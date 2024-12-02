@@ -15,21 +15,29 @@
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.3",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.0.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.13.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "postcss": "^8",
+    "prettier": "^3.4.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.16.0"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "git add"
-    ]
+      "prettier --write"
+    ],
+    "prettier.config.js": "prettier --write"
   }
 }
