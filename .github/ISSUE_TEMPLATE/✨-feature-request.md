@@ -3,7 +3,7 @@ name: "✨ Feature Request"
 about: 새로운 기능 또는 개선점을 제안합니다
 title: "[FEATURE]"
 labels: ''
-assignees: Defor721
+assignees: ''
 
 ---
 

@@ -3,7 +3,7 @@ name: "\U0001F41E Bug Report"
 about: 버그 관련 문제를 보고합니다.
 title: "[BUG]"
 labels: ''
-assignees: Defor721
+assignees: ''
 
 ---
 

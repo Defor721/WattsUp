@@ -3,7 +3,7 @@ name: "\U0001F4CC Custom Issue"
 about: 기타 이슈를 제기합니다.
 title: "[CUSTOM]"
 labels: ''
-assignees: Defor721
+assignees: ''
 
 ---
 
