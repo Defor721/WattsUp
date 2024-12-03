@@ -4,7 +4,6 @@ import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { QueryProviders } from "../../config";
 
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -27,15 +26,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <QueryProviders>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
-        <Sidebar />
-        <main className="flex-1 p-4">{children}</main>
+        <QueryProviders>
+          <Sidebar />
+          <main className="flex-1 p-4">{children}</main>
+        </QueryProviders>
       </body>
     </html>
-    </QueryProviders>
   );
 }
