@@ -1,6 +1,4 @@
 function loading() {
-  return (
-    <div>loading</div>
-  )
+    return <div>loading</div>;
 }
-export default loading
+export default loading;
