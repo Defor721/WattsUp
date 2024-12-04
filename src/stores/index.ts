@@ -1,1 +1,3 @@
-const hi = "";
+import { useLoginStore } from "./loginStore";
+
+export { useLoginStore };
