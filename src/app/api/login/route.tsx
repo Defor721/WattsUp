@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
 import jwt from "jsonwebtoken";
+
+import clientPromise from "@/lib/mongodb";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,11 +22,11 @@ export async function POST(request: NextRequest) {
       const refresh = jwt.sign(payload, refreshSecret, { expiresIn: "7d" });
       await collection.updateOne(
         { userId },
-        { $set: { refreshToken: refresh } }
+        { $set: { refreshToken: refresh } },
       );
       const response = NextResponse.json(
         { message: "Login Successfully", access },
-        { status: 200 }
+        { status: 200 },
       );
       response.cookies.set("refreshToken", refresh, {
         httpOnly: true,
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json(
         { message: "Password invalid" },
-        { status: 401 }
+        { status: 401 },
       );
     }
   } catch (error: unknown) {
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { message: "Failed to find data", error: errorMessage },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
