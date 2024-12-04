@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import React, { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import {
   IoMdHome,
   FaExchangeAlt,
@@ -10,8 +13,6 @@ import {
   IoLogInOutline,
 } from "@/public/assets/icons";
 import { Separator } from "@/components/shadcn";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useLoginStore } from "@/stores";
 
 const sideLists = [
@@ -52,9 +53,9 @@ function Sidebar() {
   };
 
   return (
-    <aside className="flex flex-col justify-between  w-[240px] h-[100vh] p-4 bg-[rgb(8,16,41)] text-white border-r border-r-[rgb(8,16,40)]">
-      <div className="flex flex-col ">
-        <Link href={"/"} className="flex items-center gap-2 cursor-pointer">
+    <aside className="flex h-[100vh] w-[240px] flex-col justify-between border-r border-r-[rgb(8,16,40)] bg-[rgb(8,16,41)] p-4 text-white">
+      <div className="flex flex-col">
+        <Link href={"/"} className="flex cursor-pointer items-center gap-2">
           <Image
             src="/assets/images/logo.webp"
             width={64}
@@ -70,7 +71,7 @@ function Sidebar() {
             <Link
               href={`/${side.label.toLowerCase().trim()}`}
               key={index}
-              className="flex items-center gap-2 cursor-pointer w-full hover:bg-slate-400 p-2 rounded-sm"
+              className="flex w-full cursor-pointer items-center gap-2 rounded-sm p-2 hover:bg-slate-400"
             >
               <div>{side.icons}</div>
               <li>{side.label}</li>
@@ -98,16 +99,16 @@ function Sidebar() {
               <div className="text-sm">Account settings</div>
             </div>
           </div>
-          <FaChevronRight className="text-white  size-3 opacity-70" />
+          <FaChevronRight className="size-3 text-white opacity-70" />
         </div>
       ) : (
         <div
-          className="flex items-center gap-2 hover:cursor-pointer p-2"
+          className="flex items-center gap-2 p-2 hover:cursor-pointer"
           onClick={handleLoginClick}
         >
           <div>로그인</div>
 
-          <IoLogInOutline className="text-white  size-5" />
+          <IoLogInOutline className="size-5 text-white" />
         </div>
       )}
     </aside>

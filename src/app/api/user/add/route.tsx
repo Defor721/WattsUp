@@ -20,12 +20,12 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json(
         { message: "Sign up successfully" },
-        { status: 200 }
+        { status: 200 },
       );
     } else {
       return NextResponse.json(
         { message: "Name already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
   } catch (error: unknown) {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { message: "Failed to create data", error: errorMessage },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

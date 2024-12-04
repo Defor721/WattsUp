@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
-import clientPromise from "@/lib/mongodb";
 import jwt from "jsonwebtoken";
+
+import clientPromise from "@/lib/mongodb";
 
 interface JwtPayload {
   userId: string;
@@ -12,19 +13,19 @@ export async function POST(request: NextRequest) {
     if (!refresh) {
       return NextResponse.json(
         { message: "Refresh token is missing" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     let decoded: JwtPayload;
     try {
       decoded = jwt.verify(
         refresh,
-        process.env.REFRESH_TOKEN_SECRET as string
+        process.env.REFRESH_TOKEN_SECRET as string,
       ) as JwtPayload;
     } catch (err) {
       return NextResponse.json(
         { message: "Invalid refresh token" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const userId = decoded.userId;
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
     const collection = db.collection("userdata");
     const result = await collection.updateOne(
       { userId },
-      { $unset: { refreshToken: "" } }
+      { $unset: { refreshToken: "" } },
     );
     if (result.matchedCount === 0) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -41,12 +42,12 @@ export async function POST(request: NextRequest) {
     if (result.modifiedCount === 0) {
       return NextResponse.json(
         { message: "Refresh token was not removed" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     const response = NextResponse.json(
       { message: "Logout successful" },
-      { status: 200 }
+      { status: 200 },
     );
     response.cookies.set("refreshToken", "", {
       httpOnly: true,
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { message: "Failed to fetch", error: errorMessage },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
