@@ -54,3 +54,5 @@ export {
   TooltipContent,
   TooltipProvider,
 } from "./tooltip";
+export { Label } from "./label";
+export { Tabs } from "./tabs";
