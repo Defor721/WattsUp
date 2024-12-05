@@ -1,24 +1,24 @@
 import axios, { AxiosInstance } from "axios";
+// import {
+//   handleRequest,
+//   handleRequestError,
+//   handleResponse,
+//   handleResponseError,
+// } from "./interceptors";
 
 const MOCK_BASE_URL =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "development"
     ? "http://localhost:3000"
     : process.env.NEXT_PUBLIC_API_BASE_URL;
 
-class ApiInstance {
-  public static create(): AxiosInstance {
-    const instance = axios.create({
-      baseURL: MOCK_BASE_URL,
-      withCredentials: true,
-    });
+// axios 인스턴스 생성
+const apiClient: AxiosInstance = axios.create({
+  baseURL: MOCK_BASE_URL,
+  withCredentials: true,
+});
 
-    // 요청 인터셉터
-    instance.interceptors.request.use(handleRequest, handleRequestError);
-    // 응답 인터셉터
-    instance.interceptors.response.use(handleResponse, handleResponseError);
+// 인터셉터
+// apiClient.interceptors.request.use(handleRequest, handleRequestError);
+// apiClient.interceptors.response.use(handleResponse, handleResponseError);
 
-    return instance;
-  }
-}
-
-export default ApiInstance;
+export default apiClient;

@@ -1,7 +1,9 @@
+"use client";
+
 import LoginButton from "@/auth/components/LoginButton";
 import GoogleLoginButton from "@/auth/components/GoogleLoginButton";
 
-export default function Page() {
+export default function LoginPage() {
   return (
     <div>
       {/* 일반 로그인 헤더 */}
