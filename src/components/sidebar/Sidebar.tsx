@@ -5,6 +5,9 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { Separator } from "@/components/shadcn";
+import { useLoginStore } from "@/stores";
+
 import {
   IoMdHome,
   FaExchangeAlt,
@@ -15,8 +18,6 @@ import {
   FaChartLine,
   FaDollarSign,
 } from "../../../public/assets/icons";
-import { Separator } from "@/components/shadcn";
-import { useLoginStore } from "@/stores";
 
 const sideLists = [
   {
