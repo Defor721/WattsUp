@@ -3,6 +3,9 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
 import { IoLogInOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
+import { FaChartLine } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
 
 export {
   IoMdHome,
@@ -10,4 +13,7 @@ export {
   IoMdSettings,
   FaChevronRight,
   IoLogInOutline,
+  IoPersonOutline,
+  FaChartLine,
+  FaDollarSign,
 };
