@@ -1,43 +1,37 @@
+"use client";
+
 import { create } from "zustand";
-import Cookies from "js-cookie";
+
 import { AuthState } from "./type";
 import ApiInstance from "@/lib/axios";
+import { setCookie, getCookie, deleteCookie } from "@/utils/cookieHelper";
 
 export const useAuthStore = create<AuthState>((set) => ({
-  accessToken: Cookies.get("accessToken") || null, // 쿠키에서 토큰 초기화
+  accessToken: getCookie("access_token"),
   actions: {
-    setAccessToken: (token) => {
-      Cookies.set("accessToken", token, {
-        secure: true,
-        sameSite: "Strict",
-        expires: 7, // 7일 동안 유효
-      });
-      set({ accessToken: token });
-    },
-    resetAccessToken: () => {
-      Cookies.remove("accessToken");
-      set({ accessToken: null });
-    },
+    /** 쿠키 갱신 */
     fetchAccessToken: async (code: string) => {
       try {
         const { data } = await ApiInstance.post("/api/auth/exchange", {
           authorizationCode: code,
         });
-
-        // 쿠키와 Zustand 상태에 저장
-        Cookies.set("accessToken", data.access_token, {
-          secure: true,
-          sameSite: "Strict",
-          expires: 7,
-        });
+        console.log(`data: `, data);
+        setCookie("access_token", data.access_token, data.expires_in);
         set({ accessToken: data.access_token });
       } catch (error) {
-        console.error(
-          "Authorization Code를 교환중 에러가 발생했습니다.",
-          error
-        );
+        console.error("Authorization Code를 교환중 에러가 발생했습니다.");
         throw error;
       }
+    },
+    /** 쿠키 변경 */
+    setAccessToken: (token: string, expiresIn: number) => {
+      setCookie("access_token", token, expiresIn);
+      set({ accessToken: token });
+    },
+    /** 쿠키 삭제 */
+    resetAccessToken: () => {
+      deleteCookie("access_token");
+      set({ accessToken: null });
     },
   },
 }));

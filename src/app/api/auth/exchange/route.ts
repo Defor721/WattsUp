@@ -24,8 +24,7 @@ export async function POST(request: NextRequest) {
         grant_type: "authorization_code",
       }
     );
-
-    const { access_token, refresh_token } = tokenResponse.data;
+    const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
     const headers = new Headers();
     headers.append(
@@ -44,7 +43,11 @@ export async function POST(request: NextRequest) {
     const userInfo = userInfoResponse.data;
 
     return new Response(
-      JSON.stringify({ user: userInfo, access_token: access_token }),
+      JSON.stringify({
+        user: userInfo,
+        access_token: access_token,
+        expires_in: expires_in,
+      }),
       { headers, status: 200 }
     );
   } catch (error) {

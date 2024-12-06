@@ -17,6 +17,7 @@ export default function AuthCallbackPage() {
     async (code: string) => {
       try {
         await fetchAccessToken(code);
+
         router.push("/");
       } catch (error) {
         console.error("Error exchanging code for token:", error);
@@ -27,9 +28,7 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (code) {
-      exchangeCodeForToken(code);
-    }
+    if (code) exchangeCodeForToken(code);
   }, [exchangeCodeForToken, searchParams]);
 
   return <div>로그인 처리 중...</div>;
