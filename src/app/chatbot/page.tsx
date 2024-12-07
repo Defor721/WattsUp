@@ -1,4 +1,4 @@
 function page() {
-  return <div>page</div>;
+  return <div>pag</div>;
 }
 export default page;
