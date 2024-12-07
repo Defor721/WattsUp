@@ -8,6 +8,7 @@ import { setCookie, getCookie, deleteCookie } from "@/utils/cookieHelper";
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: getCookie("access_token"),
+  user: null,
   actions: {
     /** 쿠키 갱신 */
     fetchAccessToken: async (code: string) => {
@@ -15,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         const { data } = await ApiInstance.post("/api/auth/exchange", {
           authorizationCode: code,
         });
-        console.log(`data: `, data);
+
         setCookie("access_token", data.access_token, data.expires_in);
         set({ accessToken: data.access_token });
       } catch (error) {

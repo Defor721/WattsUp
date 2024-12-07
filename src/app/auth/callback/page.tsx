@@ -20,7 +20,7 @@ export default function AuthCallbackPage() {
 
         router.push("/");
       } catch (error) {
-        console.error("Error exchanging code for token:", error);
+        console.error("토큰을 받아오는 중 에러가 발생했습니다: ", error);
       }
     },
     [fetchAccessToken, router]

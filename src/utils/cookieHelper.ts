@@ -5,10 +5,8 @@ export const setCookie = (
   expiresInSeconds: number
 ) => {
   if (typeof window === "undefined") return null;
-  console.log(`expiresInSeconds: `, expiresInSeconds);
   const expires = new Date();
   expires.setTime(expires.getTime() + expiresInSeconds * 1000);
-  console.log(`expires.toUTCString(): `, expires.toUTCString());
   document.cookie = `${name}=${encodeURIComponent(
     value
   )};expires=${expires.toUTCString()};path=/;samesite=strict`;
