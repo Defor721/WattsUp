@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/_components/shadcn";
+import { Button } from "@/components/shadcn";
 
 // 구글 OAuth 2.0의 endpoint
 const Google_OAUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
