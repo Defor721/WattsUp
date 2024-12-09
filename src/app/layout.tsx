@@ -37,7 +37,7 @@ export default function RootLayout({
       >
         <QueryProviders>
           <Sidebar />
-          <main className="flex-1 bg-[rgb(7,15,38)] p-4 text-white">
+          <main className="flex-1 bg-[rgb(7,15,38)] text-white">
             {children}
           </main>
         </QueryProviders>

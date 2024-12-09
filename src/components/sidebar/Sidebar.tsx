@@ -1,153 +1,105 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-import { Separator } from "@/components/shadcn";
-import { useLoginStore } from "@/stores";
-
 import {
-  IoMdHome,
-  FaExchangeAlt,
-  IoMdSettings,
-  FaChevronRight,
-  IoLogInOutline,
-  IoPersonOutline,
-  FaChartLine,
-  FaDollarSign,
-} from "../../../public/assets/icons";
+  Home,
+  BarChart2,
+  DollarSign,
+  RefreshCw,
+  Settings,
+  User,
+  LogOut,
+} from "lucide-react";
 
-const sideLists = [
-  {
-    icons: <IoMdHome />,
-    label: "Dashboard",
-  },
-  //   {
-  //     icons: <IoPersonOutline />,
-  //     label: "Mypage",
-  // },
-  {
-    icons: <FaChartLine />,
-    label: "Power Generation Forecasting",
-  },
-  {
-    icons: <FaDollarSign />,
-    label: "Profitability Analysis",
-  },
-  {
-    icons: <FaExchangeAlt />,
-    label: "Trading",
-  },
-  {
-    icons: <IoMdSettings />,
-    label: "Settings",
-  },
+import { Separator } from "@/components/shadcn/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const sidebarItems = [
+  { icon: Home, label: "Dashboard" },
+  { icon: BarChart2, label: "Power Generation Forecasting" },
+  { icon: DollarSign, label: "Profitability Analysis" },
+  { icon: RefreshCw, label: "Trading" },
+  { icon: Settings, label: "Settings" },
 ];
 
-function Sidebar() {
+export default function Sidebar() {
   const router = useRouter();
 
-  // const isLogin = useLoginStore((state) => state.isLogin);
-  /**isLogin: Zustand 스토어에서 가져온 로그인 상태. */
-
-  // useEffect(() => {
-  //   console.log(isLogin);
-  // }, [isLogin]);
-
-  const handleUserClick = () => {
-    // router.push("#");
-    // login();
-  };
-
-  const handleLoginClick = () => {
-    router.push("/login");
-  };
-
   return (
-    <aside className="flex h-[100vh] w-[240px] flex-col justify-between border-r border-r-[rgb(8,16,40)] bg-[rgb(8,16,41)] p-4 text-white">
-      <div className="flex flex-col">
-        <Link
-          href={"/"}
-          className="flex h-[84px] cursor-pointer items-center gap-4"
-        >
-          <Image
-            src="/assets/images/logo.webp"
-            className="h-[60px] w-[60px] rounded-xl"
-            width={64}
-            height={64}
-            alt="logo"
-          />
-          <div className="text-2xl">WattsUp</div>
-        </Link>
-        <Separator />
-
-        <ul className="flex flex-col items-start gap-1">
-          {sideLists.map((side, index) => (
-            <Link
-              href={`/${side.label.toLowerCase().trim()}`}
-              key={index}
-              className="flex w-full cursor-pointer items-center gap-4 rounded-lg p-2 transition duration-300 ease-in-out hover:bg-slate-400 hover:text-[rgb(8,16,40)]"
-            >
-              <div>{side.icons}</div>
-              <li>{side.label}</li>
-            </Link>
-          ))}
-        </ul>
-      </div>
-
-      <Separator />
-      <div
-        className="flex items-center justify-between hover:cursor-pointer"
-        onClick={handleUserClick}
-      >
-        <div className="flex items-center gap-2">
-          <Image
-            src="/assets/images/logo.webp"
-            width={50}
-            height={50}
-            alt="user_image"
-            className="rounded-xl"
-          />
-          <div>
-            <div>이름</div>
-            <div className="text-sm">Account settings</div>
-          </div>
-        </div>
-        <FaChevronRight className="size-3 text-white opacity-70" />
-      </div>
-      {/* {isLogin ? (
-        <div
-          className="flex items-center justify-between hover:cursor-pointer"
-          onClick={handleUserClick}
-        >
-          <div className="flex items-center gap-2">
+    <aside className="hadow-right flex h-screen w-64 flex-col justify-between bg-[#020232f4] p-6 text-white">
+      <div className="flex-grow overflow-y-auto">
+        <div className="flex flex-col">
+          <Link href="/" className="flex items-center gap-2 p-6">
             <Image
               src="/assets/images/logo.webp"
-              width={50}
-              height={50}
-              alt="user_image"
-              className="rounded-xl"
+              width={48}
+              height={48}
+              alt="WattsUp Logo"
+              className="rounded-md"
             />
-            <div>
-              <div>이름</div>
-              <div className="text-sm">Account settings</div>
+            <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-2xl font-bold text-transparent">
+              WattsUp
+            </span>
+          </Link>
+          <Separator className="mb-4" />
+          <nav className="space-y-1 px-3">
+            {sidebarItems.map((item, index) => (
+              <Link
+                key={index}
+                href={`/${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-50 hover:text-blue-700"
+              >
+                <item.icon className="h-5 w-5" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+      <div className="mt-auto p-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg p-2 transition-colors hover:bg-blue-50">
+            <Image
+              src="/assets/images/avatar-placeholder.png"
+              width={36}
+              height={36}
+              alt="User Avatar"
+              className="rounded-full"
+            />
+            <div className="flex-1 text-left">
+              <p className="text-sm font-medium">John Doe</p>
+              <p className="text-xs text-gray-500">john.doe@example.com</p>
             </div>
-          </div>
-          <FaChevronRight className="size-3 text-white opacity-70" />
-        </div>
-      ) : (
-        <div
-          className="flex items-center gap-2 p-2 hover:cursor-pointer"
-          onClick={handleLoginClick}
-        >
-          <div>로그인</div>
-
-          <IoLogInOutline className="size-5 text-white" />
-        </div>
-      )} */}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </aside>
   );
 }
-export default Sidebar;
