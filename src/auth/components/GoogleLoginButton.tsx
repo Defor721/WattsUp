@@ -16,7 +16,9 @@ export default function GoogleLoginButton() {
 
     // OAuth 2.0 endpoint에 필요한 파라미터를 넣어주어야 함
     // access_type 은 offline을 설정하면 리프레시 토큰을 받을 수 있음
-    const authUrl = `${Google_OAUTH_URL}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline&prompt=consent`;
+    const authUrl = `
+      ${Google_OAUTH_URL}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline&prompt=consent
+    `;
 
     window.location.href = authUrl;
   };

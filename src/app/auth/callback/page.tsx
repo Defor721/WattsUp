@@ -1,35 +1,53 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
-import { useAuthStore } from "@/auth/store";
+import { exchangeSocialToken } from "@/auth/authService";
+import { useAuthStore } from "@/auth/authStore";
 
-/**
- * Authorized redirect URIs로 code를 성공적으로 받아왔다면 토큰 요청
- */
 export default function AuthCallbackPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const { fetchAccessToken } = useAuthStore((state) => state.actions);
+  const searchParams = useSearchParams();
+  const { setAccessToken, setUser, resetAccessToken } = useAuthStore(
+    (state) => state.actions,
+  );
 
-  const exchangeCodeForToken = useCallback(
+  const handleSocialLogin = useCallback(
     async (code: string) => {
       try {
-        await fetchAccessToken(code);
+        const { access_token, expires_in, redirectTo, user, message } =
+          await exchangeSocialToken(code);
 
-        router.push("/");
+        if (message) {
+          console.error("로그인 실패:", message);
+          router.push("/login");
+          return;
+        }
+
+        if (redirectTo) {
+          router.push(redirectTo);
+          return;
+        }
+
+        if (access_token && user) {
+          setAccessToken(access_token, Number(expires_in));
+          setUser(user);
+          router.push("/");
+        }
       } catch (error) {
-        console.error("토큰을 받아오는 중 에러가 발생했습니다: ", error);
+        console.error("로그인 처리 중 에러 발생:", error);
+        resetAccessToken();
+        router.push("/login");
       }
     },
-    [fetchAccessToken, router]
+    [setAccessToken, setUser, resetAccessToken, router],
   );
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (code) exchangeCodeForToken(code);
-  }, [exchangeCodeForToken, searchParams]);
+    if (code) handleSocialLogin(code);
+  }, [handleSocialLogin, searchParams]);
 
   return <div>로그인 처리 중...</div>;
 }
