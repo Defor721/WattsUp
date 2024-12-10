@@ -1,20 +1,93 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale, // x축 스케일
+  LinearScale, // y축 스케일
+  PointElement,
+  LineElement,
+  BarElement, // 바 차트를 사용하려면 추가
+  Title,
+  Tooltip,
+  Legend,
+  ChartData,
+} from "chart.js";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import { Chart } from "react-chartjs-2";
 
 import { Button } from "@/components/shadcn/button";
 import { Card } from "@/components/shadcn/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
+type EnergyData = {
+  Time: string;
+  "Demand (MWh)": number;
+  "Supply (MWh)": number;
+  "Energy Transacted (MWh)": number;
+  "Price ($/MWh)": number;
+};
 
 export default function TradingView() {
   const [timeInterval, setTimeInterval] = useState("30분");
   const [orderType, setOrderType] = useState("buy");
   const [orderAmount, setOrderAmount] = useState("");
   const [orderPrice, setOrderPrice] = useState("");
+  const [chartData, setChartData] = useState<ChartData<"line">>();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch("/api/trade/tradedata"); // API 엔드포인트
+        const { data } = await res.json();
+        const labels = data.map((item: { Time: string }) => item.Time); // Time 데이터를 x축으로 사용
+        const demandData = data.map(
+          (item: { "Demand (MWh)": number }) => item["Demand (MWh)"],
+        ); // y축 데이터
+        const supplyData = data.map(
+          (item: { "Supply (MWh)": number }) => item["Supply (MWh)"],
+        );
+        const priceData = data.map(
+          (item: { "Price ($/MWh)": number }) => item["Price ($/MWh)"],
+        );
 
+        // Chart.js 데이터 설정
+        setChartData({
+          labels, // x축 레이블
+          datasets: [
+            {
+              label: "Demand (MWh)",
+              data: demandData,
+              borderColor: "rgba(255, 99, 132, 1)", // 대비가 강한 테두리 색
+              backgroundColor: "rgba(255, 99, 132, 0.5)", // 투명도 낮춤
+              borderWidth: 2, // 선 두께 증가
+            },
+            {
+              label: "Supply (MWh)",
+              data: supplyData,
+              borderColor: "rgba(54, 162, 235, 1)",
+              backgroundColor: "rgba(54, 162, 235, 0.5)",
+              borderWidth: 2,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("데이터 로드 에러:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
   const getOrderButtonClass = () => {
     return orderType === "buy"
       ? "bg-green-500 hover:bg-green-600 text-white"
@@ -134,7 +207,16 @@ export default function TradingView() {
 
           {/* Chart Placeholder */}
           <div className="relative flex h-[75%] items-center justify-center rounded-lg bg-gray-100">
-            Chart Area
+            {chartData ? (
+              <Chart
+                type="line"
+                data={chartData}
+                options={{ responsive: true }}
+              />
+            ) : (
+              <p>데이터 로딩 중...</p>
+            )}
+
             {/* Buy/Sell Order Form */}
             <Card className="absolute bottom-4 right-4 w-80 p-4">
               <Tabs
