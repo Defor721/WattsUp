@@ -44,18 +44,8 @@ function Page() {
     fetchDataAndInitializeModel();
   }, []);
 
-  // 데이터 표준화 함수
-  const standardizeData = (data: number[]) => {
-    const mean = data.reduce((acc, value) => acc + value, 0) / data.length;
-    const stdDev = Math.sqrt(
-      data.reduce((acc, value) => acc + (value - mean) ** 2, 0) / data.length,
-    );
-    return data.map((value) => (value - mean) / stdDev);
-  };
-
-  // 데이터 전처리 함수
   const prepareData = (dataset: any[], amgoData: any[]) => {
-    // 독립변수
+    // 독립변수 데이터 추출
     const rawInputs = dataset.map((item) => [
       parseFloat(item["일 강수량 (mm)"]),
       parseFloat(item["일 평균 수증기압 (hPa)"]),
@@ -68,8 +58,8 @@ function Page() {
       parseFloat(item["최대풍속 (m/s)"]),
     ]);
 
-    // 각 피처를 표준화
-    const standardizedInputs = rawInputs.map((row, rowIndex) =>
+    // 독립변수 표준화
+    const standardizedInputs = rawInputs.map((row) =>
       row.map((value, colIndex) => {
         const columnValues = rawInputs.map((r) => r[colIndex]);
         const mean =
@@ -82,8 +72,10 @@ function Page() {
       }),
     );
 
-    // 종속변수 표준화
+    // 종속변수 데이터 추출
     const rawOutputs = amgoData.map((item) => parseFloat(item["amgo"]));
+
+    // 종속변수 표준화
     const meanOutput =
       rawOutputs.reduce((acc, value) => acc + value, 0) / rawOutputs.length;
     const stdDevOutput = Math.sqrt(
@@ -96,7 +88,8 @@ function Page() {
 
     return {
       inputs: standardizedInputs,
-      outputs: standardizedOutputs.map((value) => [value]),
+      outputs: standardizedOutputs.map((value) => [value]), // 2D 배열로 변환
+      stats: { meanOutput, stdDevOutput },
     };
   };
 
@@ -143,35 +136,10 @@ function Page() {
 
     try {
       // 모델 저장 (파일 다운로드)
-      await model.save("downloads://trained-model");
+      await model.save("downloads://model");
       console.log("모델이 브라우저에 저장되었습니다!");
     } catch (error) {
       console.error("모델 저장 중 오류 발생:", error);
-    }
-  };
-
-  const saveModelToIndexedDB = async () => {
-    if (!model) {
-      console.error("모델이 초기화되지 않았습니다.");
-      return;
-    }
-
-    try {
-      // 모델 저장 (IndexedDB)
-      await model.save("indexeddb://trained-model");
-      console.log("모델이 IndexedDB에 저장되었습니다!");
-    } catch (error) {
-      console.error("IndexedDB에 모델 저장 중 오류 발생:", error);
-    }
-  };
-
-  const loadModelFromIndexedDB = async () => {
-    try {
-      const loadedModel = await tf.loadLayersModel("indexeddb://trained-model");
-      setModel(loadedModel as tf.Sequential);
-      console.log("IndexedDB에서 모델을 불러왔습니다!");
-    } catch (error) {
-      console.error("IndexedDB에서 모델 불러오기 중 오류 발생:", error);
     }
   };
 
@@ -186,12 +154,6 @@ function Page() {
       <button onClick={trainModel}>추가 학습</button>
       <br />
       <button onClick={saveModel}>모델 저장 (다운로드)</button>
-      <br />
-      <button onClick={saveModelToIndexedDB}>모델 저장 (IndexedDB)</button>
-      <br />
-      <button onClick={loadModelFromIndexedDB}>
-        IndexedDB에서 모델 불러오기
-      </button>
       <br />
       <h2>학습 기록</h2>
       <ul>{/* 학습 기록 표시 */}</ul>
