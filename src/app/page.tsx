@@ -1,10 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/auth/authStore";
-
 export default function Home() {
-  const user = useAuthStore((state) => state.user);
-  const access = useAuthStore((state) => state.accessToken);
   return (
     <div className="relative h-screen">
       {/* 비디오를 상단에 고정 */}
@@ -20,8 +16,6 @@ export default function Home() {
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <h1 className="text-5xl font-bold text-white">Watts_uP</h1>
         </div>
-        <div>user: {user?.email}</div>
-        <div>access: {access}</div>
       </div>
     </div>
   );

@@ -14,25 +14,25 @@ import { http, HttpResponse } from "msw";
 const users = [
   {
     id: "1",
-    signupType: "native",
-    businessType: "individual",
-    personalId: "900101",
-    businessNumber: "0000000000",
-    companyName: "Test Company",
-    email: "tester@example.com",
-    provider: null,
-    corporateNumber: null,
-  },
-  {
-    id: "2",
     signupType: "social",
     provider: "Google",
     businessType: "corporate",
     corporateNumber: "1234567890123",
     businessNumber: "1111111111",
     companyName: "Shell Corporation",
-    email: "fraud@scam.com",
     personalId: null,
+    email: "fraud@scam.com",
+  },
+  {
+    id: "2",
+    signupType: "native",
+    provider: null,
+    businessType: "individual",
+    corporateNumber: null,
+    businessNumber: "0000000000",
+    companyName: "Test Company",
+    personalId: "900101",
+    email: "tester@example.com",
   },
 ];
 
@@ -43,7 +43,6 @@ export const handlers = [
   // Google 토큰 요청 가로채기
   http.post("https://oauth2.googleapis.com/token", async ({ request }) => {
     const body = await request.json();
-    console.log("MSW: Google Token 요청:", body);
 
     // 가짜 응답 생성
     return HttpResponse.json(
@@ -61,8 +60,6 @@ export const handlers = [
   http.get(
     "https://openidconnect.googleapis.com/v1/userinfo",
     ({ request }) => {
-      console.log("MSW: Google 사용자 정보 요청:", request.headers);
-
       // 가짜 응답 생성
       return HttpResponse.json(
         {
@@ -79,29 +76,27 @@ export const handlers = [
     },
   ),
 
-  http.post(`${baseUrl}/api/checkUserInfo`, async ({ request }) => {
+  // 유저 가입 정보 확인
+  http.post(`${baseUrl}/api/users/registration`, async ({ request }) => {
     const { email } = (await request.json()) as { email: string };
-    console.log(`요청된 이메일: ${email}`);
-    const existingUser = users.find((user) => {
-      console.log(`데이터베이스 사용자 이메일: ${user.email}`);
-      return user.email === email;
-    });
-
+    console.log(`check email: `, email);
+    const existingUser = users.find((user) => user.email === email);
+    console.log(`check existingUser: `, existingUser);
+    // DB에 존재하지 않는 경우
     if (!existingUser) {
-      console.log("MSW: 신규 사용자, 추가 정보 필요");
       return HttpResponse.json(
-        { isAdditionalInfoRequired: true, provider: null },
+        {
+          signupType: null,
+          isAdditionalInfoRequired: true,
+        },
         { status: 200 },
       );
     }
 
-    console.log(`MSW: ${existingUser.provider} 회원으로 등록됨`);
-
     return HttpResponse.json(
       {
+        signupType: existingUser.signupType,
         isAdditionalInfoRequired: false,
-        provider: existingUser.provider, // 등록된 제공자 정보 반환
-        user: existingUser,
       },
       { status: 200 },
     );

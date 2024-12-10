@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { MSWProvider, QueryProvider } from "@/config";
+import { Toaster } from "@/components/ui/toaster";
 
 // const geistSans = localFont({
 //   src: "/public/assets/fonts/GeistVF.woff",
@@ -49,6 +50,7 @@ export default function RootLayout({
             <Sidebar />
             <main className="flex-1 bg-[rgb(7,15,38)] p-4 text-white">
               {children}
+              <Toaster />
             </main>
           </QueryProvider>
         </MSWProvider>

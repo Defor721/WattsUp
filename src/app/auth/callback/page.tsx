@@ -3,45 +3,33 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useCallback } from "react";
 
-import { exchangeSocialToken } from "@/auth/authService";
 import { useAuthStore } from "@/auth/authStore";
 
+/**
+ * 구글에게 토큰을 받기 위한 임시 코드를 받는 콜백 페이지
+ */
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setAccessToken, setUser, resetAccessToken } = useAuthStore(
-    (state) => state.actions,
-  );
+  const { loginWithSocialToken } = useAuthStore((state) => state.actions);
 
   const handleSocialLogin = useCallback(
     async (code: string) => {
       try {
-        const { access_token, expires_in, redirectTo, user, message } =
-          await exchangeSocialToken(code);
+        const redirectTo = await loginWithSocialToken(code);
 
-        if (message) {
-          console.error("로그인 실패:", message);
-          router.push("/login");
-          return;
-        }
-
-        if (redirectTo) {
-          router.push(redirectTo);
-          return;
-        }
-
-        if (access_token && user) {
-          setAccessToken(access_token, Number(expires_in));
-          setUser(user);
+        router.push(redirectTo || "/");
+      } catch (error: any) {
+        if (error.response?.status === 409) {
+          const redirectTo = error.response.data.redirectTo || "/login";
+          router.push(`${redirectTo}?error=already_registered`);
+        } else {
+          console.error("로그인 실패:", error);
           router.push("/");
         }
-      } catch (error) {
-        console.error("로그인 처리 중 에러 발생:", error);
-        resetAccessToken();
-        router.push("/login");
       }
     },
-    [setAccessToken, setUser, resetAccessToken, router],
+    [loginWithSocialToken, router],
   );
 
   useEffect(() => {
