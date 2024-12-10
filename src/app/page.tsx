@@ -1,11 +1,21 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
+  const links = [
+    { title: "Explore Dashboard", href: "/dashboard" },
+    { title: "Energy Analytics", href: "/analytics" },
+    { title: "Smart Trading", href: "/trading" },
+    { title: "With Turbin Crew", href: "https://turbinecrew.co.kr/" },
+  ];
+
   return (
     <div className="relative min-h-screen bg-gray-100">
-      {/* Full-width video header */}
-      <div className="relative h-[70vh] w-full overflow-hidden">
+      {/* Full-width video header with overlay links */}
+      <div className="relative h-[60vh] w-full overflow-hidden">
         <video
           src="/assets/videos/istockphoto-1569244272-640_adpp_is.mp4"
           autoPlay
@@ -14,24 +24,27 @@ export default function Home() {
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-50" />{" "}
-        {/* Overlay for better text visibility */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
-          <h1 className="mb-4 text-6xl font-bold">
-            <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent">
+        <div className="absolute inset-0 bg-black bg-opacity-60" />
+
+        {/* Grid of links */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <h1 className="mb-8 text-center">
+            <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[80px] font-bold text-transparent sm:text-[100px]">
               Watts_uP
             </span>
           </h1>
-          <p className="mb-8 w-full max-w-2xl bg-black p-2 text-xl">
-            WITH_TURBIN_CREW
-          </p>
-          <Link
-            href="/dashboard"
-            className="flex items-center rounded-full bg-blue-300 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-          >
-            Explore Dashboard
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
+          <div className="grid w-full max-w-4xl grid-cols-2 gap-0 px-4 sm:px-0">
+            {links.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                className="flex items-center justify-between bg-black bg-opacity-50 p-8 text-white transition-all duration-200 hover:bg-opacity-80"
+              >
+                <span className="text-xl font-semibold">{link.title}</span>
+                <ArrowRight className="h-6 w-6" />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -46,19 +59,29 @@ export default function Home() {
               title: "Real-time Monitoring",
               description:
                 "Track power generation and consumption in real-time with intuitive visualizations.",
+              icon: "/assets/icons/monitor.svg",
             },
             {
               title: "Predictive Analytics",
               description:
                 "Leverage AI-driven forecasts to optimize energy distribution and reduce costs.",
+              icon: "/assets/icons/analytics.svg",
             },
             {
               title: "Smart Trading",
               description:
                 "Automate energy trading decisions based on market trends and demand patterns.",
+              icon: "/assets/icons/trading.svg",
             },
           ].map((feature, index) => (
             <div key={index} className="rounded-lg bg-white p-6 shadow-md">
+              <Image
+                src={feature.icon}
+                alt={feature.title}
+                width={48}
+                height={48}
+                className="mb-4"
+              />
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 {feature.title}
               </h3>
