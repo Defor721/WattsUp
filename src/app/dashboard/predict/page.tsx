@@ -2,16 +2,60 @@
 
 import React, { useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
+import axios from "axios";
 
 function Page() {
+  const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<tf.Sequential | tf.LayersModel | null>(
     null,
   );
+  const [inputTensor, setInputTensor] = useState<tf.Tensor | null>(null);
+  const [outputTensor, setOutputTensor] = useState<tf.Tensor | null>(null);
+  const [inputStats, setInputStats] = useState<any>(null);
+  const [outputStats, setOutputStats] = useState<any>(null);
 
   // 모델 초기화
   useEffect(() => {
-    const model = createModel();
-    setModel(model);
+    const fetchData = async () => {
+      try {
+        // 데이터 가져오기
+        const response_dataset = await axios.get("/api/learning/dataset");
+        const response_amgo = await axios.get("/api/learning/amgo");
+
+        const dataset = response_dataset.data.data;
+        const amgoData = response_amgo.data.data;
+
+        // 데이터 전처리
+        const { inputs, outputs, inputStats, outputStats } = prepareData(
+          dataset,
+          amgoData,
+        );
+
+        // console.log(inputs);
+        // console.log(outputs);
+
+        // Tensor 변환
+        const inputTensor = tf.tensor(inputs);
+        const outputTensor = tf.tensor(outputs);
+        // inputTensor.print();
+        // outputTensor.print();
+
+        // 상태 저장
+        setInputTensor(inputTensor);
+        setOutputTensor(outputTensor);
+        setInputStats(inputStats);
+        setOutputStats(outputStats);
+
+        const model = createModel();
+        setModel(model);
+        console.log("모델 초기화 완료");
+      } catch (error) {
+        console.error("데이터 가져오기 또는 초기화 중 오류 발생:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   // Min-Max 정규화 함수
@@ -28,6 +72,42 @@ function Page() {
     max: Math.max(...data),
   });
 
+  // 데이터 전처리 함수
+  const prepareData = (dataset: any[], amgoData: any[]) => {
+    const rawInputs = dataset.map((item) => [
+      parseFloat(item["일 평균 풍속 (m/s)"] || 0),
+      parseFloat(item["일 평균기온 (C)"] || 0),
+    ]);
+
+    // 독립 변수 정규화
+    const inputStats = rawInputs[0].map((_, colIndex) =>
+      calcStats(rawInputs.map((row) => row[colIndex])),
+    );
+    const normalizedInputs = rawInputs.map((row) =>
+      row.map(
+        (value, index) =>
+          normalize([value], inputStats[index].min, inputStats[index].max)[0],
+      ),
+    );
+
+    const rawOutputs = amgoData.map((item) => parseFloat(item["amgo"] || 0));
+
+    // 종속 변수 정규화
+    const outputStats = calcStats(rawOutputs);
+    const normalizedOutputs = normalize(
+      rawOutputs,
+      outputStats.min,
+      outputStats.max,
+    );
+
+    return {
+      inputs: normalizedInputs, // 2차원 배열
+      outputs: normalizedOutputs.map((value) => [value]), // 2차원 배열로 변환
+      inputStats,
+      outputStats,
+    };
+  };
+
   // 모델 생성 함수
   const createModel = () => {
     const model = tf.sequential();
@@ -40,7 +120,6 @@ function Page() {
     model.add(tf.layers.dense({ units: 16, activation: "relu" }));
     model.add(tf.layers.batchNormalization()); // 배치 정규화 추가
 
-    // 출력층
     model.add(tf.layers.dense({ units: 1 })); // 단일 출력층
 
     // 모델 컴파일
@@ -54,68 +133,49 @@ function Page() {
 
   // 학습 함수
   const trainModel = async () => {
-    if (!model) {
-      console.error("모델 초기화되지 않았습니다.");
-      return;
-    }
+    setLoading(true);
+    try {
+      if (
+        !model ||
+        !inputTensor ||
+        !outputTensor ||
+        !inputStats ||
+        !outputStats
+      ) {
+        throw new Error("모델 또는 데이터가 초기화되지 않았습니다.");
+      }
 
-    const rawInputData = [
-      [3, 6.1],
-      [1.7, 2.9],
-      [3.4, 2.3],
-      [7.5, 10],
-    ];
-    const rawOutputData = [1806.988292, 701.585258, 1482.81824, 925.309851];
-
-    // 정규화
-    const inputStats = rawInputData[0].map((_, colIndex) =>
-      calcStats(rawInputData.map((row) => row[colIndex])),
-    );
-
-    const normalizedInputs = rawInputData.map((row) =>
-      row.map(
-        (value, index) =>
-          normalize([value], inputStats[index].min, inputStats[index].max)[0],
-      ),
-    );
-
-    const outputStats = calcStats(rawOutputData);
-    const normalizedOutputs = normalize(
-      rawOutputData,
-      outputStats.min,
-      outputStats.max,
-    );
-
-    // 텐서 변환
-    const inputDataTensor = tf.tensor2d(normalizedInputs);
-    const outputDataTensor = tf.tensor2d(normalizedOutputs.map((val) => [val]));
-
-    // 학습
-    const fitParam = {
-      epochs: 100, // 한 번에 학습할 에포크 수
-      batchSize: 64,
-      callbacks: {
-        onEpochEnd: (epoch: number, logs: any) => {
-          console.log(`Epoch ${epoch}: RMSE =>`, Math.sqrt(logs.loss));
+      const fitParam = {
+        epochs: 10,
+        batchSize: 64,
+        callbacks: {
+          onEpochEnd: (epoch: number, logs: any) => {
+            console.log(`Epoch ${epoch}: RMSE =>`, Math.sqrt(logs.loss));
+          },
         },
-      },
-    };
+      };
 
-    await model.fit(inputDataTensor, outputDataTensor, fitParam);
-    console.log("추가 학습 완료!");
+      await model.fit(inputTensor, outputTensor, fitParam);
+      console.log("추가 학습 완료!");
 
-    // 예측값 계산
-    const predictions = model.predict(inputDataTensor) as tf.Tensor;
-    const normalizedPrediction = predictions.dataSync(); // 정규화된 예측값
+      const predictions = model.predict(inputTensor) as tf.Tensor;
+      const normalizedPrediction = predictions.dataSync();
+      const denormalizedPrediction = denormalize(
+        Array.from(normalizedPrediction),
+        outputStats.min,
+        outputStats.max,
+      );
 
-    // 역정규화
-    const denormalizedPrediction = denormalize(
-      Array.from(normalizedPrediction),
-      outputStats.min,
-      outputStats.max,
-    );
+      const formattedPrediction = denormalizedPrediction.map((value) =>
+        parseFloat(value.toFixed(2)),
+      );
 
-    console.log("예측값 (역정규화):", denormalizedPrediction);
+      console.log("예측값 (역정규화, 소수점 2자리):", formattedPrediction);
+    } catch (error) {
+      console.error("학습 중 오류 발생:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 모델 저장
@@ -134,6 +194,10 @@ function Page() {
     }
   };
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div>
       <h1>TensorFlow.js Model Training</h1>
@@ -142,10 +206,6 @@ function Page() {
       <br />
       <button onClick={saveModel}>모델 저장 (다운로드)</button>
       <br />
-
-      {
-        "mix-max 정규화를 하지 않고, 이 상태로 학습을 한 1,000 ~ 2,000번 정도 돌리면서 예측값을 확인해보니 점차 amgo값과 가까워지는 것을 발견했는데, min-max 정규화가 추가되면 "
-      }
     </div>
   );
 }
