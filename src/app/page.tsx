@@ -7,13 +7,13 @@ import Image from "next/image";
 export default function Home() {
   const links = [
     { title: "Explore Dashboard", href: "/dashboard" },
-    { title: "Energy Analytics", href: "/energytrade" },
+    { title: "Electricity Transaction Status", href: "/energytrade" },
     { title: "Smart Trading", href: "/trading" },
     { title: "With Turbin Crew", href: "https://turbinecrew.co.kr/" },
   ];
 
   return (
-    <div className="relative min-h-screen bg-gray-100">
+    <div className="relative min-h-screen bg-[rgb(7,15,38)] p-2">
       {/* Full-width video header with overlay links */}
       <div className="relative h-[60vh] w-full overflow-hidden">
         <video
@@ -38,7 +38,7 @@ export default function Home() {
               <Link
                 key={index}
                 href={link.href}
-                className="flex items-center justify-between bg-black bg-opacity-50 p-8 text-white transition-all duration-200 hover:bg-opacity-80"
+                className="flex items-center justify-between bg-black bg-opacity-50 p-8 text-white transition-all duration-200 hover:scale-105 hover:bg-opacity-80"
               >
                 <span className="text-xl font-semibold">{link.title}</span>
                 <ArrowRight className="h-6 w-6" />
@@ -49,10 +49,7 @@ export default function Home() {
       </div>
 
       {/* Features section */}
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
-          Powerful Features for Energy Management
-        </h2>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-4 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
             {
@@ -74,7 +71,10 @@ export default function Home() {
               icon: "/assets/icons/trading.svg",
             },
           ].map((feature, index) => (
-            <div key={index} className="rounded-lg bg-white p-6 shadow-md">
+            <div
+              key={index}
+              className="rounded-lg bg-white p-6 shadow-md hover:scale-105"
+            >
               <Image
                 src={feature.icon}
                 alt={feature.title}
