@@ -71,7 +71,7 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="grid h-64 grid-cols-1 gap-6 overflow-y-scroll md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid h-64 grid-cols-1 gap-6 overflow-hidden overflow-y-scroll p-4 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
           <Card key={i} className="border-gray-800 bg-gray-900/50">
             <CardHeader>
@@ -188,14 +188,15 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex space-x-4">
+    <div className="p-4">
+      <div className="p-4">
         <Button
           onClick={() => setViewMode("list")}
           variant={viewMode === "list" ? "outline" : "default"}
         >
           리스트로 보기
         </Button>
+
         <Button
           onClick={() => setViewMode("graph")}
           variant={viewMode === "graph" ? "outline" : "default"}
@@ -203,7 +204,10 @@ export default function Dashboard() {
           그래프로 보기
         </Button>
       </div>
-      {viewMode === "list" ? renderListView() : renderGraphView()}
+      <div className="space-y-4 border border-gray-500">
+        <div className="flex space-x-4"></div>
+        {viewMode === "list" ? renderListView() : renderGraphView()}
+      </div>
     </div>
   );
 }
