@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { MSWProvider, QueryProvider } from "@/config";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/shadcn/toaster";
 
 // const geistSans = localFont({
 //   src: "/public/assets/fonts/GeistVF.woff",

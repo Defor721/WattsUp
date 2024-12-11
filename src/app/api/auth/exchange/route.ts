@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ...NULL_RESPONSE_PAYLOAD,
-          message: "Authorization code가 사라졌습니다.",
+          message: "Authorization code가 없습니다.",
           redirectTo: "/login",
         },
         { status: 400 },
@@ -27,53 +27,24 @@ export async function POST(request: NextRequest) {
     const userInfo = await fetchGoogleUserInfo(access_token);
 
     // DB에서 유저 확인
-    const { isAdditionalInfoRequired, signupType } = await checkUserInDatabase(
-      userInfo.email,
-    );
+    const { signupType } = await checkUserInDatabase(userInfo.email);
 
     // 일반 유저 분기 처리
     if (signupType === "native") {
       return NextResponse.json(
         {
           ...NULL_RESPONSE_PAYLOAD,
-          message: "일반 회원으로 등록된 이메일입니다.",
-          redirectTo: "/login?error=already_registered",
+          message:
+            "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요.",
+          redirectTo: "/login",
         },
         { status: 409 },
       );
     }
 
-    if (isAdditionalInfoRequired) {
-      // 추가 정보가 필요한 경우
-      const response = NextResponse.json(
-        {
-          ...NULL_RESPONSE_PAYLOAD,
-          requiresRedirect: true,
-          redirectTo: "/login/additional",
-        },
-        { status: 200 },
-      );
-
-      response.cookies.set("access_token", access_token, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        sameSite: "strict",
-      });
-      response.cookies.set("email", userInfo.email, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        sameSite: "strict",
-      });
-
-      return response;
-    }
-
     // 로그인 성공 응답
     const response = NextResponse.json({
       ...NULL_RESPONSE_PAYLOAD,
-      user: userInfo,
       access_token,
       expires_in,
     });

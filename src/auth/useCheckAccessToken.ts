@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { useAuthStore } from "./authStore";
+import { useAuthStore } from "./useLoginStore";
 import { fetchCurrentUser } from "./authService";
 
 export default function useCheckAccessToken() {

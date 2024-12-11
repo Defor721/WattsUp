@@ -11,7 +11,7 @@ export interface AuthState {
 
 export interface User {
   id: string;
-  signupType: "native" | "social";
+  signupType: "native" | "social" | null;
   provider?: string | null;
   businessType: "individual" | "corporate";
   personalId?: string | null;
@@ -24,8 +24,6 @@ export interface User {
 export interface ResponsePayload {
   access_token: string | null;
   expires_in: number | null;
-  user: any | null;
-  message: string | null;
-  requiresRedirect: boolean;
   redirectTo: string;
+  message: string | null;
 }

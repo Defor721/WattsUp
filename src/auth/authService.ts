@@ -2,43 +2,44 @@ import axios, { AxiosError } from "axios";
 
 import apiClient from "@/lib/axios";
 
-import { ResponsePayload } from "./type";
-
 export interface GoogleTokenResponse {
   access_token: string;
   expires_in: number;
   refresh_token: string;
 }
 
+export interface ResponsePayload {
+  access_token: string | null;
+  expires_in: number | null;
+  user: any | null;
+  message: string | null;
+  requiresAdditionalData: boolean;
+  redirectTo: string;
+}
+
+interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  redirectTo?: string;
+  message?: string;
+  status?: number;
+}
+
 /**
  * 소셜 토큰 교환 서비스
  */
-export async function exchangeSocialToken(
-  code: string,
-): Promise<ResponsePayload> {
+export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
   try {
-    // API 요청
-    const { data } = await apiClient.post<ResponsePayload>(
-      "/api/auth/exchange",
-      {
-        authorizationCode: code,
-      },
-    );
-
-    return data; // 응답 반환
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<ResponsePayload>;
-
-      // **409 오류 반환 처리**
-      if (apiError.response?.status === 409) {
-        console.warn("409 오류 발생:", apiError.response.data.message);
-        return apiError.response.data;
-      }
-    }
-
-    console.error("API 오류 발생:", error);
-    throw new Error("로그인 실패");
+    const { data } = await apiClient.post<AuthResponse>("/api/auth/exchange", {
+      authorizationCode: code,
+    });
+    console.log(`exchangeSocialToken: `);
+    return data;
+  } catch (error) {
+    console.log("소셜 토큰 교환 중 오류 발생");
+    console.log(error);
+    throw error;
   }
 }
 

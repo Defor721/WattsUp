@@ -1,41 +1,57 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 
-import { useAuthStore } from "@/auth/authStore";
+import { useLoginStore } from "@/auth/useLoginStore";
+import { useDialog } from "@/hooks/use-dialog";
+import useAccessToken from "@/auth/useAccessToken";
 
-/**
- * 구글에게 토큰을 받기 위한 임시 코드를 받는 콜백 페이지
- */
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { loginWithSocialToken } = useAuthStore((state) => state.actions);
+  const { showDialog, DialogComponent } = useDialog();
+  const { setAccessToken, resetAccessToken } = useAccessToken();
 
-  const handleSocialLogin = useCallback(
-    async (code: string) => {
-      try {
-        const redirectTo = await loginWithSocialToken(code);
-
-        router.push(redirectTo || "/");
-      } catch (error: any) {
-        if (error.response?.status === 409) {
-          const redirectTo = error.response.data.redirectTo || "/login";
-          router.push(`${redirectTo}?error=already_registered`);
-        } else {
-          console.error("로그인 실패:", error);
-          router.push("/");
-        }
-      }
-    },
-    [loginWithSocialToken, router],
+  const accessToken = useLoginStore((state) => state.accessToken);
+  const error = useLoginStore((state) => state.error);
+  const message = useLoginStore((state) => state.message);
+  const redirectTo = useLoginStore((state) => state.redirectTo);
+  const expires_in = useLoginStore((state) => state.expires_in);
+  const { loginWithSocialCode, reset } = useLoginStore(
+    (state) => state.actions,
   );
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (code) handleSocialLogin(code);
-  }, [handleSocialLogin, searchParams]);
+    if (code) loginWithSocialCode(code);
+  }, [loginWithSocialCode, searchParams]);
 
-  return <div>로그인 처리 중...</div>;
+  useEffect(() => {
+    if (accessToken && expires_in !== null) {
+      setAccessToken(accessToken, expires_in);
+    }
+  }, [accessToken, expires_in, setAccessToken]);
+
+  // 에러 상태 감지 시 모달 표시
+  useEffect(() => {
+    if (error && message) {
+      showDialog({
+        title: "로그인 안내",
+        description: message,
+        confirmText: "확인",
+        onConfirm: () => {
+          router.push(redirectTo);
+          resetAccessToken();
+          reset(); // 상태 초기화
+        },
+      });
+    }
+  }, [error]);
+
+  return (
+    <>
+      <DialogComponent />
+    </>
+  );
 }
