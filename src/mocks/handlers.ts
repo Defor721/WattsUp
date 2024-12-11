@@ -14,8 +14,8 @@ import { http, HttpResponse } from "msw";
 const users = [
   {
     id: "1",
-    signupType: "social",
-    provider: "Google",
+    signupType: "native",
+    provider: null,
     businessType: "corporate",
     corporateNumber: "1234567890123",
     businessNumber: "1111111111",
@@ -25,8 +25,8 @@ const users = [
   },
   {
     id: "2",
-    signupType: "native",
-    provider: null,
+    signupType: "social",
+    provider: "Google",
     businessType: "individual",
     corporateNumber: null,
     businessNumber: "0000000000",

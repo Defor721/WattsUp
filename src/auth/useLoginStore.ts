@@ -12,7 +12,7 @@ interface AuthState {
   message: string | null;
   actions: {
     loginWithSocialCode: (code: string) => Promise<void>;
-    reset: () => void;
+    resetUseLoginStore: () => void;
   };
 }
 
@@ -44,7 +44,7 @@ export const useLoginStore = create<AuthState>((set) => ({
       }
     },
 
-    reset: () => {
+    resetUseLoginStore: () => {
       set({
         accessToken: null,
         redirectTo: "/",

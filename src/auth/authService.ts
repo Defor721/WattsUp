@@ -1,5 +1,3 @@
-import axios, { AxiosError } from "axios";
-
 import apiClient from "@/lib/axios";
 
 export interface GoogleTokenResponse {
@@ -34,7 +32,7 @@ export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
     const { data } = await apiClient.post<AuthResponse>("/api/auth/exchange", {
       authorizationCode: code,
     });
-    console.log(`exchangeSocialToken: `);
+
     return data;
   } catch (error) {
     console.log("소셜 토큰 교환 중 오류 발생");
