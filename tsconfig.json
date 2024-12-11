@@ -11,6 +11,7 @@
     "moduleResolution": "node", // 'bundler'에서 'node'로 변경
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "skipLibCheck": true,
     "jsx": "preserve", // 'preserve'에서 'react-jsx'로 변경
     "incremental": true,
     "plugins": [

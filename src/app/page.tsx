@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function Home() {
   const links = [
     { title: "Explore Dashboard", href: "/dashboard" },
-    { title: "Energy Analytics", href: "/analytics" },
+    { title: "Energy Analytics", href: "/energytrade" },
     { title: "Smart Trading", href: "/trading" },
     { title: "With Turbin Crew", href: "https://turbinecrew.co.kr/" },
   ];
