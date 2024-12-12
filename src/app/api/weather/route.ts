@@ -68,12 +68,22 @@ const processWeatherData = (responseData: string) => {
   const csvRows = responseData
     .split("\n")
     .filter((row) => row.trim() && !row.startsWith("#"));
+
   return csvRows.map((row) => {
     const parsedRow = row.split(/\s+/);
-    const dataObj = Object.fromEntries(
-      columnsKorean.map((col, idx) => [col, parsedRow[idx]]),
-    );
-    return dataObj;
+    // 필요한 9개 컬럼만 추출
+    const filteredData = {
+      "일 평균 풍속 (m/s)": parsedRow[2],
+      "최대풍속 (m/s)": parsedRow[3],
+      "일 평균기온 (C)": parsedRow[4],
+      "일 평균 지면온도 (C)": parsedRow[5],
+      "일 평균 수증기압 (hPa)": parsedRow[6],
+      "일 평균 현지기압 (hPa)": parsedRow[7],
+      "일조합 (hr)": parsedRow[8],
+      "일사합 (MJ/m2)": parsedRow[9],
+      "일 강수량 (mm)": parsedRow[10],
+    };
+    return filteredData;
   });
 };
 
