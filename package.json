@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-label": "^2.1.0",
@@ -57,6 +58,7 @@
     "globals": "^15.13.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
+    "msw": "^2.6.8",
     "postcss": "^8",
     "prettier": "^3.4.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
@@ -70,5 +72,10 @@
       "prettier --write"
     ],
     "prettier.config.js": "prettier --write"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
