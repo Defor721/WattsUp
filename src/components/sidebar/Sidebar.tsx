@@ -27,7 +27,7 @@ const sidebarItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="shadow-right flex h-screen w-[30vh] flex-col justify-between bg-[#000000] p-4 text-white">
+    <aside className="shadow-right flex h-screen w-[30vh] flex-col justify-between bg-[rgb(7,15,38)] p-4 text-white">
       <div className="flex-grow overflow-y-auto">
         <div className="flex flex-col">
           <Link href="/" className="relative flex items-center p-4">
@@ -49,7 +49,7 @@ export default function Sidebar() {
               <Link
                 key={index}
                 href={`/${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:text-base hover:text-black hover:opacity-80"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:text-base hover:text-[rgb(7,15,38)] hover:opacity-80"
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>

@@ -152,10 +152,7 @@ async function fetchWeatherData(date: string, stn: number) {
 }
 
 // Next.js API Route
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const results: Record<string, any>[] = [];
 
