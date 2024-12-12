@@ -32,7 +32,7 @@ const users = [
     businessNumber: "0000000000",
     companyName: "Test Company",
     personalId: "900101",
-    email: "tester@example.com",
+    email: "admin@example.com",
   },
 ];
 

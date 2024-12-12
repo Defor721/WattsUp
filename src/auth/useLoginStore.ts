@@ -2,7 +2,10 @@
 
 import { create } from "zustand";
 
-import { exchangeSocialToken } from "@/auth/authService";
+import {
+  exchangeSocialToken,
+  loginWithEmailAndPassword,
+} from "@/auth/authService";
 
 interface AuthState {
   accessToken: string | null;
@@ -11,8 +14,9 @@ interface AuthState {
   error: boolean;
   message: string | null;
   actions: {
-    loginWithSocialCode: (code: string) => Promise<void>;
-    resetUseLoginStore: () => void;
+    nativeLogin: (email: string, password: string) => Promise<void>;
+    socialLogin: (code: string) => Promise<void>;
+    resetLoginState: () => void;
   };
 }
 
@@ -23,7 +27,28 @@ export const useLoginStore = create<AuthState>((set) => ({
   error: false,
   message: null,
   actions: {
-    async loginWithSocialCode(code: string) {
+    async nativeLogin(email: string, password: string) {
+      try {
+        const { access_token, expires_in, redirectTo } =
+          await loginWithEmailAndPassword(email, password);
+
+        set({
+          accessToken: access_token,
+          expires_in: Number(expires_in),
+          redirectTo: redirectTo || "/",
+          error: false,
+          message: null,
+        });
+      } catch (error: any) {
+        set({
+          redirectTo: "/login",
+          error: true,
+          message: error.response.data.message || "로그인 실패",
+        });
+      }
+    },
+
+    async socialLogin(code: string) {
       try {
         const { access_token, expires_in, redirectTo } =
           await exchangeSocialToken(code);
@@ -44,7 +69,7 @@ export const useLoginStore = create<AuthState>((set) => ({
       }
     },
 
-    resetUseLoginStore: () => {
+    resetLoginState: () => {
       set({
         accessToken: null,
         redirectTo: "/",

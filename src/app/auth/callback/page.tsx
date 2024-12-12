@@ -18,19 +18,19 @@ export default function AuthCallbackPage() {
   const message = useLoginStore((state) => state.message);
   const redirectTo = useLoginStore((state) => state.redirectTo);
   const expires_in = useLoginStore((state) => state.expires_in);
-  const { loginWithSocialCode, resetUseLoginStore } = useLoginStore(
+  const { socialLogin, resetLoginState } = useLoginStore(
     (state) => state.actions,
   );
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (code) loginWithSocialCode(code);
+    if (code) socialLogin(code);
   }, [searchParams]);
 
   useEffect(() => {
     if (accessToken && expires_in !== null) {
       setAccessToken(accessToken, expires_in);
-      resetUseLoginStore();
+      resetLoginState();
       router.push(redirectTo);
     }
   }, [accessToken]);
@@ -45,7 +45,7 @@ export default function AuthCallbackPage() {
         onConfirm: () => {
           router.push(redirectTo);
           resetAccessToken();
-          resetUseLoginStore(); // 상태 초기화
+          resetLoginState(); // 상태 초기화
         },
       });
     }

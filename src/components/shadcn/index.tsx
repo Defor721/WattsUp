@@ -1,3 +1,16 @@
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "./alert-dialog";
 export { Button, buttonVariants } from "./button";
 export {
   Card,
@@ -8,6 +21,7 @@ export {
   CardContent,
 } from "./card";
 export { Input } from "./input";
+export { Label } from "./label";
 export { Separator } from "./separator";
 export {
   Sheet,
@@ -48,11 +62,10 @@ export {
   useSidebar,
 } from "./sidebar";
 export { Skeleton } from "./skeleton";
+export { Tabs } from "./tabs";
 export {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
 } from "./tooltip";
-export { Label } from "./label";
-export { Tabs } from "./tabs";
