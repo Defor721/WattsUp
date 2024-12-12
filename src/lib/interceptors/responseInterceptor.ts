@@ -1,4 +1,5 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+
 import AuthService from "../auth/AuthService";
 import { accessTokenUtil } from "../auth/accessTokenUtil";
 import ApiInstance from "../lib/axios";
@@ -11,7 +12,7 @@ export const handleResponse = (response: AxiosResponse): AxiosResponse => {
   console.log(
     `[Response]: ${response.config.method?.toUpperCase()} ${
       response.config.url
-    }`
+    }`,
   );
   return response;
 };

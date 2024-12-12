@@ -7,6 +7,7 @@ import { NULL_RESPONSE_PAYLOAD } from "@/constants/nullObject";
 export async function POST(request: NextRequest) {
   try {
     const { authorizationCode } = await request.json();
+    console.log("authorizationCode: ", authorizationCode);
 
     if (!authorizationCode) {
       return NextResponse.json(
@@ -22,12 +23,15 @@ export async function POST(request: NextRequest) {
     // Google에서 토큰 요청
     const { access_token, refresh_token, expires_in } =
       await fetchGoogleTokens(authorizationCode);
+    console.log("access_token: ", access_token);
 
     // Google에서 유저 정보 요청
     const userInfo = await fetchGoogleUserInfo(access_token);
+    console.log("userInfo: ", userInfo);
 
     // DB에서 유저 확인
     const { signupType } = await checkUserInDatabase(userInfo.email);
+    console.log("signupType: ", signupType);
 
     // 일반 유저 분기 처리
     if (signupType === "native") {
