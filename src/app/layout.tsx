@@ -2,19 +2,21 @@ import type { Metadata } from "next";
 /** Metadata : TypeScript를 사용하는 Next.js 프로젝트에서 타입(type)만 가져오기 위한 구문 */
 import localFont from "next/font/local";
 
+import { pretendard } from "../../public/assets/fonts";
+
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { MSWProvider, QueryProvider } from "@/config";
 import { Toaster } from "@/components/shadcn/toaster";
 
 // const geistSans = localFont({
-//   src: "/public/assets/fonts/GeistVF.woff",
+//   src: "assets/fonts/PretendardVariable.woff2",
 //   variable: "--font-geist-sans",
 //   weight: "100 900",
 // });
 
 // const geistMono = localFont({
-//   src: "/assets/fonts/GeistMonoVF.woff",
+//   src: "assets/fonts/PretendardVariable.woff2",
 //   variable: "--font-geist-mono",
 //   weight: "100 900",
 // });

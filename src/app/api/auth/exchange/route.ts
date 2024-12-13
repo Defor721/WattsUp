@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
       await fetchGoogleTokens(authorizationCode);
     console.log("access_token: ", access_token);
 
+    console.log("access_token: ", access_token);
+
     // Google에서 유저 정보 요청
     const userInfo = await fetchGoogleUserInfo(access_token);
     console.log("userInfo: ", userInfo);
