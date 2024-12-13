@@ -13,7 +13,7 @@ const MOCK_BASE_URL =
 
 // axios 인스턴스 생성
 const apiClient: AxiosInstance = axios.create({
-  baseURL: MOCK_BASE_URL,
+  baseURL: MOCK_BASE_URL || "http://localhost:3000",
   withCredentials: true,
 });
 
