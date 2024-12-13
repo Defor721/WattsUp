@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function Home() {
         {/* Grid of links */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="mb-8 text-center">
-            <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[80px] font-bold text-transparent sm:text-[100px]">
+            <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent sm:text-[100px]">
               Watts_uP
             </span>
           </h1>

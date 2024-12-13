@@ -2,50 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/shadcn/alert";
 import { Button } from "@/components/shadcn/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/shadcn/card";
+import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
 import { Skeleton } from "@/components/shadcn/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/shadcn/table";
 import {
   PowerSupplyData,
   PowerForecastData,
-} from "@/components/energytrade/types";
+} from "@/components/energytrade/mock/types";
 import {
-  formatNumber,
   mockPowerSupplyData,
   mockPowerForecastData,
-} from "@/components/energytrade/helpers";
+} from "@/components/energytrade/mock/helpers";
+import { StatusCards } from "@/components/energytrade/StatusCards";
+import { BarChartComponent } from "@/components/energytrade/BarChart";
+import { LineChartComponent } from "@/components/energytrade/LineChart";
+import { DataTable } from "@/components/energytrade/DataTable";
+import { Forecast } from "@/components/energytrade/Forecast";
 
 type GraphType = "bar" | "line" | "table" | "forecast";
-
-const MotionCard = motion(Card);
 
 export default function Dashboard() {
   const [supplyData, setSupplyData] = useState<PowerSupplyData[]>([]);
@@ -92,229 +68,17 @@ export default function Dashboard() {
 
   const currentSupply = supplyData[supplyData.length - 1];
 
-  const renderBarChart = () => (
-    <Card className="mb-8">
-      <CardHeader>
-        <CardTitle>시간대별 전력수급 현황</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={supplyData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="supply" fill="#8884d8" name="공급" />
-              <Bar dataKey="demand" fill="#82ca9d" name="수요" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const renderLineChart = () => (
-    <Card className="mb-8">
-      <CardHeader>
-        <CardTitle>시간대별 전력 수요 및 공급 추이</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={supplyData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="supply"
-                stroke="#8884d8"
-                name="공급"
-              />
-              <Line
-                type="monotone"
-                dataKey="demand"
-                stroke="#82ca9d"
-                name="수요"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const renderTable = () => (
-    <div className="mb-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>시간대별 전력수급 현황</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">시간</TableHead>
-                  <TableHead>공급(MW)</TableHead>
-                  <TableHead>수요(MW)</TableHead>
-                  <TableHead>예비력(MW)</TableHead>
-                  <TableHead className="text-right">예비율(%)</TableHead>
-                </TableRow>
-              </TableHeader>
-            </Table>
-          </div>
-          <div className="max-h-[400px] overflow-y-auto">
-            <Table>
-              <TableBody>
-                {supplyData.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="w-[100px]">{item.time}</TableCell>
-                    <TableCell>{formatNumber(item.supply)}</TableCell>
-                    <TableCell>{formatNumber(item.demand)}</TableCell>
-                    <TableCell>{formatNumber(item.reserve)}</TableCell>
-                    <TableCell className="text-right">
-                      {item.reserveRate.toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const renderForecast = () => (
-    <div className="mb-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>전력수급 예측</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex">
-            <div className="w-1/2 pr-4">
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px]">시간</TableHead>
-                      <TableHead>예측 수요(MW)</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                </Table>
-              </div>
-              <div className="max-h-[400px] overflow-y-auto">
-                <Table>
-                  <TableBody>
-                    {forecastData.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="w-[100px]">{item.time}</TableCell>
-                        <TableCell>
-                          {formatNumber(item.forecastDemand)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-            <div className="w-1/2 pl-4">
-              <div className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={forecastData}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="forecastDemand"
-                      stroke="#8884d8"
-                      name="예측 수요"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
   return (
     <div className="p-4">
       <h1 className="mb-8 text-5xl font-bold">
         Electricity Transaction Status
       </h1>
 
-      {/* 실시간 전력수급 현황 */}
-      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[
-          { title: "현재 수요", value: currentSupply.demand },
-          { title: "현재 공급", value: currentSupply.supply },
-          { title: "현재 예비력", value: currentSupply.reserve },
-          {
-            title: "현재 예비율",
-            value: currentSupply.reserveRate,
-            isPercentage: true,
-          },
-        ].map((item, index) => (
-          <MotionCard
-            key={item.title}
-            initial={{ opacity: 0, y: 90, x: -10 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{ duration: 0.9, delay: index * 0.1 }}
-          >
-            <CardHeader>
-              <CardTitle>{item.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">
-                {item.isPercentage
-                  ? `${item.value.toFixed(2)}%`
-                  : `${formatNumber(item.value)} MW`}
-              </p>
-            </CardContent>
-          </MotionCard>
-        ))}
-      </div>
+      <StatusCards currentSupply={currentSupply} />
 
-      {/* 그래프 선택 버튼 */}
-      <div className="mb-4 flex space-x-2">
-        <div className="flex flex-col">
-          <span className="text-lg"> 시간대별 전력수급 현황 </span>
+      <div className="mb-4 flex gap-4 space-x-2">
+        <div className="flex gap-4">
+          <span className="text-lg font-bold">시간대별 전력수급 현황</span>
           <div>
             <Button
               onClick={() => setSelectedGraph("bar")}
@@ -330,16 +94,17 @@ export default function Dashboard() {
             </Button>
           </div>
         </div>
-
+        <span className="mt-2">|</span>
         <Button
-          className="text-lg"
+          className="text-lg font-bold"
           onClick={() => setSelectedGraph("line")}
           variant={selectedGraph === "line" ? "outline" : "default"}
         >
           시간대별 전력 수요 및 공급 추이
         </Button>
+        <span className="mt-2">|</span>
         <Button
-          className="text-lg"
+          className="text-lg font-bold"
           onClick={() => setSelectedGraph("forecast")}
           variant={selectedGraph === "forecast" ? "outline" : "default"}
         >
@@ -347,11 +112,10 @@ export default function Dashboard() {
         </Button>
       </div>
 
-      {/* 선택된 그래프 렌더링 */}
-      {selectedGraph === "bar" && renderBarChart()}
-      {selectedGraph === "line" && renderLineChart()}
-      {selectedGraph === "table" && renderTable()}
-      {selectedGraph === "forecast" && renderForecast()}
+      {selectedGraph === "bar" && <BarChartComponent data={supplyData} />}
+      {selectedGraph === "line" && <LineChartComponent data={supplyData} />}
+      {selectedGraph === "table" && <DataTable data={supplyData} />}
+      {selectedGraph === "forecast" && <Forecast data={forecastData} />}
     </div>
   );
 }
