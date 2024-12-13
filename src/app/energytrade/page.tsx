@@ -78,7 +78,7 @@ export default function Dashboard() {
 
       <div className="mb-4 flex gap-4 space-x-2">
         <div className="flex gap-4">
-          <span className="text-lg">시간대별 전력수급 현황</span>
+          <span className="text-lg font-bold">시간대별 전력수급 현황</span>
           <div>
             <Button
               onClick={() => setSelectedGraph("bar")}
@@ -96,7 +96,7 @@ export default function Dashboard() {
         </div>
         <span className="mt-2">|</span>
         <Button
-          className="text-lg"
+          className="text-lg font-bold"
           onClick={() => setSelectedGraph("line")}
           variant={selectedGraph === "line" ? "outline" : "default"}
         >
@@ -104,7 +104,7 @@ export default function Dashboard() {
         </Button>
         <span className="mt-2">|</span>
         <Button
-          className="text-lg"
+          className="text-lg font-bold"
           onClick={() => setSelectedGraph("forecast")}
           variant={selectedGraph === "forecast" ? "outline" : "default"}
         >
