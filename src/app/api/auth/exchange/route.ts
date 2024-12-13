@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     // Google에서 토큰 요청
     const { access_token, refresh_token, expires_in } =
       await fetchGoogleTokens(authorizationCode);
+    console.log("access_token: ", access_token);
 
     console.log("access_token: ", access_token);
 
