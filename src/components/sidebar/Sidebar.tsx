@@ -19,6 +19,10 @@ const sidebarItems = [
   { icon: Home, label: "Dashboard" },
   { icon: BarChart2, label: "Power Generation Forecasting" },
   { icon: DollarSign, label: "Profitability Analysis" },
+  {
+    icon: RefreshCw,
+    label: "energytrade",
+  },
   { icon: RefreshCw, label: "Trading" },
   { icon: Settings, label: "Settings" },
 ];
