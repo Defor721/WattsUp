@@ -15,19 +15,21 @@ import {
 
 import { Separator } from "@/components/shadcn/separator";
 
-import { UserDropdown } from "./UserDropdown";
-
 const sidebarItems = [
   { icon: Home, label: "Dashboard" },
   { icon: BarChart2, label: "Power Generation Forecasting" },
   { icon: DollarSign, label: "Profitability Analysis" },
+  {
+    icon: RefreshCw,
+    label: "energytrade",
+  },
   { icon: RefreshCw, label: "Trading" },
   { icon: Settings, label: "Settings" },
 ];
 
 export default function Sidebar() {
   return (
-    <aside className="shadow-right flex h-screen w-[30vh] flex-col justify-between bg-[rgb(7,15,38)] p-4 text-white">
+    <aside className="flex min-h-screen w-[30vh] flex-col justify-between bg-[rgb(7,15,38)] p-4 text-white">
       <div className="flex-grow overflow-y-auto">
         <div className="flex flex-col">
           <Link href="/" className="relative flex items-center p-4">
@@ -57,9 +59,6 @@ export default function Sidebar() {
             ))}
           </nav>
         </div>
-      </div>
-      <div className="mt-auto p-4">
-        <UserDropdown />
       </div>
     </aside>
   );

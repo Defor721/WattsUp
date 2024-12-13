@@ -6,3 +6,5 @@ export const pretendard = localFont({
   display: "swap",
   weight: "45 920",
 });
+
+export default pretendard;
