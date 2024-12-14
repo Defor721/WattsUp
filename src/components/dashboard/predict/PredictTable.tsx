@@ -15,7 +15,7 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
     return <p className="text-center text-gray-400">데이터가 없습니다.</p>;
   }
 
-  // 모든 데이터 키 및 "발전량 예측값" 포함
+  // 모든 데이터 키 및 "발전량 예측값" 포함d
   const headers = [
     ...Object.keys(tableData[0].data[0]), // 데이터의 키
     "발전량 예측값 (amgo)", // 추가 항목
