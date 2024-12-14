@@ -122,11 +122,46 @@ export async function GET() {
     },
     {},
   );
+  const sortGroupedResultsByRegion = (
+    groupedResults: Record<string, any[]>,
+  ) => {
+    // 객체의 키(지역 이름)를 정렬
+    const sortedKeys = Object.keys(groupedResults).sort((a, b) =>
+      a.localeCompare(b),
+    );
+
+    // 정렬된 키를 기반으로 새로운 객체 생성
+    const sortedGroupedResults: Record<string, any[]> = {};
+    sortedKeys.forEach((key) => {
+      sortedGroupedResults[key] = groupedResults[key];
+    });
+
+    return sortedGroupedResults;
+  };
+
+  // 기존 groupedResults를 정렬된 객체로 변환
+  const sortedGroupedResults = sortGroupedResultsByRegion(groupedResults);
+  // console.log("sortedGroupedResults: ", sortedGroupedResults);
+
+  // date로 그룹화하고 각 그룹 내에서 stationName 기준 정렬
+  // const groupedResultsByDate = results.reduce<Record<string, any[]>>(
+  //   (acc, result) => {
+  //     const { stationName, date, data } = result;
+  //     if (!acc[date]) {
+  //       acc[date] = [];
+  //     }
+  //     acc[date].push({ stationName, data });
+  //     return acc;
+  //   },
+  //   {},
+  // );
 
   // 그룹 내 date 정렬
-  for (const stationName in groupedResults) {
-    groupedResults[stationName].sort((a, b) => a.date.localeCompare(b.date));
+  for (const stationName in sortedGroupedResults) {
+    sortedGroupedResults[stationName].sort((a, b) =>
+      a.date.localeCompare(b.date),
+    );
   }
 
-  return NextResponse.json({ results: groupedResults });
+  return NextResponse.json({ results: sortedGroupedResults });
 }
