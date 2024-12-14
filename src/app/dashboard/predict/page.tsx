@@ -6,6 +6,7 @@ import axios from "axios";
 
 import PredictChart from "@/components/dashboard/predict/PredictChart";
 import { Button } from "@/components/shadcn";
+import PredictTable from "@/components/dashboard/predict/PredictTable";
 
 const inputStats = {
   min: tf.tensor([-99]),
@@ -48,10 +49,30 @@ async function loadModel() {
   return await tf.loadLayersModel("/assets/models/model.json");
 }
 
+let isTfReady = false; // TensorFlow.js 초기화 상태 확인
+
 function Page() {
   const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
   const [chartData, setChartData] = useState<Record<string, any[]>>({});
   const [selectedRegion, setSelectedRegion] = useState("서울시");
+
+  useEffect(() => {
+    const suppressWarnings = () => {
+      const originalWarn = console.warn;
+      console.warn = (message, ...args) => {
+        if (
+          message.includes("already registered") ||
+          message.includes("backend 'webgl'")
+        ) {
+          return;
+        }
+        originalWarn(message, ...args);
+      };
+    };
+
+    suppressWarnings();
+  }, []);
 
   useEffect(() => {
     const fetchDataAndPredict = async () => {
@@ -64,7 +85,9 @@ function Page() {
         ]);
 
         const weatherData = weatherResponse.data.results;
+        setWeatherData(weatherData);
         const sampleInputs: number[][] = [];
+        // console.log("weatherData: ", weatherData["강원도"]);
 
         regions.forEach((region) => {
           weatherData[region].forEach((day: any) => {
@@ -103,13 +126,11 @@ function Page() {
             const predictionIndex = dateIndex * regions.length + regionIndex;
             return {
               date,
-              amgo:
-                Math.max(
-                  0,
-                  parseFloat(
-                    (predictionArray[predictionIndex]?.[0] || 0).toFixed(2),
-                  ),
-                ) / 1000,
+              amgo: parseFloat(
+                (
+                  Math.max(0, predictionArray[predictionIndex]?.[0] || 0) / 1000
+                ).toFixed(2),
+              ), // 1000으로 나누고 소숫점 2자리까지 제한
             };
           });
         });
@@ -124,6 +145,40 @@ function Page() {
 
     fetchDataAndPredict();
   }, []);
+
+  useEffect(() => {
+    const configureBackend = async () => {
+      if (!isTfReady) {
+        await tf.ready();
+        const backend = tf.getBackend();
+        if (backend !== "cpu") {
+          await tf.setBackend("cpu");
+        }
+        isTfReady = true;
+      }
+    };
+
+    configureBackend();
+  }, []);
+
+  const tableData = useMemo(() => {
+    if (!weatherData || !selectedRegion) {
+      return;
+    }
+    return weatherData[selectedRegion].map(
+      (
+        item: {
+          date: string;
+          data: Array<Record<string, string>>;
+        },
+        index: number,
+      ) => ({
+        date: item.date,
+        data: item.data || [], // 날짜별 데이터
+        amgo: chartData[selectedRegion][index]?.amgo || "-", // 발전량 예측값
+      }),
+    );
+  }, [chartData, selectedRegion]);
 
   const regionButtons = useMemo(() => {
     return regions.map((region) => (
@@ -151,6 +206,10 @@ function Page() {
           data={chartData[selectedRegion]}
           region={selectedRegion}
         />
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <h3>데이터 테이블</h3>
+        <PredictTable tableData={tableData || []} />
       </div>
     </div>
   );
