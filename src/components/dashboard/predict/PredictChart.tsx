@@ -4,6 +4,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -45,19 +46,21 @@ function PredictChart({ data, region }: Ichart) {
     <div>로딩중...</div>;
   }
   return (
-    <LineChart
-      width={730}
-      height={400}
-      data={data}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
-    </LineChart>
+    <ResponsiveContainer width={"100%"} aspect={16.0 / 5.0}>
+      <LineChart
+        width={730}
+        height={400}
+        data={data}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }
 

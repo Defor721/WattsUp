@@ -15,7 +15,7 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
     return <p className="text-center text-gray-400">데이터가 없습니다.</p>;
   }
 
-  // 모든 데이터 키 및 "발전량 예측값" 포함
+  // 모든 데이터 키 및 "발전량 예측값" 포함d
   const headers = [
     ...Object.keys(tableData[0].data[0]), // 데이터의 키
     "발전량 예측값 (amgo)", // 추가 항목
@@ -49,11 +49,13 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
               key={row.date}
               className="odd:bg-[rgb(10,20,40)] even:bg-[rgb(15,25,50)]"
             >
-              <td className="border border-gray-700 px-4 py-2">{row.date}</td>
+              <td className="border border-gray-700 px-4 py-3 text-gray-200">
+                {row.date}
+              </td>
               {headers.map((header) => (
                 <td
                   key={`${row.date}-${header}`}
-                  className="border border-gray-700 px-4 py-2 text-gray-200"
+                  className="border border-gray-700 px-4 py-3 text-gray-200"
                 >
                   {header === "발전량 예측값 (amgo)"
                     ? row.amgo || "-"
