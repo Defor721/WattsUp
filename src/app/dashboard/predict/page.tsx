@@ -45,11 +45,26 @@ const getLast7Days = (): string[] => {
   }).sort();
 };
 
+let modelInstance: tf.LayersModel | null = null;
+let isInitialized = false;
+
 async function loadModel() {
-  return await tf.loadLayersModel("/assets/models/model.json");
+  if (!modelInstance) {
+    modelInstance = await tf.loadLayersModel("/assets/models/model.json");
+  }
+  return modelInstance;
 }
 
-let isTfReady = false; // TensorFlow.js 초기화 상태 확인
+async function initializeTensorFlow() {
+  if (!isInitialized) {
+    await tf.ready();
+    const backend = tf.getBackend();
+    if (backend !== "cpu") {
+      await tf.setBackend("cpu");
+    }
+    isInitialized = true;
+  }
+}
 
 function Page() {
   const [loading, setLoading] = useState(true);
@@ -58,6 +73,8 @@ function Page() {
   const [selectedRegion, setSelectedRegion] = useState("서울시");
 
   useEffect(() => {
+    initializeTensorFlow();
+
     const suppressWarnings = () => {
       const originalWarn = console.warn;
       console.warn = (message, ...args) => {
@@ -75,42 +92,51 @@ function Page() {
   }, []);
 
   useEffect(() => {
-    const fetchDataAndPredict = async () => {
+    const fetchWeatherData = async () => {
       try {
         setLoading(true);
+        const weatherResponse = await axios.get("/api/weather");
+        setWeatherData(weatherResponse.data.results);
+      } catch (error) {
+        console.error("Error fetching weather data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        const [weatherResponse, model] = await Promise.all([
-          axios.get("/api/weather"),
-          loadModel(),
-        ]);
+    fetchWeatherData();
+  }, []);
 
-        const weatherData = weatherResponse.data.results;
-        setWeatherData(weatherData);
-        const sampleInputs: number[][] = [];
-        // console.log("weatherData: ", weatherData["강원도"]);
+  useEffect(() => {
+    const predictRegionData = async () => {
+      if (!weatherData) return;
 
-        regions.forEach((region) => {
-          weatherData[region].forEach((day: any) => {
-            sampleInputs.push([
-              parseFloat(day.data[0]["일 평균 풍속 (m/s)"] || 0),
-              parseFloat(day.data[0]["최대풍속 (m/s)"] || 0),
-              parseFloat(day.data[0]["일 평균기온 (C)"] || 0),
-              parseFloat(day.data[0]["일 평균 지면온도 (C)"] || 0),
-              parseFloat(day.data[0]["일 평균 수증기압 (hPa)"] || 0),
-              parseFloat(day.data[0]["일 평균 현지기압 (hPa)"] || 0),
-              parseFloat(day.data[0]["일조합 (hr)"] || 0),
-              parseFloat(day.data[0]["일사합 (MJ/m2)"] || 0),
-              parseFloat(day.data[0]["일 강수량 (mm)"] || 0),
-            ]);
-          });
-        });
+      try {
+        const model = await loadModel();
+        const sampleInputs = regions.flatMap((region) =>
+          weatherData[region].map((day: any) => [
+            parseFloat(day.data[0]["일 평균 풍속 (m/s)"] || 0),
+            parseFloat(day.data[0]["최대풍속 (m/s)"] || 0),
+            parseFloat(day.data[0]["일 평균기온 (C)"] || 0),
+            parseFloat(day.data[0]["일 평균 지면온도 (C)"] || 0),
+            parseFloat(day.data[0]["일 평균 수증기압 (hPa)"] || 0),
+            parseFloat(day.data[0]["일 평균 현지기압 (hPa)"] || 0),
+            parseFloat(day.data[0]["일조합 (hr)"] || 0),
+            parseFloat(day.data[0]["일사합 (MJ/m2)"] || 0),
+            parseFloat(day.data[0]["일 강수량 (mm)"] || 0),
+          ]),
+        );
 
+        // 독립변수 tensor화
         const inputTensor = tf.tensor2d(sampleInputs);
+        // 독립변수 min-max스케일링
         const normalizedInputs = inputTensor
           .sub(inputStats.min)
           .div(inputStats.max.sub(inputStats.min));
 
+        // 종속변수 예측값
         const predictions = model.predict(normalizedInputs) as tf.Tensor;
+        // 종속변수 역스케일링
         const denormalizedPredictions = predictions
           .mul(outputStats.max.sub(outputStats.min))
           .add(outputStats.min);
@@ -130,36 +156,19 @@ function Page() {
                 (
                   Math.max(0, predictionArray[predictionIndex]?.[0] || 0) / 1000
                 ).toFixed(2),
-              ), // 1000으로 나누고 소숫점 2자리까지 제한
+              ),
             };
           });
         });
 
         setChartData(formattedData);
       } catch (error) {
-        console.error("Error fetching or processing data: ", error);
-      } finally {
-        setLoading(false);
+        console.error("Error predicting data: ", error);
       }
     };
 
-    fetchDataAndPredict();
-  }, []);
-
-  useEffect(() => {
-    const configureBackend = async () => {
-      if (!isTfReady) {
-        await tf.ready();
-        const backend = tf.getBackend();
-        if (backend !== "cpu") {
-          await tf.setBackend("cpu");
-        }
-        isTfReady = true;
-      }
-    };
-
-    configureBackend();
-  }, []);
+    predictRegionData();
+  }, [weatherData]);
 
   const tableData = useMemo(() => {
     if (!weatherData || !selectedRegion) {
@@ -174,8 +183,8 @@ function Page() {
         index: number,
       ) => ({
         date: item.date,
-        data: item.data || [], // 날짜별 데이터
-        amgo: chartData[selectedRegion][index]?.amgo || "-", // 발전량 예측값
+        data: item.data || [],
+        amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
       }),
     );
   }, [chartData, selectedRegion]);
@@ -184,7 +193,7 @@ function Page() {
     return regions.map((region) => (
       <Button
         key={region}
-        variant={"outline"}
+        variant={selectedRegion === region ? "secondary" : "outline"}
         onClick={() => setSelectedRegion(region)}
       >
         {region}
@@ -198,17 +207,20 @@ function Page() {
 
   return (
     <div>
-      <h1>TensorFlow.js Model Predictions</h1>
-      <div>{regionButtons}</div>
-      <div>
-        <h2>{selectedRegion}</h2>
+      <div className="flex gap-2">{regionButtons}</div>
+      <div className="mt-5">
+        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
+          {selectedRegion} 발전량 예측 그래프
+        </h4>
         <PredictChart
           data={chartData[selectedRegion]}
           region={selectedRegion}
         />
       </div>
-      <div style={{ marginTop: "20px" }}>
-        <h3>데이터 테이블</h3>
+      <div className="mt-5">
+        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
+          {selectedRegion} 테이블
+        </h4>
         <PredictTable tableData={tableData || []} />
       </div>
     </div>

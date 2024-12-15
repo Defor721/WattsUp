@@ -49,11 +49,13 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
               key={row.date}
               className="odd:bg-[rgb(10,20,40)] even:bg-[rgb(15,25,50)]"
             >
-              <td className="border border-gray-700 px-4 py-2">{row.date}</td>
+              <td className="border border-gray-700 px-4 py-3 text-gray-200">
+                {row.date}
+              </td>
               {headers.map((header) => (
                 <td
                   key={`${row.date}-${header}`}
-                  className="border border-gray-700 px-4 py-2 text-gray-200"
+                  className="border border-gray-700 px-4 py-3 text-gray-200"
                 >
                   {header === "발전량 예측값 (amgo)"
                     ? row.amgo || "-"
