@@ -7,7 +7,7 @@ import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { MSWProvider, QueryProvider } from "@/config";
 import { Toaster } from "@/components/shadcn/toaster";
-import { Header } from "@/components/header/header";
+import { UserDropdown } from "@/components/sidebar/UserDropdown";
 
 export const metadata: Metadata = {
   title: "Watts_uP - Energy Dashboard",
@@ -31,13 +31,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pretendard.variable} flex antialiased`}>
+      <body
+        className={`${pretendard.variable} flex bg-[rgb(7,15,38)] antialiased`}
+      >
         {/* <MSWProvider> */}
         <QueryProvider>
           <Sidebar />
           <div className="flex flex-1 flex-col">
-            <Header />
-            <main className="flex-1 bg-[#F9FAFB] p-4 pt-[10vh] text-[rgb(7,15,38)]">
+            <main className="flex-1 bg-[#F9FAFB] text-[rgb(7,15,38)]">
               {children}
             </main>
             <Toaster />
