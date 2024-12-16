@@ -7,6 +7,7 @@ import axios from "axios";
 import PredictChart from "@/components/dashboard/predict/PredictChart";
 import { Button } from "@/components/shadcn";
 import PredictTable from "@/components/dashboard/predict/PredictTable";
+import { regions } from "@/utils/regions";
 
 const inputStats = {
   min: tf.tensor([-99]),
@@ -18,25 +19,6 @@ const outputStats = {
   max: tf.tensor([18407.54296875]),
 };
 
-const regions = [
-  "강원도",
-  "경기도",
-  "경상남도",
-  "경상북도",
-  "광주시",
-  "대구시",
-  "대전시",
-  "부산시",
-  "서울시",
-  "세종시",
-  "울산시",
-  "인천시",
-  "전라남도",
-  "전라북도",
-  "충청남도",
-  "충청북도",
-];
-
 const getLast7Days = (): string[] => {
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
@@ -46,24 +28,31 @@ const getLast7Days = (): string[] => {
 };
 
 let modelInstance: tf.LayersModel | null = null;
-let isInitialized = false;
 
 async function loadModel() {
   if (!modelInstance) {
-    modelInstance = await tf.loadLayersModel("/assets/models/model.json");
+    console.time("Model Loading");
+
+    // IndexedDB에서 모델 불러오기 시도
+    try {
+      modelInstance = await tf.loadLayersModel("indexeddb://my-model");
+      console.log("Model loaded from IndexedDB");
+    } catch (error) {
+      console.warn("No model found in IndexedDB. Loading from file...");
+      modelInstance = await tf.loadLayersModel("/assets/models/model.json");
+
+      // 모델을 IndexedDB에 저장
+      try {
+        await modelInstance.save("indexeddb://my-model");
+        console.log("Model saved to IndexedDB");
+      } catch (saveError) {
+        console.error("Failed to save model to IndexedDB", saveError);
+      }
+    }
+
+    console.timeEnd("Model Loading");
   }
   return modelInstance;
-}
-
-async function initializeTensorFlow() {
-  if (!isInitialized) {
-    await tf.ready();
-    const backend = tf.getBackend();
-    if (backend !== "cpu") {
-      await tf.setBackend("cpu");
-    }
-    isInitialized = true;
-  }
 }
 
 function Page() {
@@ -71,25 +60,6 @@ function Page() {
   const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
   const [chartData, setChartData] = useState<Record<string, any[]>>({});
   const [selectedRegion, setSelectedRegion] = useState("서울시");
-
-  useEffect(() => {
-    initializeTensorFlow();
-
-    const suppressWarnings = () => {
-      const originalWarn = console.warn;
-      console.warn = (message, ...args) => {
-        if (
-          message.includes("already registered") ||
-          message.includes("backend 'webgl'")
-        ) {
-          return;
-        }
-        originalWarn(message, ...args);
-      };
-    };
-
-    suppressWarnings();
-  }, []);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -127,16 +97,15 @@ function Page() {
           ]),
         );
 
-        // 독립변수 tensor화
         const inputTensor = tf.tensor2d(sampleInputs);
-        // 독립변수 min-max스케일링
         const normalizedInputs = inputTensor
           .sub(inputStats.min)
           .div(inputStats.max.sub(inputStats.min));
 
-        // 종속변수 예측값
+        console.time("Prediction");
         const predictions = model.predict(normalizedInputs) as tf.Tensor;
-        // 종속변수 역스케일링
+        console.timeEnd("Prediction");
+
         const denormalizedPredictions = predictions
           .mul(outputStats.max.sub(outputStats.min))
           .add(outputStats.min);
