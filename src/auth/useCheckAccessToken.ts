@@ -2,24 +2,22 @@
 
 import { useEffect } from "react";
 
-import { useAuthStore } from "./useLoginStore";
-import { fetchCurrentUser } from "./authService";
+import { fetchCurrentUser } from "@/services/userService";
 
-export default function useCheckAccessToken() {
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const { resetAccessToken } = useAuthStore((state) => state.actions);
+import useAccessToken from "./useAccessToken";
+
+export default function useCheckAccessToken(): void {
+  const { accessToken, resetAccessToken } = useAccessToken();
 
   useEffect(() => {
-    const verifyAccessToken = async () => {
-      if (!accessToken) return;
-
+    const checkAccessToken = async () => {
       try {
         await fetchCurrentUser();
       } catch (error) {
-        console.error(error);
+        console.log(error);
         resetAccessToken();
       }
     };
-    verifyAccessToken();
+    checkAccessToken();
   }, [accessToken, resetAccessToken]);
 }

@@ -47,13 +47,13 @@ export function LineChartComponent({ data }: LineChartProps) {
               <Line
                 type="monotone"
                 dataKey="supply"
-                stroke="#E5B2CC"
+                stroke="#FF85A1"
                 name="공급"
               />
               <Line
                 type="monotone"
                 dataKey="demand"
-                stroke="#99B2E5"
+                stroke="#42C9FF"
                 name="수요"
               />
             </LineChart>

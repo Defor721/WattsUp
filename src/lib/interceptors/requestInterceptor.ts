@@ -1,13 +1,14 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-import { accessTokenUtil } from "../auth/accessTokenUtil";
+import { getCookie } from "@/utils/cookieHelper";
 
 // 요청 인터셉터 핸들러
 export const handleRequest = (config: InternalAxiosRequestConfig) => {
-  const accessToken = accessTokenUtil.getAccessToken();
+  const accessToken = getCookie("accessToken");
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
+
   return config;
 };
 

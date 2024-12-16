@@ -31,12 +31,29 @@ export const loginWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  const { data } = await apiClient.post("/api/login", {
-    email,
-    password,
-  });
+  try {
+    const response = await apiClient.post("/api/auth/session", {
+      email,
+      password,
+    });
 
-  return data;
+    return response.data;
+  } catch (error) {
+    console.log("일반 로그인 중 오류 발생", error);
+
+    throw error;
+  }
+};
+
+/**
+ * 로그아웃
+ */
+export const logout = async () => {
+  try {
+    await apiClient.delete("/api/logout");
+  } catch (error) {
+    console.error("로그아웃 실패:", error);
+  }
 };
 
 /**
