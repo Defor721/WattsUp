@@ -100,9 +100,10 @@ export default function TradingView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col p-4">
+      <h1 className="mb-8 text-5xl font-bold">Trading</h1>
       {/* Header */}
-      <header className="border-b">
+      {/* <header className="border-b">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-8"></div>
@@ -112,7 +113,7 @@ export default function TradingView() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Main Content */}
       <div className="flex flex-1">
@@ -120,7 +121,7 @@ export default function TradingView() {
         <aside className="hidden w-80 border-r lg:block">
           <div className="p-4">
             <div className="mb-4 flex items-center justify-between">
-              <span className="font-medium">실시간 시세</span>
+              <span className="font-bold">실시간 시세</span>
               <Button variant="ghost" size="sm">
                 설정
               </Button>

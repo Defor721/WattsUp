@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { image } from "@tensorflow/tfjs";
 
 export default function Home() {
   const links = [
@@ -30,7 +31,7 @@ export default function Home() {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="mb-8 text-center">
             <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent sm:text-[100px]">
-              Watts_uP
+              WattsUp
             </span>
           </h1>
           <div className="grid w-full max-w-4xl grid-cols-2 gap-0 px-4 sm:px-0">
@@ -53,16 +54,16 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
             {
-              title: "Real-time Monitoring",
+              title: "Turbincrew",
               description:
-                "Track power generation and consumption in real-time with intuitive visualizations.",
-              icon: "/assets/icons/monitor.svg",
+                "터빈크루는 인공지능(AI)과 사물인터넷(IoT) 기술을 활용하여 스마트 그린 에너지 솔루션을 제공하는 기업입니다. 2021년 9월에 설립되어 신재생에너지 분야에서 혁신적인 기술 개발에 주력하고 있습니다.",
+              image: "/assets/images/th.jpg",
             },
             {
-              title: "Predictive Analytics",
+              title: "전력거래소(KPX, Korea Power Exchange)",
               description:
-                "Leverage AI-driven forecasts to optimize energy distribution and reduce costs.",
-              icon: "/assets/icons/analytics.svg",
+                "전력거래소(KPX)는 대한민국의 전력 시장 운영기관이자 전력 시스템 운영자입니다. 전력의 안정적인 공급과 수요 관리를 책임지며, 발전사와 소비자(전력회사) 간 전력 거래를 공정하고 효율적으로 관리합니다.",
+              icon: "/assets/icons/kpx.jpeg",
             },
             {
               title: "Smart Trading",
@@ -76,7 +77,7 @@ export default function Home() {
               className="rounded-lg bg-white p-6 shadow-md hover:scale-105"
             >
               <Image
-                src={feature.icon}
+                src={feature.image || "/assets/images/default.jpg"}
                 alt={feature.title}
                 width={48}
                 height={48}
