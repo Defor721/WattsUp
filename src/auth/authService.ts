@@ -45,6 +45,9 @@ export const loginWithEmailAndPassword = async (
   }
 };
 
+/**
+ * 로그아웃
+ */
 export const logout = async () => {
   try {
     await apiClient.delete("/api/logout");

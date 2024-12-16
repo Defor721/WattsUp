@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { checkUserInDatabase } from "@/services/userService";
+import { checkUserByEmail } from "@/services/userService";
 import { fetchGoogleTokens, fetchGoogleUserInfo } from "@/auth/authService";
 import { NULL_RESPONSE_PAYLOAD } from "@/constants/nullObject";
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     console.log("userInfo: ", userInfo);
 
     // DB에서 유저 확인
-    const { signupType } = await checkUserInDatabase(userInfo.email);
+    const { signupType } = await checkUserByEmail(userInfo.email);
     console.log("signupType: ", signupType);
 
     // 일반 유저 분기 처리

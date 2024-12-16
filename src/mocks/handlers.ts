@@ -49,8 +49,8 @@ export const handlers = [
     // 가짜 응답 생성
     return HttpResponse.json(
       {
-        access_token: "fake-access-token",
-        refresh_token: "fake-refresh-token",
+        access_token: "fake-access-token1",
+        refresh_token: "fake-refresh-token1",
         expires_in: 3600,
         token_type: "Bearer",
       },
@@ -81,9 +81,9 @@ export const handlers = [
   // 유저 가입 정보 확인
   http.post(`${baseUrl}/api/users/registration`, async ({ request }) => {
     const { email } = (await request.json()) as { email: string };
-    console.log(`check email: `, email);
+
     const existingUser = users.find((user) => user.email === email);
-    console.log(`check existingUser: `, existingUser);
+
     // DB에 존재하지 않는 경우
     if (!existingUser) {
       return HttpResponse.json(
@@ -104,6 +104,44 @@ export const handlers = [
     );
   }),
 
+  // http.get(`${baseUrl}/api/users/me`, async ({ cookies }) => {
+  //   console.log(cookies);
+
+  //   return new HttpResponse(
+  //     JSON.stringify({
+  //       id: "1",
+  //       signupType: "native",
+  //       provider: null,
+  //       businessType: "corporate",
+  //       corporateNumber: "1234567890123",
+  //       businessNumber: "1111111111",
+  //       companyName: "Shell Corporation",
+  //       personalId: null,
+  //       email: "fraud@scam.com",
+  //       password: "fraud@scam.com",
+  //     }),
+  //   );
+  // }),
+
+  http.get(`${baseUrl}/api/users/me`, async ({ request }) => {
+    const cookies = request.headers.get("cookie");
+    console.log(cookies);
+    return new HttpResponse(
+      JSON.stringify({
+        id: "1",
+        signupType: "native",
+        provider: null,
+        businessType: "corporate",
+        corporateNumber: "1234567890123",
+        businessNumber: "1111111111",
+        companyName: "Shell Corporation",
+        personalId: null,
+        email: "fraud@scam.com",
+        password: "fraud@scam.com",
+      }),
+    );
+  }),
+
   // 일반 로그인
   http.post(`${baseUrl}/api/login`, async ({ request }) => {
     const { email, password } = (await request.json()) as {
@@ -113,26 +151,20 @@ export const handlers = [
     const existingUser = users.find((user) => user.email === email);
 
     if (existingUser && existingUser.password === password) {
-      // 성공 응답과 함께 쿠키 설정
-      const response = new HttpResponse(
-        JSON.stringify({
+      return HttpResponse.json(
+        {
           message: "로그인 성공",
           access_token: "fake-access-token",
           expires_in: "3600",
           redirectTo: "/",
-        }),
+        },
         {
           headers: {
-            "Set-Cookie": "refresh_token=fake-refresh-token; Path=/;",
-            "Content-Type": "application/json",
+            "Set-Cookie": "refresh_token=fake-refresh-token;HttpOnly;Path=/",
           },
           status: 200,
         },
       );
-
-      console.log(`handler response: `, response);
-
-      return response;
     }
 
     // 로그인 실패 응답
@@ -141,6 +173,40 @@ export const handlers = [
       { status: 401 },
     );
   }),
-];
 
-//fraud124@scam.com
+  // 일반 로그인
+  // http.post(`${baseUrl}/api/login`, async ({ request }) => {
+  //   const { email, password } = (await request.json()) as {
+  //     email: string;
+  //     password: string;
+  //   };
+  //   const existingUser = users.find((user) => user.email === email);
+
+  //   if (existingUser && existingUser.password === password) {
+  //     // 성공 응답과 함께 쿠키 설정
+  //     const response = new HttpResponse(
+  //       JSON.stringify({
+  //         message: "로그인 성공",
+  //         access_token: "fake-access-token",
+  //         expires_in: "3600",
+  //         redirectTo: "/",
+  //       }),
+  //       {
+  //         headers: {
+  //           "Set-Cookie":
+  //             "refresh_token=fake-refresh-token; Path=/; Secure; SameSite=None",
+  //           "Content-Type": "application/json",
+  //         },
+  //         status: 200,
+  //       },
+  //     );
+  //     return response;
+  //   }
+
+  //   // 로그인 실패 응답
+  //   return HttpResponse.json(
+  //     { message: "로그인 실패 - 사용자 없음" },
+  //     { status: 401 },
+  //   );
+  // }),
+];

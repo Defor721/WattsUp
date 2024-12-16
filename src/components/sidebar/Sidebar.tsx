@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { Separator } from "@/components/shadcn/separator";
+import useCheckAccessToken from "@/auth/useCheckAccessToken";
 
 const sidebarItems = [
   { icon: Home, label: "Dashboard" },
@@ -28,6 +29,8 @@ const sidebarItems = [
 ];
 
 export default function Sidebar() {
+  // TODO: 테스트용, 팀원과 위치 상의할 것
+  useCheckAccessToken();
   return (
     <aside className="flex min-h-screen w-[30vh] flex-col justify-between bg-[rgb(7,15,38)] p-4 text-white">
       <div className="flex-grow overflow-y-auto">
