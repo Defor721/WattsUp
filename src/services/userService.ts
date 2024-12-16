@@ -5,7 +5,7 @@ export interface CheckUserResponse {
   signupType: "native" | "social" | null;
 }
 
-export async function checkUserInDatabase(
+export async function checkUserByEmail(
   email: string,
 ): Promise<CheckUserResponse> {
   const { data } = await apiClient.post<CheckUserResponse>(
@@ -13,4 +13,15 @@ export async function checkUserInDatabase(
     { email },
   );
   return data;
+}
+
+export async function fetchCurrentUser() {
+  try {
+    const { data } = await apiClient.get("/api/users");
+
+    const { id, email } = data;
+    return { id, email };
+  } catch (error) {
+    console.log(error);
+  }
 }

@@ -20,6 +20,7 @@ export default function AdditionalInfo() {
     });
 
     if (response.ok) {
+      // TODO: 토스트로 교체
       console.log("추가 정보 제출 완료");
       router.push("/dashboard"); // 메인 페이지로 리다이렉트
     } else {

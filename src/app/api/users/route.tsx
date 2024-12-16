@@ -6,7 +6,8 @@ import clientPromise from "@/lib/mongodb";
 
 export async function GET(request: NextRequest) {
   try {
-    const { Authorization } = await request.json();
+    const Authorization = await request.headers.get("Authorization");
+
     if (!Authorization) {
       return NextResponse.json({ message: "Access Denied" }, { status: 403 });
     }
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
             );
           } else {
             return NextResponse.json(
-              { message: "Success to find user" },
+              { message: "Success to find user", userData },
               { status: 200 },
             );
           }

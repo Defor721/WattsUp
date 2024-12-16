@@ -17,7 +17,7 @@ export default function AuthCallbackPage() {
   const error = useLoginStore((state) => state.error);
   const message = useLoginStore((state) => state.message);
   const redirectTo = useLoginStore((state) => state.redirectTo);
-  const expires_in = useLoginStore((state) => state.expires_in);
+  const expiresIn = useLoginStore((state) => state.expiresIn);
   const { socialLogin, resetLoginState } = useLoginStore(
     (state) => state.actions,
   );
@@ -28,8 +28,8 @@ export default function AuthCallbackPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (accessToken && expires_in !== null) {
-      setAccessToken(accessToken, expires_in);
+    if (accessToken && expiresIn !== null) {
+      setAccessToken(accessToken, expiresIn);
       resetLoginState();
       router.push(redirectTo);
     }
