@@ -44,8 +44,8 @@ export function BarChartComponent({ data }: BarChartProps) {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="supply" fill="#E5B2CC" name="공급" />
-              <Bar dataKey="demand" fill="#99B2E5" name="수요" />
+              <Bar dataKey="supply" fill="#FF85A1" name="공급" />
+              <Bar dataKey="demand" fill="#42C9FF " name="수요" />
             </BarChart>
           </ResponsiveContainer>
         </div>

@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-
-// eslint-disable-next-line import/order
-import pretendard from "../../public/assets/fonts";
+import { Inter } from "next/font/google";
 
 import "./globals.css";
+import { Menu } from "lucide-react";
+
 import Sidebar from "@/components/sidebar/Sidebar";
-import { MSWProvider, QueryProvider } from "@/config";
 import { Toaster } from "@/components/shadcn/toaster";
-import { Header } from "@/components/header/header";
+import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
+import { MSWProvider, QueryProvider } from "@/config";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Watts_uP - Energy Dashboard",
-  description: "Real-time energy supply and demand monitoring dashboard",
+  title: "WattsUp Energy Dashboard",
+  description: "Energy trading and analysis platform",
 };
 
 // 서버 컴포넌트 일때 msw 사용을 위한 조건문
@@ -24,9 +26,9 @@ if (
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
