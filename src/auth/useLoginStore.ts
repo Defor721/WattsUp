@@ -27,12 +27,13 @@ export const useLoginStore = create<AuthState>((set) => ({
   actions: {
     async nativeLogin(email: string, password: string) {
       try {
-        const { access_token } = await loginWithEmailAndPassword(
+        const { accessToken } = await loginWithEmailAndPassword(
           email,
           password,
         );
+
         set({
-          accessToken: access_token,
+          accessToken: accessToken,
           redirectTo: "/",
           error: false,
           message: null,
@@ -50,10 +51,10 @@ export const useLoginStore = create<AuthState>((set) => ({
 
     async socialLogin(code: string) {
       try {
-        const { access_token, redirectTo } = await exchangeSocialToken(code);
+        const { accessToken, redirectTo } = await exchangeSocialToken(code);
 
         set({
-          accessToken: access_token,
+          accessToken: accessToken,
           redirectTo: redirectTo || "/",
           error: false,
           message: null,

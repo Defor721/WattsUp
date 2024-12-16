@@ -16,6 +16,7 @@ import {
 
 import { useSidebarStore } from "@/stores/sidebarStore"; // Zustand 스토어
 import { Separator } from "@/components/shadcn/separator";
+import useCheckAccessToken from "@/auth/useCheckAccessToken";
 
 import { Input } from "../shadcn/input";
 import { UserDropdown } from "./UserDropdown";
@@ -39,6 +40,7 @@ const sidebarItems = [
 
 export default function Sidebar() {
   const { isOpen, toggle } = useSidebarStore(); // Zustand 상태 관리
+  useCheckAccessToken();
 
   return (
     <>

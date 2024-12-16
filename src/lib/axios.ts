@@ -1,10 +1,9 @@
 import axios, { AxiosInstance } from "axios";
-// import {
-//   handleRequest,
-//   handleRequestError,
-//   handleResponse,
-//   handleResponseError,
-// } from "./interceptors";
+
+import {
+  handleRequest,
+  handleRequestError,
+} from "./interceptors/requestInterceptor";
 
 const MOCK_BASE_URL =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "development"
@@ -17,7 +16,7 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 // 인터셉터
-// apiClient.interceptors.request.use(handleRequest, handleRequestError);
+apiClient.interceptors.request.use(handleRequest, handleRequestError);
 // apiClient.interceptors.response.use(handleResponse, handleResponseError);
 
 export default apiClient;

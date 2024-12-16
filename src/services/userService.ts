@@ -16,10 +16,12 @@ export async function checkUserByEmail(
 }
 
 export async function fetchCurrentUser() {
-  const { data } = await apiClient.get("/api/users/me", {
-    withCredentials: true,
-  });
+  try {
+    const { data } = await apiClient.get("/api/users");
 
-  const { id, email } = data;
-  return { id, email };
+    const { id, email } = data;
+    return { id, email };
+  } catch (error) {
+    console.log(error);
+  }
 }

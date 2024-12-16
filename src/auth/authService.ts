@@ -36,7 +36,7 @@ export const loginWithEmailAndPassword = async (
       email,
       password,
     });
-    console.log(`loginWithEmailAndPassword: `, response);
+
     return response.data;
   } catch (error) {
     console.log("일반 로그인 중 오류 발생", error);

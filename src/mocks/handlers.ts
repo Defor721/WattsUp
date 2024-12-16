@@ -45,7 +45,6 @@ export const handlers = [
   // Google 토큰 요청 가로채기
   // http.post("https://oauth2.googleapis.com/token", async ({ request }) => {
   //   const body = await request.json();
-
   //   // 가짜 응답 생성
   //   return HttpResponse.json(
   //     {
@@ -57,7 +56,6 @@ export const handlers = [
   //     { status: 200 },
   //   );
   // }),
-
   // Google 사용자 정보 요청 가로채기
   // http.get(
   //   "https://openidconnect.googleapis.com/v1/userinfo",
@@ -77,37 +75,31 @@ export const handlers = [
   //     );
   //   },
   // ),
-
   // 유저 가입 정보 확인
-  http.post(`${baseUrl}/api/users/registration`, async ({ request }) => {
-    const { email } = (await request.json()) as { email: string };
-
-    const existingUser = users.find((user) => user.email === email);
-
-    // DB에 존재하지 않는 경우
-    if (!existingUser) {
-      return HttpResponse.json(
-        {
-          signupType: null,
-          isAdditionalInfoRequired: true,
-        },
-        { status: 200 },
-      );
-    }
-
-    return HttpResponse.json(
-      {
-        signupType: existingUser.signupType,
-        isAdditionalInfoRequired: false,
-      },
-      { status: 200 },
-    );
-  }),
-
+  // http.post(`${baseUrl}/api/users/registration`, async ({ request }) => {
+  //   const { email } = (await request.json()) as { email: string };
+  //   const existingUser = users.find((user) => user.email === email);
+  //   // DB에 존재하지 않는 경우
+  //   if (!existingUser) {
+  //     return HttpResponse.json(
+  //       {
+  //         signupType: null,
+  //         isAdditionalInfoRequired: true,
+  //       },
+  //       { status: 200 },
+  //     );
+  //   }
+  //   return HttpResponse.json(
+  //     {
+  //       signupType: existingUser.signupType,
+  //       isAdditionalInfoRequired: false,
+  //     },
+  //     { status: 200 },
+  //   );
+  // }),
   // 내 정보 확인
   // http.get(`${baseUrl}/api/users/me`, async ({ cookies }) => {
   //   console.log(cookies);
-
   //   return new HttpResponse(
   //     JSON.stringify({
   //       id: "1",
@@ -123,40 +115,36 @@ export const handlers = [
   //     }),
   //   );
   // }),
-
   // 일반 로그인
-  http.post(`${baseUrl}/api/auth/session`, async ({ request }) => {
-    const { email, password } = (await request.json()) as {
-      email: string;
-      password: string;
-    };
-    const existingUser = users.find((user) => user.email === email);
-
-    if (existingUser && existingUser.password === password) {
-      return HttpResponse.json(
-        {
-          message: "로그인 성공",
-          access_token: "fake-login-access-token",
-        },
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-            "Access-Control-Allow-Credentials": "true",
-            "Set-Cookie":
-              "refresh_token=fake-login-refresh-token; HttpOnly; Path=/",
-          },
-          status: 200,
-        },
-      );
-    }
-
-    // 로그인 실패 응답
-    return HttpResponse.json(
-      { message: "로그인 실패 - 사용자 없음" },
-      { status: 400 },
-    );
-  }),
-
+  // http.post(`${baseUrl}/api/auth/session`, async ({ request }) => {
+  //   const { email, password } = (await request.json()) as {
+  //     email: string;
+  //     password: string;
+  //   };
+  //   const existingUser = users.find((user) => user.email === email);
+  //   if (existingUser && existingUser.password === password) {
+  //     return HttpResponse.json(
+  //       {
+  //         message: "로그인 성공",
+  //         access_token: "fake-login-access-token",
+  //       },
+  //       {
+  //         headers: {
+  //           "Access-Control-Allow-Origin": "http://localhost:3000",
+  //           "Access-Control-Allow-Credentials": "true",
+  //           "Set-Cookie":
+  //             "refresh_token=fake-login-refresh-token; HttpOnly; Path=/",
+  //         },
+  //         status: 200,
+  //       },
+  //     );
+  //   }
+  //   // 로그인 실패 응답
+  //   return HttpResponse.json(
+  //     { message: "로그인 실패 - 사용자 없음" },
+  //     { status: 400 },
+  //   );
+  // }),
   // 일반 로그인
   // http.post(`${baseUrl}/api/login`, async ({ request }) => {
   //   const { email, password } = (await request.json()) as {
@@ -164,7 +152,6 @@ export const handlers = [
   //     password: string;
   //   };
   //   const existingUser = users.find((user) => user.email === email);
-
   //   if (existingUser && existingUser.password === password) {
   //     // 성공 응답과 함께 쿠키 설정
   //     const response = new HttpResponse(
@@ -185,7 +172,6 @@ export const handlers = [
   //     );
   //     return response;
   //   }
-
   //   // 로그인 실패 응답
   //   return HttpResponse.json(
   //     { message: "로그인 실패 - 사용자 없음" },

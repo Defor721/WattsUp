@@ -31,10 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} flex antialiased`}
-        className="flex"
-      >
+      <body className="flex justify-center">
         <MSWProvider>
           <QueryProvider>
             <Sidebar />
