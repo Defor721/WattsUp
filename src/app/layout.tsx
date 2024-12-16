@@ -1,50 +1,37 @@
 import type { Metadata } from "next";
-
-// eslint-disable-next-line import/order
-import pretendard from "../../public/assets/fonts";
+import { Inter } from "next/font/google";
 
 import "./globals.css";
+import { Menu } from "lucide-react";
+
 import Sidebar from "@/components/sidebar/Sidebar";
-import { MSWProvider, QueryProvider } from "@/config";
 import { Toaster } from "@/components/shadcn/toaster";
-import { UserDropdown } from "@/components/sidebar/UserDropdown";
+import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Watts_uP - Energy Dashboard",
-  description: "Real-time energy supply and demand monitoring dashboard",
+  title: "WattsUp Energy Dashboard",
+  description: "Energy trading and analysis platform",
 };
-
-// Server-side MSW setup for development
-// if (
-//   process.env.NEXT_PUBLIC_ENVIRONMENT === "development" &&
-//   typeof window === "undefined"
-// ) {
-//   import("@/mocks/http").then(({ server }) => {
-//     server.listen();
-//   });
-// }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${pretendard.variable} flex bg-[rgb(7,15,38)] antialiased`}
-      >
-        {/* <MSWProvider> */}
-        <QueryProvider>
+      <body className={inter.className}>
+        <div className="flex">
           <Sidebar />
-          <div className="flex flex-1 flex-col">
+          <SidebarStateWrapper>
             <main className="flex-1 bg-[#F9FAFB] text-[rgb(7,15,38)]">
               {children}
             </main>
             <Toaster />
-          </div>
-        </QueryProvider>
-        {/* </MSWProvider> */}
+          </SidebarStateWrapper>
+        </div>
       </body>
     </html>
   );

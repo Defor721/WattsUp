@@ -3,7 +3,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { image } from "@tensorflow/tfjs";
 
 export default function Home() {
   const links = [
@@ -50,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* Features section */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 transition-all sm:px-4 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
             {
@@ -63,24 +62,24 @@ export default function Home() {
               title: "전력거래소(KPX, Korea Power Exchange)",
               description:
                 "전력거래소(KPX)는 대한민국의 전력 시장 운영기관이자 전력 시스템 운영자입니다. 전력의 안정적인 공급과 수요 관리를 책임지며, 발전사와 소비자(전력회사) 간 전력 거래를 공정하고 효율적으로 관리합니다.",
-              icon: "/assets/icons/kpx.jpeg",
+              icon: "/assets/images/kpx.png",
             },
             {
-              title: "Smart Trading",
+              title: "재생에너지란?",
               description:
-                "Automate energy trading decisions based on market trends and demand patterns.",
-              icon: "/assets/icons/trading.svg",
+                "재생에너지(Renewable Energy)는 자연적으로 지속 가능하게 재생되는 에너지 자원을 의미합니다. 태양, 바람, 물, 지열, 생물 연료 등을 포함하며, 탄소 배출이 적어 환경친화적인 에너지원으로 평가받습니다.",
+              icon: "/assets/images/재생에너지.jpeg",
             },
           ].map((feature, index) => (
             <div
               key={index}
-              className="rounded-lg bg-white p-6 shadow-md hover:scale-105"
+              className="rounded-lg bg-white p-6 shadow-md transition-all hover:scale-105"
             >
               <Image
-                src={feature.image || "/assets/images/default.jpg"}
+                src={feature.image || "/assets/images"}
                 alt={feature.title}
-                width={48}
-                height={48}
+                width={100}
+                height={100}
                 className="mb-4"
               />
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
