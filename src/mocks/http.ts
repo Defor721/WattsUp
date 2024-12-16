@@ -6,6 +6,4 @@ import { handlers } from "./handlers";
 export const server = setupServer(...handlers);
 
 // 서버 시작 시 옵션 설정
-server.listen({
-  onUnhandledRequest: "bypass", // 정의되지 않은 요청은 원래 서버로 전달
-});
+server.listen();

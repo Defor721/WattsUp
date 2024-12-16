@@ -15,7 +15,6 @@ export default function LoginPage() {
 
   const {
     accessToken,
-    expiresIn,
     redirectTo,
     actions: { resetLoginState },
   } = useLoginStore();
@@ -25,8 +24,8 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
-    if (accessToken && expiresIn !== null) {
-      setAccessToken(accessToken, expiresIn);
+    if (accessToken) {
+      setAccessToken(accessToken);
       resetLoginState();
       router.push(redirectTo);
     }

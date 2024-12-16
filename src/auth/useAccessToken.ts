@@ -10,8 +10,8 @@ export default function useAccessToken() {
   const accessToken = getCookie("access_token");
 
   // 액세스 토큰 설정 함수
-  const setAccessToken = (token: string, expires_in: number) => {
-    setCookie("access_token", token, expires_in);
+  const setAccessToken = (token: string) => {
+    setCookie("access_token", token);
   };
 
   // 액세스 토큰 삭제 함수

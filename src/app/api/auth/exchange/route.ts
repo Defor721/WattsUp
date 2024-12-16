@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       await fetchGoogleTokens(authorizationCode);
     console.log("access_token: ", access_token);
 
-    console.log("access_token: ", access_token);
+    console.log("refresh_token: ", refresh_token);
 
     // Google에서 유저 정보 요청
     const userInfo = await fetchGoogleUserInfo(access_token);
@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
       secure: true,
       path: "/",
       sameSite: "strict",
+      maxAge: 1209600, // 2주
     });
 
     return response;

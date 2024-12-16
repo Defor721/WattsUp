@@ -32,11 +32,11 @@ export const loginWithEmailAndPassword = async (
   password: string,
 ) => {
   try {
-    const response = await apiClient.post("/api/login", {
+    const response = await apiClient.post("/api/auth/session", {
       email,
       password,
     });
-    console.log(`response: `, response);
+    console.log(`loginWithEmailAndPassword: `, response);
     return response.data;
   } catch (error) {
     console.log("일반 로그인 중 오류 발생", error);

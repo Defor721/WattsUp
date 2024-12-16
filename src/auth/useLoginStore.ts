@@ -9,7 +9,6 @@ import {
 
 interface AuthState {
   accessToken: string | null;
-  expiresIn: number | null;
   redirectTo: string;
   error: boolean;
   message: string | null;
@@ -22,19 +21,19 @@ interface AuthState {
 
 export const useLoginStore = create<AuthState>((set) => ({
   accessToken: null,
-  expiresIn: null,
   redirectTo: "/",
   error: false,
   message: null,
   actions: {
     async nativeLogin(email: string, password: string) {
       try {
-        const { access_token, expires_in, redirectTo } =
-          await loginWithEmailAndPassword(email, password);
+        const { access_token } = await loginWithEmailAndPassword(
+          email,
+          password,
+        );
         set({
           accessToken: access_token,
-          expiresIn: Number(expires_in),
-          redirectTo: redirectTo || "/",
+          redirectTo: "/",
           error: false,
           message: null,
         });
@@ -51,12 +50,10 @@ export const useLoginStore = create<AuthState>((set) => ({
 
     async socialLogin(code: string) {
       try {
-        const { access_token, expires_in, redirectTo } =
-          await exchangeSocialToken(code);
+        const { access_token, redirectTo } = await exchangeSocialToken(code);
 
         set({
           accessToken: access_token,
-          expiresIn: Number(expires_in),
           redirectTo: redirectTo || "/",
           error: false,
           message: null,

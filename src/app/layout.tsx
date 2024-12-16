@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 // 서버 컴포넌트 일때 msw 사용을 위한 조건문
 if (
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "development" &&
-  typeof window === "undefined"
+  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_RUNTIME === "nodejs"
 ) {
   import("@/mocks/http");
 }

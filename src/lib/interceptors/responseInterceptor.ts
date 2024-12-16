@@ -29,7 +29,7 @@ export const handleResponseError = async (error: AxiosError) => {
   const { status, data } = response;
 
   // 만료된 토큰 처리
-  if (status === 401 && data.message === "TokenExpired") {
+  if (status === 401 && data.message === "Token Expired") {
     return handleTokenRefresh(config as InternalAxiosRequestConfig);
   }
 
