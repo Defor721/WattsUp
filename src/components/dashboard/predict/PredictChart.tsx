@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   CartesianGrid,
@@ -51,10 +53,11 @@ function PredictChart({ data, region }: Ichart) {
         width={730}
         height={400}
         data={data}
+        // className="my-[5px] ml-5 mr-[30px]"
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
+        <XAxis dataKey="date" className="text-sm" />
         <YAxis />
         <Tooltip />
         <Legend />

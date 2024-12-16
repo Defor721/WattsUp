@@ -21,20 +21,6 @@ const locations: Record<string, number> = {
   제주도: 184,
 };
 
-const columnsKorean = [
-  "관측일(KST)",
-  "국내 지점번호",
-  "일 평균 풍속 (m/s)",
-  "최대풍속 (m/s)",
-  "일 평균기온 (C)",
-  "일 평균 지면온도 (C)",
-  "일 평균 수증기압 (hPa)",
-  "일 평균 현지기압 (hPa)",
-  "일조합 (hr)",
-  "일사합 (MJ/m2)",
-  "일 강수량 (mm)",
-];
-
 const getLast7Days = (): string[] => {
   const dates: string[] = [];
   for (let i = 0; i < 7; i++) {
@@ -142,19 +128,6 @@ export async function GET() {
   // 기존 groupedResults를 정렬된 객체로 변환
   const sortedGroupedResults = sortGroupedResultsByRegion(groupedResults);
   // console.log("sortedGroupedResults: ", sortedGroupedResults);
-
-  // date로 그룹화하고 각 그룹 내에서 stationName 기준 정렬
-  // const groupedResultsByDate = results.reduce<Record<string, any[]>>(
-  //   (acc, result) => {
-  //     const { stationName, date, data } = result;
-  //     if (!acc[date]) {
-  //       acc[date] = [];
-  //     }
-  //     acc[date].push({ stationName, data });
-  //     return acc;
-  //   },
-  //   {},
-  // );
 
   // 그룹 내 date 정렬
   for (const stationName in sortedGroupedResults) {

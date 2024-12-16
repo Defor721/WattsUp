@@ -187,13 +187,18 @@ function Page() {
         amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
       }),
     );
-  }, [chartData, selectedRegion]);
+  }, [chartData, selectedRegion, weatherData]);
 
   const regionButtons = useMemo(() => {
     return regions.map((region) => (
       <Button
         key={region}
-        variant={selectedRegion === region ? "secondary" : "outline"}
+        variant={"outline"}
+        className={`${
+          selectedRegion === region
+            ? "bg-[rgb(7,15,38)] text-white"
+            : "bg-gray-200"
+        }`}
         onClick={() => setSelectedRegion(region)}
       >
         {region}
@@ -207,7 +212,9 @@ function Page() {
 
   return (
     <div>
-      <div className="flex gap-2">{regionButtons}</div>
+      <div className="flex-wrap justify-start gap-2 md:flex">
+        {regionButtons}
+      </div>
       <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
           {selectedRegion} 발전량 예측 그래프
@@ -219,7 +226,7 @@ function Page() {
       </div>
       <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
-          {selectedRegion} 테이블
+          {selectedRegion} 날씨 데이터
         </h4>
         <PredictTable tableData={tableData || []} />
       </div>
