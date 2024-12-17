@@ -20,6 +20,11 @@ export {
   CardDescription,
   CardContent,
 } from "./card";
+export {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "./collapsible";
 export { Input } from "./input";
 export { Label } from "./label";
 export { Separator } from "./separator";
