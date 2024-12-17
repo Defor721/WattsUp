@@ -2,41 +2,23 @@
 
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import Plot from "react-plotly.js";
-import { Container, Row, Col, Dropdown, Card, Button } from "react-bootstrap";
+import { BatteryCharging, TrendingUp, TrendingDown, Users } from "lucide-react";
 
-// 데이터 타입 정의
+// import KPICard from "@/app/dashboard/electro/KPIcard";
+
 interface PowerData {
   연도: number;
-  "총발전량총계(GWh)": number;
   "발전설비총계(MW)": number;
+  "총발전량총계(GWh)": number;
+  "부하율(%)": number;
   "이용율(%)": number;
-  "수력(MW)": number;
-  "화력(MW)": number;
-  "원자력(MW)": number;
-  "자가용(MW)": number;
-  "수력(GWh)": number;
-  "화력(GWh)": number;
-  "원자력(GWh)": number;
-  "자가용(GWh)": number;
-  "송배전손실률(%)": number;
 }
-
-// 색상 팔레트
-const colors = {
-  background: "#2c2f33",
-  cardBackground: "#3c3f41",
-  text: "#ffffff",
-  accent: "#77dd77",
-  primary: "#4f8df7",
-  secondary: "#ffb347",
-  tertiary: "#ff6961",
-};
 
 const PowerDashboard: React.FC = () => {
   const [data, setData] = useState<PowerData[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [filteredData, setFilteredData] = useState<PowerData | null>(null);
+  const [currentData, setCurrentData] = useState<PowerData | null>(null);
+  const [previousData, setPreviousData] = useState<PowerData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,165 +30,85 @@ const PowerDashboard: React.FC = () => {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData: PowerData[] = XLSX.utils.sheet_to_json(worksheet);
       setData(jsonData);
-      setSelectedYear(jsonData[0].연도);
+      setSelectedYear(jsonData[0]?.연도 || null);
     };
-
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (selectedYear && data.length > 0) {
-      const filtered = data.find((item) => item.연도 === selectedYear);
-      setFilteredData(filtered || null);
+    if (selectedYear) {
+      const current = data.find((d) => d.연도 === selectedYear);
+      const previous = data.find((d) => d.연도 === selectedYear - 1);
+      setCurrentData(current || null);
+      setPreviousData(previous || null);
     }
   }, [selectedYear, data]);
 
-  const handleDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "전력지표");
-    XLSX.writeFile(workbook, "전력지표_데이터.xlsx");
+  const calculateChange = (current: number, previous: number | undefined) => {
+    if (previous === undefined || previous === 0) return null;
+    return (((current - previous) / previous) * 100).toFixed(1);
   };
 
   return (
-    <Container
-      fluid
-      style={{
-        backgroundColor: colors.background,
-        color: colors.text,
-        minHeight: "100vh",
-        padding: "20px",
-      }}
-    >
-      <h1 className="mb-4 text-center">전력지표 대시보드</h1>
-
-      {/* 드롭다운 및 다운로드 */}
-      <Row className="mb-4">
-        <Col md={6}>
-          <Dropdown onSelect={(e) => setSelectedYear(Number(e))}>
-            <Dropdown.Toggle variant="secondary">
-              연도 선택: {selectedYear}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {data.map((item) => (
-                <Dropdown.Item key={item.연도} eventKey={item.연도}>
-                  {item.연도}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col md={6} className="text-end">
-          <Button variant="success" onClick={handleDownload}>
-            데이터 다운로드
-          </Button>
-        </Col>
-      </Row>
-
-      {/* KPI 카드 */}
-      {filteredData && (
-        <Row className="mb-4 text-center">
-          <Col>
-            <Card
-              style={{
-                backgroundColor: colors.cardBackground,
-                padding: "10px",
-              }}
-            >
-              <Card.Body>
-                <Card.Title>총 발전량</Card.Title>
-                <h3>
-                  {filteredData["총발전량총계(GWh)"].toLocaleString()} GWh
-                </h3>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col>
-            <Card
-              style={{
-                backgroundColor: colors.cardBackground,
-                padding: "10px",
-              }}
-            >
-              <Card.Body>
-                <Card.Title>발전설비 총계</Card.Title>
-                <h3>{filteredData["발전설비총계(MW)"].toLocaleString()} MW</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col>
-            <Card
-              style={{
-                backgroundColor: colors.cardBackground,
-                padding: "10px",
-              }}
-            >
-              <Card.Body>
-                <Card.Title>이용률</Card.Title>
-                <h3>{filteredData["이용율(%)"]}%</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
-
-      {/* 그래프 */}
-      {filteredData && (
-        <>
-          <Row>
-            <Col md={6}>
-              <Plot
-                data={[
-                  {
-                    x: ["수력", "화력", "원자력", "자가용"],
-                    y: [
-                      filteredData["수력(GWh)"],
-                      filteredData["화력(GWh)"],
-                      filteredData["원자력(GWh)"],
-                      filteredData["자가용(GWh)"],
-                    ],
-                    type: "bar",
-                    marker: {
-                      color: [
-                        colors.primary,
-                        colors.secondary,
-                        colors.tertiary,
-                        colors.accent,
-                      ],
-                    },
-                  },
-                ]}
-                layout={{
-                  title: "발전량 분포",
-                  paper_bgcolor: colors.background,
-                  font: { color: colors.text },
-                }}
-              />
-            </Col>
-            <Col md={6}>
-              <Plot
-                data={[
-                  {
-                    labels: ["송배전 손실률 (%)", "이용률 (%)"],
-                    values: [
-                      filteredData["송배전손실률(%)"],
-                      filteredData["이용율(%)"],
-                    ],
-                    type: "pie",
-                    marker: { colors: [colors.tertiary, colors.accent] },
-                  },
-                ]}
-                layout={{
-                  title: "송배전 손실률 및 이용률",
-                  paper_bgcolor: colors.background,
-                  font: { color: colors.text },
-                }}
-              />
-            </Col>
-          </Row>
-        </>
-      )}
-    </Container>
+    <div className="min-h-screen bg-gray-900 p-6 text-gray-200">
+      <h1 className="mb-6 text-center text-4xl font-bold text-white">
+        {"Today's Power Metrics"}
+      </h1>
+      <div className="grid grid-cols-4 gap-4">
+        {/* {currentData && previousData && (
+          <>
+            <KPICard
+              title="발전설비총계"
+              value={`${currentData["발전설비총계(MW)"]} MW`}
+              change={parseFloat(
+                calculateChange(
+                  currentData["발전설비총계(MW)"],
+                  previousData["발전설비총계(MW)"],
+                ) || "0",
+              )}
+              icon={<BatteryCharging className="text-yellow-400" />}
+              color="text-yellow-400"
+            />
+            <KPICard
+              title="총발전량"
+              value={`${currentData["총발전량총계(GWh)"]} GWh`}
+              change={parseFloat(
+                calculateChange(
+                  currentData["총발전량총계(GWh)"],
+                  previousData["총발전량총계(GWh)"],
+                ) || "0",
+              )}
+              icon={<TrendingUp className="text-green-400" />}
+              color="text-green-400"
+            />
+            <KPICard
+              title="부하율"
+              value={`${currentData["부하율(%)"]}%`}
+              change={parseFloat(
+                calculateChange(
+                  currentData["부하율(%)"],
+                  previousData["부하율(%)"],
+                ) || "0",
+              )}
+              icon={<Users className="text-blue-400" />}
+              color="text-blue-400"
+            />
+            <KPICard
+              title="이용율"
+              value={`${currentData["이용율(%)"]}%`}
+              change={parseFloat(
+                calculateChange(
+                  currentData["이용율(%)"],
+                  previousData["이용율(%)"],
+                ) || "0",
+              )}
+              icon={<TrendingDown className="text-red-400" />}
+              color="text-red-400"
+            />
+          </>
+        )} */}
+      </div>
+    </div>
   );
 };
 
