@@ -117,3 +117,22 @@ export async function fetchGoogleUserInfo(accessToken: string): Promise<any> {
     throw error;
   }
 }
+
+/**
+ * 토큰 재발급
+ * test@google.com
+ * 1234
+ */
+export async function reissueToken(): Promise<any> {
+  try {
+    const { data } = await apiClient.post("/api/auth/token", {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (error) {
+    console.log("토큰 재발급 중 오류 발생", error);
+
+    throw error;
+  }
+}

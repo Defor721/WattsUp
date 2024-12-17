@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (user.password === password) {
       const payload = { email: email };
       const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
-      const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "1h" });
+      const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "5s" });
       const refreshSecret = process.env.REFRESH_TOKEN_SECRET as string;
       const refreshToken = jwt.sign(payload, refreshSecret, {
         expiresIn: "7d",
