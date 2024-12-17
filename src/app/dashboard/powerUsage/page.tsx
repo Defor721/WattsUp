@@ -28,7 +28,7 @@ const PowerUsageDashboard = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "/assets/HOME_발전·판매_고객호수_계약종별.xlsx",
+          "/assets/dashboards/HOME_발전·판매_고객호수_계약종별.xlsx",
         );
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: "array" });

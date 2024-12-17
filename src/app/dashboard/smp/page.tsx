@@ -50,7 +50,7 @@ const SmpDashboard = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "/assets/HOME_전력거래_계통한계가격_연료원별SMP결정.xlsx",
+          "/assets/dashboards/HOME_전력거래_계통한계가격_연료원별SMP결정.xlsx",
           {
             responseType: "arraybuffer",
           },
