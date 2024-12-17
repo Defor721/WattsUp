@@ -26,7 +26,7 @@ const sidebarItems = [
   {
     icon: BarChart2,
     label: "Power Generation Forecasting",
-    href: "/power-generation-forecasting",
+    href: "/dashboard/predict",
   },
   {
     icon: DollarSign,
@@ -93,7 +93,7 @@ export default function Sidebar() {
                 <a
                   key={index}
                   href={item.href}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-110 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80"
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>

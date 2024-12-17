@@ -14,7 +14,7 @@ import { Line, Bar, Pie } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import rawData from "../../../public/assets/HOME_발전·판매_발전량_전원별.json"; // JSON 변환 필요
+import rawData from "../../../public/assets/dashboards/HOME_발전·판매_발전량_전원별.json"; // JSON 변환 필요
 
 // 타입 정의
 interface DataType {
