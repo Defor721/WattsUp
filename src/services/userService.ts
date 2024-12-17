@@ -22,6 +22,8 @@ export async function fetchCurrentUser() {
     const { id, email } = data;
     return { id, email };
   } catch (error) {
-    console.log(error);
+    console.log("현재 유저 데이터 가져오는 중 오류 발생", error);
+
+    throw error;
   }
 }

@@ -27,7 +27,7 @@ export const handleResponseError = async (error: AxiosError) => {
     return Promise.reject(error);
   }
 
-  const { status, data } = response;
+  const { status, data } = response as AxiosResponse<{ message: string }>;
 
   // 만료된 토큰 처리
   if (status === 401 && data.message === "Token Expired") {
@@ -62,6 +62,7 @@ const handleTokenRefresh = async (config: InternalAxiosRequestConfig) => {
 
     try {
       const data = await reissueToken();
+      console.log(`handleTokenRefresh: `, data);
       const { accessToken } = data;
 
       // 토큰 저장
