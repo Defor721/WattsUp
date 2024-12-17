@@ -9,7 +9,6 @@ import {
 
 interface AuthState {
   accessToken: string | null;
-  expires_in: number | null;
   redirectTo: string;
   error: boolean;
   message: string | null;
@@ -22,20 +21,20 @@ interface AuthState {
 
 export const useLoginStore = create<AuthState>((set) => ({
   accessToken: null,
-  expires_in: null,
   redirectTo: "/",
   error: false,
   message: null,
   actions: {
     async nativeLogin(email: string, password: string) {
       try {
-        const { access_token, expires_in, redirectTo } =
-          await loginWithEmailAndPassword(email, password);
+        const { accessToken } = await loginWithEmailAndPassword(
+          email,
+          password,
+        );
 
         set({
-          accessToken: access_token,
-          expires_in: Number(expires_in),
-          redirectTo: redirectTo || "/",
+          accessToken: accessToken,
+          redirectTo: "/",
           error: false,
           message: null,
         });
@@ -43,19 +42,19 @@ export const useLoginStore = create<AuthState>((set) => ({
         set({
           redirectTo: "/login",
           error: true,
-          message: error.response.data.message || "로그인 실패",
+          message:
+            error.response.data.message ||
+            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
         });
       }
     },
 
     async socialLogin(code: string) {
       try {
-        const { access_token, expires_in, redirectTo } =
-          await exchangeSocialToken(code);
+        const { accessToken, redirectTo } = await exchangeSocialToken(code);
 
         set({
-          accessToken: access_token,
-          expires_in: Number(expires_in),
+          accessToken: accessToken,
           redirectTo: redirectTo || "/",
           error: false,
           message: null,
@@ -64,7 +63,9 @@ export const useLoginStore = create<AuthState>((set) => ({
         set({
           redirectTo: error.response.data.redirectTo || "/login",
           error: true,
-          message: error.response.data.message || "로그인 실패",
+          message:
+            error.response.data.message ||
+            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
         });
       }
     },

@@ -69,30 +69,28 @@ export default function Dashboard() {
   const currentSupply = supplyData[supplyData.length - 1];
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <h1 className="mb-8 text-5xl font-bold">
         Electricity Transaction Status
       </h1>
 
       <StatusCards currentSupply={currentSupply} />
 
-      <div className="mb-4 flex gap-4 space-x-2">
-        <div className="flex gap-4">
-          <span className="text-lg font-bold">시간대별 전력수급 현황</span>
-          <div>
-            <Button
-              onClick={() => setSelectedGraph("bar")}
-              variant={selectedGraph === "bar" ? "outline" : "default"}
-            >
-              막대 그래프
-            </Button>
-            <Button
-              onClick={() => setSelectedGraph("table")}
-              variant={selectedGraph === "table" ? "outline" : "default"}
-            >
-              리스트
-            </Button>
-          </div>
+      <div className="mx-20 mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <span className="text-lg font-bold">시간대별 전력수급 현황</span>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={() => setSelectedGraph("bar")}
+            variant={selectedGraph === "bar" ? "outline" : "default"}
+          >
+            막대 그래프
+          </Button>
+          <Button
+            onClick={() => setSelectedGraph("table")}
+            variant={selectedGraph === "table" ? "outline" : "default"}
+          >
+            리스트
+          </Button>
         </div>
         <span className="mt-2">|</span>
         <Button
