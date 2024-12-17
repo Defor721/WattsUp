@@ -58,7 +58,7 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
                   className="px-4 py-3 text-gray-200 lg:border lg:border-gray-700"
                 >
                   {header === "발전량 예측값 (amgo)"
-                    ? row.amgo || "-"
+                    ? row.amgo || 0
                     : row.data[0][header] || "-"}
                 </td>
               ))}

@@ -6,6 +6,8 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import { Toaster } from "@/components/shadcn/toaster";
 import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
 import { MSWProvider, QueryProvider } from "@/config";
+import { SidebarProvider, SidebarTrigger } from "@/components/shadcn/sidebar";
+import AppSidebar from "@/components/appSidebar/AppSidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,15 +34,19 @@ export default function RootLayout({
       <body className={`${inter.className} flex`}>
         <MSWProvider>
           <QueryProvider>
-            <SidebarStateWrapper>
-              <Sidebar />
+            <SidebarProvider>
+              {/* <SidebarStateWrapper> */}
+              {/* <Sidebar /> */}
+              <AppSidebar />
               <div className="flex flex-1 flex-col">
                 <main className="ml-2 flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
+                  {/* <SidebarTrigger /> */}
                   {children}
                 </main>
                 <Toaster />
               </div>
-            </SidebarStateWrapper>
+              {/* </SidebarStateWrapper> */}
+            </SidebarProvider>
           </QueryProvider>
         </MSWProvider>
       </body>
