@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
-import { Menu } from "lucide-react";
-
 import Sidebar from "@/components/sidebar/Sidebar";
 import { Toaster } from "@/components/shadcn/toaster";
 import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
