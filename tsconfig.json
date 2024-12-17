@@ -1,18 +1,21 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node", // 'bundler'에서 'node'로 변경
+    "moduleResolution": "node", // "node"가 Next.js와 호환됨
     "resolveJsonModule": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "jsx": "preserve", // 'preserve'에서 'react-jsx'로 변경
+    "jsx": "preserve", // Next.js에서 권장하는 JSX 옵션
     "incremental": true,
     "plugins": [
       {
@@ -20,15 +23,23 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ] // 커스텀 타입 경로 설정
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/shadcn/index.ts" // 파일 확장자 수정
+    "src/components/shadcn/index.tsx" // 확장자를 .tsx로 변경
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
