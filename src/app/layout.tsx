@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
-import { Menu } from "lucide-react";
-
 import Sidebar from "@/components/sidebar/Sidebar";
 import { Toaster } from "@/components/shadcn/toaster";
 import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
@@ -31,14 +29,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex justify-center">
+      <body className={`${inter.className} flex`}>
         <MSWProvider>
           <QueryProvider>
-            <Sidebar />
-            <main className="flex-1 bg-[rgb(7,15,38)] p-4 text-white">
-              {children}
-              <Toaster />
-            </main>
+            <SidebarStateWrapper>
+              <Sidebar />
+              <div className="flex flex-1 flex-col">
+                <main className="flex-1 bg-white text-[rgb(7,15,38)]">
+                  {children}
+                </main>
+                <Toaster />
+              </div>
+            </SidebarStateWrapper>
           </QueryProvider>
         </MSWProvider>
       </body>
