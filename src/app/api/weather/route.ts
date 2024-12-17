@@ -1,7 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import axios from "axios";
 
-// 지점번호 매핑
+import { getLast7Days } from "@/utils/getLast7Days";
+
 const locations: Record<string, number> = {
   충청북도: 131,
   충청남도: 129,
@@ -9,7 +10,7 @@ const locations: Record<string, number> = {
   전라남도: 156,
   인천시: 112,
   울산시: 152,
-  세종시: 133, // 대전 지점번호와 동일
+  세종시: 133,
   서울시: 108,
   부산시: 159,
   대전시: 133,
@@ -22,163 +23,110 @@ const locations: Record<string, number> = {
   제주도: 184,
 };
 
-// 열 이름을 한국 설명 이름으로 지정
-const columnsKorean = [
-  "관측일(KST)",
-  "국내 지점번호",
-  "일 평균 풍속 (m/s)",
-  "일 풍정 (m)",
-  "최대풍향",
-  "최대풍속 (m/s)",
-  "최대풍속 시각 (시분)",
-  "최대순간풍향",
-  "최대순간풍속 (m/s)",
-  "최대순간풍속 시각 (시분)",
-  "일 평균기온 (C)",
-  "최고기온 (C)",
-  "최고기온 시각 (시분)",
-  "최저기온 (C)",
-  "최저기온 시각 (시분)",
-  "일 평균 이슬점온도 (C)",
-  "일 평균 지면온도 (C)",
-  "일 최저 초상온도 (C)",
-  "일 평균 상대습도 (%)",
-  "최저습도 (%)",
-  "최저습도 시각 (시분)",
-  "일 평균 수증기압 (hPa)",
-  "소형 증발량 (mm)",
-  "대형 증발량 (mm)",
-  "안개계속시간 (hr)",
-  "일 평균 현지기압 (hPa)",
-  "일 평균 해면기압 (hPa)",
-  "최고 해면기압 (hPa)",
-  "최고 해면기압 시각 (시분)",
-  "최저 해면기압 (hPa)",
-  "최저 해면기압 시각 (시분)",
-  "일 평균 전운량 (1/10)",
-  "일조합 (hr)",
-  "가조시간 (hr)",
-  "캄벨 일조 (hr)",
-  "일사합 (MJ/m2)",
-  "최대 1시간일사 (MJ/m2)",
-  "최대 1시간일사 시각 (시분)",
-  "일 강수량 (mm)",
-  "9-9 강수량 (mm)",
-  "강수계속시간 (hr)",
-  "1시간 최다강수량 (mm)",
-  "1시간 최다강수량 시각 (시분)",
-  "10분간 최다강수량 (mm)",
-  "10분간 최다강수량 시각 (시분)",
-  "최대 강우강도 (mm/h)",
-  "최대 강우강도 시각 (시분)",
-  "최심 신적설 (cm)",
-  "최심 신적설 시각 (시분)",
-  "최심 적설 (cm)",
-  "최심 적설 시각 (시분)",
-  "0.5m 지중온도 (C)",
-  "1.0m 지중온도 (C)",
-  "1.5m 지중온도 (C)",
-  "3.0m 지중온도 (C)",
-  "5.0m 지중온도 (C)",
-];
-
-// 제거할 열 목록
-const columnsToRemove = [
-  "일 풍정 (m)",
-  "최대풍향",
-  "최대풍속 시각 (시분)",
-  "최대순간풍향",
-  "최대순간풍속 (m/s)",
-  "최대순간풍속 시각 (시분)",
-  "최고기온 (C)",
-  "최고기온 시각 (시분)",
-  "최저기온 (C)",
-  "최저기온 시각 (시분)",
-  "일 평균 이슬점온도 (C)",
-  "일 최저 초상온도 (C)",
-  "일 평균 상대습도 (%)",
-  "최저습도 (%)",
-  "최저습도 시각 (시분)",
-  "소형 증발량 (mm)",
-  "대형 증발량 (mm)",
-  "안개계속시간 (hr)",
-  "일 평균 해면기압 (hPa)",
-  "최고 해면기압 (hPa)",
-  "최고 해면기압 시각 (시분)",
-  "최저 해면기압 (hPa)",
-  "최저 해면기압 시각 (시분)",
-  "일 평균 전운량 (1/10)",
-  "가조시간 (hr)",
-  "캄벨 일조 (hr)",
-  "최대 1시간일사 (MJ/m2)",
-  "최대 1시간일사 시각 (시분)",
-  "9-9 강수량 (mm)",
-  "강수계속시간 (hr)",
-  "1시간 최다강수량 (mm)",
-  "1시간 최다강수량 시각 (시분)",
-  "10분간 최다강수량 (mm)",
-  "10분간 최다강수량 시각 (시분)",
-  "최대 강우강도 (mm/h)",
-  "최대 강우강도 시각 (시분)",
-  "최심 신적설 (cm)",
-  "최심 신적설 시각 (시분)",
-  "최심 적설 (cm)",
-  "최심 적설 시각 (시분)",
-  "0.5m 지중온도 (C)",
-  "1.0m 지중온도 (C)",
-  "1.5m 지중온도 (C)",
-  "3.0m 지중온도 (C)",
-  "5.0m 지중온도 (C)",
-];
-
-// 기상청 API 요청 함수
-async function fetchWeatherData(date: string, stn: number) {
+const fetchWeatherData = async (date: string, stn: number) => {
   const url = "https://apihub.kma.go.kr/api/typ01/url/kma_sfcdd.php";
   const params = {
     tm: date,
     stn: stn.toString(),
     disp: "0",
     help: "0",
-    authKey: process.env.KMA_API_KEY, // API 인증키
+    authKey: process.env.KMA_API_KEY,
   };
 
   try {
     const response = await axios.get(url, { params });
     return response.data;
   } catch (error) {
-    console.error(`API 요청 실패 (${stn}):`, error);
+    console.error(`API 요청 실패 (${stn} - ${date}):`, error);
     return null;
   }
-}
+};
 
-// Next.js API Route
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const results: Record<string, any>[] = [];
+const processWeatherData = (responseData: string) => {
+  const csvRows = responseData
+    .split("\n")
+    .filter((row) => row.trim() && !row.startsWith("#"));
 
-  for (const [stationName, stationId] of Object.entries(locations)) {
-    const responseData = await fetchWeatherData(currentDate, stationId);
-    if (responseData) {
-      const csvRows = responseData
-        .split("\n")
-        .filter((row: string) => row.trim() && !row.startsWith("#"));
-      const parsedData = csvRows.map((row: string) => row.split(/\s+/)); // 공백 기준으로 데이터 분리
+  return csvRows.map((row) => {
+    const parsedRow = row.split(/\s+/);
+    // 필요한 9개 컬럼만 추출
+    const filteredData = {
+      "일 평균 풍속 (m/s)": parsedRow[2],
+      "최대풍속 (m/s)": parsedRow[3],
+      "일 평균기온 (C)": parsedRow[4],
+      "일 평균 지면온도 (C)": parsedRow[5],
+      "일 평균 수증기압 (hPa)": parsedRow[6],
+      "일 평균 현지기압 (hPa)": parsedRow[7],
+      "일조합 (hr)": parsedRow[8],
+      "일사합 (MJ/m2)": parsedRow[9],
+      "일 강수량 (mm)": parsedRow[10],
+    };
+    return filteredData;
+  });
+};
 
-      // 열 이름 설정 및 제거할 열 처리
-      const filteredData = parsedData.map((row: any[]) => {
-        const dataObj = Object.fromEntries(
-          columnsKorean.map((col, idx) => [col, row[idx]]),
-        );
-        columnsToRemove.forEach((col) => delete dataObj[col]); // 제거할 열 삭제
-        return dataObj;
-      });
+export async function GET() {
+  const last7Days = getLast7Days();
 
-      results.push({ stationName, data: filteredData });
-    }
+  // 모든 요청을 병렬 처리
+  const promises = Object.entries(locations).flatMap(
+    ([stationName, stationId]) =>
+      last7Days.map(async (date) => {
+        const responseData = await fetchWeatherData(date, stationId);
+        if (responseData) {
+          const processedData = processWeatherData(responseData);
+          return { stationName, date, data: processedData };
+        }
+        return null; // 요청 실패 시 null 반환
+      }),
+  );
+
+  // 모든 요청 완료 후 결과 필터링 및 타입 단언 추가
+  const results = (await Promise.all(promises)).filter(Boolean) as {
+    stationName: string;
+    date: string;
+    data: any[];
+  }[];
+
+  // stationName으로 그룹화하고 각 그룹 내에서 date 기준 정렬
+  const groupedResults = results.reduce<Record<string, any[]>>(
+    (acc, result) => {
+      const { stationName, date, data } = result;
+      if (!acc[stationName]) {
+        acc[stationName] = [];
+      }
+      acc[stationName].push({ date, data });
+      return acc;
+    },
+    {},
+  );
+  const sortGroupedResultsByRegion = (
+    groupedResults: Record<string, any[]>,
+  ) => {
+    // 객체의 키(지역 이름)를 정렬
+    const sortedKeys = Object.keys(groupedResults).sort((a, b) =>
+      a.localeCompare(b),
+    );
+
+    // 정렬된 키를 기반으로 새로운 객체 생성
+    const sortedGroupedResults: Record<string, any[]> = {};
+    sortedKeys.forEach((key) => {
+      sortedGroupedResults[key] = groupedResults[key];
+    });
+
+    return sortedGroupedResults;
+  };
+
+  // 기존 groupedResults를 정렬된 객체로 변환
+  const sortedGroupedResults = sortGroupedResultsByRegion(groupedResults);
+  // console.log("sortedGroupedResults: ", sortedGroupedResults);
+
+  // 그룹 내 date 정렬
+  for (const stationName in sortedGroupedResults) {
+    sortedGroupedResults[stationName].sort((a, b) =>
+      a.date.localeCompare(b.date),
+    );
   }
 
-  res.status(200).json({ date: currentDate, results });
+  return NextResponse.json({ results: sortedGroupedResults });
 }

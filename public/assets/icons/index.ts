@@ -6,6 +6,7 @@ import { IoLogInOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaChartLine } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
 
 export {
   IoMdHome,
@@ -16,4 +17,6 @@ export {
   IoPersonOutline,
   FaChartLine,
   FaDollarSign,
+  Eye,
+  EyeOff,
 };

@@ -22,7 +22,9 @@ const PowerDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/assets/HOME_주요지표_전력지표.xlsx");
+      const response = await fetch(
+        "/assets/dashboards/HOME_주요지표_전력지표.xlsx",
+      );
       const arrayBuffer = await response.arrayBuffer();
       const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
         type: "array",
