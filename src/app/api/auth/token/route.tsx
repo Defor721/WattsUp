@@ -7,10 +7,11 @@ interface JwtPayload {
   email: string;
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   //토큰 재발급
   try {
-    const refresh = request.cookies.get("token")?.value;
+    const refresh = request.cookies.get("refreshToken")?.value;
+
     if (!refresh) {
       return NextResponse.json({ message: "Token Not Found" }, { status: 401 });
     }
@@ -37,14 +38,14 @@ export async function GET(request: NextRequest) {
         expiresIn: "7d",
       });
       await collection.updateOne(
-        { rtEmail },
+        { email: rtEmail },
         { $set: { refreshToken: newRefreshToken } },
       );
       const response = NextResponse.json(
         { accessToken: newAccessToken, message: "ok" },
         { status: 200 },
       );
-      response.cookies.set("token", newRefreshToken, {
+      response.cookies.set("refreshToken", newRefreshToken, {
         httpOnly: true,
         secure: true,
         path: "/",
