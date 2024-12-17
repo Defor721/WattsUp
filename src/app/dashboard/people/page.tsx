@@ -35,7 +35,9 @@ const EconomicDashboard = () => {
   // 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/assets/HOME_주요지표_국민계정.xlsx");
+      const response = await fetch(
+        "/assets/dashboards/HOME_주요지표_국민계정.xlsx",
+      );
       const arrayBuffer = await response.arrayBuffer();
       const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
         type: "array",

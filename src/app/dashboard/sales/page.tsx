@@ -43,7 +43,9 @@ const SalesDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/assets/HOME_발전·판매_판매금액.xlsx");
+        const response = await fetch(
+          "/assets/dashboards/HOME_발전·판매_판매금액.xlsx",
+        );
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
           type: "array",
