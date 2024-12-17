@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { Separator } from "@radix-ui/react-separator";
+import { motion } from "framer-motion"; // Add this import
 
 interface TodoItem {
   id: number;
@@ -56,177 +58,132 @@ const DashboardPage = () => {
     { name: "판매금액 대시보드", path: "/dashboard/sales" },
   ];
 
+  // Add these variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
+
   return (
     <div className="p-8">
       <h1 className="mb-8 text-5xl font-bold">Dashboard</h1>
-      <div
-        style={{
-          padding: "20px",
-          fontFamily: "Arial, sans-serif",
-          backgroundColor: "#f9fafb",
-          color: "#333",
-        }}
-      >
-        <h1 style={{ color: "#007aff", textAlign: "center" }}>대시보드 관리</h1>
+      <div className="bg-gray-50 p-5 font-sans text-gray-800">
+        <div className="mb-10 p-4">
+          <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
+            대시보드 관리
+          </h1>
 
-        {/* KPI 입력 섹션 */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginBottom: "20px",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="작성자 이름"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          />
-          <input
-            type="number"
-            placeholder="목표 전력량 (kWh)"
-            value={kpi.목표전력량}
-            onChange={(e) => setKpi({ ...kpi, 목표전력량: e.target.value })}
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          />
-          <input
-            type="number"
-            placeholder="목표 가격 (₩)"
-            value={kpi.목표가격}
-            onChange={(e) => setKpi({ ...kpi, 목표가격: e.target.value })}
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          />
-          <input
-            type="number"
-            placeholder="목표 입찰금액 (₩)"
-            value={kpi.목표입찰금액}
-            onChange={(e) => setKpi({ ...kpi, 목표입찰금액: e.target.value })}
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          />
-          <input
-            type="text"
-            placeholder="대시보드 주제"
-            value={extra}
-            onChange={(e) => setExtra(e.target.value)}
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          />
-          <button
-            onClick={handleAddTodo}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#007aff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            추가
-          </button>
+          {/* KPI 입력 섹션 */}
+          <div className="mb-6 flex flex-wrap justify-center gap-4">
+            <input
+              type="text"
+              placeholder="작성자 이름"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              className="rounded-lg border border-gray-300 p-2"
+            />
+            <input
+              type="number"
+              placeholder="목표 전력량 (kWh)"
+              value={kpi.목표전력량}
+              onChange={(e) => setKpi({ ...kpi, 목표전력량: e.target.value })}
+              className="rounded-lg border border-gray-300 p-2"
+            />
+            <input
+              type="number"
+              placeholder="목표 가격 (₩)"
+              value={kpi.목표가격}
+              onChange={(e) => setKpi({ ...kpi, 목표가격: e.target.value })}
+              className="rounded-lg border border-gray-300 p-2"
+            />
+            <input
+              type="number"
+              placeholder="목표 입찰금액 (₩)"
+              value={kpi.목표입찰금액}
+              onChange={(e) => setKpi({ ...kpi, 목표입찰금액: e.target.value })}
+              className="rounded-lg border border-gray-300 p-2"
+            />
+            <input
+              type="text"
+              placeholder="대시보드 주제"
+              value={extra}
+              onChange={(e) => setExtra(e.target.value)}
+              className="rounded-lg border border-gray-300 p-2"
+            />
+            <button
+              onClick={handleAddTodo}
+              className="rounded-lg bg-[rgb(7,15,38)] p-2 px-4 text-white transition-colors hover:bg-opacity-90"
+            >
+              추가
+            </button>
+          </div>
+
+          {/* TODO 리스트 테이블 */}
+          <div className="overflow-x-auto">
+            <table className="w-full overflow-hidden rounded-lg bg-white shadow-md">
+              <thead className="bg-[rgb(7,15,38)] text-white">
+                <tr>
+                  <th className="p-3 text-center">ID</th>
+                  <th className="p-3 text-center">작성자</th>
+                  <th className="p-3 text-center">목표 전력량</th>
+                  <th className="p-3 text-center">목표 가격</th>
+                  <th className="p-3 text-center">목표 입찰금액</th>
+                  <th className="p-3 text-center">대시보드 주제</th>
+                </tr>
+              </thead>
+              <tbody>
+                {todos.map((todo) => (
+                  <tr key={todo.id} className="border-b border-gray-200">
+                    <td className="p-3">{todo.id}</td>
+                    <td className="p-3">{todo.작성자}</td>
+                    <td className="p-3">{todo.목표전력량} kWh</td>
+                    <td className="p-3">₩{todo.목표가격.toLocaleString()}</td>
+                    <td className="p-3">
+                      ₩{todo.목표입찰금액.toLocaleString()}
+                    </td>
+                    <td className="p-3">{todo.대시보드주제}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* TODO 리스트 테이블 */}
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-            overflow: "hidden",
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "#007aff",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px" }}>ID</th>
-              <th style={{ padding: "10px" }}>작성자</th>
-              <th style={{ padding: "10px" }}>목표 전력량</th>
-              <th style={{ padding: "10px" }}>목표 가격</th>
-              <th style={{ padding: "10px" }}>목표 입찰금액</th>
-              <th style={{ padding: "10px" }}>대시보드 주제</th>
-            </tr>
-          </thead>
-          <tbody>
-            {todos.map((todo) => (
-              <tr key={todo.id} style={{ borderBottom: "1px solid #eee" }}>
-                <td style={{ padding: "10px" }}>{todo.id}</td>
-                <td style={{ padding: "10px" }}>{todo.작성자}</td>
-                <td style={{ padding: "10px" }}>{todo.목표전력량} kWh</td>
-                <td style={{ padding: "10px" }}>
-                  ₩{todo.목표가격.toLocaleString()}
-                </td>
-                <td style={{ padding: "10px" }}>
-                  ₩{todo.목표입찰금액.toLocaleString()}
-                </td>
-                <td style={{ padding: "10px" }}>{todo.대시보드주제}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
         {/* 대시보드 선택 버튼 */}
-        <h2
-          style={{ marginTop: "30px", color: "#007aff", textAlign: "center" }}
-        >
-          대시보드 선택
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "10px",
-            marginTop: "20px",
-          }}
-        >
-          {dashboards.map((dashboard) => (
-            <Link
-              key={dashboard.name}
-              href={dashboard.path}
-              style={{
-                display: "block",
-                padding: "15px",
-                backgroundColor: "#f0f8ff",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                textAlign: "center",
-                textDecoration: "none",
-                color: "#007aff",
-                fontWeight: "bold",
-                boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
-              }}
-            >
-              {dashboard.name}
-            </Link>
-          ))}
+        <div className="border-rgb(7,15,38) border p-4">
+          <h1 className="m-8 text-center text-3xl font-bold text-[rgb(7,15,38)]">
+            대시보드 선택
+          </h1>
+          <motion.div
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {dashboards.map((dashboard) => (
+              <motion.div key={dashboard.name} variants={itemVariants}>
+                <Link
+                  href={dashboard.path}
+                  className="my-2 block rounded-lg border border-gray-200 bg-white p-4 text-center font-bold text-[rgb(7,15,38)] shadow-md transition-all hover:scale-105 hover:bg-gray-50"
+                >
+                  {dashboard.name}
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </div>
