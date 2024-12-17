@@ -26,7 +26,7 @@ const sidebarItems = [
   {
     icon: BarChart2,
     label: "Power Generation Forecasting",
-    href: "/power-generation-forecasting",
+    href: "/dashboard/predict",
   },
   {
     icon: DollarSign,
