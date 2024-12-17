@@ -35,7 +35,7 @@ export default function RootLayout({
             <SidebarStateWrapper>
               <Sidebar />
               <div className="flex flex-1 flex-col">
-                <main className="flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
+                <main className="ml-2 flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
                   {children}
                 </main>
                 <Toaster />

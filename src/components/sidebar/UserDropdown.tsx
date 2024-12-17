@@ -40,7 +40,7 @@ export function UserDropdown() {
               Mypage
             </a>
             <a
-              href="#"
+              href="/editprofile"
               className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
             >
               <Settings size={16} className="mr-2" />
