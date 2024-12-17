@@ -76,7 +76,7 @@ export default function Home() {
               className="rounded-lg bg-white p-6 shadow-md transition-all hover:scale-105"
             >
               <Image
-                src={feature.image || "/assets/images"}
+                src={feature.image || "/assets/images/kpx.png"}
                 alt={feature.title}
                 width={100}
                 height={100}
