@@ -15,7 +15,7 @@ export default function useCheckAccessToken(): void {
         await fetchCurrentUser();
       } catch (error) {
         console.log("토큰 유효성 확인 중 에러 발생", error);
-        // resetAccessToken();
+        resetAccessToken();
       }
     };
     checkAccessToken();

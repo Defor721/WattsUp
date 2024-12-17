@@ -120,8 +120,6 @@ export async function fetchGoogleUserInfo(accessToken: string): Promise<any> {
 
 /**
  * 토큰 재발급
- * test@google.com
- * 1234
  */
 export async function reissueToken(): Promise<any> {
   try {

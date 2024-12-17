@@ -62,7 +62,7 @@ const handleTokenRefresh = async (config: InternalAxiosRequestConfig) => {
 
     try {
       const data = await reissueToken();
-      console.log(`handleTokenRefresh: `, data);
+
       const { accessToken } = data;
 
       // 토큰 저장
