@@ -6,8 +6,22 @@ import {
   exchangeSocialToken,
   loginWithEmailAndPassword,
 } from "@/auth/authService";
+import { fetchCurrentUser } from "@/services/userService";
+import { deleteCookie } from "@/utils/cookieHelper";
+
+interface User {
+  businessNumber: number;
+  businessType: string;
+  companyName: string;
+  corporateNumber: number | null;
+  email: string;
+  personalId: number | null;
+  provider: null | string;
+  signupType: string;
+}
 
 interface AuthState {
+  user: User | null;
   accessToken: string | null;
   redirectTo: string;
   error: boolean;
@@ -15,11 +29,13 @@ interface AuthState {
   actions: {
     nativeLogin: (email: string, password: string) => Promise<void>;
     socialLogin: (code: string) => Promise<void>;
+    fetchCurrentUser: () => Promise<void>;
     resetLoginState: () => void;
   };
 }
 
 export const useLoginStore = create<AuthState>((set) => ({
+  user: null,
   accessToken: null,
   redirectTo: "/",
   error: false,
@@ -70,8 +86,29 @@ export const useLoginStore = create<AuthState>((set) => ({
       }
     },
 
+    async fetchCurrentUser() {
+      try {
+        const user = await fetchCurrentUser();
+        set((state) => {
+          if (state.user?.email === user.userData.email) {
+            return state;
+          }
+          return { ...state, user: user.userData };
+        });
+      } catch (error: any) {
+        deleteCookie("accessToken");
+        set({
+          user: null,
+          message:
+            error.response.data.message ||
+            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
+        });
+      }
+    },
+
     resetLoginState: () => {
       set({
+        user: null,
         accessToken: null,
         redirectTo: "/",
         error: false,
