@@ -153,7 +153,7 @@ function Page() {
       ) => ({
         date: item.date,
         data: item.data || [],
-        amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
+        amgo: chartData[selectedRegion]?.[index]?.amgo || 0,
       }),
     );
   }, [chartData, selectedRegion, weatherData]);
