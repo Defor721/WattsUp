@@ -9,13 +9,6 @@ import {
   SidebarMenuItem,
 } from "@/components/shadcn/sidebar";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../shadcn";
-
 interface data {
   icon: any;
   label: string;
