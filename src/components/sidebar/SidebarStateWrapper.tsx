@@ -17,7 +17,7 @@ export function SidebarStateWrapper({ children }: SidebarStateWrapperProps) {
   return (
     <>
       <div className="bg-[rgb(7,15,38)] p-4">
-        <Menu className="p-4" />
+        <Menu className="pr-2" />
       </div>
 
       <SidebarToggle />

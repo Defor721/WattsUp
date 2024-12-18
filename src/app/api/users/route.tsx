@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
         { status: 403 },
       );
     }
+
     const token = authorizationHeader.split(" ")[1]?.trim();
     if (!token) {
       return NextResponse.json({ message: "Token Missing" }, { status: 403 });
@@ -22,6 +23,9 @@ export async function GET(request: NextRequest) {
     try {
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
     } catch (err) {
+      if (err instanceof jwt.TokenExpiredError) {
+        return NextResponse.json({ message: "Token Expired" }, { status: 401 });
+      }
       return NextResponse.json(
         { message: "Failed to Decode or Token Expired" },
         { status: 403 },
@@ -60,53 +64,6 @@ export async function GET(request: NextRequest) {
       error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { message: "Failed to process request", error: errorMessage },
-      { status: 500 },
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const {
-      email,
-      signupType,
-      provider,
-      businessType,
-      personalId,
-      corporateNumber,
-      businessNumber,
-      companyName,
-    } = await request.json();
-    const client = await clientPromise;
-    const db = client.db("wattsup");
-    const check = await db.collection("userdata").findOne({ email: email });
-    if (!check) {
-      await db.collection("userdata").insertOne({
-        email,
-        signupType,
-        provider,
-        businessType,
-        personalId,
-        corporateNumber,
-        businessNumber,
-        companyName,
-        dateCreate: new Date(),
-      });
-      return NextResponse.json(
-        { message: "Sign up successfully" },
-        { status: 201 },
-      );
-    } else {
-      return NextResponse.json(
-        { message: "Email already exists" },
-        { status: 400 },
-      );
-    }
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json(
-      { message: "Failed to create data", error: errorMessage },
       { status: 500 },
     );
   }

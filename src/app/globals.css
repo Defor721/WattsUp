@@ -23,6 +23,20 @@ body {
   /* background-color: #fafaf5; */
 }
 
+@keyframes riseUp {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.rising-background {
+  animation: riseUp 1.5s ease-out forwards;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

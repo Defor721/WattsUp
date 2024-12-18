@@ -30,21 +30,21 @@ export function UserDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mb-2 w-full overflow-hidden rounded-md bg-[rgb(13,23,53)] shadow-lg">
+        <div className="absolute bottom-full left-0 mb-2 w-full overflow-hidden rounded-md bg-[rgb(13,23,53)] shadow-lg">
           <div className="py-1">
             <a
-              href="#"
+              href="/mypage"
               className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
             >
               <User size={16} className="mr-2" />
               Mypage
             </a>
             <a
-              href="#"
+              href="/editprofile"
               className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
             >
               <Settings size={16} className="mr-2" />
-              Settings
+              Profile Settings
             </a>
             <a
               href="#"

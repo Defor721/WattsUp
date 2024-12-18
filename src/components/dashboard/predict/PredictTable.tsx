@@ -26,15 +26,15 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
       <table className="min-w-full border-collapse border border-gray-700 text-center">
         <thead className="bg-[rgb(15,25,50)] text-gray-300">
           <tr>
-            <th className="border border-gray-700 px-4 py-2">날짜</th>
+            <th className="border border-gray-700 px-3 py-2">날짜</th>
             {headers.map((header) => {
               const match = header.match(/^(.*?)(\((.*?)\))?$/);
               const title = match?.[1] || header; // 제목
               const unit = match?.[3] || ""; // 단위
 
               return (
-                <th key={header} className="border border-gray-700 px-4 py-2">
-                  <div>{title}</div>
+                <th key={header} className="border border-gray-700 px-3 py-2">
+                  <div className="md:text-sm lg:text-base">{title}</div>
                   {unit && (
                     <div className="text-sm text-gray-500">({unit})</div>
                   )}
@@ -49,16 +49,16 @@ const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
               key={row.date}
               className="odd:bg-[rgb(10,20,40)] even:bg-[rgb(15,25,50)]"
             >
-              <td className="border border-gray-700 px-4 py-3 text-gray-200">
-                {row.date}
+              <td className="border border-gray-700 px-3 py-3 text-gray-200">
+                {`${row.date.slice(0, 4)}-${row.date.slice(4, 6)}-${row.date.slice(6)}`}
               </td>
               {headers.map((header) => (
                 <td
                   key={`${row.date}-${header}`}
-                  className="border border-gray-700 px-4 py-3 text-gray-200"
+                  className="px-4 py-3 text-gray-200 lg:border lg:border-gray-700"
                 >
                   {header === "발전량 예측값 (amgo)"
-                    ? row.amgo || "-"
+                    ? row.amgo || 0
                     : row.data[0][header] || "-"}
                 </td>
               ))}
