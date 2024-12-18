@@ -40,14 +40,14 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             {/* 조건에 따라 UI 변경 */}
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              {/* 아바타 아이콘만 표시 */}
+              {/* 테블릿 화면이고, 사이드바 확장시키지 않은 경우 */}
               {isMobile && !isMobileExpanded ? (
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
@@ -72,12 +72,12 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
 
           {/* 드롭다운 메뉴 */}
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-[rgb(7,15,38)] text-white"
-            side={"top"}
+            className="position:fixed w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-y-auto rounded-lg bg-[rgb(7,15,38)] text-white"
+            side={isMobile ? "right" : "top"}
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="font-normal hover:cursor-pointer">
+            <DropdownMenuLabel className="font-normal">
               <div className="flex items-center gap-2 px-2 py-[6px] text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
@@ -93,7 +93,7 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className={"bg-slate-999"} />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
@@ -105,7 +105,6 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
@@ -117,7 +116,7 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+
             <DropdownMenuItem>
               <Link
                 href="#"
