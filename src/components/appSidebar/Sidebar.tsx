@@ -42,7 +42,7 @@ const items = [
 const user = {
   name: "김터빈",
   email: "김터빈@gmail.com",
-  avatar: "/avatars/shadcn.jpg",
+  avatar: "/assets/images/logo.webp",
 };
 
 function Sidebar() {

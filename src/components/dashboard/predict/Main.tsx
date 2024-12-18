@@ -1,12 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+"use client";
+
+import React, { useEffect, useState, useMemo } from "react";
 import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
 
-import { regions } from "@/utils/regions";
+import PredictChart from "@/components/dashboard/predict/Chart";
 import { Button } from "@/components/shadcn";
-
-import PredictChart from "./PredictChart";
-import PredictTable from "./PredictTable";
+import PredictTable from "@/components/dashboard/predict/Table";
+import { regions } from "@/utils/regions";
+import { getLast7Days } from "@/utils/getLast7Days";
 
 const inputStats = {
   min: tf.tensor([-99]),
@@ -18,57 +20,57 @@ const outputStats = {
   max: tf.tensor([18407.54296875]),
 };
 
-const getLast7Days = (): string[] => {
-  return Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    return date.toISOString().slice(0, 10);
-  }).sort();
-};
-
 let modelInstance: tf.LayersModel | null = null;
+let isInitialized = false;
 
 async function loadModel() {
   if (!modelInstance) {
-    console.time("Model Loading");
-
-    // IndexedDB에서 모델 불러오기 시도
-    try {
-      modelInstance = await tf.loadLayersModel("indexeddb://my-model");
-      console.log("Model loaded from IndexedDB");
-    } catch (error) {
-      console.warn("No model found in IndexedDB. Loading from file...");
-      modelInstance = await tf.loadLayersModel("/assets/models/model.json");
-
-      // 모델을 IndexedDB에 저장
-      try {
-        await modelInstance.save("indexeddb://my-model");
-        console.log("Model saved to IndexedDB");
-      } catch (saveError) {
-        console.error("Failed to save model to IndexedDB", saveError);
-      }
-    }
-
-    console.timeEnd("Model Loading");
+    modelInstance = await tf.loadLayersModel("/assets/models/model2.json");
   }
   return modelInstance;
 }
 
-function Sample() {
+async function initializeTensorFlow() {
+  if (!isInitialized) {
+    await tf.ready();
+    const backend = tf.getBackend();
+    if (backend !== "cpu") {
+      await tf.setBackend("cpu");
+    }
+    isInitialized = true;
+  }
+}
+
+function PredictMain() {
   const [loading, setLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
   const [chartData, setChartData] = useState<Record<string, any[]>>({});
   const [selectedRegion, setSelectedRegion] = useState("서울시");
 
   useEffect(() => {
+    initializeTensorFlow();
+
+    const suppressWarnings = () => {
+      const originalWarn = console.warn;
+      console.warn = (message, ...args) => {
+        if (
+          message.includes("already registered") ||
+          message.includes("backend 'webgl'")
+        ) {
+          return;
+        }
+        originalWarn(message, ...args);
+      };
+    };
+
+    suppressWarnings();
+  }, []);
+
+  useEffect(() => {
     const fetchWeatherData = async () => {
       try {
         setLoading(true);
         const weatherResponse = await axios.get("/api/weather");
-        console.log(
-          "weatherResponse.data.results: ",
-          weatherResponse.data.results,
-        );
         setWeatherData(weatherResponse.data.results);
       } catch (error) {
         console.error("Error fetching weather data: ", error);
@@ -100,22 +102,23 @@ function Sample() {
           ]),
         );
 
-        console.log("sampleInputs: ", sampleInputs);
+        // 독립변수 tensor화
         const inputTensor = tf.tensor2d(sampleInputs);
+        // 독립변수 min-max스케일링
         const normalizedInputs = inputTensor
           .sub(inputStats.min)
           .div(inputStats.max.sub(inputStats.min));
 
-        console.time("Prediction");
+        // 종속변수 예측값
         const predictions = model.predict(normalizedInputs) as tf.Tensor;
-        console.timeEnd("Prediction");
-
+        // 종속변수 역스케일링
         const denormalizedPredictions = predictions
           .mul(outputStats.max.sub(outputStats.min))
           .add(outputStats.min);
 
         const predictionArray =
           denormalizedPredictions.arraySync() as number[][];
+        console.log("predictionArray: ", predictionArray);
 
         const dates = getLast7Days();
         const formattedData: Record<string, any[]> = {};
@@ -135,12 +138,13 @@ function Sample() {
         });
 
         setChartData(formattedData);
+        console.log("formattedData2: ", formattedData);
       } catch (error) {
         console.error("Error predicting data: ", error);
       }
     };
 
-    // predictRegionData();
+    predictRegionData();
   }, [weatherData]);
 
   const tableData = useMemo(() => {
@@ -157,21 +161,17 @@ function Sample() {
       ) => ({
         date: item.date,
         data: item.data || [],
-        amgo: chartData[selectedRegion]?.[index]?.amgo || 0,
+        amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
       }),
     );
-  }, [chartData, selectedRegion, weatherData]);
+  }, [chartData, selectedRegion]);
+  console.log("tableData: ", tableData);
 
   const regionButtons = useMemo(() => {
     return regions.map((region) => (
       <Button
         key={region}
-        variant={"outline"}
-        className={`${
-          selectedRegion === region
-            ? "bg-[rgb(7,15,38)] text-white"
-            : "bg-gray-200"
-        }`}
+        variant={selectedRegion === region ? "secondary" : "outline"}
         onClick={() => setSelectedRegion(region)}
       >
         {region}
@@ -185,10 +185,8 @@ function Sample() {
 
   return (
     <div>
-      <div className="flex-wrap justify-start gap-2 md:flex">
-        {regionButtons}
-      </div>
-      {/* <div className="mt-5">
+      <div className="flex gap-2">{regionButtons}</div>
+      <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
           {selectedRegion} 발전량 예측 그래프
         </h4>
@@ -199,12 +197,12 @@ function Sample() {
       </div>
       <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
-          {selectedRegion} 날씨 데이터
+          {selectedRegion} 테이블
         </h4>
         <PredictTable tableData={tableData || []} />
-      </div> */}
+      </div>
     </div>
   );
 }
 
-export default Sample;
+export default PredictMain;
