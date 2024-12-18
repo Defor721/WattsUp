@@ -27,7 +27,7 @@ function NavHeader({ isMobile, isMobileExpanded }: NavHeaderProps) {
             width={80}
             height={80}
             alt="WattsUp Logo"
-            className="rounded-md opacity-70"
+            className="rounded-lg opacity-70"
           />
           <SidebarGroupLabel className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[26px] font-bold text-transparent">
             {"WattsUp"}

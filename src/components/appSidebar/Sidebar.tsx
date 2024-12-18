@@ -7,6 +7,7 @@ import {
   RefreshCw,
   Settings,
   TrendingUp,
+  Search,
   PanelLeft,
   X,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 import NavHeader from "./NavHeader";
 import NavMain from "./NavMain";
 import { NavUser } from "./NavUser";
+import { Input } from "../shadcn";
 
 // Menu items
 const items = [
@@ -85,6 +87,15 @@ function Sidebar() {
               isMobile={isMobile}
               isMobileExpanded={isMobileExpanded}
             />
+          </div>
+          {/* Search Section */}
+          <div className="relative my-2 w-full">
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
+            />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           </div>
           {/* Content Section */}
           <div className="flex-1 overflow-y-auto">
