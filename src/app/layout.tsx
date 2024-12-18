@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
-import Sidebar from "@/components/sidebar/Sidebar";
 import { Toaster } from "@/components/shadcn/toaster";
-import { SidebarStateWrapper } from "@/components/sidebar/SidebarStateWrapper";
 import { MSWProvider, QueryProvider } from "@/config";
+import Sidebar from "@/components/appSidebar/Sidebar";
+import { SidebarProvider } from "@/components/shadcn";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,15 +32,15 @@ export default function RootLayout({
       <body className={`${inter.className} flex`}>
         <MSWProvider>
           <QueryProvider>
-            <SidebarStateWrapper>
+            <SidebarProvider>
               <Sidebar />
               <div className="flex flex-1 flex-col">
-                <main className="ml-2 flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
+                <main className="flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
                   {children}
                 </main>
                 <Toaster />
               </div>
-            </SidebarStateWrapper>
+            </SidebarProvider>
           </QueryProvider>
         </MSWProvider>
       </body>
