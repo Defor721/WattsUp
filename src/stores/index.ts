@@ -1,3 +1,3 @@
-import { useLoginStore } from "./loginStore";
+import { useAuthStore } from "./loginStore";
 
-export { useLoginStore };
+export { useAuthStore };

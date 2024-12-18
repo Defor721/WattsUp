@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { useLoginStore } from "@/auth/useLoginStore";
+import { useAuthStore } from "@/auth/useAuthStore";
 import { useDialog } from "@/hooks/use-dialog";
 import useAccessToken from "@/auth/useAccessToken";
 
@@ -13,12 +13,12 @@ export default function AuthCallbackPage() {
   const { showDialog, DialogComponent } = useDialog();
   const { setAccessToken, resetAccessToken } = useAccessToken();
 
-  const accessToken = useLoginStore((state) => state.accessToken);
-  const error = useLoginStore((state) => state.error);
-  const message = useLoginStore((state) => state.message);
-  const redirectTo = useLoginStore((state) => state.redirectTo);
-  const expiresIn = useLoginStore((state) => state.expiresIn);
-  const { socialLogin, resetLoginState } = useLoginStore(
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const error = useAuthStore((state) => state.error);
+  const message = useAuthStore((state) => state.message);
+  const redirectTo = useAuthStore((state) => state.redirectTo);
+  const expiresIn = useAuthStore((state) => state.expiresIn);
+  const { socialLogin, resetLoginState } = useAuthStore(
     (state) => state.actions,
   );
 

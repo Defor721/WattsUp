@@ -3,13 +3,13 @@
 import { useEffect } from "react";
 
 import useAccessToken from "./useAccessToken";
-import { useLoginStore } from "./useLoginStore";
+import { useAuthStore } from "./useAuthStore";
 
 export default function useCheckAccessToken(): void {
   const { accessToken, resetAccessToken } = useAccessToken();
   const {
     actions: { fetchCurrentUser },
-  } = useLoginStore();
+  } = useAuthStore();
 
   useEffect(() => {
     const checkAccessToken = async () => {

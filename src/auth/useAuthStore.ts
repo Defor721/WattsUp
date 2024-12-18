@@ -11,13 +11,13 @@ import { deleteCookie } from "@/utils/cookieHelper";
 
 interface User {
   businessNumber: number;
-  businessType: string;
+  businessType: "individual" | "corporate";
   companyName: string;
   corporateNumber: number | null;
   email: string;
   personalId: number | null;
   provider: null | string;
-  signupType: string;
+  signupType: "native" | "social";
 }
 
 interface AuthState {
@@ -34,12 +34,16 @@ interface AuthState {
   };
 }
 
-export const useLoginStore = create<AuthState>((set) => ({
+const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
   user: null,
   accessToken: null,
   redirectTo: "/",
   error: false,
   message: null,
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  ...NULL_AUTH_STATE,
   actions: {
     async nativeLogin(email: string, password: string) {
       try {
@@ -47,7 +51,6 @@ export const useLoginStore = create<AuthState>((set) => ({
           email,
           password,
         );
-
         set({
           accessToken: accessToken,
           redirectTo: "/",
@@ -68,7 +71,6 @@ export const useLoginStore = create<AuthState>((set) => ({
     async socialLogin(code: string) {
       try {
         const { accessToken, redirectTo } = await exchangeSocialToken(code);
-
         set({
           accessToken: accessToken,
           redirectTo: redirectTo || "/",
@@ -90,10 +92,10 @@ export const useLoginStore = create<AuthState>((set) => ({
       try {
         const user = await fetchCurrentUser();
         set((state) => {
-          if (state.user?.email === user.userData.email) {
-            return state;
+          if (state.user?.email !== user.userData.email) {
+            return { ...state, user: user.userData };
           }
-          return { ...state, user: user.userData };
+          return state;
         });
       } catch (error: any) {
         deleteCookie("accessToken");
@@ -106,14 +108,6 @@ export const useLoginStore = create<AuthState>((set) => ({
       }
     },
 
-    resetLoginState: () => {
-      set({
-        user: null,
-        accessToken: null,
-        redirectTo: "/",
-        error: false,
-        message: null,
-      });
-    },
+    resetLoginState: () => set(NULL_AUTH_STATE),
   },
 }));

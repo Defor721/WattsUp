@@ -3,9 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useSignupFormStore } from "@/stores/signupFormStore";
+
 export default function AdditionalInfo() {
   const router = useRouter();
   const [form, setForm] = useState({ businessType: "", companyName: "" });
+  const { email, password, verifyPassword, companyName } = useSignupFormStore();
+
+  console.log(email, password, verifyPassword, companyName);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
