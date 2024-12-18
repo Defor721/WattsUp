@@ -7,6 +7,8 @@ import { MSWProvider, QueryProvider } from "@/config";
 import Sidebar from "@/components/appSidebar/Sidebar";
 import { SidebarProvider } from "@/components/shadcn";
 
+import loading from "./loading";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
