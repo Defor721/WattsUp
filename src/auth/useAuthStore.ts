@@ -70,13 +70,23 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     async socialLogin(code: string) {
       try {
-        const { accessToken } = await exchangeSocialToken(code);
-        set({
-          accessToken: accessToken,
-          redirectTo: "/",
-          error: false,
-          message: null,
-        });
+        const { accessToken, message } = await exchangeSocialToken(code);
+
+        if (message === "추가 정보 입력이 필요합니다.") {
+          set({
+            accessToken: null,
+            message,
+            redirectTo: "/login/additional",
+            error: true,
+          });
+        } else {
+          set({
+            accessToken,
+            redirectTo: "/",
+            message,
+            error: false,
+          });
+        }
       } catch (error: any) {
         set({
           redirectTo: "/login",

@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const googleUser = await fetchGoogleUserInfo(access_token);
 
     // DB에서 유저 확인
-    const user = await checkUserByEmail(googleUser.email);
+    const user = await collection.findOne({ email: googleUser.email });
 
     // 일반 유저 분기 처리
     if (user?.signupType === "native") {
@@ -98,19 +98,25 @@ export async function POST(request: NextRequest) {
       { expiresIn: "15m" },
     );
 
-    return NextResponse.json(
-      {
-        signupToken,
-        message: "추가 정보 입력이 필요합니다.",
-      },
+    const response = NextResponse.json(
+      { message: "추가 정보 입력이 필요합니다." },
       { status: 201 },
     );
+
+    response.cookies.set("signupToken", signupToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 900,
+      path: "/",
+      sameSite: "strict",
+    });
+
+    return response;
   } catch (error) {
     console.error("auth exchange 로직에서 에러 발생:", error);
     return NextResponse.json(
       {
         message: "내부 서버 오류가 발생했습니다.",
-        redirectTo: "/login",
       },
       { status: 500 },
     );

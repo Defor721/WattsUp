@@ -108,7 +108,7 @@ export default function LoginForm() {
           />
           <Button
             size={"icon"}
-            className="absolute right-2 top-[38px] -translate-y-1/4 bg-transparent hover:bg-transparent"
+            className="absolute right-2 top-4 -translate-y-1/4 bg-transparent hover:bg-transparent"
             onClick={togglePassword}
           >
             {showPassword ? (

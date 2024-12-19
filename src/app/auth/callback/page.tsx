@@ -44,7 +44,7 @@ export default function AuthCallbackPage() {
         onConfirm: () => {
           router.push(redirectTo);
           resetAccessToken();
-          resetLoginState(); // 상태 초기화
+          resetLoginState();
         },
       });
     }
