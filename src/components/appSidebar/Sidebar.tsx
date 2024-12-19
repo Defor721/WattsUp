@@ -14,6 +14,7 @@ import { useState } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import useCheckAccessToken from "@/auth/useCheckAccessToken";
 
 import NavHeader from "./NavHeader";
 import NavMain from "./NavMain";
@@ -46,6 +47,7 @@ const user = {
 function Sidebar() {
   const isMobile = useIsMobile(); // 모바일 여부 확인
   const [isMobileExpanded, setIsMobileExpanded] = useState(false); // 모바일 확장 상태
+  useCheckAccessToken();
 
   const toggleMobileSidebar = () => setIsMobileExpanded((prev) => !prev);
   return (
