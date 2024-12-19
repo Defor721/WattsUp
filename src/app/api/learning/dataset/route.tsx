@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     try {
       const data = await collection
         .find({}, { projection: { _id: 0, amgo: 0 } })
-        .sort({ "관측일(KST)": 1, "국내 지점번호": 1 })
         .toArray();
       return NextResponse.json(
         { message: "success to find data", data },
