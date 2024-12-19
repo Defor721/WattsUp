@@ -73,7 +73,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
           {/* 드롭다운 메뉴 */}
           <DropdownMenuContent
             className="position:fixed w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-y-auto rounded-lg bg-[rgb(7,15,38)] text-white"
-            side={isTablet ? "right" : "top"}
+            side={isTablet && !isTabletExpanded ? "right" : "top"}
             align="end"
             sideOffset={4}
           >

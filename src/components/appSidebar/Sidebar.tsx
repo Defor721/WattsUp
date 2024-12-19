@@ -13,8 +13,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 import { useDeviceType } from "@/hooks/useDeviceType";
 
 import NavHeader from "./NavHeader";
@@ -47,14 +45,15 @@ const user = {
 };
 
 function Sidebar() {
-  const { isMobile, isTablet } = useDeviceType(); // 디바이스 여부 확인
+  // const
+  const { isTablet } = useDeviceType();
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
   return (
-    <div className={`relative flex`}>
+    <div className="relative flex">
       {/* 테블릿 화면에서 사이드바 확장시켰을 때 */}
-      {(isMobile || isTablet) && isTabletExpanded && (
+      {isTabletExpanded && (
         <div
           className="fixed inset-0 z-40 bg-gray-900/70"
           onClick={toggleTabletSidebar}
@@ -62,23 +61,16 @@ function Sidebar() {
       )}
 
       {/* 사이드바 */}
-      <div className={`h-full ${isMobile || isTablet ? "w-16" : "w-64"}`}></div>
+      <div className={`h-full w-16 lg:w-64`}></div>
       <aside
-        className={cn(
-          "fixed z-50 flex h-full flex-col bg-[rgb(7,15,38)] p-2 text-white transition-all duration-300",
-          isMobile || isTablet ? "w-16" : "w-64", // 테블릿, 모바일에서는 아이콘만 보이게, 데스크탑에서는 확장된 상태
-          (isMobile || isTabletExpanded) && "w-64 shadow-lg", // 테블릿 확장 상태에서 강조
-        )}
+        className={`fixed z-50 flex h-full w-16 flex-col bg-[rgb(7,15,38)] p-2 text-white transition-all duration-300 lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
       >
-        {/* 테블릿에서만 Trigger Button 표시 */}
-        {(isMobile || isTablet) && (
-          <button
-            className="absolute right-[12px] top-0 z-10 bg-[rgb(7,15,38)] p-2 text-white shadow-md"
-            onClick={toggleTabletSidebar}
-          >
-            {isTabletExpanded ? <X /> : <PanelLeft />}
-          </button>
-        )}
+        <button
+          className="absolute right-[12px] top-0 z-10 block bg-[rgb(7,15,38)] p-2 text-white shadow-md lg:hidden"
+          onClick={toggleTabletSidebar}
+        >
+          {isTabletExpanded ? <X /> : <PanelLeft />}
+        </button>
 
         {/* Sidebar Sections */}
         <div className="flex h-full flex-col">
@@ -89,18 +81,19 @@ function Sidebar() {
               isTabletExpanded={isTabletExpanded}
             />
           </div>
+
           {/* Search Section */}
-          {(!isMobile && !isTablet) ||
-            (isTabletExpanded && (
-              <div className="relative my-2 w-full">
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
-                />
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-              </div>
-            ))}
+          {(!isTablet || isTabletExpanded) && (
+            <div className="relative my-2 w-full">
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
+              />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+            </div>
+          )}
+
           {/* Content Section */}
           <div className="flex-1 overflow-y-auto">
             <NavMain
@@ -109,12 +102,9 @@ function Sidebar() {
               isTabletExpanded={isTabletExpanded}
             />
           </div>
+
           {/* Footer Section */}
-          <div
-            className={cn(
-              "rounded-md hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white",
-            )}
-          >
+          <div className="rounded-md hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white">
             <NavUser
               user={user}
               isTablet={isTablet}

@@ -1,6 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
+import React, { useEffect, useMemo, useState } from "react";
+import * as tf from "@tensorflow/tfjs";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
+import { regions } from "@/utils/regions";
+import { Button } from "@/components/shadcn";
+import apiClient from "@/lib/axios";
+import { get5Days } from "@/utils/get6Days";
+
+// OpenWeather API 설정
 const LOCATIONS = [
   { name: "강원도", latitude: 37.8228, longitude: 128.1555 },
   { name: "경기도", latitude: 37.4138, longitude: 127.5183 },
@@ -19,107 +37,213 @@ const LOCATIONS = [
   { name: "충청남도", latitude: 36.5184, longitude: 126.8 },
   { name: "충청북도", latitude: 36.6357, longitude: 127.4917 },
 ];
+const API_KEY = "79eb1cc0bb4be154c5d7cba7344315bc";
 
-const API_KEY = "79eb1cc0bb4be154c5d7cba7344315bc"; // OpenWeather API 키를 입력하세요.
+const INPUT_STATS = { min: -24.6, max: 33.3 };
+const OUTPUT_STATS = { min: 1.574659, max: 5263.160841499999 };
 
-function Page() {
-  const [dataset, setDataset] = useState([]);
+let modelInstance: tf.LayersModel | null = null;
+
+async function loadModel() {
+  if (!modelInstance) {
+    try {
+      console.time("Model Loading");
+      modelInstance = await tf.loadLayersModel("/assets/models/model-3.json");
+      console.log("Model loaded successfully!");
+      console.timeEnd("Model Loading");
+    } catch (error) {
+      console.error("Error loading model:", error);
+    }
+  }
+  return modelInstance;
+}
+
+const normalize = (data: number[], min: number, max: number) =>
+  data.map((value) => (value - min) / (max - min));
+
+const denormalize = (data: number[], min: number, max: number) =>
+  data.map((value) => value * (max - min) + min);
+
+export default function Page() {
   const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<Record<string, any[]>>({});
+  const [chartData, setChartData] = useState<Record<string, any[]>>({});
+  const [selectedRegion, setSelectedRegion] = useState("서울시");
 
   useEffect(() => {
-    async function fetchAllData() {
+    const fetchWeatherData = async () => {
       try {
+        setLoading(true);
         const requests = LOCATIONS.map((location) => {
-          const URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${API_KEY}&units=metric`;
+          const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${API_KEY}&units=metric`;
 
-          return fetch(URL)
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-              }
-              return res.json();
-            })
-            .then((data) => ({
-              location: location.name,
-              data: data.list,
-            }));
+          return apiClient.get(url).then((response) => ({
+            location: location.name,
+            data: response.data.list,
+          }));
         });
 
         const results = await Promise.all(requests);
         console.log("results: ", results);
 
-        const formattedDataset = results.flatMap(({ location, data }) => {
-          return data.map((entry) => {
-            const temp = entry.main.temp; // 현재 기온
-            const humidity = entry.main.humidity; // 상대습도 (%)
-            const windSpeed = entry.wind.speed; // 풍속 (m/s)
-            const rainfall = entry.rain?.["3h"] || 0; // 강수량 (mm, 없으면 0)
+        const processedWeatherData: Record<string, any[]> = {};
 
-            // 수증기압 계산
-            const vaporPressure = calculateVaporPressure(humidity, temp);
+        results.forEach(({ location, data }) => {
+          const groupedByDate = data.reduce((acc: any, entry: any) => {
+            const date = entry.dt_txt.split(" ")[0];
+            const windSpeed = entry.wind.speed || 0;
+            const temperature = entry.main.temp || 0;
+            const precipitation = entry.rain?.["3h"] || 0;
 
-            return {
-              location,
-              date: entry.dt_txt.split(" ")[0],
-              windSpeed,
-              temperature: temp,
-              vaporPressure,
-              precipitation: rainfall,
-            };
-          });
+            if (!acc[date]) {
+              acc[date] = {
+                date,
+                windSpeed: 0,
+                temperature: 0,
+                precipitation: 0,
+                count: 0,
+              };
+            }
+
+            acc[date].windSpeed += windSpeed;
+            acc[date].temperature += temperature;
+            acc[date].precipitation += precipitation;
+            acc[date].count += 1;
+            return acc;
+          }, {});
+
+          const processedData = Object.values(groupedByDate).map(
+            (entry: any) => ({
+              date: entry.date,
+              windSpeed: parseFloat((entry.windSpeed / entry.count).toFixed(2)),
+              temperature: parseFloat(
+                (entry.temperature / entry.count).toFixed(2),
+              ),
+              precipitation: parseFloat(entry.precipitation.toFixed(2)),
+            }),
+          );
+
+          processedWeatherData[location] = processedData;
         });
 
-        setDataset(formattedDataset);
+        setWeatherData(processedWeatherData);
+        console.log("Processed Weather Data:", processedWeatherData);
       } catch (error) {
-        console.error("데이터 가져오기 실패:", error);
+        console.error("Error fetching weather data:", error);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    fetchAllData();
+    fetchWeatherData();
   }, []);
 
-  function calculateVaporPressure(humidity, temperature) {
-    // 포화 수증기압 계산 (hPa)
-    const saturatedVaporPressure =
-      6.11 * Math.exp((17.27 * temperature) / (temperature + 237.3));
-    // 수증기압 계산 (hPa)
-    return (humidity * saturatedVaporPressure) / 100;
-  }
+  useEffect(() => {
+    const predictRegionData = async () => {
+      if (!weatherData) return;
 
-  if (loading) return <div>로딩 중...</div>;
-  if (dataset.length === 0) return <div>데이터가 없습니다.</div>;
+      try {
+        const model = await loadModel();
+
+        const sampleInputs = regions.flatMap((region) =>
+          weatherData[region]?.map((day) => [
+            day.windSpeed,
+            day.temperature,
+            day.precipitation,
+          ]),
+        );
+
+        console.log("sampleInputs: ", sampleInputs);
+        const inputTensor = tf.tensor2d(
+          sampleInputs.map((input) =>
+            input.map(
+              (value) =>
+                normalize([value], INPUT_STATS.min, INPUT_STATS.max)[0],
+            ),
+          ),
+        );
+        if (!model) return;
+        const predictionsTensor = model.predict(inputTensor) as tf.Tensor;
+        const predictionsArray = predictionsTensor.arraySync() as number[][];
+
+        const denormalizedPredictions = predictionsArray.map(
+          (pred) =>
+            denormalize([pred[0]], OUTPUT_STATS.min, OUTPUT_STATS.max)[0],
+        );
+
+        const dates = get5Days();
+        const formattedChartData = regions.reduce(
+          (acc, region, regionIndex) => {
+            acc[region] = dates.map((date, dateIndex) => ({
+              date,
+              amgo:
+                parseFloat(
+                  denormalizedPredictions[
+                    dateIndex * regions.length + regionIndex
+                  ].toFixed(2),
+                ) || 0,
+            }));
+            return acc;
+          },
+          {} as Record<string, any[]>,
+        );
+
+        setChartData(formattedChartData);
+        // console.log("Predicted Chart Data:", formattedChartData);
+      } catch (error) {
+        console.error("Error during prediction:", error);
+      }
+    };
+
+    predictRegionData();
+  }, [weatherData]);
+
+  const handleRegionClick = (region: string) => {
+    setSelectedRegion(region);
+  };
+
+  const regionButtons = useMemo(() => {
+    return regions.map((region) => (
+      <Button
+        key={region}
+        variant={"outline"}
+        className={`${
+          selectedRegion === region
+            ? "bg-[rgb(7,15,38)] text-white"
+            : "bg-gray-200"
+        }`}
+        onClick={() => handleRegionClick(region)}
+      >
+        {region}
+      </Button>
+    ));
+  }, [selectedRegion]);
 
   return (
     <div>
-      <h1>OpenWeather Weather Data for Model Training</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>지역</th>
-            <th>날짜</th>
-            <th>평균 풍속 (m/s)</th>
-            <th>평균 기온 (°C)</th>
-            <th>수증기압 (hPa)</th>
-            <th>강수량 (mm/3h)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataset.map((entry, index) => (
-            <tr key={index}>
-              <td>{entry.location}시</td>
-              <td>{entry.date}</td>
-              <td>{entry.windSpeed.toFixed(2)}</td>
-              <td>{entry.temperature.toFixed(2)}</td>
-              <td>{entry.vaporPressure.toFixed(2)}</td>
-              <td>{entry.precipitation.toFixed(2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="flex-wrap justify-start gap-2 md:flex">
+        {regionButtons}
+      </div>
+      <div className="mt-5">
+        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
+          {selectedRegion} 발전량 예측 그래프
+        </h4>
+        <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+          <LineChart
+            width={730}
+            height={500}
+            data={chartData[selectedRegion]}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="amgo" stroke="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
-
-export default Page;
