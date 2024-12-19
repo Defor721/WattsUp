@@ -12,6 +12,7 @@ export default function useCheckAccessToken(): void {
   } = useAuthStore();
 
   useEffect(() => {
+    // TODO: 만료된 리프레시 토큰도 받아야 하는지 확인
     const checkAccessToken = async () => {
       try {
         if (!accessToken) return;

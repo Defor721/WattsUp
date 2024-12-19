@@ -70,16 +70,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     async socialLogin(code: string) {
       try {
-        const { accessToken, redirectTo } = await exchangeSocialToken(code);
+        const { accessToken } = await exchangeSocialToken(code);
         set({
           accessToken: accessToken,
-          redirectTo: redirectTo || "/",
+          redirectTo: "/",
           error: false,
           message: null,
         });
       } catch (error: any) {
         set({
-          redirectTo: error.response.data.redirectTo || "/login",
+          redirectTo: "/login",
           error: true,
           message:
             error.response.data.message ||

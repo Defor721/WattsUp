@@ -13,14 +13,13 @@ export default function AuthCallbackPage() {
   const { showDialog, DialogComponent } = useDialog();
   const { setAccessToken, resetAccessToken } = useAccessToken();
 
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const error = useAuthStore((state) => state.error);
-  const message = useAuthStore((state) => state.message);
-  const redirectTo = useAuthStore((state) => state.redirectTo);
-  const expiresIn = useAuthStore((state) => state.expiresIn);
-  const { socialLogin, resetLoginState } = useAuthStore(
-    (state) => state.actions,
-  );
+  const {
+    accessToken,
+    error,
+    message,
+    redirectTo,
+    actions: { socialLogin, resetLoginState },
+  } = useAuthStore();
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -28,8 +27,8 @@ export default function AuthCallbackPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (accessToken && expiresIn !== null) {
-      setAccessToken(accessToken, expiresIn);
+    if (accessToken) {
+      setAccessToken(accessToken);
       resetLoginState();
       router.push(redirectTo);
     }

@@ -6,22 +6,9 @@ export interface GoogleTokenResponse {
   refresh_token: string;
 }
 
-export interface ResponsePayload {
-  access_token: string | null;
-  expires_in: number | null;
-  user: any | null;
-  message: string | null;
-  requiresAdditionalData: boolean;
-  redirectTo: string;
-}
-
 interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  redirectTo?: string;
-  message?: string;
-  status?: number;
+  accessToken: string;
+  message: string;
 }
 
 /**
