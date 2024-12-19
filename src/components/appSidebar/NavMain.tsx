@@ -17,15 +17,15 @@ interface data {
 
 interface Props {
   items: data[];
-  isMobile: boolean;
-  isMobileExpanded: boolean;
+  isTablet: boolean;
+  isTabletExpanded: boolean;
 }
 
-function NavMain({ items, isMobile, isMobileExpanded }: Props) {
+function NavMain({ items, isTablet, isTabletExpanded }: Props) {
   return (
     <>
       {/* 테블릿 화면에서 사이드바 확장 and 평상시 화면 */}
-      {(isMobileExpanded || (!isMobile && !isMobileExpanded)) && (
+      {(isTabletExpanded || (!isTablet && !isTabletExpanded)) && (
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -48,7 +48,7 @@ function NavMain({ items, isMobile, isMobileExpanded }: Props) {
       )}
 
       {/* 테블릿 화면일 경우 */}
-      {isMobile && !isMobileExpanded && (
+      {isTablet && !isTabletExpanded && (
         <div className="flex flex-col items-center gap-4 p-2">
           {items.map((item) => (
             <Link

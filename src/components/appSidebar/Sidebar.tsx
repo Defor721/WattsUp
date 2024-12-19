@@ -15,6 +15,7 @@ import { useState } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { useDeviceType } from "@/hooks/useDeviceType";
 
 import NavHeader from "./NavHeader";
 import NavMain from "./NavMain";
@@ -32,7 +33,7 @@ const items = [
   {
     icon: DollarSign,
     label: "Profitability Analysis",
-    href: "/profitability-analysis",
+    href: "/",
   },
   { icon: TrendingUp, label: "Energy Trade", href: "/energytrade" },
   { icon: RefreshCw, label: "Trading", href: "/trading" },
@@ -46,36 +47,36 @@ const user = {
 };
 
 function Sidebar() {
-  const isMobile = useIsMobile(); // 모바일 여부 확인
-  const [isMobileExpanded, setIsMobileExpanded] = useState(false); // 모바일 확장 상태
+  const { isMobile, isTablet } = useDeviceType(); // 디바이스 여부 확인
+  const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
 
-  const toggleMobileSidebar = () => setIsMobileExpanded((prev) => !prev);
+  const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
   return (
     <div className={`relative flex`}>
       {/* 테블릿 화면에서 사이드바 확장시켰을 때 */}
-      {isMobile && isMobileExpanded && (
+      {(isMobile || isTablet) && isTabletExpanded && (
         <div
           className="fixed inset-0 z-40 bg-gray-900/70"
-          onClick={toggleMobileSidebar}
+          onClick={toggleTabletSidebar}
         />
       )}
 
       {/* 사이드바 */}
-      <div className={`h-full ${isMobile ? "w-16" : "w-64"}`}></div>
+      <div className={`h-full ${isMobile || isTablet ? "w-16" : "w-64"}`}></div>
       <aside
         className={cn(
-          "fixed z-50 flex h-full flex-col bg-[rgb(7,15,38)] p-2 text-white transition-all duration-300 md:fixed",
-          isMobile ? "w-16" : "w-64", // 테블릿에서는 아이콘만 보이게, 데스크탑에서는 확장된 상태
-          isMobileExpanded && "w-64 shadow-lg", // 테블릿 확장 상태에서 강조
+          "fixed z-50 flex h-full flex-col bg-[rgb(7,15,38)] p-2 text-white transition-all duration-300",
+          isMobile || isTablet ? "w-16" : "w-64", // 테블릿, 모바일에서는 아이콘만 보이게, 데스크탑에서는 확장된 상태
+          (isMobile || isTabletExpanded) && "w-64 shadow-lg", // 테블릿 확장 상태에서 강조
         )}
       >
         {/* 테블릿에서만 Trigger Button 표시 */}
-        {isMobile && (
+        {(isMobile || isTablet) && (
           <button
             className="absolute right-[12px] top-0 z-10 bg-[rgb(7,15,38)] p-2 text-white shadow-md"
-            onClick={toggleMobileSidebar}
+            onClick={toggleTabletSidebar}
           >
-            {isMobileExpanded ? <X /> : <PanelLeft />}
+            {isTabletExpanded ? <X /> : <PanelLeft />}
           </button>
         )}
 
@@ -84,25 +85,28 @@ function Sidebar() {
           {/* Header Section */}
           <div>
             <NavHeader
-              isMobile={isMobile}
-              isMobileExpanded={isMobileExpanded}
+              isTablet={isTablet}
+              isTabletExpanded={isTabletExpanded}
             />
           </div>
           {/* Search Section */}
-          <div className="relative my-2 w-full">
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
-            />
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-          </div>
+          {(!isMobile && !isTablet) ||
+            (isTabletExpanded && (
+              <div className="relative my-2 w-full">
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
+                />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+              </div>
+            ))}
           {/* Content Section */}
           <div className="flex-1 overflow-y-auto">
             <NavMain
               items={items}
-              isMobile={isMobile}
-              isMobileExpanded={isMobileExpanded}
+              isTablet={isTablet}
+              isTabletExpanded={isTabletExpanded}
             />
           </div>
           {/* Footer Section */}
@@ -113,8 +117,8 @@ function Sidebar() {
           >
             <NavUser
               user={user}
-              isMobile={isMobile}
-              isMobileExpanded={isMobileExpanded}
+              isTablet={isTablet}
+              isTabletExpanded={isTabletExpanded}
             />
           </div>
         </div>

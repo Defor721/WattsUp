@@ -12,15 +12,15 @@ import {
 } from "@/components/shadcn/sidebar";
 
 interface NavHeaderProps {
-  isMobile: boolean;
-  isMobileExpanded: boolean;
+  isTablet: boolean;
+  isTabletExpanded: boolean;
 }
 
-function NavHeader({ isMobile, isMobileExpanded }: NavHeaderProps) {
+function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
   return (
     <>
       {/* 테블릿 화면에서 사이드바 확장 and 평상시 화면 */}
-      {(isMobileExpanded || (!isMobile && !isMobileExpanded)) && (
+      {(isTabletExpanded || (!isTablet && !isTabletExpanded)) && (
         <Link href="/" className="relative flex items-center p-4">
           <Image
             src="/assets/images/logo.webp"
@@ -35,7 +35,7 @@ function NavHeader({ isMobile, isMobileExpanded }: NavHeaderProps) {
         </Link>
       )}
       {/* 테블릿 화면일 경우 */}
-      {isMobile && !isMobileExpanded && (
+      {isTablet && !isTabletExpanded && (
         <SidebarMenu className="mt-9">
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
