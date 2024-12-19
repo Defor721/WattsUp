@@ -32,11 +32,11 @@ interface User {
 
 interface UserProps {
   user: User;
-  isMobile: boolean;
-  isMobileExpanded: boolean;
+  isTablet: boolean;
+  isTabletExpanded: boolean;
 }
 
-export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
+export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -48,7 +48,7 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               {/* 테블릿 화면이고, 사이드바 확장시키지 않은 경우 */}
-              {isMobile && !isMobileExpanded ? (
+              {isTablet && !isTabletExpanded ? (
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
@@ -73,7 +73,7 @@ export function NavUser({ user, isMobile, isMobileExpanded }: UserProps) {
           {/* 드롭다운 메뉴 */}
           <DropdownMenuContent
             className="position:fixed w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-y-auto rounded-lg bg-[rgb(7,15,38)] text-white"
-            side={isMobile ? "right" : "top"}
+            side={isTablet && !isTabletExpanded ? "right" : "top"}
             align="end"
             sideOffset={4}
           >

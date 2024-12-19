@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-import PredictChart from "@/components/dashboard/predict/Chart";
-import { Button } from "@/components/shadcn";
-import PredictTable from "@/components/dashboard/predict/Table";
 import { regions } from "@/utils/regions";
-import { get6Days } from "@/utils/get6Days";
+import { Button } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
+import { get5Days } from "@/utils/get6Days";
 
 // OpenWeather API 설정
 const LOCATIONS = [
@@ -29,10 +37,10 @@ const LOCATIONS = [
   { name: "충청남도", latitude: 36.5184, longitude: 126.8 },
   { name: "충청북도", latitude: 36.6357, longitude: 127.4917 },
 ];
+const API_KEY = "79eb1cc0bb4be154c5d7cba7344315bc";
 
 const INPUT_STATS = { min: -24.6, max: 33.3 };
 const OUTPUT_STATS = { min: 1.574659, max: 5263.160841499999 };
-const API_KEY = "79eb1cc0bb4be154c5d7cba7344315bc";
 
 let modelInstance: tf.LayersModel | null = null;
 
@@ -56,9 +64,9 @@ const normalize = (data: number[], min: number, max: number) =>
 const denormalize = (data: number[], min: number, max: number) =>
   data.map((value) => value * (max - min) + min);
 
-function PredictMain() {
+export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
+  const [weatherData, setWeatherData] = useState<Record<string, any[]>>({});
   const [chartData, setChartData] = useState<Record<string, any[]>>({});
   const [selectedRegion, setSelectedRegion] = useState("서울시");
 
@@ -163,7 +171,7 @@ function PredictMain() {
             denormalize([pred[0]], OUTPUT_STATS.min, OUTPUT_STATS.max)[0],
         );
 
-        const dates = get6Days();
+        const dates = get5Days();
         const formattedChartData = regions.reduce(
           (acc, region, regionIndex) => {
             acc[region] = dates.map((date, dateIndex) => ({
@@ -190,28 +198,9 @@ function PredictMain() {
     predictRegionData();
   }, [weatherData]);
 
-  const tableData = useMemo(() => {
-    if (!weatherData || !selectedRegion) {
-      return;
-    }
-    return weatherData[selectedRegion].map(
-      (
-        item: {
-          date: string;
-          windSpeed: string;
-          temperature: string;
-          precipitation: string;
-        },
-        index: number,
-      ) => ({
-        date: item.date,
-        windSpeed: item.windSpeed,
-        temperature: item.temperature,
-        precipitation: item.precipitation,
-        amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
-      }),
-    );
-  }, [chartData, selectedRegion]);
+  const handleRegionClick = (region: string) => {
+    setSelectedRegion(region);
+  };
 
   const regionButtons = useMemo(() => {
     return regions.map((region) => (
@@ -223,37 +212,38 @@ function PredictMain() {
             ? "bg-[rgb(7,15,38)] text-white"
             : "bg-gray-200"
         }`}
-        onClick={() => setSelectedRegion(region)}
+        onClick={() => handleRegionClick(region)}
       >
         {region}
       </Button>
     ));
   }, [selectedRegion]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <div>
-      <div className="flex flex-wrap gap-2">{regionButtons}</div>
+      <div className="flex-wrap justify-start gap-2 md:flex">
+        {regionButtons}
+      </div>
       <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
           {selectedRegion} 발전량 예측 그래프
         </h4>
-        <PredictChart
-          data={chartData[selectedRegion]}
-          region={selectedRegion}
-        />
-      </div>
-      <div className="mt-5">
-        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
-          {selectedRegion} 테이블
-        </h4>
-        <PredictTable tableData={tableData || []} />
+        <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+          <LineChart
+            width={730}
+            height={500}
+            data={chartData[selectedRegion]}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="amgo" stroke="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
 }
-
-export default PredictMain;
