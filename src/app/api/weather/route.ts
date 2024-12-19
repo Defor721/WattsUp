@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-import { getLast7Days } from "@/utils/getLast7Days";
-
 const locations: Record<string, number> = {
   충청북도: 131,
   충청남도: 129,
@@ -21,6 +19,14 @@ const locations: Record<string, number> = {
   경기도: 119,
   강원도: 105,
   제주도: 184,
+};
+
+const getLast7Days = (): string[] => {
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    return date.toISOString().slice(0, 10);
+  }).sort();
 };
 
 const fetchWeatherData = async (date: string, stn: number) => {

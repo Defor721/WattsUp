@@ -43,22 +43,24 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
+  console.log("Chart Data:", data);
 
   if (!data) {
     <div>로딩중...</div>;
   }
   return (
-    <ResponsiveContainer width={"100%"} aspect={16.0 / 5.0}>
+    <ResponsiveContainer width={"100%"} aspect={16 / 5}>
       <LineChart
         width={730}
-        height={400}
+        height={500}
         data={data}
         // className="my-[5px] ml-5 mr-[30px]"
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" className="text-sm" />
-        <YAxis />
+        <YAxis allowDataOverflow />
+
         <Tooltip />
         <Legend />
         <Line type="monotone" dataKey="amgo" stroke={strokeColor} />

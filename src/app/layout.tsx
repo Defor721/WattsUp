@@ -4,10 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
-import Sidebar from "@/components/appSidebar/Sidebar";
 import { SidebarProvider } from "@/components/shadcn";
-
-import loading from "./loading";
+import Sidebar from "@/components/appSidebar/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,12 +34,12 @@ export default function RootLayout({
           <QueryProvider>
             <SidebarProvider>
               <Sidebar />
-              <div className="flex flex-1 flex-col">
-                <main className="flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
-                  {children}
-                </main>
-                <Toaster />
-              </div>
+              {/* <div className="flex flex-1 flex-col"> */}
+              <main className="flex flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
+                {children}
+              </main>
+              <Toaster />
+              {/* </div> */}
             </SidebarProvider>
           </QueryProvider>
         </MSWProvider>
