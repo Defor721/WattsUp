@@ -233,7 +233,7 @@ function PredictMain() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="p-1 md:p-3 lg:p-5">
       <div className="flex flex-wrap gap-2">{regionButtons}</div>
       <div className="mt-5">
         <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
