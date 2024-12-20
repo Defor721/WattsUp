@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { useLoginStore } from "@/auth/useLoginStore";
+import { useAuthStore } from "@/auth/useAuthStore";
 import { useDialog } from "@/hooks/use-dialog";
 import useAccessToken from "@/auth/useAccessToken";
 
@@ -13,14 +13,13 @@ export default function AuthCallbackPage() {
   const { showDialog, DialogComponent } = useDialog();
   const { setAccessToken, resetAccessToken } = useAccessToken();
 
-  const accessToken = useLoginStore((state) => state.accessToken);
-  const error = useLoginStore((state) => state.error);
-  const message = useLoginStore((state) => state.message);
-  const redirectTo = useLoginStore((state) => state.redirectTo);
-  const expiresIn = useLoginStore((state) => state.expiresIn);
-  const { socialLogin, resetLoginState } = useLoginStore(
-    (state) => state.actions,
-  );
+  const {
+    accessToken,
+    error,
+    message,
+    redirectTo,
+    actions: { socialLogin, resetLoginState },
+  } = useAuthStore();
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -28,8 +27,8 @@ export default function AuthCallbackPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (accessToken && expiresIn !== null) {
-      setAccessToken(accessToken, expiresIn);
+    if (accessToken) {
+      setAccessToken(accessToken);
       resetLoginState();
       router.push(redirectTo);
     }
@@ -45,7 +44,7 @@ export default function AuthCallbackPage() {
         onConfirm: () => {
           router.push(redirectTo);
           resetAccessToken();
-          resetLoginState(); // 상태 초기화
+          resetLoginState();
         },
       });
     }

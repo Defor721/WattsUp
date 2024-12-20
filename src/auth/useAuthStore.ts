@@ -11,13 +11,13 @@ import { deleteCookie } from "@/utils/cookieHelper";
 
 interface User {
   businessNumber: number;
-  businessType: string;
+  businessType: "individual" | "corporate";
   companyName: string;
   corporateNumber: number | null;
   email: string;
   personalId: number | null;
   provider: null | string;
-  signupType: string;
+  signupType: "native" | "social";
 }
 
 interface AuthState {
@@ -34,12 +34,16 @@ interface AuthState {
   };
 }
 
-export const useLoginStore = create<AuthState>((set) => ({
+const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
   user: null,
   accessToken: null,
   redirectTo: "/",
   error: false,
   message: null,
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  ...NULL_AUTH_STATE,
   actions: {
     async nativeLogin(email: string, password: string) {
       try {
@@ -47,7 +51,6 @@ export const useLoginStore = create<AuthState>((set) => ({
           email,
           password,
         );
-
         set({
           accessToken: accessToken,
           redirectTo: "/",
@@ -67,17 +70,26 @@ export const useLoginStore = create<AuthState>((set) => ({
 
     async socialLogin(code: string) {
       try {
-        const { accessToken, redirectTo } = await exchangeSocialToken(code);
+        const { accessToken, message } = await exchangeSocialToken(code);
 
-        set({
-          accessToken: accessToken,
-          redirectTo: redirectTo || "/",
-          error: false,
-          message: null,
-        });
+        if (message === "추가 정보 입력이 필요합니다.") {
+          set({
+            accessToken: null,
+            message,
+            redirectTo: "/login/additional",
+            error: true,
+          });
+        } else {
+          set({
+            accessToken,
+            redirectTo: "/",
+            message,
+            error: false,
+          });
+        }
       } catch (error: any) {
         set({
-          redirectTo: error.response.data.redirectTo || "/login",
+          redirectTo: "/login",
           error: true,
           message:
             error.response.data.message ||
@@ -90,10 +102,10 @@ export const useLoginStore = create<AuthState>((set) => ({
       try {
         const user = await fetchCurrentUser();
         set((state) => {
-          if (state.user?.email === user.userData.email) {
-            return state;
+          if (state.user?.email !== user.userData.email) {
+            return { ...state, user: user.userData };
           }
-          return { ...state, user: user.userData };
+          return state;
         });
       } catch (error: any) {
         deleteCookie("accessToken");
@@ -106,14 +118,6 @@ export const useLoginStore = create<AuthState>((set) => ({
       }
     },
 
-    resetLoginState: () => {
-      set({
-        user: null,
-        accessToken: null,
-        redirectTo: "/",
-        error: false,
-        message: null,
-      });
-    },
+    resetLoginState: () => set(NULL_AUTH_STATE),
   },
 }));

@@ -16,7 +16,7 @@ import {
   Label,
 } from "@/components/shadcn";
 import { FindPasswordPopup } from "@/auth/components/FindPassword";
-import { useLoginStore } from "@/auth/useLoginStore";
+import { useAuthStore } from "@/auth/useAuthStore";
 import { useDialog } from "@/hooks/use-dialog";
 
 import useAccessToken from "../useAccessToken";
@@ -36,7 +36,7 @@ export default function LoginForm() {
     message,
     redirectTo,
     actions: { nativeLogin, resetLoginState },
-  } = useLoginStore();
+  } = useAuthStore();
 
   const togglePassword = () => setShowPassword((prevState) => !prevState);
 
@@ -108,7 +108,7 @@ export default function LoginForm() {
           />
           <Button
             size={"icon"}
-            className="absolute right-2 top-[38px] -translate-y-1/4 bg-transparent hover:bg-transparent"
+            className="absolute right-2 top-4 -translate-y-1/4 bg-transparent hover:bg-transparent"
             onClick={togglePassword}
           >
             {showPassword ? (

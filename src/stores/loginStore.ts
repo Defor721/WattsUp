@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useLoginStore = create((set) => {
+export const useAuthStore = create((set) => {
   return {
     // isLogin: false,
 

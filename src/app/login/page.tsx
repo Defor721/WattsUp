@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Card } from "@/components/shadcn";
 import GoogleLoginButton from "@/auth/components/GoogleLoginButton";
 import LoginForm from "@/auth/components/loginForm";
-import { useLoginStore } from "@/auth/useLoginStore";
+import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/useAccessToken";
 
 export default function LoginPage() {
@@ -17,7 +17,7 @@ export default function LoginPage() {
     accessToken,
     redirectTo,
     actions: { resetLoginState },
-  } = useLoginStore();
+  } = useAuthStore();
 
   useEffect(() => {
     resetLoginState();
