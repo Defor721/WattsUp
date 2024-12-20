@@ -2,201 +2,249 @@
 
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import Plot from "react-plotly.js";
-import { Dropdown, Button, Container, Row, Col, Card } from "react-bootstrap";
+import {
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  BatteryCharging,
+  Download,
+} from "lucide-react";
 
-// 데이터 인터페이스
+import KPICard from "@/components/dashboard/page3/KPICard";
+import LineChart from "@/components/dashboard/page3/LineChart";
+import DoughnutChart from "@/components/dashboard/page3/DoughnutChart";
+import BarChart from "@/components/dashboard/page3/BarChart";
+
+import DataTable from "@/components/dashboard/page3/DataTable";
+
 interface EnergyData {
   연도: number;
-  "에너지 항목": string;
-  소비량: number;
+  총에너지: number;
+  석탄합계: number;
+  석유합계: number;
+  LNG: number;
+  수력: number;
+  원자력: number;
+  기타: number;
 }
 
 const EnergyDashboard: React.FC = () => {
   const [data, setData] = useState<EnergyData[]>([]);
-  const [filteredData, setFilteredData] = useState<EnergyData[]>([]);
-  const [selectedYear, setSelectedYear] = useState<string>("전체");
-  const [selectedEnergy, setSelectedEnergy] = useState<string>("전체");
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [currentYearData, setCurrentYearData] = useState<EnergyData | null>(
+    null,
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [totalEnergy, setTotalEnergy] = useState<number>(0);
-  const [percentage, setPercentage] = useState<number>(0);
+  const normalizeData = (row: Record<string, any>): EnergyData => {
+    try {
+      return {
+        연도: Number(row["연도"]),
+        총에너지: Number(row["1차에너지소비(1000ton)_총에너지"]),
+        석탄합계: Number(row["1차에너지소비(1000ton)_석탄합계"]),
+        석유합계: Number(row["1차에너지소비(1000ton)_석유합계"]),
+        LNG: Number(row["1차에너지소비(1000ton)_LNG"]),
+        수력: Number(row["1차에너지소비(1000ton)_수력"]),
+        원자력: Number(row["1차에너지소비(1000ton)_원자력"]),
+        기타: Number(row["1차에너지소비(1000ton)_기타"]),
+      };
+    } catch (err) {
+      console.error("Failed to normalize data:", row, err);
+      throw new Error("Invalid data format");
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        "/assets/dashboards/HOME_주요지표_에너지지표.xlsx",
-      );
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-      });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          "/assets/dashboards/HOME_주요지표_에너지지표.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: EnergyData[] = XLSX.utils
+          .sheet_to_json<Record<string, any>>(worksheet)
+          .map(normalizeData);
 
-      const jsonData: EnergyData[] = XLSX.utils
-        .sheet_to_json(worksheet)
-        .map((row: any) => ({
-          연도: row["연도"],
-          "에너지 항목": row["에너지 항목"],
-          소비량: row["소비량"],
-        }));
-
-      setData(jsonData);
-      setFilteredData(jsonData);
+        setData(jsonData);
+        const latestYear = jsonData[0]?.연도 || null;
+        setSelectedYear(latestYear);
+        setCurrentYearData(
+          jsonData.find((item) => item.연도 === latestYear) || null,
+        );
+        setError(null);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
   }, []);
 
   useEffect(() => {
-    let filtered = data;
-
-    if (selectedYear !== "전체") {
-      filtered = filtered.filter(
-        (item) => item.연도.toString() === selectedYear,
-      );
+    if (selectedYear) {
+      const yearData = data.find((item) => item.연도 === selectedYear);
+      setCurrentYearData(yearData || null);
     }
+  }, [selectedYear, data]);
 
-    if (selectedEnergy !== "전체") {
-      filtered = filtered.filter(
-        (item) => item["에너지 항목"] === selectedEnergy,
-      );
-    }
+  const handleDownload = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Energy Data");
+    XLSX.writeFile(workbook, "EnergyDashboardData.xlsx");
+  };
 
-    const total = filtered.reduce((acc, curr) => acc + curr.소비량, 0);
-    const totalAll = data.reduce((acc, curr) => acc + curr.소비량, 0);
-    const percentage = (total / totalAll) * 100;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
-    setFilteredData(filtered);
-    setTotalEnergy(total);
-    setPercentage(percentage);
-  }, [selectedYear, selectedEnergy, data]);
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+        <div>{error}</div>
+      </div>
+    );
+  }
 
-  // 연도 및 에너지 항목 옵션
-  const years = ["전체", ...new Set(data.map((item) => item.연도))];
-  const energyTypes = [
-    "전체",
-    ...new Set(data.map((item) => item["에너지 항목"])),
-  ];
+  if (!currentYearData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+        <div>데이터가 없습니다.</div>
+      </div>
+    );
+  }
 
   return (
-    <Container
-      fluid
-      style={{ backgroundColor: "#1C1F2B", color: "white", minHeight: "100vh" }}
-    >
-      <h1 className="my-4 text-center">에너지 소비 대시보드</h1>
+    <div className="min-h-screen bg-gray-900 p-4 md:p-8">
+      <h1 className="mb-6 text-center text-4xl font-bold text-white">
+        에너지 지표 대시보드
+      </h1>
 
-      {/* 필터 */}
-      <Row className="mb-4">
-        <Col md={6}>
-          <Dropdown onSelect={(e) => setSelectedYear(e || "전체")}>
-            <Dropdown.Toggle variant="secondary">
-              연도 선택: {selectedYear}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {years.map((year) => (
-                <Dropdown.Item key={year} eventKey={year}>
-                  {year}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col md={6}>
-          <Dropdown onSelect={(e) => setSelectedEnergy(e || "전체")}>
-            <Dropdown.Toggle variant="secondary">
-              에너지 항목 선택: {selectedEnergy}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {energyTypes.map((type) => (
-                <Dropdown.Item key={type} eventKey={type}>
-                  {type}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-
-      {/* KPI */}
-      <Row className="mb-4 text-center">
-        <Col>
-          <Card className="bg-dark text-white">
-            <Card.Body>
-              <Card.Title>총 에너지 소비량</Card.Title>
-              <Card.Text>{totalEnergy.toLocaleString()} (1000톤)</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card className="bg-dark text-white">
-            <Card.Body>
-              <Card.Title>비율 (%)</Card.Title>
-              <Card.Text>{percentage.toFixed(2)}%</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* 차트 */}
-      <Row>
-        <Col md={6}>
-          <Plot
-            data={[
-              {
-                x: filteredData.map((item) => item.연도),
-                y: filteredData.map((item) => item.소비량),
-                type: "line",
-                mode: "lines+markers",
-                marker: { color: "#4e79a7" },
-              },
-            ]}
-            layout={{
-              title: "에너지 소비 추이",
-              paper_bgcolor: "#1C1F2B",
-              plot_bgcolor: "#1C1F2B",
-              font: { color: "white" },
-            }}
-          />
-        </Col>
-        <Col md={6}>
-          <Plot
-            data={[
-              {
-                x: filteredData.map((item) => item.연도),
-                y: filteredData.map((item) => item.소비량),
-                type: "bar",
-                marker: { color: "#FF5733" },
-              },
-            ]}
-            layout={{
-              title: "에너지 소비 비교",
-              paper_bgcolor: "#1C1F2B",
-              plot_bgcolor: "#1C1F2B",
-              font: { color: "white" },
-            }}
-          />
-        </Col>
-      </Row>
-
-      {/* 데이터 다운로드 */}
-      <div className="mt-4 text-center">
-        <Button
-          variant="success"
-          onClick={() => {
-            const blob = new Blob([JSON.stringify(filteredData, null, 2)], {
-              type: "application/json",
-            });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = "energy_data.json";
-            link.click();
-          }}
+      {/* 연도 선택 및 다운로드 */}
+      <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:justify-end">
+        <select
+          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
+          value={selectedYear || ""}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
         >
+          <option value="" disabled>
+            연도를 선택하세요
+          </option>
+          {data.map((item) => (
+            <option key={item.연도} value={item.연도}>
+              {item.연도}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={handleDownload}
+          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          <Download size={16} />
           데이터 다운로드
-        </Button>
+        </button>
       </div>
-    </Container>
+
+      {/* KPI Cards */}
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <KPICard
+          title="총 에너지 소비량"
+          value={`${currentYearData.총에너지.toLocaleString()} 1000ton`}
+          icon={<BatteryCharging size={24} color="#FFFFFF" />}
+          backgroundColor="#6D28D9"
+          iconColor="#A855F7"
+        />
+        <KPICard
+          title="석탄 소비량"
+          value={`${currentYearData.석탄합계.toLocaleString()} 1000ton`}
+          icon={<TrendingDown size={24} color="#FFFFFF" />}
+          backgroundColor="#22C55E"
+          iconColor="#16A34A"
+        />
+        <KPICard
+          title="석유 소비량"
+          value={`${currentYearData.석유합계.toLocaleString()} 1000ton`}
+          icon={<Activity size={24} color="#FFFFFF" />}
+          backgroundColor="#F59E0B"
+          iconColor="#FACC15"
+        />
+        <KPICard
+          title="LNG 소비량"
+          value={`${currentYearData.LNG.toLocaleString()} 1000ton`}
+          icon={<TrendingUp size={24} color="#FFFFFF" />}
+          backgroundColor="#3B82F6"
+          iconColor="#2563EB"
+        />
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
+          <h2 className="mb-4 text-lg font-semibold text-white">
+            연도별 에너지 소비량
+          </h2>
+          <LineChart
+            data={data.map((item) => ({
+              연도: item.연도,
+              총에너지: item.총에너지,
+              석탄: item.석탄합계,
+              석유: item.석유합계,
+            }))}
+          />
+        </div>
+        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
+          <h2 className="mb-4 text-lg font-semibold text-white">
+            에너지 소비 비율
+          </h2>
+          <DoughnutChart
+            data={{
+              석탄: currentYearData.석탄합계,
+              석유: currentYearData.석유합계,
+              LNG: currentYearData.LNG,
+              기타: currentYearData.기타,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Data Table */}
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold text-white">데이터 테이블</h2>
+        <DataTable
+          data={data.map((item) => ({
+            연도: item.연도.toString(),
+            총에너지: item.총에너지.toLocaleString(),
+            석탄합계: item.석탄합계.toLocaleString(),
+            석유합계: item.석유합계.toLocaleString(),
+            LNG: item.LNG.toLocaleString(),
+            수력: item.수력.toLocaleString(),
+            원자력: item.원자력.toLocaleString(),
+          }))}
+          columns={[
+            { key: "연도", title: "연도" },
+            { key: "총에너지", title: "총 에너지 소비량 (1000ton)" },
+            { key: "석탄합계", title: "석탄 소비량 (1000ton)" },
+            { key: "석유합계", title: "석유 소비량 (1000ton)" },
+            { key: "LNG", title: "LNG 소비량 (1000ton)" },
+            { key: "수력", title: "수력 소비량 (1000ton)" },
+            { key: "원자력", title: "원자력 소비량 (1000ton)" },
+          ]}
+        />
+      </div>
+    </div>
   );
 };
 
