@@ -23,20 +23,20 @@ import { Input } from "../shadcn";
 
 // Menu items
 const items = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
   {
     icon: BarChart2,
-    label: "Power Generation Forecasting",
+    label: "전력 생산 예측",
     href: "/dashboard/predict",
   },
   {
     icon: DollarSign,
-    label: "Profitability Analysis",
+    label: "수익성 분석",
     href: "/",
   },
-  { icon: TrendingUp, label: "Energy Trade", href: "/energytrade" },
-  { icon: RefreshCw, label: "Trading", href: "/trading" },
-  { icon: Settings, label: "Settings", href: "/settings" },
+  { icon: TrendingUp, label: "전력 거래", href: "/energytrade" },
+  // { icon: RefreshCw, label: "Trading", href: "/trading" },
+  { icon: Settings, label: "설정", href: "/settings" },
 ];
 
 const user = {
@@ -74,7 +74,6 @@ function Sidebar() {
         >
           {isTabletExpanded ? <X /> : <PanelLeft />}
         </button>
-
         {/* Sidebar Sections */}
         <div className="flex h-full flex-col">
           {/* Header Section */}

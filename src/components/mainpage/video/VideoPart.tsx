@@ -33,25 +33,27 @@ function VideoPart() {
 
   // 자동 슬라이드 전환을 위한 타이머 설정
   useEffect(() => {
+    // 5초마다 실행되는 타이머 생성
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length); // 마지막 슬라이드에서 처음으로 돌아감
-    }, 5000); // 5초마다 슬라이드 전환
+    }, 5000); // 5000ms (5초)마다 실행
+
     return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 제거
   }, []);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* 배경 비디오 */}
+      {/* 배경 비디오 설정 */}
       <video
         src="/assets/videos/istockphoto-1569244272-640_adpp_is.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay // 비디오 자동 재생
+        loop // 비디오 반복 재생
+        muted // 비디오 음소거
+        playsInline // 모바일에서 인라인 재생 허용
+        className="absolute inset-0 h-full w-full object-cover" // 전체 화면에 비디오 배경 설정
       />
 
-      {/* 로고 애니메이션 (내려오는 효과) */}
+      {/* 로고 애니메이션 설정 (내려오는 효과) */}
       <motion.div
         initial={{ y: -200, opacity: 0 }} // 초기 위치와 투명도
         animate={{ y: 0, opacity: 0.7 }} // 애니메이션 후 위치와 투명도
@@ -59,14 +61,14 @@ function VideoPart() {
         className="absolute inset-0 z-0 flex items-center justify-center"
       >
         <h1 className="text-center">
-          <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent sm:text-[200px] md:text-[250px] lg:text-[300px]">
+          <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent opacity-80 sm:text-[200px] md:text-[250px] lg:text-[230px]">
             WattsUp
           </span>
         </h1>
       </motion.div>
 
       {/* 어두운 오버레이 */}
-      <div className="absolute inset-0 bg-black bg-opacity-50" />
+      <div className="absolute inset-0 bg-black bg-opacity-60" />
 
       {/* 슬라이드 콘텐츠 애니메이션 */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
@@ -74,8 +76,8 @@ function VideoPart() {
           {/* 슬라이드 전환 애니메이션 */}
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0, y: 20 }} // 시작 상태 (투명도 0, 아래 위치)
-            animate={{ opacity: 1, y: 0 }} // 애니메이션 완료 상태
+            initial={{ opacity: 0, y: 20 }} // 슬라이드 초기 상태 (투명도 0, 아래 위치)
+            animate={{ opacity: 1, y: 0 }} // 슬라이드 애니메이션 완료 상태
             exit={{ opacity: 0, y: -20 }} // 슬라이드 사라질 때 상태
             transition={{ duration: 0.8, ease: "easeOut" }} // 부드러운 애니메이션 효과
             className="container mx-auto px-4"
@@ -83,9 +85,9 @@ function VideoPart() {
             <div className="text-center">
               {/* 슬라이드 부제목 */}
               <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                initial={{ opacity: 0 }} // 투명한 상태에서 시작
+                animate={{ opacity: 1 }} // 투명도가 점차 증가
+                transition={{ delay: 0.3 }} // 약간의 지연 효과
                 className="mb-2 text-sm font-light tracking-wider text-gray-300 sm:mb-4 sm:text-base md:text-lg lg:text-xl"
               >
                 {slides[currentSlide].subtitle}
@@ -93,9 +95,9 @@ function VideoPart() {
 
               {/* 슬라이드 제목 */}
               <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                initial={{ opacity: 0, y: 20 }} // 아래에서 위로 이동하며 나타남
+                animate={{ opacity: 1, y: 0 }} // 제자리에서 보이게 함
+                transition={{ delay: 0.5 }} // 0.5초 지연 후 애니메이션
                 className="mb-3 text-3xl font-bold text-white sm:mb-4 sm:text-4xl md:text-5xl lg:mb-6 lg:text-7xl"
               >
                 {slides[currentSlide].title}
@@ -129,14 +131,19 @@ function VideoPart() {
           </motion.div>
         </AnimatePresence>
 
-        {/* 슬라이드 번호 표시 */}
-        <div className="absolute bottom-4 right-4 font-light text-white sm:bottom-6 sm:right-6 md:bottom-8 md:right-8">
-          <span className="text-xl sm:text-2xl md:text-3xl">
-            {currentSlide + 1}
-          </span>
-          <span className="text-base opacity-50 sm:text-lg md:text-xl">
-            /{slides.length}
-          </span>
+        {/* 슬라이드 동그라미 단추 표시 */}
+        <div className="absolute bottom-6 right-6 flex justify-end space-x-2">
+          {slides.map((_, index) => (
+            <button
+              key={index} // 버튼의 고유 키 값 설정
+              onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드를 변경
+              className={`h-4 w-4 rounded-full border-2 ${
+                currentSlide === index
+                  ? "bg-white"
+                  : "border-white bg-transparent"
+              }`} // 현재 슬라이드면 흰색 배경, 아니면 투명 배경
+            />
+          ))}
         </div>
       </div>
     </div>
