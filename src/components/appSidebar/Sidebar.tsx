@@ -16,9 +16,9 @@ import { useState } from "react";
 import useCheckAccessToken from "@/auth/useCheckAccessToken";
 import { useDeviceType } from "@/hooks/useDeviceType";
 
-import NavHeader from "./NavHeader";
-import NavMain from "./NavMain";
-import { NavUser } from "./NavUser";
+import NavHeader from "./Header";
+import NavMain from "./Main";
+import { NavUser } from "./User";
 import { Input } from "../shadcn";
 
 // Menu items

@@ -76,7 +76,7 @@ function PredictMain() {
         });
 
         const results = await Promise.all(requests);
-        console.log("results: ", results);
+        // console.log("results: ", results);
 
         const processedWeatherData: Record<string, any[]> = {};
 
@@ -119,7 +119,7 @@ function PredictMain() {
         });
 
         setWeatherData(processedWeatherData);
-        console.log("Processed Weather Data:", processedWeatherData);
+        // console.log("Processed Weather Data:", processedWeatherData);
       } catch (error) {
         console.error("Error fetching weather data:", error);
       } finally {
@@ -145,7 +145,7 @@ function PredictMain() {
           ]),
         );
 
-        console.log("sampleInputs: ", sampleInputs);
+        // console.log("sampleInputs: ", sampleInputs);
         const inputTensor = tf.tensor2d(
           sampleInputs.map((input) =>
             input.map(
@@ -230,9 +230,7 @@ function PredictMain() {
     ));
   }, [selectedRegion]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>

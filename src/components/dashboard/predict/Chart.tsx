@@ -45,9 +45,8 @@ function PredictChart({ data, region }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
   console.log("Chart Data:", data);
 
-  if (!data) {
-    <div>로딩중...</div>;
-  }
+  if (!data) return <div>로딩중...</div>;
+
   return (
     <ResponsiveContainer width={"100%"} aspect={16 / 5}>
       <LineChart
