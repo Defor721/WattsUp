@@ -40,7 +40,7 @@ const sidebarItems = [
 
 export default function Sidebar() {
   const { isOpen, toggle } = useSidebarStore(); // Zustand 상태 관리
-  // useCheckAccessToken();
+  useCheckAccessToken();
 
   return (
     <>

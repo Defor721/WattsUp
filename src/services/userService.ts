@@ -1,8 +1,9 @@
 import apiClient from "@/lib/axios";
 
 export interface CheckUserResponse {
-  isAdditionalInfoRequired: boolean;
+  businessNumber: any;
   signupType: "native" | "social" | null;
+  email: string;
 }
 
 export async function checkUserByEmail(

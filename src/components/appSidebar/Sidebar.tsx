@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import useCheckAccessToken from "@/auth/useCheckAccessToken";
 import { useDeviceType } from "@/hooks/useDeviceType";
 
 import NavHeader from "./NavHeader";
@@ -45,6 +46,8 @@ const user = {
 };
 
 function Sidebar() {
+  useCheckAccessToken();
+
   // const
   const { isTablet } = useDeviceType();
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
