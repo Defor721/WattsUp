@@ -6,6 +6,7 @@ import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
 import { SidebarProvider } from "@/components/shadcn";
 import Sidebar from "@/components/appSidebar/Sidebar";
+import FloatingButton from "@/components/FloatingButton/FloatingButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
               <main className="flex flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
                 {children}
               </main>
+              <FloatingButton />
               <Toaster />
               {/* </div> */}
             </SidebarProvider>
