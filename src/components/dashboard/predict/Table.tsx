@@ -13,9 +13,7 @@ interface PredictTableProps {
 }
 
 const PredictTable: React.FC<PredictTableProps> = ({ tableData }) => {
-  if (!tableData || tableData.length === 0) {
-    return <p className="text-center text-gray-400">데이터가 없습니다.</p>;
-  }
+  if (!tableData) return <div>로딩중...</div>;
 
   return (
     <div className="overflow-x-auto">
