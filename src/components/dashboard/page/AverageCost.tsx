@@ -3,7 +3,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/shadcn";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
