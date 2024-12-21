@@ -9,5 +9,5 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="flex justify-center">{children}</div>;
+  return <div className="flex w-full justify-center">{children}</div>;
 }

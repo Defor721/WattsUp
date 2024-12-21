@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
-import { checkUserByEmail } from "@/services/userService";
 import { fetchGoogleTokens, fetchGoogleUserInfo } from "@/auth/authService";
 
 // 환경 변수 검증 함수

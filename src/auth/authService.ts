@@ -117,7 +117,20 @@ export async function reissueToken(): Promise<any> {
     return data;
   } catch (error) {
     console.log("토큰 재발급 중 오류 발생", error);
+    throw error;
+  }
+}
 
+export async function validateBusinessNumber(
+  businessNumber: string,
+): Promise<any> {
+  try {
+    const response = await apiClient.post("/api/auth/validatebusiness", {
+      businessNumber,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log("사업자 등록번호 확인 중 오류 발생", error);
     throw error;
   }
 }
