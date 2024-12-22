@@ -23,20 +23,20 @@ import { Input } from "../shadcn";
 
 // Menu items
 const items = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
   {
     icon: BarChart2,
-    label: "Power Generation Forecasting",
+    label: "전력 생산 예측",
     href: "/dashboard/predict",
   },
   {
     icon: DollarSign,
-    label: "Profitability Analysis",
+    label: "수익성 분석",
     href: "/",
   },
-  { icon: TrendingUp, label: "Energy Trade", href: "/energytrade" },
-  { icon: RefreshCw, label: "Trading", href: "/trading" },
-  { icon: Settings, label: "Settings", href: "/settings" },
+  { icon: TrendingUp, label: "전력 거래", href: "/energytrade" },
+  // { icon: RefreshCw, label: "Trading", href: "/trading" },
+  { icon: Settings, label: "설정", href: "/settings" },
 ];
 
 const user = {
@@ -66,15 +66,14 @@ function Sidebar() {
       {/* 사이드바 */}
       <div className={`h-full w-16 lg:w-64`}></div>
       <aside
-        className={`fixed z-50 flex h-full w-16 flex-col bg-[rgb(7,15,38)] p-2 text-white transition-all duration-300 lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
+        className={`fixed z-50 flex h-full w-16 flex-col bg-customBg p-2 transition-all duration-300 dark:bg-customBg-dark lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
       >
         <button
-          className="absolute right-[12px] top-0 z-10 block bg-[rgb(7,15,38)] p-2 text-white shadow-md lg:hidden"
+          className={`absolute bg-customBg dark:bg-customBg-dark ${isTabletExpanded ? "right-[0px]" : "right-[12px]"} top-0 z-10 block p-2 lg:hidden`}
           onClick={toggleTabletSidebar}
         >
           {isTabletExpanded ? <X /> : <PanelLeft />}
         </button>
-
         {/* Sidebar Sections */}
         <div className="flex h-full flex-col">
           {/* Header Section */}

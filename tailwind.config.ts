@@ -19,36 +19,9 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/styles/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: ["class", '[data-theme="dark"]'], // 다크모드 변수 활성화
+  darkMode: ["class"], // 다크모드 변수 활성화
   theme: {
     extend: {
-      keyframes: {
-        insideout: {
-          "0%": { opacity: "0%" },
-          "100%": { opacity: "100%" },
-        },
-        fadeOut: {
-          "0%": { opacity: "100%" },
-          "100%": { opacity: "0%" },
-        },
-        scaleIn: {
-          "0%": { transform: "scale(0)", opacity: "0" },
-          "100%": { transform: "scale(1)", opacity: "1" },
-        },
-        scaleOut: {
-          "0%": { transform: "scale(1)", opacity: "1" },
-          "100%": { transform: "scale(0)", opacity: "0" },
-        },
-      },
-      animation: {
-        insideout: "insideout 0.6s ease-in-out",
-        fadeOut: "fadeOut 0.6s ease-in-out",
-        scaleIn: "scaleIn 0.3s ease-in-out",
-        scaleOut: "scaleOut 0.3s ease-in-out",
-      },
-      borderWidth: {
-        1: "1px",
-      },
       colors: {
         primary: {
           DEFAULT: "var(--primary)",
@@ -104,6 +77,41 @@ const config: Config = {
           DEFAULT: "#FF5B1A",
           dark: "#FF6B31",
         },
+        customBg: {
+          DEFAULT: "#f8f9fa",
+          dark: "#070f26", // 다크 모드 배경 색상
+        },
+        customText: {
+          DEFAULT: "#111",
+          dark: "#26053b", // 다크 모드 텍스트 색상
+        },
+      },
+      keyframes: {
+        insideout: {
+          "0%": { opacity: "0%" },
+          "100%": { opacity: "100%" },
+        },
+        fadeOut: {
+          "0%": { opacity: "100%" },
+          "100%": { opacity: "0%" },
+        },
+        scaleIn: {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        scaleOut: {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(0)", opacity: "0" },
+        },
+      },
+      animation: {
+        insideout: "insideout 0.6s ease-in-out",
+        fadeOut: "fadeOut 0.6s ease-in-out",
+        scaleIn: "scaleIn 0.3s ease-in-out",
+        scaleOut: "scaleOut 0.3s ease-in-out",
+      },
+      borderWidth: {
+        1: "1px",
       },
     },
   },

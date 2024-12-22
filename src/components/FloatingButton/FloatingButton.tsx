@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { MdOutlineDarkMode } from "react-icons/md";
+import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { useTheme } from "next-themes";
 
 function FloatingButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { setTheme, theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,8 +44,12 @@ function FloatingButton() {
   };
 
   const handleThemeChangeClick = () => {
-    console.log("테마 버튼 클릭");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  useEffect(() => {
+    console.log("theme: ", theme);
+  }, [theme]);
 
   return (
     <div className="relative">
@@ -75,7 +81,11 @@ function FloatingButton() {
           isExpanded ? "translate-y-[-120px] opacity-100" : "opacity-0"
         }`}
       >
-        <MdOutlineDarkMode size={"24px"} className="text-white opacity-80" />
+        {theme === "dark" ? (
+          <MdOutlineLightMode size={"24px"} className="text-white opacity-80" />
+        ) : (
+          <MdOutlineDarkMode size={"24px"} className="text-white opacity-80" />
+        )}
       </button>
     </div>
   );

@@ -7,6 +7,7 @@ import { MSWProvider, QueryProvider } from "@/config";
 import { SidebarProvider } from "@/components/shadcn";
 import Sidebar from "@/components/appSidebar/Sidebar";
 import FloatingButton from "@/components/FloatingButton/FloatingButton";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,14 +35,21 @@ export default function RootLayout({
         <MSWProvider>
           <QueryProvider>
             <SidebarProvider>
-              <Sidebar />
-              {/* <div className="flex flex-1 flex-col"> */}
-              <main className="flex flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
-                {children}
-              </main>
-              <FloatingButton />
-              <Toaster />
-              {/* </div> */}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Sidebar />
+                {/* <div className="flex flex-1 flex-col"> */}
+                <main className="flex flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
+                  {children}
+                </main>
+                <FloatingButton />
+                <Toaster />
+                {/* </div> */}
+              </ThemeProvider>
             </SidebarProvider>
           </QueryProvider>
         </MSWProvider>
