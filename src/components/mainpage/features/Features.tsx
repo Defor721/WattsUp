@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 function FeaturesPart() {
   return (
-    <div className="min-h-screen bg-[#F5F5F5]">
+    <div className="flex min-h-screen flex-col bg-[#F5F5F5]">
       {/* Hero Section */}
       <div className="relative flex h-[50vh] flex-col items-center justify-center text-center">
         <motion.div
@@ -35,7 +35,7 @@ function FeaturesPart() {
       </div>
 
       {/* Cards Section */}
-      <div className="bg-gradient-to-b from-[#F5F5F5] to-gray-900">
+      <div className="flex bg-gradient-to-b from-[#F5F5F5] to-gray-900">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             {[
