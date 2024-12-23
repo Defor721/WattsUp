@@ -39,14 +39,14 @@ export function StatusCards({ currentSupply }: StatusCardsProps) {
         >
           <CardHeader>
             <CardTitle className="text-md">{item.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
+            {/* <CardContent> */}
             <p className="text-end text-2xl font-bold">
               {item.isPercentage
                 ? `${item.value.toFixed(2)}%`
                 : `${formatNumber(item.value)} MW`}
             </p>
-          </CardContent>
+            {/* </CardContent> */}
+          </CardHeader>
         </MotionCard>
       ))}
     </div>
