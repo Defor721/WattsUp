@@ -10,6 +10,8 @@ import { regions } from "@/utils/regions";
 import { get6Days } from "@/utils/get6Days";
 import apiClient from "@/lib/axios";
 
+import RegionButtons from "./RegionButtons";
+
 // OpenWeather API 설정
 const LOCATIONS = [
   { name: "강원도", latitude: 37.8228, longitude: 128.1555 },
@@ -234,22 +236,20 @@ function PredictMain() {
 
   return (
     <div className="p-1 md:p-3 lg:p-5">
-      <div className="flex flex-wrap gap-2">{regionButtons}</div>
-      <div className="mt-5">
-        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
-          {selectedRegion} 발전량 예측 그래프
-        </h4>
-        <PredictChart
-          data={chartData[selectedRegion]}
-          region={selectedRegion}
-        />
-      </div>
-      <div className="mt-5">
-        <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
-          {selectedRegion} 테이블
-        </h4>
-        <PredictTable tableData={tableData || []} />
-      </div>
+      <RegionButtons
+        regions={regions}
+        selectedRegion={selectedRegion}
+        setSelectedRegion={setSelectedRegion}
+      />
+      <PredictChart
+        data={chartData[selectedRegion]}
+        region={selectedRegion}
+        selectedRegion={selectedRegion}
+      />
+      <PredictTable
+        tableData={tableData || []}
+        selectedRegion={selectedRegion}
+      />
     </div>
   );
 }

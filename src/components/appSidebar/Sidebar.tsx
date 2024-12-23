@@ -15,18 +15,20 @@ import { useState } from "react";
 
 import useCheckAccessToken from "@/auth/useCheckAccessToken";
 import { useDeviceType } from "@/hooks/useDeviceType";
+import useAccessToken from "@/auth/useAccessToken";
 
 import NavHeader from "./Header";
 import NavMain from "./Main";
 import { NavUser } from "./User";
 import { Input } from "../shadcn";
+import NotLogin from "./NotLogin";
 
 // Menu items
 const items = [
   { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
   {
     icon: BarChart2,
-    label: "태양광 발전량 생산 예측",
+    label: "태양광 발전량 예측",
     href: "/dashboard/predict",
   },
   {
@@ -48,9 +50,9 @@ const user = {
 function Sidebar() {
   useCheckAccessToken();
 
-  // const
   const { isTablet } = useDeviceType();
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
+  const { accessToken } = useAccessToken();
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
   return (
@@ -66,14 +68,15 @@ function Sidebar() {
       {/* 사이드바 */}
       <div className={`h-full w-16 lg:w-64`}></div>
       <aside
-        className={`fixed z-50 flex h-full w-16 flex-col bg-customBg p-2 transition-all duration-300 dark:bg-customBg-dark lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
+        className={`fixed z-50 flex h-full w-16 flex-col bg-[#070f26] p-2 text-white transition-all duration-300 lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
       >
         <button
-          className={`absolute bg-customBg dark:bg-customBg-dark ${isTabletExpanded ? "right-[0px]" : "right-[12px]"} top-0 z-10 block p-2 lg:hidden`}
+          className={`absolute bg-[#070f26] ${isTabletExpanded ? "right-[0px]" : "right-[12px]"} top-0 z-10 block p-2 lg:hidden`}
           onClick={toggleTabletSidebar}
         >
           {isTabletExpanded ? <X /> : <PanelLeft />}
         </button>
+
         {/* Sidebar Sections */}
         <div className="flex h-full flex-col">
           {/* Header Section */}
@@ -106,13 +109,18 @@ function Sidebar() {
           </div>
 
           {/* Footer Section */}
-          <div className="rounded-md hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white">
-            <NavUser
-              user={user}
-              isTablet={isTablet}
-              isTabletExpanded={isTabletExpanded}
-            />
-          </div>
+          {/* 로그인 여부에 따라 보이는 컴포넌트가 다름 */}
+          {accessToken ? (
+            <div className="rounded-md hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white">
+              <NavUser
+                user={user}
+                isTablet={isTablet}
+                isTabletExpanded={isTabletExpanded}
+              />
+            </div>
+          ) : (
+            <NotLogin isTablet={isTablet} isTabletExpanded={isTabletExpanded} />
+          )}
         </div>
       </aside>
     </div>

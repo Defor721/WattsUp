@@ -30,7 +30,7 @@ function FloatingButton() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isVisible]);
 
   const handleExpandedClick = () => {
     setIsExpanded((prev) => !prev);
@@ -55,8 +55,8 @@ function FloatingButton() {
     <div className="relative">
       <button
         onClick={handleExpandedClick}
-        className={`fixed bottom-[-100px] right-5 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[rgb(7,15,38)] opacity-70 transition-transform duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
-          isVisible ? "translate-y-[-120px]" : ""
+        className={`fixed bottom-5 right-[-100px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[rgb(7,15,38)] opacity-70 transition-transform duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
+          isVisible ? "translate-x-[-120px]" : ""
         }`}
       >
         <HiOutlineDotsVertical
@@ -67,8 +67,8 @@ function FloatingButton() {
 
       <button
         onClick={handleScrollTopClick}
-        className={`fixed bottom-[-100px] right-[80px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gray-500 opacity-70 transition-all duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
-          isExpanded ? "translate-y-[-120px] opacity-100" : "opacity-0"
+        className={`fixed bottom-[80px] right-[-100px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gray-500 opacity-70 transition-all duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
+          isExpanded ? "translate-x-[-120px] opacity-100" : "opacity-0"
         }`}
       >
         <FaArrowUp size={"20px"} className="text-white opacity-80" />
@@ -77,8 +77,8 @@ function FloatingButton() {
       {/* 화면 테마 버튼 */}
       <button
         onClick={handleThemeChangeClick}
-        className={`fixed bottom-[-100px] right-[140px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gray-500 opacity-70 transition-all duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
-          isExpanded ? "translate-y-[-120px] opacity-100" : "opacity-0"
+        className={`fixed bottom-[140px] right-[-100px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gray-500 opacity-70 transition-all duration-500 ease-in-out hover:cursor-pointer hover:opacity-100 ${
+          isExpanded ? "translate-x-[-120px] opacity-100" : "opacity-0"
         }`}
       >
         {theme === "dark" ? (

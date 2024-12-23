@@ -20,6 +20,7 @@ interface dataProps {
 interface Ichart {
   data: dataProps[];
   region: string;
+  selectedRegion: string;
 }
 
 const regionColors: Record<string, string> = {
@@ -41,30 +42,35 @@ const regionColors: Record<string, string> = {
   충청북도: "#DC143C",
 };
 
-function PredictChart({ data, region }: Ichart) {
+function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
   console.log("Chart Data:", data);
 
   if (!data) return <div>로딩중...</div>;
 
   return (
-    <ResponsiveContainer width={"100%"} aspect={16 / 5}>
-      <LineChart
-        width={730}
-        height={500}
-        data={data}
-        // className="my-[5px] ml-5 mr-[30px]"
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" className="text-sm" />
-        <YAxis allowDataOverflow />
+    <div className="mt-5">
+      <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
+        {selectedRegion} 발전량 예측 그래프
+      </h4>
+      <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+        <LineChart
+          width={730}
+          height={500}
+          data={data}
+          // className="my-[5px] ml-5 mr-[30px]"
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" className="text-sm" />
+          <YAxis allowDataOverflow />
 
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
-      </LineChart>
-    </ResponsiveContainer>
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
