@@ -24,7 +24,6 @@ import { Input } from "../shadcn";
 // Menu items
 const items = [
   { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
-  { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
   {
     icon: BarChart2,
     label: "태양광 발전량 생산 예측",
@@ -33,12 +32,8 @@ const items = [
   {
     icon: DollarSign,
     label: "수익성 분석",
-    label: "수익성 분석",
     href: "/",
   },
-  { icon: TrendingUp, label: "전력 거래", href: "/energytrade" },
-  // { icon: RefreshCw, label: "Trading", href: "/trading" },
-  { icon: Settings, label: "설정", href: "/settings" },
   { icon: TrendingUp, label: "전력 거래", href: "/energytrade" },
   // { icon: RefreshCw, label: "Trading", href: "/trading" },
   { icon: Settings, label: "설정", href: "/settings" },
