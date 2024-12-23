@@ -20,6 +20,7 @@ import { BarChartComponent } from "@/components/energytrade/BarChart";
 import { LineChartComponent } from "@/components/energytrade/LineChart";
 import { DataTable } from "@/components/energytrade/DataTable";
 import { Forecast } from "@/components/energytrade/Forecast";
+import { TradingModal } from "@/components/energytrade/TradingModal";
 
 type GraphType = "bar" | "line" | "table" | "forecast";
 
@@ -29,9 +30,9 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedGraph, setSelectedGraph] = useState<GraphType>("bar");
+  const [isTradingModalOpen, setIsTradingModalOpen] = useState(false);
 
   useEffect(() => {
-    // 실제 API 호출 대신 목업 데이터 사용
     setSupplyData(mockPowerSupplyData());
     setForecastData(mockPowerForecastData());
     setIsLoading(false);
@@ -39,16 +40,15 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="grid h-64 grid-cols-1 gap-6 overflow-hidden overflow-y-scroll p-4 md:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
+      <div className="grid grid-cols-1 gap-4 p-4">
+        {[...Array(3)].map((_, i) => (
           <Card key={i} className="border-gray-800 bg-gray-900/50">
             <CardHeader>
-              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-full max-w-[250px]" />
             </CardHeader>
             <CardContent className="space-y-2">
-              <Skeleton className="h-4 w-[200px]" />
-              <Skeleton className="h-4 w-[200px]" />
-              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-full max-w-[200px]" />
+              <Skeleton className="h-4 w-full max-w-[200px]" />
             </CardContent>
           </Card>
         ))}
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" className="m-4">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>오류 발생</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
@@ -69,51 +69,82 @@ export default function Dashboard() {
   const currentSupply = supplyData[supplyData.length - 1];
 
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-5xl font-bold">
-        Electricity Transaction Status
-      </h1>
-
-      <StatusCards currentSupply={currentSupply} />
-
-      <div className="mx-20 mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-lg font-bold">시간대별 전력수급 현황</span>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => setSelectedGraph("bar")}
-            variant={selectedGraph === "bar" ? "outline" : "default"}
-          >
-            막대 그래프
-          </Button>
-          <Button
-            onClick={() => setSelectedGraph("table")}
-            variant={selectedGraph === "table" ? "outline" : "default"}
-          >
-            리스트
-          </Button>
-        </div>
-        <span className="mt-2">|</span>
-        <Button
-          className="text-lg font-bold"
-          onClick={() => setSelectedGraph("line")}
-          variant={selectedGraph === "line" ? "outline" : "default"}
-        >
-          시간대별 전력 수요 및 공급 추이
-        </Button>
-        <span className="mt-2">|</span>
-        <Button
-          className="text-lg font-bold"
-          onClick={() => setSelectedGraph("forecast")}
-          variant={selectedGraph === "forecast" ? "outline" : "default"}
-        >
-          전력수급 예측
-        </Button>
+    <div className="container mx-auto p-8">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
+          Electricity Transaction Status
+        </h1>
       </div>
 
-      {selectedGraph === "bar" && <BarChartComponent data={supplyData} />}
-      {selectedGraph === "line" && <LineChartComponent data={supplyData} />}
-      {selectedGraph === "table" && <DataTable data={supplyData} />}
-      {selectedGraph === "forecast" && <Forecast data={forecastData} />}
+      {/* Status Cards */}
+      <StatusCards currentSupply={currentSupply} />
+
+      {/* Graph Controls */}
+      <div className="mb-6">
+        <div className="flex">
+          <span className="mb-4 block text-lg font-medium">
+            시간대별 전력수급 현황
+          </span>
+          <Button
+            onClick={() => setIsTradingModalOpen(true)}
+            className="mx-4 rounded-md border border-[rgb(7,15,38)] bg-white px-6 py-2 font-semibold text-[rgb(7,15,38)] transition-all duration-300 ease-in-out hover:scale-105 hover:bg-[rgb(7,15,38)] hover:text-white hover:shadow-lg"
+          >
+            거래하기
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => setSelectedGraph("bar")}
+              variant={selectedGraph === "bar" ? "outline" : "default"}
+            >
+              막대 그래프
+            </Button>
+            <Button
+              onClick={() => setSelectedGraph("table")}
+              variant={selectedGraph === "table" ? "outline" : "default"}
+            >
+              리스트
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => setSelectedGraph("line")}
+              variant={selectedGraph === "line" ? "outline" : "default"}
+            >
+              수요/공급 추이
+            </Button>
+            <Button
+              onClick={() => setSelectedGraph("forecast")}
+              variant={selectedGraph === "forecast" ? "outline" : "default"}
+            >
+              전력수급 예측
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts/Table */}
+      <div className="bg-card rounded-lg border">
+        <div className="h-[400px] w-full p-4">
+          {selectedGraph === "bar" && <BarChartComponent data={supplyData} />}
+          {selectedGraph === "line" && <LineChartComponent data={supplyData} />}
+          {selectedGraph === "table" && (
+            <div className="h-full overflow-auto">
+              <DataTable data={supplyData} />
+            </div>
+          )}
+          {selectedGraph === "forecast" && <Forecast data={forecastData} />}
+        </div>
+      </div>
+
+      {/* Trading Modal */}
+      <TradingModal
+        isOpen={isTradingModalOpen}
+        onClose={() => setIsTradingModalOpen(false)}
+      />
     </div>
   );
 }
