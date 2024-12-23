@@ -26,7 +26,7 @@ const items = [
   { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
   {
     icon: BarChart2,
-    label: "전력 생산 예측",
+    label: "태양광 발전량 생산 예측",
     href: "/dashboard/predict",
   },
   {
