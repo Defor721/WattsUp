@@ -18,7 +18,6 @@ interface NavHeaderProps {
 }
 
 function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
-  const { theme } = useTheme();
   // 테블릿 화면일 경우
   if (isTablet && !isTabletExpanded)
     return (
@@ -31,7 +30,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
                 width={30}
                 height={30}
                 alt="WattsUp Logo"
-                className={`rounded-md ${theme === "dark" ? "opacity-70" : "opacity-100"} `}
+                className={`rounded-md opacity-70`}
               />
             </Link>
           </SidebarMenuButton>
@@ -47,7 +46,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
         width={80}
         height={80}
         alt="WattsUp Logo"
-        className={`rounded-md ${theme === "dark" ? "opacity-70" : "opacity-100"} `}
+        className={`rounded-md opacity-70`}
       />
       <SidebarGroupLabel className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[26px] font-bold text-transparent">
         {"WattsUp"}

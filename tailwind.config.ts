@@ -77,13 +77,16 @@ const config: Config = {
           DEFAULT: "#FF5B1A",
           dark: "#FF6B31",
         },
+        sidebarBg: {
+          DEFAULT: "#070f26",
+        },
         customBg: {
           DEFAULT: "#f8f9fa",
           dark: "#070f26", // 다크 모드 배경 색상
         },
         customText: {
-          DEFAULT: "#111",
-          dark: "#26053b", // 다크 모드 텍스트 색상
+          DEFAULT: "#fff",
+          dark: "#fff", // 다크 모드 텍스트 색상
         },
       },
       keyframes: {

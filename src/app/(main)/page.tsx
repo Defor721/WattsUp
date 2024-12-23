@@ -1,9 +1,3 @@
-// "use client";
-
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-
 import Introduce from "@/components/mainpage/introduce/Introduce";
 import VideoPart from "@/components/mainpage/video/VideoPart";
 import FeaturesPart from "@/components/mainpage/features/Features";

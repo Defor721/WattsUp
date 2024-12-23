@@ -6,10 +6,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
-import { SidebarProvider } from "@/components/shadcn";
-import Sidebar from "@/components/appSidebar/Sidebar";
-import FloatingButton from "@/components/FloatingButton/FloatingButton";
-import { ThemeProvider } from "@/components/common/ThemeProvider";
+import FloatingButton from "@/components/floatingButton/FloatingButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,23 +41,9 @@ export default function RootLayout({
       <body className={`${inter.className} font-pretendard flex`}>
         <MSWProvider>
           <QueryProvider>
-            <SidebarProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Sidebar />
-                {/* <div className="flex flex-1 flex-col"> */}
-                <main className="flex flex-1 bg-[#f9fafb] text-[rgb(7,15,38)]">
-                  {children}
-                </main>
-                <FloatingButton />
-                <Toaster />
-                {/* </div> */}
-              </ThemeProvider>
-            </SidebarProvider>
+            {children}
+            <FloatingButton />
+            <Toaster />
           </QueryProvider>
         </MSWProvider>
       </body>
