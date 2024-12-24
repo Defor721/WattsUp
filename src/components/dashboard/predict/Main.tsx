@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import * as tf from "@tensorflow/tfjs";
 
 import PredictChart from "@/components/dashboard/predict/Chart";
-import { Button } from "@/components/shadcn";
 import PredictTable from "@/components/dashboard/predict/Table";
 import { regions } from "@/utils/regions";
 import { get6Days } from "@/utils/get6Days";
@@ -215,27 +214,10 @@ function PredictMain() {
     );
   }, [chartData, selectedRegion]);
 
-  const regionButtons = useMemo(() => {
-    return regions.map((region) => (
-      <Button
-        key={region}
-        variant={"outline"}
-        className={`${
-          selectedRegion === region
-            ? "bg-[rgb(7,15,38)] text-white"
-            : "bg-gray-200"
-        }`}
-        onClick={() => setSelectedRegion(region)}
-      >
-        {region}
-      </Button>
-    ));
-  }, [selectedRegion]);
-
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="p-1 md:p-3 lg:p-5">
+    <div className="min-w-[704px] p-3 dark:bg-[#050a18] md:w-full md:p-5 lg:p-10">
       <RegionButtons
         regions={regions}
         selectedRegion={selectedRegion}

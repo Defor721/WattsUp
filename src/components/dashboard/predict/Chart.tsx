@@ -44,15 +44,16 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
-  console.log("Chart Data:", data);
+  // console.log("Chart Data:", data);
 
   if (!data) return <div>로딩중...</div>;
 
   return (
     <div className="mt-5">
-      <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight">
+      <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 발전량 예측 그래프
       </h4>
+
       <ResponsiveContainer width={"100%"} aspect={16 / 5}>
         <LineChart
           width={730}
