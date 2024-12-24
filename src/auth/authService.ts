@@ -121,6 +121,9 @@ export async function reissueToken(): Promise<any> {
   }
 }
 
+/**
+ * 사업자등록정보 상태조회
+ */
 export async function validateBusinessNumber(
   businessNumber: string,
 ): Promise<any> {

@@ -10,6 +10,7 @@ export default function AdditionalPage() {
   const [statusMessage, setStatusMessage] = useState("");
   const [isBusinessValid, setIsBusinessValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [businessType, setBusinessType] = useState("corporate");
 
   const handleCheckBusinessNumber = async () => {
     setIsLoading(true);
@@ -35,7 +36,6 @@ export default function AdditionalPage() {
       const { data } = await apiClient.post("/api/auth/validatebusiness", {
         businessNumber,
       });
-
       console.log(`AdditionalPage: `, data);
     } catch (error) {
       console.log(error);
@@ -45,7 +45,6 @@ export default function AdditionalPage() {
   return (
     <div className="flex w-full flex-col gap-4 bg-slate-100 p-6">
       <h1 className="text-xl font-bold">추가 정보 입력</h1>
-
       <div className="flex flex-col gap-2">
         {/* 1118194369 */}
         <label htmlFor="businessNumber"> 사업자 번호 </label>
@@ -55,6 +54,7 @@ export default function AdditionalPage() {
           value={businessNumber}
           onChange={(e) => setBusinessNumber(e.target.value)}
           required
+          placeholder="사업자 번호 10자리를 입력해주세요."
           className="rounded border p-2"
         />
         <button
@@ -75,6 +75,56 @@ export default function AdditionalPage() {
           >
             {statusMessage}
           </p>
+        )}
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
+          <div>
+            <input
+              id="corporate"
+              type="radio"
+              name="businessType"
+              value="corporate"
+              checked={businessType === "corporate"}
+              onChange={() => setBusinessType("corporate")}
+            />
+            <label id="corporate">법인 사업자</label>
+          </div>
+          <div>
+            <input
+              id="individual"
+              type="radio"
+              name="businessType"
+              value="individual"
+              checked={businessType === "individual"}
+              onChange={() => setBusinessType("individual")}
+            />
+            <label id="individual">개인 사업자</label>
+          </div>
+        </div>
+        {businessType === "corporate" && (
+          <div className="flex flex-col gap-2">
+            <label id="corporateNumber">법인등록번호</label>
+            <input
+              id="corporateNumber"
+              type="text"
+              name="corporateNumber"
+              placeholder="법인등록번호 13자리를 입력해주세요."
+              className="rounded border p-2"
+            />
+          </div>
+        )}
+        {businessType === "individual" && (
+          <div className="flex flex-col gap-2">
+            <label id="personalId">주민등록번호</label>
+            <input
+              id="personalId"
+              type="text"
+              name="personalId"
+              placeholder="주민등록번호 앞 6자리를 입력해주세요."
+              className="rounded border p-2"
+            />
+          </div>
         )}
       </div>
 

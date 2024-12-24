@@ -7,7 +7,7 @@ import {
   loginWithEmailAndPassword,
 } from "@/auth/authService";
 import { fetchCurrentUser } from "@/services/userService";
-import { deleteCookie } from "@/utils/cookieHelper";
+import { deleteCookie } from "@/utils";
 
 interface User {
   businessNumber: number;

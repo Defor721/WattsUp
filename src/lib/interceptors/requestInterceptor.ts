@@ -1,6 +1,6 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-import { getCookie } from "@/utils/cookieHelper";
+import { getCookie } from "@/utils";
 
 // 요청 인터셉터 핸들러
 export const handleRequest = (config: InternalAxiosRequestConfig) => {

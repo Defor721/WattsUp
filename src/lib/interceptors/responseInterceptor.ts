@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 import { reissueToken } from "@/auth/authService";
-import { setCookie } from "@/utils/cookieHelper";
+import { setCookie } from "@/utils";
 
 import apiClient from "../axios";
 
