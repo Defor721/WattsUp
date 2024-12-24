@@ -86,7 +86,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       personalId,
     }) {
       try {
-        await socialSignup({
+        const { accessToken, message } = await socialSignup({
           businessNumber,
           startDate,
           pricipalName,
@@ -94,6 +94,12 @@ export const useAuthStore = create<AuthState>((set) => ({
           businessType,
           corporateNumber,
           personalId,
+        });
+        set({
+          accessToken,
+          redirectTo: "/",
+          error: false,
+          message,
         });
       } catch (error: any) {
         set({
