@@ -8,24 +8,26 @@ interface LineChartProps {
 
 const LineChart: React.FC<LineChartProps> = ({ data, title }) => {
   const chartData = {
-    labels: ["2022", "2021", "2020", "2019"],
+    labels:
+      data.length > 0 ? data[0].values.map((_, idx) => `Year ${idx + 1}`) : [],
     datasets: data.map((item, index) => ({
       label: item.category,
       data: item.values,
       borderColor: ["#3B82F6", "#22C55E", "#F59E0B", "#EF4444"][index % 4],
       backgroundColor: "transparent",
+      tension: 0.4, // 부드러운 곡선
     })),
   };
 
   const options = {
     responsive: true,
     plugins: {
-      legend: { position: "top" as const }, // 수정: position 값을 유니언 타입에 맞게 명시적으로 설정
+      legend: { position: "top" as const },
       title: { display: true, text: title },
     },
     scales: {
       x: { title: { display: true, text: "연도" } },
-      y: { title: { display: true, text: "수입량" } },
+      y: { title: { display: true, text: "값" } },
     },
   };
 
