@@ -40,8 +40,7 @@ export default async function POST(request: NextRequest) {
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,
     });
 
-    // 인증 코드를 DB 또는 캐시에 저장 (Redis)
-    await redis.set(email, verificationCode, { EX: 300 }); // 5분 유효
+    await redis.set(email, verificationCode, { EX: 300 });
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },

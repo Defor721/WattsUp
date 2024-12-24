@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = process.env.BUSINESS_STATUS_API_URL!;
+const API_BASE_URL = process.env.BUSINESS_INFO_VERIFICATION_API_URL!;
 const SERVICE_KEY = process.env.BUSINESS_SERVICE_KEY!;
 
 export async function POST(request: NextRequest) {
   try {
-    const { businessNumber } = await request.json();
+    const { businessNumber, startDate, principalName, companyName } =
+      await request.json();
 
     const response = await fetch(
       `${API_BASE_URL}?serviceKey=${encodeURIComponent(SERVICE_KEY)}`,
@@ -16,7 +17,19 @@ export async function POST(request: NextRequest) {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          b_no: [businessNumber],
+          businesses: [
+            {
+              b_no: businessNumber,
+              start_dt: startDate,
+              p_nm: principalName,
+              p_nm2: "",
+              b_nm: companyName,
+              corp_no: "",
+              b_sector: "",
+              b_type: "",
+              b_adr: "",
+            },
+          ],
         }),
       },
     );
@@ -47,7 +60,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           message: "필수 요청 항목이 누락되었습니다.",
-          details: data?.msg || "필수 요청 파라미터 누락",
+          details: "필수 요청 파라미터 누락",
         },
         { status: 411 },
       );
@@ -66,8 +79,19 @@ export async function POST(request: NextRequest) {
     if (response.status >= 500) {
       return NextResponse.json(
         {
-          message: "서버 오류가 발생했습니다.",
+          message: "서버 오류가 발생했습니다. 관리자에게 문의하세요.",
           details: data?.msg || "Internal Server Error",
+        },
+        { status: 500 },
+      );
+    }
+
+    if (response.status === -5) {
+      return NextResponse.json(
+        {
+          message:
+            "외부 서비스와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+          details: data?.msg || "HTTP_ERROR",
         },
         { status: 500 },
       );
@@ -76,7 +100,14 @@ export async function POST(request: NextRequest) {
     if (response.ok) {
       const businessInfo = data.data[0];
 
-      if (businessInfo.b_stt_cd !== "01") {
+      if (businessInfo.valid !== "01") {
+        return NextResponse.json(
+          { message: "사업자 정보가 일치하지 않습니다." },
+          { status: 403 },
+        );
+      }
+
+      if (businessInfo.status.b_stt_cd !== "01") {
         return NextResponse.json(
           { message: "유효하지 않은 사업자 상태입니다." },
           { status: 403 },
@@ -84,7 +115,8 @@ export async function POST(request: NextRequest) {
       }
 
       if (
-        businessInfo.tax_type === "국세청에 등록되지 않은 사업자등록번호입니다."
+        businessInfo.status.tax_type ===
+        "국세청에 등록되지 않은 사업자등록번호입니다."
       ) {
         return NextResponse.json(
           { message: "국세청에 등록된 사업자만 가입할 수 있습니다." },
@@ -100,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.log(`check error: `, error);
+    console.log(error);
     return NextResponse.json(
       { message: "서버 오류가 발생했습니다." },
       { status: 500 },
