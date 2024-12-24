@@ -65,7 +65,7 @@ const EconomicDashboard: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "/assets/dashboards/HOME_주요지표_경제지표.xlsx",
+          "/assets/dashboards/HOME_Main indicators_Economic indicators.xlsx",
         );
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {

@@ -66,7 +66,7 @@ const PowerDashboard: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "/assets/dashboards/HOME_주요지표_전력지표.xlsx",
+          "/assets/dashboards/HOME_Main indicators_Power indicators.xlsx",
         );
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
