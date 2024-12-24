@@ -1,10 +1,23 @@
-// "use client";
+"use client";
+
+import { Triangle } from "react-loader-spinner";
 
 export default function Loading() {
   return (
-    <div className="bg-navy-900 flex min-h-screen items-center justify-center">
-      <p>로딩중입니다.</p>
-      <span>잠시만 기다려주세요.</span>
-    </div>
+    <Triangle
+      visible={true}
+      height="80"
+      width="80"
+      color="#4fa94d"
+      ariaLabel="triangle-loading"
+      wrapperStyle={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        width: "100vw",
+      }}
+      wrapperClass=""
+    />
   );
 }
