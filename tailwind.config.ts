@@ -19,6 +19,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/styles/**/*.{js,ts,jsx,tsx}",
   ],
+
   darkMode: ["class"], // 다크모드 변수 활성화
   theme: {
     extend: {
@@ -76,17 +77,6 @@ const config: Config = {
         warning: {
           DEFAULT: "#FF5B1A",
           dark: "#FF6B31",
-        },
-        sidebarBg: {
-          DEFAULT: "#070f26",
-        },
-        customBg: {
-          DEFAULT: "#f8f9fa",
-          dark: "#070f26", // 다크 모드 배경 색상
-        },
-        customText: {
-          DEFAULT: "#fff",
-          dark: "#fff", // 다크 모드 텍스트 색상
         },
       },
       keyframes: {
