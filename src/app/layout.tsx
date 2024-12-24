@@ -7,6 +7,7 @@ import "./globals.css";
 import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
 import FloatingButton from "@/components/floatingButton/FloatingButton";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,13 +39,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} font-pretendard flex`}>
+      <body className={`${inter.className} font-pretendard`}>
         <MSWProvider>
-          <QueryProvider>
+          {/* <QueryProvider> */}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
             <FloatingButton />
             <Toaster />
-          </QueryProvider>
+          </ThemeProvider>
+          {/* </QueryProvider> */}
         </MSWProvider>
       </body>
     </html>

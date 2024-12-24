@@ -72,6 +72,12 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* 경민 css 변수 생성 */
+    --button-text-black: #111;
+    --button-text-white: #fff;
+    --button-bg-white: #fff;
+    --button-bg-black: #111;
   }
 
   .dark {
@@ -107,5 +113,22 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* 경민 css 변수 생성 */
+    --button-text-black: #fff;
+    --button-text-white: #111;
+    --button-bg-white: #111;
+    --button-bg-black: #fff;
   }
+
+  /* @layer components {
+    .button {
+      background-color: purple;
+      padding: 10px;
+    }
+
+    .dark .button {
+      background-color: orange;
+    }
+  } */
 }

@@ -4,8 +4,11 @@ interface KPICardProps {
   title: string;
   value: string;
   unit?: string;
-  trend: "up" | "down";
-  change: string;
+  trend?: "up" | "down"; // 선택적 속성으로 변경
+  change?: string; // 선택적 속성으로 변경
+  icon: React.ReactNode;
+  backgroundColor: string;
+  iconColor: string;
 }
 
 const KPICard: React.FC<KPICardProps> = ({
@@ -14,19 +17,35 @@ const KPICard: React.FC<KPICardProps> = ({
   unit,
   trend,
   change,
+  icon,
+  backgroundColor,
+  iconColor,
 }) => {
   return (
-    <div className="rounded-lg bg-gray-800 p-4 shadow-md">
+    <div
+      className="rounded-lg p-4 shadow-md"
+      style={{ backgroundColor: backgroundColor }}
+    >
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-400">{title}</h3>
-        <span
-          className={`text-sm font-bold ${trend === "up" ? "text-green-500" : "text-red-500"}`}
-        >
-          {trend === "up" ? "▲" : "▼"} {change}
-        </span>
+        <h3 className="text-sm font-medium text-gray-200">{title}</h3>
+        {trend &&
+          change && ( // trend와 change가 있을 때만 표시
+            <span
+              className={`text-sm font-bold ${
+                trend === "up" ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {trend === "up" ? "▲" : "▼"} {change}
+            </span>
+          )}
       </div>
-      <div className="mt-2 text-2xl font-bold text-white">
-        {value} <span className="text-lg text-gray-400">{unit}</span>
+      <div className="mt-4 flex items-center">
+        <div className="mr-3" style={{ color: iconColor }}>
+          {icon}
+        </div>
+        <div className="text-2xl font-bold text-white">
+          {value} <span className="text-lg text-gray-300">{unit}</span>
+        </div>
       </div>
     </div>
   );
