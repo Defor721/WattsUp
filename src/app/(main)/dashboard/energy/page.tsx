@@ -14,8 +14,7 @@ import KPICard from "@/components/dashboard/page3/KPICard";
 import LineChart from "@/components/dashboard/page3/LineChart";
 import DoughnutChart from "@/components/dashboard/page3/DoughnutChart";
 import BarChart from "@/components/dashboard/page3/BarChart";
-
-import DataTable from "@/components/dashboard/page3/DataTable";
+import DataTable from "@/components/dashboard/page2/DataTable";
 
 interface EnergyData {
   연도: number;
@@ -60,7 +59,7 @@ const EnergyDashboard: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "/assets/dashboards/HOME_주요지표_에너지지표.xlsx",
+          "/assets/dashboards/HOME_Main indicators_Energy indicators.xlsx",
         );
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
@@ -197,12 +196,21 @@ const EnergyDashboard: React.FC = () => {
             연도별 에너지 소비량
           </h2>
           <LineChart
-            data={data.map((item) => ({
-              연도: item.연도,
-              총에너지: item.총에너지,
-              석탄: item.석탄합계,
-              석유: item.석유합계,
-            }))}
+            data={[
+              {
+                category: "총 에너지",
+                values: data.map((item) => item.총에너지),
+              },
+              {
+                category: "석탄",
+                values: data.map((item) => item.석유합계),
+              },
+              {
+                category: "석유",
+                values: data.map((item) => item.석유합계),
+              },
+            ]}
+            title="연도별 에너지 소비량"
           />
         </div>
         <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
@@ -216,6 +224,7 @@ const EnergyDashboard: React.FC = () => {
               LNG: currentYearData.LNG,
               기타: currentYearData.기타,
             }}
+            title="에너지 소비 비율"
           />
         </div>
       </div>

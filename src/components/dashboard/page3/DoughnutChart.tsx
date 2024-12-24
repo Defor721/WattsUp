@@ -13,6 +13,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, title }) => {
       {
         data: Object.values(data),
         backgroundColor: ["#3B82F6", "#22C55E", "#F59E0B", "#EF4444"],
+        hoverBackgroundColor: ["#2563EB", "#16A34A", "#D97706", "#DC2626"], // hover 색상 추가
       },
     ],
   };
@@ -20,7 +21,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, title }) => {
   const options = {
     responsive: true,
     plugins: {
-      legend: { position: "right" as const }, // 수정: 'as const'로 허용된 값 설정
+      legend: { position: "right" as const },
       title: { display: true, text: title },
     },
   };
