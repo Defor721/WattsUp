@@ -3,13 +3,13 @@ import { http, HttpResponse } from "msw";
 /**
  * id: DB 고유 아이디
  * email: 이메일
- * companyName: 대표자명
- * signupType: 일반회원은 소셜회원은 social
+ * signupType: 일반회원은 native 소셜회원은 social
  * provider: 소셜 로그인 제공자(소셜 로그인일 경우)
+ * businessNumber: 사업자 등록번호 10자리
+ * companyName: 대표자명
  * businessType: 개인사업자는 individual, 법인사업자는 corporate
  * personalId: 주민등록번호 앞 6자리(개인사업자일 경우)
  * corporateNumber: 법인번호 13자리(법인사업자일 경우)
- * businessNumber: 사업자 등록번호 10자리
  */
 const users = [
   {

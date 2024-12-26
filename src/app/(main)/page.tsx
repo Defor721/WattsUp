@@ -5,7 +5,7 @@ import RenewableEnergyIntro from "@/components/mainpage/renewable/renewable";
 
 export default function Home() {
   return (
-    <div className="relative mx-auto min-h-screen w-full bg-white sm:w-[640px] md:w-[768px] lg:w-[1024px] xl:w-[1460px]">
+    <div className="relative min-h-screen min-w-[650px] bg-white md:w-full">
       {/* 비디오 섹션 */}
       <VideoPart />
 

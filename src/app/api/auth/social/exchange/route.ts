@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
-import { checkUserByEmail } from "@/services/userService";
 import { fetchGoogleTokens, fetchGoogleUserInfo } from "@/auth/authService";
 
 // 환경 변수 검증 함수
@@ -81,7 +80,6 @@ export async function POST(request: NextRequest) {
       response.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
-        maxAge: 7 * 24 * 60 * 60,
         path: "/",
         sameSite: "none",
       });
@@ -92,7 +90,8 @@ export async function POST(request: NextRequest) {
     const signupToken = jwt.sign(
       {
         email: googleUser.email,
-        name: googleUser.name,
+        signupType: "social",
+        provider: "google",
       },
       process.env.TEMP_TOKEN_SECRET!,
       { expiresIn: "15m" },
@@ -106,7 +105,6 @@ export async function POST(request: NextRequest) {
     response.cookies.set("signupToken", signupToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 900,
       path: "/",
       sameSite: "strict",
     });
