@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Building, Globe, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
 function FeaturesPart() {
@@ -51,7 +51,7 @@ function FeaturesPart() {
                 description:
                   "전력거래소(KPX)는 대한민국의 전력 시장 운영기관이자 전력 시스템 운영자입니다. 전력의 안정적인 공급과 수요 관리를 책임지며, 발전사와 소비자(전력회사) 간 전력 거래를 공정하고 효율적으로 관리합니다.",
                 image: "/assets/images/kpx.jpg",
-                link: "https://www.kpx.or.kr",
+                link: "https://www.kpx.or.kr/menu.es?mid=a10301010000",
               },
             ].map((feature, index) => (
               <motion.div
@@ -71,8 +71,8 @@ function FeaturesPart() {
                   <Image
                     src={feature.image}
                     alt={feature.title}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: "cover" }}
                     className="transform transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
