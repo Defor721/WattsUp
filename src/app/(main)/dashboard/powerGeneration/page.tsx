@@ -1,180 +1,192 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Dropdown,
-  Button,
-  Navbar,
-} from "react-bootstrap";
-import { Line, Bar, Pie } from "react-chartjs-2";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import rawData from "../../../public/assets/dashboards/HOME_발전·판매_발전량_전원별.json"; // JSON 변환 필요
+import LineChart from "@/components/dashboard/page4/LineChart";
+import BarChart from "@/components/dashboard/page4/BarChart";
+import KPICard from "@/components/dashboard/page5/KPICard";
+import RecentOrders from "@/components/dashboard/page5/RecentOrder";
+import UsersByCountry from "@/components/dashboard/page4/UserByCountry";
 
-// 타입 정의
-interface DataType {
+interface DataRow {
   연도: number;
+  일반수력: number;
+  양수: number;
+  소수력: number;
   수력소계: number;
+  무연탄: number;
+  유연탄: number;
+  중유: number;
+  가스: number;
   기력소계: number;
+  복합화력일반: number;
+  복합화력열공급: number;
+  복합화력총계: number;
   원자력: number;
   신재생: number;
+  집단: number;
+  내연력: number;
+  기타: number;
+  총계: number;
+  총발전량: number;
 }
 
-const PowerGenerationDashboard = () => {
-  const router = useRouter();
-  const [year, setYear] = useState<string>("전체");
-  const [source, setSource] = useState<string>("전체");
+const GenerationDashboard = () => {
+  const [data, setData] = useState<DataRow[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number>(2023);
+  const [currentKPI, setCurrentKPI] = useState<DataRow | null>(null);
 
-  // 연도 및 발전원 필터링
-  const years = [
-    "전체",
-    ...new Set(rawData.map((item: DataType) => item.연도)),
-  ];
-  const powerSources = ["수력소계", "기력소계", "원자력", "신재생"];
+  // 데이터 불러오기
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await fetch(
+        "/assets/dashboards/HOME_generationQuantity.xlsx",
+      );
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+        type: "array",
+      });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData: DataRow[] = XLSX.utils
+        .sheet_to_json(worksheet)
+        .map((row: any) => ({
+          연도: Number(row["연도"]),
+          일반수력: Number(row["일반수력"]),
+          양수: Number(row["양수"]),
+          소수력: Number(row["소수력"]),
+          수력소계: Number(row["수력소계"]),
+          무연탄: Number(row["무연탄"]),
+          유연탄: Number(row["유연탄"]),
+          중유: Number(row["중유"]),
+          가스: Number(row["가스"]),
+          기력소계: Number(row["기력소계"]),
+          복합화력일반: Number(row["복합화력일반"]),
+          복합화력열공급: Number(row["복합화력열공급"]),
+          복합화력총계: Number(row["복합화력총계"]),
+          원자력: Number(row["원자력"]),
+          신재생: Number(row["신재생"]),
+          집단: Number(row["집단"]),
+          내연력: Number(row["내연력"]),
+          기타: Number(row["기타"]),
+          총계: Number(row["총계"]),
+          총발전량: Number(row["총발전량"]),
+        }));
+      setData(jsonData);
+      setSelectedYear(jsonData[0]?.연도 || 2023);
+      setCurrentKPI(jsonData[0]);
+    };
 
-  const filteredData =
-    year === "전체"
-      ? rawData
-      : rawData.filter((item: DataType) => item.연도.toString() === year);
+    loadData();
+  }, []);
 
-  // KPI 계산
-  const totalKPI = (source: string) =>
-    filteredData.reduce((acc: number, curr: any) => acc + curr[source], 0);
+  // 선택한 연도의 KPI 데이터 업데이트
+  useEffect(() => {
+    const yearData = data.find((row) => row.연도 === selectedYear);
+    setCurrentKPI(yearData || null);
+  }, [selectedYear, data]);
 
-  const chartData = {
-    labels: filteredData.map((item: DataType) => item.연도),
-    datasets: powerSources.map((power) => ({
-      label: power,
-      data: filteredData.map((item: DataType) => item[power]),
-      backgroundColor: ["#4e79a7", "#f28e2c", "#59a14f", "#af7aa1"],
-    })),
-  };
+  // BarChart 데이터 생성
+  const generateBarChartData = (metric: keyof DataRow) => ({
+    labels: data.map((row) => row.연도),
+    datasets: [
+      {
+        label: metric,
+        data: data.map((row) => row[metric]),
+        backgroundColor: "#4ADE80",
+      },
+    ],
+  });
 
-  const handleDownload = () => {
-    const jsonData = JSON.stringify(filteredData, null, 2);
-    const blob = new Blob([jsonData], { type: "application/json" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "power_generation_data.json";
-    link.click();
+  const generateLineChartData = (metric: keyof DataRow) => ({
+    labels: data.map((row) => row.연도),
+    datasets: [
+      {
+        label: metric,
+        data: data.map((row) => row[metric]),
+        borderColor: "#60A5FA",
+        backgroundColor: "rgba(96, 165, 250, 0.2)",
+        fill: true,
+      },
+    ],
+  });
+
+  const kpiConfig = {
+    일반수력: { color: "#34D399", unit: "MWh" },
+    양수: { color: "#60A5FA", unit: "MWh" },
+    소수력: { color: "#FBBF24", unit: "MWh" },
+    수력소계: { color: "#F87171", unit: "MWh" },
+    총발전량: { color: "#93C5FD", unit: "MWh" },
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#1e1e2f",
-        color: "#ffffff",
-        minHeight: "100vh",
-      }}
-    >
-      <Container fluid>
-        {/* Header/Navbar */}
-        <Navbar bg="primary" variant="dark" className="mb-4 px-3">
-          <Navbar.Brand>발전량 전원별 대시보드</Navbar.Brand>
-          <Button variant="light" onClick={() => router.push("/")}>
-            홈
-          </Button>
-        </Navbar>
+    <div className="min-h-screen bg-gray-900 p-6 text-white">
+      <h1 className="mb-6 text-center text-4xl font-bold">발전량 대시보드</h1>
 
-        {/* Dropdown Filters */}
-        <Row className="mt-4">
-          <Col md={6}>
-            <Dropdown>
-              <Dropdown.Toggle variant="secondary">
-                연도 선택: {year}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {years.map((y) => (
-                  <Dropdown.Item key={y} onClick={() => setYear(y)}>
-                    {y}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-          <Col md={6}>
-            <Dropdown>
-              <Dropdown.Toggle variant="secondary">
-                발전원 선택: {source}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => setSource("전체")}>
-                  전체
-                </Dropdown.Item>
-                {powerSources.map((s) => (
-                  <Dropdown.Item key={s} onClick={() => setSource(s)}>
-                    {s}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </Row>
-
-        {/* KPI Cards */}
-        <Row className="mt-4 text-center">
-          {powerSources.map((power) => (
-            <Col md={3} key={power}>
-              <Card style={{ backgroundColor: "#28293e", color: "#ffffff" }}>
-                <Card.Body>
-                  <Card.Title>{power} (GWh)</Card.Title>
-                  <Card.Text style={{ fontSize: "2rem" }}>
-                    {totalKPI(power)} GWh
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+      {/* 연도 선택 */}
+      <div className="mb-6 flex items-center justify-between">
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
+        >
+          {data.map((row) => (
+            <option key={row.연도} value={row.연도}>
+              {row.연도}
+            </option>
           ))}
-        </Row>
+        </select>
+      </div>
 
-        {/* Charts */}
-        <Row className="mt-5">
-          <Col md={6}>
-            <Card>
-              <Card.Body>
-                <Card.Title>라인 차트</Card.Title>
-                <Line data={chartData} options={{ responsive: true }} />
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={6}>
-            <Card>
-              <Card.Body>
-                <Card.Title>바 차트</Card.Title>
-                <Bar data={chartData} options={{ responsive: true }} />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+      {/* KPI 카드 */}
+      {currentKPI && (
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {Object.entries(currentKPI)
+            .filter(([key]) => kpiConfig[key as keyof typeof kpiConfig])
+            .map(([key, value]) => {
+              const config = kpiConfig[key as keyof typeof kpiConfig];
+              return (
+                <KPICard
+                  key={key}
+                  title={key}
+                  value={`${value.toLocaleString()} ${config.unit}`}
+                  backgroundColor={config.color}
+                />
+              );
+            })}
+        </div>
+      )}
 
-        <Row className="mt-5">
-          <Col md={6}>
-            <Card>
-              <Card.Body>
-                <Card.Title>파이 차트</Card.Title>
-                <Pie data={chartData} options={{ responsive: true }} />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+      {/* 차트 섹션 */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <BarChart
+          data={generateBarChartData("총발전량")}
+          title="총 발전량 데이터"
+        />
+        <LineChart
+          data={generateLineChartData("수력소계")}
+          title="수력소계 발전 추이"
+        />
+      </div>
 
-        {/* CSV 다운로드 */}
-        <Row className="mt-4">
-          <Col className="text-center">
-            <Button variant="success" onClick={handleDownload}>
-              데이터 다운로드
-            </Button>
-          </Col>
-        </Row>
-      </Container>
+      {/* 최근 데이터 */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <RecentOrders
+          data={data.slice(0, 5).map((row) => ({
+            연도: row.연도,
+            총발전량: row.총발전량,
+            상태: row.총발전량 > 500000000 ? "High" : "Low",
+          }))}
+        />
+        <UsersByCountry
+          data={data.map((row) => ({
+            label: `${row.연도}년`,
+            value: row.총발전량,
+          }))}
+        />
+      </div>
     </div>
   );
 };
 
-export default PowerGenerationDashboard;
+export default GenerationDashboard;
