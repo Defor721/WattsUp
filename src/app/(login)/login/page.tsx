@@ -31,10 +31,5 @@ export default function LoginPage() {
     }
   }, [accessToken]);
 
-  return (
-    <Card className="w-[400px]">
-      <LoginForm />
-      <GoogleLoginButton />
-    </Card>
-  );
+  return <LoginForm />;
 }

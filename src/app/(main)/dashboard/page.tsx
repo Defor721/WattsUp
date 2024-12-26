@@ -48,13 +48,13 @@ const DashboardPage = () => {
     { name: "에너지지표 대시보드", path: "/dashboard/energy" },
     { name: "국민계정 대시보드", path: "/dashboard/people" },
     { name: "SMP 대시보드", path: "/dashboard/smp" },
-    { name: "전력사용량_계약종별 대시보드", path: "/dashboard/powerUsage" },
+    { name: "전력사용량_계약종별 대시보드", path: "/dashboard/power-usage" },
     {
       name: "전력사용량_시도별 대시보드",
-      path: "/dashboard/powerUsageByRegion",
+      path: "/dashboard/power-usage-by-region",
     },
-    { name: "전원별발전량 대시보드", path: "/dashboard/powerGeneration" },
-    { name: "판매단가 대시보드", path: "/dashboard/powerPrice" },
+    { name: "전원별발전량 대시보드", path: "/dashboard/power-generation" },
+    { name: "판매단가 대시보드", path: "/dashboard/power-price" },
     { name: "판매금액 대시보드", path: "/dashboard/sales" },
   ];
 
