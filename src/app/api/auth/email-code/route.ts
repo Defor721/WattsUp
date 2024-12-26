@@ -4,13 +4,15 @@ import { createClient, RedisClientType } from "redis";
 
 import { generateVerificationCode } from "@/utils";
 
-const redis: RedisClientType = createClient({
+const redisClient: RedisClientType = createClient({
   url: process.env.REDIS_URL, // Redis 클라우드 URL
   password: process.env.REDIS_PASSWORD, // Redis 인증 비밀번호
 });
 
 // 에러 이벤트 리스너
-redis.connect().catch((error) => console.error("Redis 연결 실패:", error));
+redisClient
+  .connect()
+  .catch((error) => console.error("Redis 연결 실패:", error));
 
 const transporter = nodemailer.createTransport({
   service: "Gmail", // Gmail 또는 원하는 이메일 서비스 제공자
@@ -20,7 +22,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
@@ -31,16 +33,20 @@ export default async function POST(request: NextRequest) {
       );
     }
 
+    if (!redisClient.isOpen) {
+      await redisClient.connect();
+    }
+
     const verificationCode = generateVerificationCode();
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: process.env.GMAIL_USER,
       to: email,
       subject: "VPP 회원가입 이메일 인증 코드",
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,
     });
 
-    await redis.set(email, verificationCode, { EX: 300 });
+    await redisClient.set(email, verificationCode, { EX: 300 });
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },
