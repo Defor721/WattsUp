@@ -1,24 +1,12 @@
-export interface AuthState {
-  accessToken: string | null;
-  user: User | null;
-  actions: {
-    loginWithSocialToken: (code: string) => ResponsePayload;
-    setUser: (user: User) => void;
-    setAccessToken: (token: string, expiresIn: number) => void;
-    resetAccessToken: () => void;
-  };
-}
-
 export interface User {
-  id: string;
-  signupType: "native" | "social" | null;
-  provider?: string | null;
+  businessNumber: number;
   businessType: "individual" | "corporate";
-  personalId?: string | null;
-  corporateNumber?: string | null;
-  businessNumber: string;
   companyName: string;
+  corporateNumber: number | null;
   email: string;
+  personalId: number | null;
+  provider: null | string;
+  signupType: "native" | "social";
 }
 
 export interface ResponsePayload {
@@ -26,4 +14,40 @@ export interface ResponsePayload {
   expires_in: number | null;
   redirectTo: string;
   message: string | null;
+}
+
+export interface SocialSignupParams {
+  businessNumber: string;
+  startDate: string;
+  pricipalName: string;
+  companyName: string;
+  businessType: "individual" | "corporate";
+  corporateNumber: string | null;
+  personalId: string | null;
+}
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  redirectTo: string;
+  error: boolean;
+  message: string | null;
+  actions: {
+    nativeLogin: (email: string, password: string) => Promise<void>;
+    socialLogin: (code: string) => Promise<void>;
+    socialSignup: (params: SocialSignupParams) => Promise<void>;
+    fetchCurrentUser: () => Promise<void>;
+    resetLoginState: () => void;
+  };
+}
+
+export interface GoogleTokenResponse {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  message: string;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { getCookie, setCookie, deleteCookie } from "@/utils/cookieHelper";
+import { deleteCookie, getCookie, setCookie } from "@/utils";
 
 /**
  * 액세스 토큰 관리 훅
