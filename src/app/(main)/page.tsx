@@ -1,7 +1,7 @@
 import Introduce from "@/components/main/introduce/Introduce";
 import VideoPart from "@/components/main/video/VideoPart";
 import FeaturesPart from "@/components/main/features/Features";
-import RenewableEnergyIntro from "@/components/main/renewable/renewable";
+import EnergyInfoPage from "@/components/main/renewable/Renewable";
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
 
         {/* 재생 가능 에너지 소개 */}
         <section className="bg-gray-50">
-          <RenewableEnergyIntro />
+          <EnergyInfoPage />
         </section>
 
         {/* 주요 기능 섹션 */}
