@@ -45,11 +45,19 @@ export function DataTable({ data }: DataTableProps) {
   return (
     <div className="mb-8">
       <Card>
-        <CardHeader>
-          <CardTitle>시간대별 전력수급 현황</CardTitle>
-          <div className="px-2">
-            <span className="bg-pink-500 p-1 text-white"> ▲ : 오름차순</span>
-            <span className="bg-blue-500 p-1 text-white"> ▼ : 내림차순</span>
+        <CardHeader className="flex">
+          <div className="flex justify-between p-2">
+            <CardTitle>시간대별 전력수급 현황</CardTitle>
+            <div>
+              <span className="m-1 bg-pink-500 p-2 text-white">
+                {" "}
+                ▲ : 오름차순
+              </span>
+              <span className="m-1 bg-blue-500 p-2 text-white">
+                {" "}
+                ▼ : 내림차순
+              </span>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

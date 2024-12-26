@@ -128,7 +128,7 @@ export default function Dashboard() {
 
       {/* Charts/Table */}
       <div className="bg-card rounded-lg border">
-        <div className="h-[400px] w-full p-4">
+        <div className="h-full w-full p-4">
           {selectedGraph === "bar" && <BarChartComponent data={supplyData} />}
           {selectedGraph === "line" && <LineChartComponent data={supplyData} />}
           {selectedGraph === "table" && (

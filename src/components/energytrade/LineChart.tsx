@@ -37,7 +37,6 @@ export function LineChartComponent({ data }: LineChartProps) {
       </CardHeader>
       <CardContent>
         <div className="h-[400px]">
-          {" "}
           {/* 차트 높이 설정 */}
           <ResponsiveContainer width="100%" height="100%">
             {/* 반응형 차트 컨테이너 */}

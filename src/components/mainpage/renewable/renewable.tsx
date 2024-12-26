@@ -1,25 +1,27 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion"; // 애니메이션을 위한 라이브러리
+import { motion } from "framer-motion";
 import {
-  Sun,
-  Wind,
   Zap,
-  BarChart2,
-  Droplet,
-  ArrowRight,
   Battery,
-  Leaf,
+  BarChart2,
   TrendingUp,
-  DollarSign,
+  Shield,
+  Leaf,
+  Sun,
 } from "lucide-react";
-import Image from "next/image"; // 이미지 최적화를 위한 Next.js 컴포넌트
+import Image from "next/image";
+
+import { PowerMarketStructure } from "@/components/mainpage/renewable/PowerMarket";
 
 const EnergyInfoPage = () => {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero 섹션: 전체 레이아웃의 메인 소개 부분 */}
+    <div className="min-h-screen">
+      {/* 전력시장 구조 섹션 */}
+      <PowerMarketStructure />
+
+      {/* 한전거래소 전력시장 운영 섹션 */}
       <section className="relative flex min-h-screen flex-col lg:flex-row">
         {/* 왼쪽 섹션: 텍스트 콘텐츠 */}
         <div className="flex items-center bg-white p-6 lg:w-1/2 lg:p-12">

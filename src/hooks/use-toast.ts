@@ -5,14 +5,16 @@ import * as React from "react";
 
 import type { ToastActionElement, ToastProps } from "@/components/shadcn/toast";
 
-const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+// 외부 설정 가능: Toast 최대 개수와 제거 딜레이
+let DEFAULT_TOAST_LIMIT = 3;
+const DEFAULT_TOAST_REMOVE_DELAY = 5000;
 
 type ToasterToast = ToastProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  variant?: "default" | "destructive" | "success" | "info" | "warning"; // 확장된 variant
 };
 
 const actionTypes = {
@@ -55,7 +57,10 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const addToRemoveQueue = (toastId: string) => {
+const addToRemoveQueue = (
+  toastId: string,
+  removeDelay: number = DEFAULT_TOAST_REMOVE_DELAY,
+) => {
   if (toastTimeouts.has(toastId)) {
     return;
   }
@@ -66,7 +71,7 @@ const addToRemoveQueue = (toastId: string) => {
       type: "REMOVE_TOAST",
       toastId: toastId,
     });
-  }, TOAST_REMOVE_DELAY);
+  }, removeDelay);
 
   toastTimeouts.set(toastId, timeout);
 };
@@ -76,7 +81,7 @@ export const reducer = (state: State, action: Action): State => {
     case "ADD_TOAST":
       return {
         ...state,
-        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+        toasts: [action.toast, ...state.toasts].slice(0, DEFAULT_TOAST_LIMIT),
       };
 
     case "UPDATE_TOAST":
@@ -90,8 +95,6 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action;
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
@@ -137,9 +140,12 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = Omit<ToasterToast, "id">;
+type Toast = Omit<ToasterToast, "id"> & {
+  limit?: number;
+  removeDelay?: number;
+};
 
-function toast({ ...props }: Toast) {
+function toast({ limit, removeDelay, ...props }: Toast) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -161,6 +167,10 @@ function toast({ ...props }: Toast) {
     },
   });
 
+  // 동적 `limit`과 `removeDelay` 적용
+  if (limit) DEFAULT_TOAST_LIMIT = limit;
+  if (removeDelay) addToRemoveQueue(id, removeDelay);
+
   return {
     id: id,
     dismiss,
@@ -179,7 +189,7 @@ function useToast() {
         listeners.splice(index, 1);
       }
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,
