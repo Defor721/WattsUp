@@ -7,21 +7,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/shadcn/alert";
 import { Button } from "@/components/shadcn/button";
 import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
 import { Skeleton } from "@/components/shadcn/skeleton";
-
 import {
   PowerSupplyData,
   PowerForecastData,
-} from "@/components/energytrade/mock/types";
+} from "@/components/energy-trade/mock/types";
 import {
   mockPowerSupplyData,
   mockPowerForecastData,
-} from "@/components/energytrade/mock/helpers";
-import { StatusCards } from "@/components/energytrade/StatusCards";
-import { BarChartComponent } from "@/components/energytrade/BarChart";
-import { LineChartComponent } from "@/components/energytrade/LineChart";
-import { DataTable } from "@/components/energytrade/DataTable";
-import { Forecast } from "@/components/energytrade/Forecast";
-import { TradingModal } from "@/components/energytrade/TradingModal";
+} from "@/components/energy-trade/mock/helpers";
+import { StatusCards } from "@/components/energy-trade/StatusCards";
+import { BarChartComponent } from "@/components/energy-trade/BarChart";
+import { LineChartComponent } from "@/components/energy-trade/LineChart";
+import { DataTable } from "@/components/energy-trade/DataTable";
+import { Forecast } from "@/components/energy-trade/Forecast";
+import { TradingModal } from "@/components/energy-trade/TradingModal";
 
 type GraphType = "bar" | "line" | "table" | "forecast";
 

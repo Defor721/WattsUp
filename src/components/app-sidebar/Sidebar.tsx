@@ -36,7 +36,7 @@ const items = [
     label: "수익성 분석",
     href: "/",
   },
-  { icon: TrendingUp, label: "전력 거래", href: "/energytrade" },
+  { icon: TrendingUp, label: "전력 거래", href: "/energy-trade" },
   // { icon: RefreshCw, label: "Trading", href: "/trading" },
   { icon: Settings, label: "설정", href: "/settings" },
 ];

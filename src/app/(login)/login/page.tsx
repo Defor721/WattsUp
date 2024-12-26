@@ -34,7 +34,6 @@ export default function LoginPage() {
   return (
     <Card>
       <LoginForm />
-      {/* <GoogleLoginButton /> */}
     </Card>
   );
 }

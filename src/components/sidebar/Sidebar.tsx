@@ -33,7 +33,7 @@ const sidebarItems = [
     label: "Profitability Analysis",
     href: "/profitability-analysis",
   },
-  { icon: TrendingUp, label: "Energy Trade", href: "/energytrade" },
+  { icon: TrendingUp, label: "Energy Trade", href: "/energy-trade" },
   { icon: RefreshCw, label: "Trading", href: "/trading" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
