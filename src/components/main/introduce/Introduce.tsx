@@ -86,7 +86,7 @@ const teamInfo = [
 
 const TeamIntroduction = () => {
   return (
-    <section className="bg-white py-12 sm:py-20 md:py-32 lg:py-40">
+    <section className="px-4 py-12 sm:py-20 md:py-32 lg:py-40">
       <div className="container mx-auto px-1">
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
@@ -96,7 +96,7 @@ const TeamIntroduction = () => {
         >
           <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent sm:text-[50px]">
             WattsUp
-          </span>{" "}
+          </span>
           팀 소개
         </motion.h1>
 
@@ -128,7 +128,7 @@ const TeamIntroduction = () => {
                 <h2 className="mb-2 text-2xl font-semibold text-[rgb(7,15,38)] sm:mb-3 sm:text-3xl md:mb-4">
                   {info.title}
                 </h2>
-                <p className="text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl">
+                <p className="text-base leading-relaxed text-neutral-600 sm:text-lg md:text-xl">
                   {info.description}
                 </p>
               </div>
