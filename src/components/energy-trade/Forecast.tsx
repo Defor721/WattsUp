@@ -23,8 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/shadcn/table";
-import { formatNumber } from "@/components/energytrade/mock/helpers";
-import { PowerForecastData } from "@/components/energytrade/mock/types";
+import { formatNumber } from "@/components/energy-trade/mock/helpers";
+import { PowerForecastData } from "@/components/energy-trade/mock/types";
 
 interface ForecastProps {
   data: PowerForecastData[];

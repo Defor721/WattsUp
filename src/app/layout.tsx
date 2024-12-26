@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
-import FloatingButton from "@/components/floatingButton/FloatingButton";
+import FloatingButton from "@/components/floating-button/FloatingButton";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -14,7 +14,7 @@ interface PredictTableProps {
 }
 
 function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
-  if (!tableData) return <div>로딩중...</div>;
+  if (!tableData) return;
 
   return (
     <div className="mt-5">

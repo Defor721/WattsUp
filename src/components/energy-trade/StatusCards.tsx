@@ -6,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card";
-import { formatNumber } from "@/components/energytrade/mock/helpers";
-import { PowerSupplyData } from "@/components/energytrade/mock/types";
+import { formatNumber } from "@/components/energy-trade/mock/helpers";
+import { PowerSupplyData } from "@/components/energy-trade/mock/types";
 
 const MotionCard = motion(Card);
 

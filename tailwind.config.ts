@@ -18,12 +18,16 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/styles/**/*.{js,ts,jsx,tsx}",
+    "./src/auth/**/*.{js,ts,jsx,tsx}",
   ],
 
   darkMode: ["class"], // 다크모드 변수 활성화
   theme: {
     extend: {
       colors: {
+        mainColor: {
+          DEFAULT: "#070f26",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           100: "var(--primary-100)",

@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card";
-import { PowerSupplyData } from "@/components/energytrade/mock/types";
+import { PowerSupplyData } from "@/components/energy-trade/mock/types";
 
 interface BarChartProps {
   data: PowerSupplyData[];
