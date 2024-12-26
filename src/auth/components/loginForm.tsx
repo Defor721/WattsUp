@@ -156,7 +156,7 @@ export default function LoginForm() {
       {/* 로그인 푸터 */}
       <CardFooter className="mt-6 flex flex-col gap-4">
         <Button
-          className={`w-full bg-black text-white dark:bg-white dark:text-black`}
+          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
           onClick={handleLogin}
           disabled={!isValid}
         >
@@ -164,7 +164,7 @@ export default function LoginForm() {
         </Button>
 
         <GoogleLoginButton
-          className={`w-full bg-black text-white dark:bg-white dark:text-black`}
+          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
         />
 
         <div className="text-center text-sm">

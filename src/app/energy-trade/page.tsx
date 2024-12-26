@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/shadcn/alert";
 import { Button } from "@/components/shadcn/button";
 import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
 import { Skeleton } from "@/components/shadcn/skeleton";
+
 import {
   PowerSupplyData,
   PowerForecastData,

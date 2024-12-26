@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/shadcn/table";
+
 import { formatNumber } from "@/components/energytrade/mock/helpers";
 import { PowerForecastData } from "@/components/energytrade/mock/types";
 
