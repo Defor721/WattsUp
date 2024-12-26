@@ -78,12 +78,8 @@ export default function LoginForm() {
     }
   }, [error]);
 
-  useEffect(() => {
-    console.log("Current theme:", theme);
-  }, [theme]);
-
   return (
-    <Card className="relative flex flex-col p-2">
+    <Card className="relative flex flex-col p-5">
       <button onClick={handlePrevClick}>
         <IoIosArrowBack
           size={"20px"}
@@ -98,7 +94,7 @@ export default function LoginForm() {
       {/* 로그인 컨텐츠 */}
       <CardContent className="grid gap-6">
         {/* 이메일 섹션 */}
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="email">이메일</Label>
           <Input
             id="email"
@@ -131,7 +127,7 @@ export default function LoginForm() {
             />
             <Button
               size={"icon"}
-              className="absolute right-1 top-0 z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
+              className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
               onClick={togglePassword}
             >
               {showPassword ? (
@@ -143,33 +139,35 @@ export default function LoginForm() {
           </div>
         </div>
       </CardContent>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t"></span>
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background text-muted-foreground z-10 px-2">
-            Or continue with
-          </span>
-        </div>
-      </div>
+
       {/* 로그인 푸터 */}
-      <CardFooter className="mt-6 flex flex-col gap-4">
+      <CardFooter className="mt-2 flex flex-col gap-2">
         <Button
-          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
+          className={`w-full bg-[#070f26] text-white dark:border-1`}
           onClick={handleLogin}
           disabled={!isValid}
         >
           로그인
         </Button>
 
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t"></span>
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background text-muted-foreground z-10 px-2">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
         <GoogleLoginButton
-          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
+          className={`w-full bg-[#070f26] text-white dark:border-1`}
         />
 
         <div className="text-center text-sm">
           계정이 없으신가요?
-          <Link href={"/signup"} className="ml-1 text-sm underline">
+          <Link href={"/signup"} className="ml-2 text-sm underline">
             회원가입
           </Link>
         </div>

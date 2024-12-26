@@ -143,6 +143,7 @@ export default function AdditionalPage() {
           required
           disabled={isBusinessValid}
         />
+
         {isBusinessValid ? (
           <button
             type="button"
