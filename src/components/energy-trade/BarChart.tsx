@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card";
-import { PowerSupplyData } from "@/components/energytrade/mock/types";
+import { PowerSupplyData } from "@/components/energy-trade/mock/types";
 
 // Props 타입 정의 (PowerSupplyData 배열을 받음)
 interface BarChartProps {

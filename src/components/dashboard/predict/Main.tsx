@@ -8,6 +8,7 @@ import PredictTable from "@/components/dashboard/predict/Table";
 import { regions } from "@/utils/regions";
 import { get6Days } from "@/utils/get6Days";
 import apiClient from "@/lib/axios";
+import Loading from "@/app/loading";
 
 import RegionButtons from "./RegionButtons";
 
@@ -214,7 +215,7 @@ function PredictMain() {
     );
   }, [chartData, selectedRegion]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
 
   return (
     <div className="min-w-[704px] p-3 dark:bg-[#050a18] md:w-full md:p-5 lg:p-10">

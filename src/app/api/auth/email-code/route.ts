@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
@@ -34,7 +34,7 @@ export default async function POST(request: NextRequest) {
     const verificationCode = generateVerificationCode();
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: process.env.GMAIL_USER,
       to: email,
       subject: "VPP 회원가입 이메일 인증 코드",
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,

@@ -23,6 +23,7 @@ import { useAuthStore } from "@/auth/useAuthStore";
 import { useDialog } from "@/hooks/use-dialog";
 
 import useAccessToken from "../useAccessToken";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -91,7 +92,7 @@ export default function LoginForm() {
       </button>
       {/* 로그인 헤더 */}
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">로그인123</CardTitle>
+        <CardTitle className="text-2xl">로그인</CardTitle>
         <CardDescription>로그인을 위한 정보를 입력해주세요.</CardDescription>
       </CardHeader>
       {/* 로그인 컨텐츠 */}
@@ -153,16 +154,20 @@ export default function LoginForm() {
         </div>
       </div>
       {/* 로그인 푸터 */}
-      <CardFooter className="mt-6 flex flex-col">
+      <CardFooter className="mt-6 flex flex-col gap-4">
         <Button
-          className={`w-full bg-black text-white dark:bg-white dark:text-black`}
+          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
           onClick={handleLogin}
           disabled={!isValid}
         >
           로그인
         </Button>
 
-        <div className="mt-4 text-center text-sm">
+        <GoogleLoginButton
+          className={`w-full bg-[#070f26] text-white dark:border-1 dark:bg-rose-500`}
+        />
+
+        <div className="text-center text-sm">
           계정이 없으신가요?
           <Link href={"/signup"} className="ml-1 text-sm underline">
             회원가입

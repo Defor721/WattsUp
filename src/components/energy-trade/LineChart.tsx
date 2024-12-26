@@ -19,7 +19,7 @@ import {
 } from "@/components/shadcn/card";
 
 // 데이터 타입 정의 (PowerSupplyData 타입)
-import { PowerSupplyData } from "@/components/energytrade/mock/types";
+import { PowerSupplyData } from "@/components/energy-trade/mock/types";
 
 // LineChartProps 인터페이스 정의: 데이터 속성 타입 지정
 interface LineChartProps {
