@@ -5,11 +5,13 @@ import { createClient, RedisClientType } from "redis";
 import { generateVerificationCode } from "@/utils";
 
 const redisClient: RedisClientType = createClient({
-  url: process.env.REDIS_URL, // Redis 클라우드 URL
-  password: process.env.REDIS_PASSWORD, // Redis 인증 비밀번호
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT as string),
+  },
+  password: process.env.REDIS_PW,
 });
 
-// 에러 이벤트 리스너
 redisClient
   .connect()
   .catch((error) => console.error("Redis 연결 실패:", error));
@@ -42,11 +44,13 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: email,
-      subject: "VPP 회원가입 이메일 인증 코드",
+      subject: "Watts Up VPP 회원가입 이메일 인증 코드",
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,
     });
 
-    await redisClient.set(email, verificationCode, { EX: 300 });
+    await redisClient.set(`verificationcode#${email}`, verificationCode, {
+      EX: 300,
+    });
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },
@@ -60,3 +64,8 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+process.on("SIGINT", async () => {
+  await redisClient.disconnect();
+  process.exit();
+});
