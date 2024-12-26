@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-import { PowerMarketStructure } from "@/components/mainpage/renewable/PowerMarket";
+import { PowerMarketStructure } from "@/components/main/renewable/PowerMarket";
 
 const EnergyInfoPage = () => {
   return (

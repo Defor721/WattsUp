@@ -31,9 +31,5 @@ export default function LoginPage() {
     }
   }, [accessToken]);
 
-  return (
-    <Card>
-      <LoginForm />
-    </Card>
-  );
+  return <LoginForm />;
 }
