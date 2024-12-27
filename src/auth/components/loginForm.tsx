@@ -20,7 +20,7 @@ import {
 } from "@/components/shadcn";
 import { FindPasswordPopup } from "@/auth/components/FindPassword";
 import { useAuthStore } from "@/auth/useAuthStore";
-import { useDialog } from "@/hooks/use-dialog";
+import { useDialog } from "@/hooks/useDialog";
 
 import useAccessToken from "../useAccessToken";
 import GoogleLoginButton from "./GoogleLoginButton";
@@ -165,7 +165,7 @@ export default function LoginForm() {
           className={`w-full bg-[#070f26] text-white dark:border-1`}
         />
 
-        <div className="text-center text-sm">
+        <div className="mt-3 text-center text-sm">
           계정이 없으신가요?
           <Link href={"/signup"} className="ml-2 text-sm underline">
             회원가입
@@ -174,13 +174,5 @@ export default function LoginForm() {
       </CardFooter>
       <DialogComponent />
     </Card>
-    // <div className="w-[200px] bg-gray-200">
-    //   <button className="bg-rose-500 text-green-500 dark:bg-blue-500 dark:text-purple-500">
-    //     글씨 테스트입니다.
-    //   </button>
-    //   <button className="bg-black text-green-500 dark:bg-yellow-500 dark:text-purple-500">
-    //     글씨 테스트입니다.
-    //   </button>
-    // </div>
   );
 }

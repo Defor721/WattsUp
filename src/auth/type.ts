@@ -19,7 +19,7 @@ export interface ResponsePayload {
 export interface SocialSignupParams {
   businessNumber: string;
   startDate: string;
-  pricipalName: string;
+  principalName: string;
   companyName: string;
   businessType: "individual" | "corporate";
   corporateNumber: string | null;
