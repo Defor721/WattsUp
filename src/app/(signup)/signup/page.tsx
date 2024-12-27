@@ -26,9 +26,6 @@ import { sendVerificationEmail } from "@/services/emailService";
 function Signup() {
   const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
-
   // 현재 날짜(YYYYMMDD)
   const [nowDate, setNowDate] = useState("");
 
@@ -36,9 +33,12 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [emailCode, setEmailCode] = useState("");
   const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
   const [verifyPassword, setVerifyPassword] = useState("");
 
   const [companyName, setCompanyName] = useState("");
@@ -56,13 +56,8 @@ function Signup() {
   const [isBusinessValid, setIsBusinessValid] = useState(false);
   const [businessStatusMessage, setBusinessStatusMessage] = useState("");
 
-  const togglePassword = () => {
-    console.log("비밀번호 눈깔 클릭");
-    setShowPassword((prevState) => !prevState);
-  };
   const toggleVerifyPassword = () => {
     console.log("비밀번호 확인 눈깔 클릭");
-    setShowVerifyPassword((prevState) => !prevState);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -86,11 +81,14 @@ function Signup() {
     setBusinessStatusMessage("");
   };
 
-  const handleCheckEmail = async () => {
-    setIsEmailLoading(true);
+  /** 이메일 인증 코드 전송 */
+  const handleSendEmailCode = async () => {
+    if (cooldown > 0) return;
+    setCooldown(60);
 
+    setIsEmailLoading(true);
     try {
-      await sendVerificationEmail({ email });
+      // await sendVerificationEmail({ email });
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -134,6 +132,16 @@ function Signup() {
     setNowDate(year + month + day);
   }, []);
 
+  useEffect(() => {
+    if (cooldown === 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
   return (
     <Card className="relative flex flex-col p-5">
       <button onClick={handlePrevClick}>
@@ -160,6 +168,7 @@ function Signup() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {/* 이메일 인증 코드 섹션 */}
             <div className="flex items-center gap-2">
               <Input
                 id="verificationEmailCode"
@@ -170,21 +179,25 @@ function Signup() {
                 required
               />
               <Button
-                className={`rounded p-2 text-white ${
-                  isEmailLoading
+                type="button"
+                onClick={handleSendEmailCode}
+                className={`min-w-[72px] rounded p-2 text-white ${
+                  cooldown > 0 || isEmailLoading
                     ? "bg-gray-400"
                     : "bg-blue-600 hover:bg-blue-700"
                 }`}
+                disabled={cooldown > 0 || isEmailLoading}
               >
-                코드 전송
+                {cooldown > 0 ? `${cooldown}초 후` : "코드 전송"}
               </Button>
             </div>
+            {/* 이메일 인증 섹션 */}
             <Button
               className={`mt-2 rounded p-2 text-white ${
                 isEmailLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
               }`}
               type="button"
-              onClick={handleCheckEmail}
+              onClick={handleSendEmailCode}
               disabled={isEmailLoading}
             >
               이메일 인증
@@ -205,9 +218,10 @@ function Signup() {
                 required
               />
               <Button
+                type="button"
                 size={"icon"}
                 className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
-                onClick={togglePassword}
+                onClick={() => setShowPassword((prevState) => !prevState)}
               >
                 {showPassword ? (
                   <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
@@ -226,6 +240,7 @@ function Signup() {
                 required
               />
               <Button
+                type="button"
                 className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
                 size={"icon"}
                 onClick={toggleVerifyPassword}

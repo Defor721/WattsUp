@@ -1,6 +1,7 @@
 import apiClient from "@/lib/axios";
 
 export async function sendVerificationEmail({ email }: { email: string }) {
+  console.log(`check: `, email);
   try {
     await apiClient.post("/api/auth/email-code", { email });
   } catch (error) {

@@ -27,10 +27,8 @@ export async function POST(request: NextRequest) {
     });
 
     await redisClient.set(verificationcodeKey(email), verificationCode, {
-      EX: 300,
+      EX: 60,
     });
-
-    console.log("인증 코드 전송 완료:", email);
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },
