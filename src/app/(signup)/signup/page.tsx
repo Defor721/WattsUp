@@ -3,9 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { IoIosArrowBack } from "react-icons/io";
 
-import { useSignupFormStore } from "@/stores/signupFormStore";
 import {
   Button,
   Card,
@@ -17,13 +15,24 @@ import {
   Label,
 } from "@/components/shadcn";
 import { businessInfoVerification } from "@/auth/authService";
+import { sendVerificationEmail } from "@/services/emailService";
 
 function Signup() {
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
 
   // 추가 정보 상태들
+  const [email, setEmail] = useState("");
+  const [emailCode, setEmailCode] = useState("");
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+
+  const [companyName, setCompanyName] = useState("");
   const [name, setName] = useState("");
   const [businessNumber, setBusinessNumber] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -33,17 +42,10 @@ function Signup() {
 
   const [corporateNumber, setCorporateNumber] = useState("");
   const [personalId, setPersonalId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isBusinessValid, setIsBusinessValid] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
 
-  const {
-    email,
-    password,
-    verifyPassword,
-    companyName,
-    actions: { setEmail, setPassword, setVerifyPassword, setCompanyName },
-  } = useSignupFormStore();
+  const [isBusinessLoading, setIsBusinessLoading] = useState(false);
+  const [isBusinessValid, setIsBusinessValid] = useState(false);
+  const [businessStatusMessage, setBusinessStatusMessage] = useState("");
 
   const togglePassword = () => {
     console.log("비밀번호 눈깔 클릭");
@@ -72,12 +74,24 @@ function Signup() {
     setStartDate("");
     setName("");
     setIsBusinessValid(false);
-    setStatusMessage("");
+    setBusinessStatusMessage("");
+  };
+
+  const handleCheckEmail = async () => {
+    setIsEmailLoading(true);
+
+    try {
+      await sendVerificationEmail({ email });
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setIsEmailLoading(false);
+    }
   };
 
   const handleCheckBusinessNumber = async () => {
-    setIsLoading(true);
-    setStatusMessage("");
+    setIsBusinessLoading(true);
+    setBusinessStatusMessage("");
     setIsBusinessValid(false);
 
     try {
@@ -88,14 +102,14 @@ function Signup() {
         companyName,
       );
       setIsBusinessValid(true);
-      setStatusMessage("유효한 사업자 등록번호입니다.");
+      setBusinessStatusMessage("유효한 사업자 등록번호입니다.");
     } catch (error: any) {
-      setStatusMessage(
+      setBusinessStatusMessage(
         error.response.data.message || `서버 오류가 발생했습니다.`,
       );
       setIsBusinessValid(false);
     } finally {
-      setIsLoading(false);
+      setIsBusinessLoading(false);
     }
   };
 
@@ -119,6 +133,7 @@ function Signup() {
         <CardContent className="flex flex-col gap-5">
           {/* 이메일 섹션 */}
           <div className="flex flex-col gap-2">
+            {/* TODO: 이메일 입력하면서 중복인지 아닌지 체크 구현할것 */}
             <Label htmlFor="email">이메일</Label>
             <Input
               id="email"
@@ -128,6 +143,35 @@ function Signup() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            <div className="flex items-center gap-2">
+              <Input
+                id="verificationEmailCode"
+                type="text"
+                placeholder="인증코드 6자리를 입력해주세요."
+                value={emailCode}
+                onChange={(e) => setEmailCode(e.target.value)}
+                required
+              />
+              <Button
+                className={`rounded p-2 text-white ${
+                  isEmailLoading
+                    ? "bg-gray-400"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                코드 전송
+              </Button>
+            </div>
+            <Button
+              className={`mt-2 rounded p-2 text-white ${
+                isEmailLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              type="button"
+              onClick={handleCheckEmail}
+              disabled={isEmailLoading}
+            >
+              이메일 인증
+            </Button>
           </div>
 
           {/* 비밀번호 섹션 */}
@@ -235,22 +279,24 @@ function Signup() {
             ) : (
               <button
                 className={`mt-2 rounded p-2 text-white ${
-                  isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                  isBusinessLoading
+                    ? "bg-gray-400"
+                    : "bg-blue-600 hover:bg-blue-700"
                 }`}
                 type="button"
                 onClick={handleCheckBusinessNumber}
-                disabled={isLoading}
+                disabled={isBusinessLoading}
               >
-                {isLoading ? "확인 중..." : "사업자번호 확인"}
+                {isBusinessLoading ? "확인 중..." : "사업자번호 확인"}
               </button>
             )}
-            {statusMessage && (
+            {businessStatusMessage && (
               <p
                 className={`mt-2 font-semibold ${
                   isBusinessValid ? "text-green-500" : "text-red-500"
                 }`}
               >
-                {statusMessage}
+                {businessStatusMessage}
               </p>
             )}
 

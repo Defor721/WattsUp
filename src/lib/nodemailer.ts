@@ -1,6 +1,12 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
+interface sendEmailProps {
+  email: string;
+  subject: string;
+  text: string;
+}
+
+export const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: process.env.GMAIL_USER,
@@ -8,4 +14,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default transporter;
+export async function sendEmail({ email, subject, text }: sendEmailProps) {
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to: email,
+    subject: subject,
+    text: text,
+  });
+}

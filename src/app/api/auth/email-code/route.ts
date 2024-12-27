@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { generateVerificationCode, verificationcodeKey } from "@/utils";
-import { sendVerificationEmail } from "@/services/emailService";
 import { checkRedisConnection, redisClient } from "@/lib/redis";
+import { sendEmail } from "@/lib/nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,11 +15,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await checkRedisConnection();
+    console.log("이메일 인증 요청 처리:", email);
 
+    await checkRedisConnection();
     const verificationCode = generateVerificationCode();
 
-    await sendVerificationEmail({
+    await sendEmail({
       email,
       subject: "Watts Up VPP 회원가입 이메일 인증 코드",
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,
@@ -28,6 +29,8 @@ export async function POST(request: NextRequest) {
     await redisClient.set(verificationcodeKey(email), verificationCode, {
       EX: 300,
     });
+
+    console.log("인증 코드 전송 완료:", email);
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },

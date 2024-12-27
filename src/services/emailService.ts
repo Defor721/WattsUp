@@ -1,20 +1,10 @@
-import transporter from "@/lib/nodemailer";
+import apiClient from "@/lib/axios";
 
-interface sendVerificationEmailProps {
-  email: string;
-  subject: string;
-  text: string;
-}
-
-export async function sendVerificationEmail({
-  email,
-  subject,
-  text,
-}: sendVerificationEmailProps) {
-  await transporter.sendMail({
-    from: process.env.GMAIL_USER,
-    to: email,
-    subject: subject,
-    text: text,
-  });
+export async function sendVerificationEmail({ email }: { email: string }) {
+  try {
+    await apiClient.post("/api/auth/email-code", { email });
+  } catch (error) {
+    console.log("이메일 인증 코드 전송중 오류 발생", error);
+    throw error;
+  }
 }
