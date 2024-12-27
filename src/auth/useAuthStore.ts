@@ -79,7 +79,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     async socialSignup({
       businessNumber,
       startDate,
-      name,
+      principalName,
       companyName,
       businessType,
       corporateNumber,
@@ -89,7 +89,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         const { accessToken, message } = await socialSignup({
           businessNumber,
           startDate,
-          name,
+          principalName,
           companyName,
           businessType,
           corporateNumber,
