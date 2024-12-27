@@ -88,7 +88,7 @@ function Signup() {
 
     setIsEmailLoading(true);
     try {
-      // await sendVerificationEmail({ email });
+      await sendVerificationEmail({ email });
     } catch (error: any) {
       console.log(error);
     } finally {
