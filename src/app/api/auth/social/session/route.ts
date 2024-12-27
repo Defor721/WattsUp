@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     const {
       businessNumber,
       startDate,
-      pricipalName,
+      name,
       companyName,
       businessType,
       corporateNumber,
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     await businessInfoVerification(
       businessNumber,
       startDate,
-      pricipalName,
+      name,
       companyName,
     );
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     await insertUserToDB(collection, {
       email,
       password: null,
-      name: pricipalName,
+      name: name,
       signupType,
       provider,
       businessType,

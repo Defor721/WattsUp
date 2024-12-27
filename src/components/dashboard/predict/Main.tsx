@@ -42,7 +42,7 @@ async function loadModel() {
   if (!modelInstance) {
     try {
       console.time("Model Loading");
-      modelInstance = await tf.loadLayersModel("/assets/models/model-3.json");
+      modelInstance = await tf.loadLayersModel("/assets/models/model.json");
       console.log("Model loaded successfully!");
       console.timeEnd("Model Loading");
     } catch (error) {

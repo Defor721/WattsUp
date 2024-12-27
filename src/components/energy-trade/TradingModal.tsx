@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
 import { ToastProvider } from "@/components/shadcn/toast"; // Toast 시스템의 Provider
-import { useToast } from "@/hooks/use-toast"; // Toast 훅 사용
+import { useToast } from "@/hooks/useToast"; // Toast 훅 사용
 
 // 모달 Props 타입 정의
 type TradingModalProps = {
