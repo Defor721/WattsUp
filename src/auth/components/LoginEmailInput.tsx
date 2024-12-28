@@ -65,6 +65,7 @@ export default function LoginEmailInput({
       setIsEmailValified(true);
     } catch (error: any) {
       console.log(error);
+      setIsEmailValified(false);
     } finally {
       setIsEmailValifiedLoading(false);
     }
