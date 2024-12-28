@@ -1,15 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/shadcn/sidebar";
-
 interface data {
+  id: string;
   icon: any;
   label: string;
   href: string;
@@ -28,7 +21,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
       <div className="flex flex-col items-center gap-4 p-2">
         {items.map((item) => (
           <Link
-            key={item.label}
+            key={item.id}
             className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80"
             href={item.href}
           >
@@ -43,7 +36,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
     <div className="flex flex-col gap-4 p-2">
       {items.map((item) => (
         <Link
-          key={item.label}
+          key={item.id}
           className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80 md:text-base"
           href={item.href}
         >
