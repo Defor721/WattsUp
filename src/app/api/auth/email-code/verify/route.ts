@@ -6,9 +6,9 @@ import { checkRedisConnection, redisClient } from "@/lib/redis";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, code } = await request.json();
-
-    if (!email || !code) {
+    const { email, emailCode } = await request.json();
+    console.log(email, emailCode);
+    if (!email || !emailCode) {
       return NextResponse.json(
         { message: "이메일과 코드를 모두 입력해야 합니다." },
         { status: 400 },
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     await checkRedisConnection();
 
     const storedCode = await redisClient.get(verificationcodeKey(email));
-
+    console.log(`storedCode: `, storedCode);
     if (!storedCode) {
       return NextResponse.json(
         {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (storedCode !== code) {
+    if (storedCode !== emailCode) {
       return NextResponse.json(
         { message: "인증 코드가 유효하지 않습니다." },
         { status: 400 },
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     await redisClient.del(verificationcodeKey(email));
 
-    const signupToken = jwt.sign(
+    const emailVerificationToken = jwt.sign(
       {
         email: email,
         signupType: "native",
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     );
 
-    response.cookies.set("signupToken", signupToken, {
+    response.cookies.set("emailVerificationToken", emailVerificationToken, {
       httpOnly: true,
       secure: true,
       path: "/",

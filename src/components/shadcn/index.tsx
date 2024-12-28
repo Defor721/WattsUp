@@ -57,6 +57,12 @@ export {
   DropdownMenuRadioGroup,
 } from "./dropdown-menu";
 export { Input } from "./input";
+export {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "./input-otp";
 export { Label } from "./label";
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";

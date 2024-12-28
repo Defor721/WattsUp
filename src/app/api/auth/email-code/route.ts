@@ -15,9 +15,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("이메일 인증 요청 처리:", email);
-
     await checkRedisConnection();
+    await redisClient.del(verificationcodeKey(email));
     const verificationCode = generateVerificationCode();
 
     await sendEmail({

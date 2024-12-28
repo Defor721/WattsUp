@@ -21,7 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/shadcn";
 import { businessInfoVerification } from "@/auth/authService";
-import { sendVerificationEmail } from "@/services/emailService";
+import LoginEmailInput from "@/auth/components/LoginEmailInput";
 
 function Signup() {
   const router = useRouter();
@@ -31,11 +31,6 @@ function Signup() {
 
   // 추가 정보 상태들
   const [email, setEmail] = useState("");
-  const [emailCode, setEmailCode] = useState("");
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
@@ -81,21 +76,6 @@ function Signup() {
     setBusinessStatusMessage("");
   };
 
-  /** 이메일 인증 코드 전송 */
-  const handleSendEmailCode = async () => {
-    if (cooldown > 0) return;
-    setCooldown(60);
-
-    setIsEmailLoading(true);
-    try {
-      await sendVerificationEmail({ email });
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setIsEmailLoading(false);
-    }
-  };
-
   const handleCheckBusinessNumber = async () => {
     setIsBusinessLoading(true);
     setBusinessStatusMessage("");
@@ -132,16 +112,6 @@ function Signup() {
     setNowDate(year + month + day);
   }, []);
 
-  useEffect(() => {
-    if (cooldown === 0) return;
-
-    const timer = setInterval(() => {
-      setCooldown((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [cooldown]);
-
   return (
     <Card className="relative flex flex-col p-5">
       <button onClick={handlePrevClick}>
@@ -157,53 +127,7 @@ function Signup() {
       <form onSubmit={handleSubmit}>
         <CardContent className="flex flex-col gap-5">
           {/* 이메일 섹션 */}
-          <div className="flex flex-col gap-2">
-            {/* TODO: 이메일 입력하면서 중복인지 아닌지 체크 구현할것 */}
-            <Label htmlFor="email">이메일</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="이메일을 입력해주세요."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            {/* 이메일 인증 코드 섹션 */}
-            <div className="flex items-center gap-2">
-              <Input
-                id="verificationEmailCode"
-                type="text"
-                placeholder="인증코드 6자리를 입력해주세요."
-                value={emailCode}
-                onChange={(e) => setEmailCode(e.target.value)}
-                required
-              />
-              <Button
-                type="button"
-                onClick={handleSendEmailCode}
-                className={`min-w-[72px] rounded p-2 text-white ${
-                  cooldown > 0 || isEmailLoading
-                    ? "bg-gray-400"
-                    : "bg-blue-600 hover:bg-blue-700"
-                }`}
-                disabled={cooldown > 0 || isEmailLoading}
-              >
-                {cooldown > 0 ? `${cooldown}초 후` : "코드 전송"}
-              </Button>
-            </div>
-            {/* 이메일 인증 섹션 */}
-            <Button
-              className={`mt-2 rounded p-2 text-white ${
-                isEmailLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-              }`}
-              type="button"
-              onClick={handleSendEmailCode}
-              disabled={isEmailLoading}
-            >
-              이메일 인증
-            </Button>
-          </div>
-
+          <LoginEmailInput email={email} setEmail={setEmail} />
           {/* 비밀번호 섹션 */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="password">비밀번호</Label>
