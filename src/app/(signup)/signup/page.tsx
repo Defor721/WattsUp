@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { IoIosArrowBack, IoMdInformationCircleOutline } from "react-icons/io";
 
 import {
@@ -22,6 +21,7 @@ import {
 } from "@/components/shadcn";
 import { businessInfoVerification } from "@/auth/authService";
 import LoginEmailInput from "@/auth/components/LoginEmailInput";
+import LoginPasswordInput from "@/auth/components/LoginPasswordInput";
 
 function Signup() {
   const router = useRouter();
@@ -30,11 +30,8 @@ function Signup() {
   const [nowDate, setNowDate] = useState("");
 
   // 추가 정보 상태들
-  const [email, setEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
-  const [verifyPassword, setVerifyPassword] = useState("");
 
   const [companyName, setCompanyName] = useState("");
   const [principalName, setPrincipalName] = useState("");
@@ -51,16 +48,12 @@ function Signup() {
   const [isBusinessValid, setIsBusinessValid] = useState(false);
   const [businessStatusMessage, setBusinessStatusMessage] = useState("");
 
-  const toggleVerifyPassword = () => {
-    console.log("비밀번호 확인 눈깔 클릭");
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     console.log("submit 클릭");
     e.preventDefault();
 
     // 유효성 검사
-    if (!email || !password) {
+    if (!isEmailVerified || !password) {
       alert("이메일과 비밀번호를 입력하세요.");
       return;
     }
@@ -104,14 +97,6 @@ function Signup() {
     router.back();
   };
 
-  useEffect(() => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = ("0" + (1 + date.getMonth())).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    setNowDate(year + month + day);
-  }, []);
-
   return (
     <Card className="relative flex flex-col p-5">
       <button onClick={handlePrevClick}>
@@ -127,56 +112,12 @@ function Signup() {
       <form onSubmit={handleSubmit}>
         <CardContent className="flex flex-col gap-5">
           {/* 이메일 섹션 */}
-          <LoginEmailInput email={email} setEmail={setEmail} />
+          <LoginEmailInput
+            isEmailVerified={isEmailVerified}
+            setIsEmailVerified={setIsEmailVerified}
+          />
           {/* 비밀번호 섹션 */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="password">비밀번호</Label>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="비밀번호를 입력해주세요."
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <Button
-                type="button"
-                size={"icon"}
-                className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
-                onClick={() => setShowPassword((prevState) => !prevState)}
-              >
-                {showPassword ? (
-                  <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
-                ) : (
-                  <Eye className="text-muted-foreground h-5 w-5 opacity-70" />
-                )}
-              </Button>
-            </div>
-            <div className="relative">
-              <Input
-                type={showVerifyPassword ? "text" : "password"}
-                name="verifyPassword"
-                placeholder="비밀번호를 다시 한번 입력해주세요."
-                value={verifyPassword}
-                onChange={(e) => setVerifyPassword(e.target.value)}
-                required
-              />
-              <Button
-                type="button"
-                className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
-                size={"icon"}
-                onClick={toggleVerifyPassword}
-              >
-                {showVerifyPassword ? (
-                  <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
-                ) : (
-                  <Eye className="text-muted-foreground h-5 w-5 opacity-70" />
-                )}
-              </Button>
-            </div>
-          </div>
+          <LoginPasswordInput password={password} setPassword={setPassword} />
           {/* 추가 정보 섹션 */}
           <div className="flex flex-col gap-4">
             <TooltipProvider>
