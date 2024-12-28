@@ -1,24 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { createClient, RedisClientType } from "redis";
 
-import { generateVerificationCode } from "@/utils";
-
-const redis: RedisClientType = createClient({
-  url: process.env.REDIS_URL, // Redis 클라우드 URL
-  password: process.env.REDIS_PASSWORD, // Redis 인증 비밀번호
-});
-
-// 에러 이벤트 리스너
-redis.connect().catch((error) => console.error("Redis 연결 실패:", error));
-
-const transporter = nodemailer.createTransport({
-  service: "Gmail", // Gmail 또는 원하는 이메일 서비스 제공자
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // 이메일 비밀번호 또는 앱 비밀번호
-  },
-});
+import { generateVerificationCode, verificationcodeKey } from "@/utils";
+import { checkRedisConnection, redisClient } from "@/lib/redis";
+import { sendEmail } from "@/lib/nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,16 +15,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("이메일 인증 요청 처리:", email);
+
+    await checkRedisConnection();
     const verificationCode = generateVerificationCode();
 
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: email,
-      subject: "VPP 회원가입 이메일 인증 코드",
+    await sendEmail({
+      email,
+      subject: "Watts Up VPP 회원가입 이메일 인증 코드",
       text: `다음 인증 코드를 입력해주세요: ${verificationCode}`,
     });
 
-    await redis.set(email, verificationCode, { EX: 300 });
+    await redisClient.set(verificationcodeKey(email), verificationCode, {
+      EX: 60,
+    });
 
     return NextResponse.json(
       { message: "해당 메일로 코드 전송 완료" },
@@ -54,3 +42,8 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+process.on("SIGINT", async () => {
+  await redisClient.disconnect();
+  process.exit();
+});
