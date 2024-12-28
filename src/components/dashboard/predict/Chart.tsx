@@ -12,6 +12,11 @@ import {
   YAxis,
 } from "recharts";
 
+import {
+  formatNumberWithDecimal,
+  formatNumberWithoutDecimal,
+} from "@/hooks/useNumberFormatter";
+
 interface dataProps {
   amgo: number;
   date: string;
@@ -44,7 +49,7 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
-  // console.log("Chart Data:", data);
+  // console.log("Chart Data:", typeof data[0].amgo);
 
   if (!data) return;
 
@@ -64,9 +69,11 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" className="text-sm" />
-          <YAxis allowDataOverflow />
+          <YAxis tickFormatter={formatNumberWithoutDecimal} />
 
-          <Tooltip />
+          <Tooltip
+            formatter={(value: number) => formatNumberWithDecimal(value)}
+          />
           <Legend />
           <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
         </LineChart>
