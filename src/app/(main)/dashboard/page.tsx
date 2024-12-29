@@ -56,6 +56,8 @@ const DashboardPage = () => {
     { name: "전원별발전량 대시보드", path: "/dashboard/power-generation" },
     { name: "판매단가 대시보드", path: "/dashboard/power-price" },
     { name: "판매금액 대시보드", path: "/dashboard/sales" },
+    { name: "전력거래_연료비용 대시보드", path: "/dashboard/cost" },
+    { name: "유형별전기고장추이 대시보드", path: "/dashboard/failures" },
   ];
 
   // Add these variants
