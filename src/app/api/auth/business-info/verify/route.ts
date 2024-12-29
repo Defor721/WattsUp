@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 const API_BASE_URL = process.env.BUSINESS_INFO_VERIFICATION_API_URL!;
 const SERVICE_KEY = process.env.BUSINESS_SERVICE_KEY!;
@@ -8,7 +9,7 @@ export async function POST(request: NextRequest) {
     const { businessNumber, startDate, principalName, companyName } =
       await request.json();
 
-    const response = await fetch(
+    const verificationResult = await fetch(
       `${API_BASE_URL}?serviceKey=${encodeURIComponent(SERVICE_KEY)}`,
       {
         method: "POST",
@@ -34,9 +35,9 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    const data = await response.json();
+    const data = await verificationResult.json();
 
-    if (response.status === 400) {
+    if (verificationResult.status === 400) {
       return NextResponse.json(
         {
           message: "잘못된 요청입니다.",
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.status === 404) {
+    if (verificationResult.status === 404) {
       return NextResponse.json(
         {
           message: "서비스를 찾을 수 없습니다.",
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.status === 411) {
+    if (verificationResult.status === 411) {
       return NextResponse.json(
         {
           message: "필수 요청 항목이 누락되었습니다.",
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.status === 413) {
+    if (verificationResult.status === 413) {
       return NextResponse.json(
         {
           message: "요청 범위를 초과했습니다.",
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.status >= 500) {
+    if (verificationResult.status >= 500) {
       return NextResponse.json(
         {
           message: "서버 오류가 발생했습니다. 관리자에게 문의하세요.",
@@ -86,7 +87,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.status === -5) {
+    if (verificationResult.status === -5) {
       return NextResponse.json(
         {
           message:
@@ -97,40 +98,58 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (response.ok) {
-      const businessInfo = data.data[0];
+    const businessInfo = data.data[0];
 
-      if (businessInfo.valid !== "01") {
-        return NextResponse.json(
-          { message: "사업자 정보가 일치하지 않습니다." },
-          { status: 403 },
-        );
-      }
-
-      if (businessInfo.status.b_stt_cd !== "01") {
-        return NextResponse.json(
-          { message: "유효하지 않은 사업자 상태입니다." },
-          { status: 403 },
-        );
-      }
-
-      if (
-        businessInfo.status.tax_type ===
-        "국세청에 등록되지 않은 사업자등록번호입니다."
-      ) {
-        return NextResponse.json(
-          { message: "국세청에 등록된 사업자만 가입할 수 있습니다." },
-          { status: 403 },
-        );
-      }
-
+    if (businessInfo.valid !== "01") {
       return NextResponse.json(
-        { message: "유효한 사업자 등록번호입니다." },
-        { status: 200 },
+        { message: "사업자 정보가 일치하지 않습니다." },
+        { status: 403 },
       );
     }
 
-    return NextResponse.json(data, { status: 200 });
+    if (businessInfo.status.b_stt_cd !== "01") {
+      return NextResponse.json(
+        { message: "유효하지 않은 사업자 상태입니다." },
+        { status: 403 },
+      );
+    }
+
+    if (
+      businessInfo.status.tax_type ===
+      "국세청에 등록되지 않은 사업자등록번호입니다."
+    ) {
+      return NextResponse.json(
+        { message: "국세청에 등록된 사업자만 가입할 수 있습니다." },
+        { status: 403 },
+      );
+    }
+
+    const businessVerificationToken = jwt.sign(
+      {
+        principalName: businessInfo.request_param.p_nm,
+        businessNumber: businessInfo.request_param.b_no,
+        companyName: businessInfo.request_param.b_nm,
+      },
+      process.env.TEMP_TOKEN_SECRET!,
+      { expiresIn: "15m" },
+    );
+
+    const response = NextResponse.json(
+      { message: "유효한 사업자 등록번호입니다." },
+      { status: 200 },
+    );
+    response.cookies.set(
+      "businessVerificationToken",
+      businessVerificationToken,
+      {
+        httpOnly: true,
+        secure: true,
+        path: "/",
+        sameSite: "strict",
+      },
+    );
+
+    return response;
   } catch (error) {
     console.log(error);
     return NextResponse.json(

@@ -17,7 +17,7 @@ import {
 import { toast } from "@/hooks/useToast";
 import { isEmailValid } from "@/utils";
 
-interface LoginEmailInputProps {
+interface SignupEmailInputProps {
   isEmailVerified: boolean;
   setIsEmailVerified: Dispatch<React.SetStateAction<boolean>>;
 }
@@ -25,7 +25,7 @@ interface LoginEmailInputProps {
 export default function LoginEmailInput({
   isEmailVerified,
   setIsEmailVerified,
-}: LoginEmailInputProps) {
+}: SignupEmailInputProps) {
   const [email, setEmail] = useState("");
   const [emailCode, setEmailCode] = useState("");
   const [isEmailValidState, setIsEmailValidState] = useState(false);
@@ -35,10 +35,18 @@ export default function LoginEmailInput({
     useState(false);
 
   const isSendButtonDisabled =
-    cooldown > 0 || isEmailCodeLoading || !isEmailValidState || isEmailVerified;
+    isEmailVerificationLoading ||
+    cooldown > 0 ||
+    isEmailCodeLoading ||
+    !isEmailValidState ||
+    isEmailVerified;
 
   const isVerifyButtonDisabled =
     isEmailVerificationLoading || emailCode.length !== 6 || !isEmailValidState;
+
+  const isEmailCodeSended = !isEmailVerified && cooldown > 0 && !emailCode;
+
+  const isEmailCodeEntered = !isEmailVerified && cooldown <= 0 && !emailCode;
 
   /** 이메일 인증 코드 전송 */
   const handleSendEmailCode = async () => {
@@ -68,7 +76,7 @@ export default function LoginEmailInput({
     if (isVerifyButtonDisabled) return;
     try {
       setIsEmailValificationLoading(true);
-      // await verifyEmailCode({ email, emailCode });
+      await verifyEmailCode({ email, emailCode });
       setCooldown(0);
       setIsEmailVerified(true);
     } catch (error: any) {
@@ -114,11 +122,18 @@ export default function LoginEmailInput({
         disabled={isEmailVerified}
         required
       />
+      {/* 이메일 입력 안내 */}
       <div className="text-sm text-gray-500">
         {!isEmailValidState && email.trim() !== "" && (
-          <>올바른 이메일 형식을 입력해주세요.</>
+          <div className="text-red-600">
+            올바른 형식의 이메일을 입력해주세요.
+          </div>
+        )}
+        {isEmailValidState && (
+          <div className="text-green-500">올바른 형식의 이메일입니다.</div>
         )}
       </div>
+      {/* 이메일 인증코드 섹션 */}
       <div className="flex flex-col items-center gap-2">
         <div className="flex gap-2">
           <InputOTP
@@ -137,11 +152,7 @@ export default function LoginEmailInput({
             </InputOTPGroup>
           </InputOTP>
           <Button
-            className={`w-[62px] rounded p-2 text-white ${
-              isSendButtonDisabled
-                ? "bg-gray-400"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`w-[62px] rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:bg-gray-400`}
             type="button"
             onClick={handleSendEmailCode}
             disabled={isSendButtonDisabled}
@@ -149,43 +160,49 @@ export default function LoginEmailInput({
             {cooldown > 0 ? `${cooldown}초` : "전송"}
           </Button>
         </div>
+        {/* 인증코드 안내 메시지 */}
         <div className="text-sm text-gray-500">
-          {cooldown > 0 ? (
-            <>인증코드가 전송되었습니다. 메일함을 확인해주세요.</>
-          ) : (
-            <>이메일 주소를 입력하고 전송 버튼을 눌러주세요.</>
+          {emailCode && (
+            <div>
+              6자리를 모두 입력 후{" "}
+              <span className="font-semibold text-blue-600">이메일 확인</span>{" "}
+              버튼을 눌러주세요.
+            </div>
+          )}
+          {isEmailVerified && (
+            <div className="text-green-500">이메일 인증을 완료했습니다.</div>
+          )}
+          {isEmailCodeSended && (
+            <>
+              인증코드가 전송되었습니다.{" "}
+              <span className="font-semibold text-blue-600">메일함</span>을
+              확인해주세요.
+            </>
+          )}
+          {isEmailCodeEntered && (
+            <>
+              이메일을 입력하고{" "}
+              <span className="font-semibold text-blue-600">전송</span> 버튼을
+              눌러주세요.
+            </>
           )}
         </div>
       </div>
       {/* 이메일 인증 섹션 */}
       {isEmailVerified ? (
         <Button
-          className={`rounded p-2 text-white ${
-            isEmailVerificationLoading
-              ? "bg-gray-400"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className="rounded bg-gray-600 p-2 text-white hover:bg-gray-700"
           type="button"
           onClick={resetEmailInfo}
         >
-          이메일 수정
+          이메일 변경
         </Button>
       ) : (
         <Button
-          className={`rounded p-2 text-white ${
-            isEmailVerificationLoading ||
-            emailCode.length !== 6 ||
-            !isEmailValidState
-              ? "bg-gray-400"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className={`rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:border-none disabled:bg-gray-400`}
           type="button"
           onClick={handleValidEmail}
-          disabled={
-            isEmailVerificationLoading ||
-            emailCode.length !== 6 ||
-            !isEmailValidState
-          }
+          disabled={isVerifyButtonDisabled}
         >
           {isEmailVerificationLoading ? "확인 중..." : "이메일 확인"}
         </Button>

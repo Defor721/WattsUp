@@ -4,19 +4,20 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button, Input, Label } from "@/components/shadcn";
 import { isPasswordsMatching, isPasswordValid } from "@/utils";
 
-interface LoginPasswordInputProps {
+interface SignupPasswordInputProps {
   password: string;
   setPassword: Dispatch<React.SetStateAction<string>>;
 }
 
-export default function LoginPasswordInput({
+export default function SignupPasswordInput({
   password,
   setPassword,
-}: LoginPasswordInputProps) {
-  const [confirmPassword, setConfirmPassword] = useState("");
+}: SignupPasswordInputProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showVerifyPassword, setShowVerifyPassword] = useState<boolean>(false);
   const [isPasswordValidState, setIsPasswordValidState] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const [isConfirmPasswordValidState, setIsConfirmPasswordValidState] =
     useState(false);
 
@@ -38,7 +39,8 @@ export default function LoginPasswordInput({
           type={showPassword ? "text" : "password"}
           id="password"
           name="password"
-          placeholder="비밀번호를 입력해주세요."
+          placeholder="8~16자의 비밀번호를 입력해주세요."
+          maxLength={16}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -50,22 +52,23 @@ export default function LoginPasswordInput({
           onClick={() => setShowPassword((prevState) => !prevState)}
         >
           {showPassword ? (
-            <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
-          ) : (
             <Eye className="text-muted-foreground h-5 w-5 opacity-70" />
+          ) : (
+            <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
           )}
         </Button>
       </div>
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-red-500">
         {!isPasswordValidState && password.trim() !== "" && (
-          <>올바른 비밀번호 형식을 입력해주세요.</>
+          <>공백을 제외한 알파벳 대/소문자, 숫자, 특수문자의 조합</>
         )}
       </div>
       <div className="relative">
         <Input
-          type={showVerifyPassword ? "text" : "password"}
+          type={showConfirmPassword ? "text" : "password"}
           name="confirmPassword"
-          placeholder="비밀번호를 다시 한번 입력해주세요."
+          placeholder="비밀번호를 다시 입력해주세요."
+          maxLength={16}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
@@ -74,16 +77,16 @@ export default function LoginPasswordInput({
           type="button"
           className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
           size={"icon"}
-          onClick={() => setShowVerifyPassword((prevState) => !prevState)}
+          onClick={() => setShowConfirmPassword((prevState) => !prevState)}
         >
-          {showVerifyPassword ? (
-            <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
-          ) : (
+          {showConfirmPassword ? (
             <Eye className="text-muted-foreground h-5 w-5 opacity-70" />
+          ) : (
+            <EyeOff className="text-muted-foreground h-5 w-5 opacity-70" />
           )}
         </Button>
       </div>
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-red-500">
         {!isConfirmPasswordValidState && confirmPassword.trim() !== "" && (
           <>비밀번호가 일치하지 않습니다.</>
         )}

@@ -33,28 +33,24 @@ export default function AdditionalPage() {
     actions: { socialSignup, resetLoginState },
   } = useAuthStore();
 
-  // 현재 날짜(YYYYMMDD)
-  const [nowDate, setNowDate] = useState("");
-
   const [principalName, setPrincipalName] = useState("");
   const [businessNumber, setBusinessNumber] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [isBusinessLoading, setIsBusinessLoading] = useState(false);
+  const [isBusinessValid, setIsBusinessValid] = useState(false);
+  const [businessStatusMessage, setBusinessStatusMessage] = useState("");
+
   const [businessType, setBusinessType] = useState<"corporate" | "individual">(
     "corporate",
   );
-
-  const [companyName, setCompanyName] = useState("");
   const [corporateNumber, setCorporateNumber] = useState("");
   const [personalId, setPersonalId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isBusinessValid, setIsBusinessValid] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
 
   const handleCheckBusinessNumber = async () => {
-    setIsLoading(true);
-    setStatusMessage("");
+    setIsBusinessLoading(true);
+    setBusinessStatusMessage("");
     setIsBusinessValid(false);
-
     try {
       await businessInfoVerification(
         businessNumber,
@@ -63,14 +59,14 @@ export default function AdditionalPage() {
         companyName,
       );
       setIsBusinessValid(true);
-      setStatusMessage("유효한 사업자 등록번호입니다.");
+      setBusinessStatusMessage("유효한 사업자 등록번호입니다.");
     } catch (error: any) {
-      setStatusMessage(
+      setBusinessStatusMessage(
         error.response.data.message || `서버 오류가 발생했습니다.`,
       );
       setIsBusinessValid(false);
     } finally {
-      setIsLoading(false);
+      setIsBusinessLoading(false);
     }
   };
 
@@ -79,7 +75,8 @@ export default function AdditionalPage() {
     setStartDate("");
     setPrincipalName("");
     setIsBusinessValid(false);
-    setStatusMessage("");
+    setCompanyName("");
+    setBusinessStatusMessage("");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -106,14 +103,6 @@ export default function AdditionalPage() {
       router.push(redirectTo);
     }
   }, [accessToken]);
-
-  useEffect(() => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = ("0" + (1 + date.getMonth())).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    setNowDate(year + month + day);
-  }, []);
 
   {
     /* TODO: 아래 인풋 예시 주석 모두 지울것 */
@@ -193,7 +182,7 @@ export default function AdditionalPage() {
                     <IoMdInformationCircleOutline />
                   </TooltipTrigger>
                   <TooltipContent side="right">
-                    {`YYYYMMDD 포맷으로 개업일자 8자리를 입력해주세요. 예) ${nowDate}`}
+                    {`YYYYMMDD 포맷으로 개업일자 8자리를 입력해주세요. 예) 20241229`}
                   </TooltipContent>
                 </div>
               </Tooltip>
@@ -244,22 +233,24 @@ export default function AdditionalPage() {
           ) : (
             <button
               className={`mt-2 rounded p-2 text-white ${
-                isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                isBusinessLoading
+                  ? "bg-gray-400"
+                  : "bg-blue-600 hover:bg-blue-700"
               }`}
               type="button"
               onClick={handleCheckBusinessNumber}
-              disabled={isLoading}
+              disabled={isBusinessLoading}
             >
-              {isLoading ? "확인 중..." : "사업자번호 확인"}
+              {isBusinessLoading ? "확인 중..." : "사업자번호 확인"}
             </button>
           )}
-          {statusMessage && (
+          {businessStatusMessage && (
             <p
               className={`mt-2 font-semibold ${
                 isBusinessValid ? "text-green-500" : "text-red-500"
               }`}
             >
-              {statusMessage}
+              {businessStatusMessage}
             </p>
           )}
 
