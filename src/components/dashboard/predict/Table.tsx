@@ -34,7 +34,7 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
         <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
           {/* 테이블 헤더 */}
           <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] dark:text-gray-300 [&>*]:text-center">
+            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 날짜
               </TableHead>

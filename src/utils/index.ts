@@ -6,3 +6,5 @@ export {
   isValidPassword,
   isPasswordMatching,
 } from "./validation";
+export { get6Days } from "./get6Days";
+export { getTodayDate, getYesterdayDate } from "./getDate";

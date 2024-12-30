@@ -1,5 +1,14 @@
 import React from "react";
 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/shadcn";
+
 const users = [
   {
     id: "test1@naver.com",
@@ -50,37 +59,71 @@ const users = [
 
 function UserManageMentTable() {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border border-gray-300 bg-white">
-        <thead>
-          <tr className="bg-gray-100 text-center">
-            <th className="border-b px-4 py-2">사용자 아이디</th>
-            <th className="border-b px-4 py-2">사업자명</th>
-            <th className="border-b px-4 py-2">상호명</th>
-            <th className="border-b px-4 py-2">사업자등록번호</th>
-            <th className="border-b px-4 py-2">법인등록번호</th>
-            <th className="border-b px-4 py-2">가입날짜</th>
-            <th className="border-b px-4 py-2">마지막 로그인 시간</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="text-center hover:bg-gray-50">
-              <td className="border-b p-3">{user.id}</td>
-              <td className="border-b p-3">{user.businessName}</td>
-              <td className="border-b p-3">{user.tradeName}</td>
-              <td className="border-b p-3">
-                {user.businessRegistrationNumber}
-              </td>
-              <td className="border-b p-3">
-                {user.corporateRegistrationNumber}
-              </td>
-              <td className="border-b p-3">{user.joinDate}</td>
-              <td className="border-b p-3">{user.lastLoginTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="mt-3">
+      <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+        사용자 관리 테이블
+      </h4>
+      <div className="overflow-x-auto">
+        <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
+          {/* 테이블 헤더 */}
+          <TableHeader>
+            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+              <TableHead className="border border-gray-700 px-3 py-2">
+                사용자 아이디
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                사업자명
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                상호명
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                사업자등록번호
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                법인등록번호
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                가입날짜
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                마지막 로그인 시간
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          {/* 테이블 본문 */}
+          <TableBody>
+            {users.map((user) => (
+              <TableRow
+                key={user.id}
+                className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+              >
+                <TableCell className="border border-gray-700 p-3">
+                  {user.id}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.businessName}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.tradeName}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.businessRegistrationNumber}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.corporateRegistrationNumber}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.joinDate}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {user.lastLoginTime}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
