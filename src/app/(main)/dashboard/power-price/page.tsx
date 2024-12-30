@@ -1,282 +1,189 @@
-// "use client";
+"use client";
 
-// import React, { useState, useEffect } from "react";
-// import dynamic from "next/dynamic";
-// import * as XLSX from "xlsx";
-// import Plot from "react-plotly.js";
-// import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
 
-// interface PowerPriceData {
-//   연도: number;
-//   주택용: number;
-//   일반용: number;
-//   교육용: number;
-//   산업용: number;
-//   농사용: number;
-//   가로등: number;
-//   심야: number;
-//   합계: number;
-// }
+import KPICard from "@/components/dashboard/page6/KPICard";
+import BarChart from "@/components/dashboard/page6/BarChart";
+import PieChart from "@/components/dashboard/page6/PieChart";
+import Table from "@/components/dashboard/page6/Table";
 
-// const Dashboard = () => {
-//   const router = useRouter();
-//   const [data, setData] = useState<PowerPriceData[]>([]);
-//   const [selectedCategory, setSelectedCategory] = useState<string>("주택용");
-//   const [kpi, setKpi] = useState({
-//     avgResidential: "",
-//     maxPriceYear: "",
-//     overallAvg: "",
-//   });
-//   const [lineChartData, setLineChartData] = useState<any[]>([]);
-//   const [boxPlotData, setBoxPlotData] = useState<any[]>([]);
-//   const [stackedAreaData, setStackedAreaData] = useState<any[]>([]);
-//   const [heatmapData, setHeatmapData] = useState<any>([]);
-
-//   // 데이터 로드
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await fetch(
-//           "/assets/dashboards/HOME_발전·판매_판매단가.xlsx",
-//         );
-//         const arrayBuffer = await response.arrayBuffer();
-//         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-//           type: "array",
-//         });
-//         const sheetName = workbook.SheetNames[0];
-//         const worksheet = workbook.Sheets[sheetName];
-//         const jsonData: PowerPriceData[] = XLSX.utils.sheet_to_json(worksheet);
-//         setData(jsonData);
-//       } catch (error) {
-//         console.error("데이터 로드 중 오류 발생:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   // 데이터 분석 및 시각화
-//   useEffect(() => {
-//     if (data.length > 0) {
-//       // KPI 계산
-//       const avgResidential = (
-//         data.reduce((sum, row) => sum + (row[selectedCategory] || 0), 0) /
-//         data.length
-//       ).toFixed(2);
-
-//       const maxPriceYearRow = data.reduce((maxRow, row) =>
-//         row.합계 > maxRow.합계 ? row : maxRow,
-//       );
-//       const overallAvg = (
-//         data.reduce(
-//           (sum, row) =>
-//             sum +
-//             Object.keys(row)
-//               .filter((key) => key !== "연도" && key !== "합계")
-//               .reduce((subSum, key) => subSum + (row[key] || 0), 0),
-//           0,
-//         ) /
-//         (data.length * 7)
-//       ).toFixed(2);
-
-//       setKpi({
-//         avgResidential: `${avgResidential} 원/kWh`,
-//         maxPriceYear: `${maxPriceYearRow.연도}년 최고: ${maxPriceYearRow.합계.toFixed(
-//           2,
-//         )} 원/kWh`,
-//         overallAvg: `${overallAvg} 원/kWh`,
-//       });
-
-//       // 라인 차트 데이터
-//       const lineData = Object.keys(data[0])
-//         .filter((key) => key !== "연도" && key !== "합계")
-//         .map((category) => ({
-//           x: data.map((row) => row.연도),
-//           y: data.map((row) => row[category]),
-//           type: "scatter",
-//           mode: "lines+markers",
-//           name: category,
-//         }));
-//       setLineChartData(lineData);
-
-//       // 박스 플롯 데이터
-//       const meltedData = Object.keys(data[0])
-//         .filter((key) => key !== "연도" && key !== "합계")
-//         .map((category) => ({
-//           x: category,
-//           y: data.map((row) => row[category]),
-//           type: "box",
-//           name: category,
-//         }));
-//       setBoxPlotData(meltedData);
-
-//       // 스택형 영역 차트 데이터
-//       const stackedData = Object.keys(data[0])
-//         .filter((key) => key !== "연도" && key !== "합계")
-//         .map((category) => ({
-//           x: data.map((row) => row.연도),
-//           y: data.map((row) => row[category]),
-//           stackgroup: "one",
-//           name: category,
-//         }));
-//       setStackedAreaData(stackedData);
-
-//       // 히트맵 데이터
-//       const heatmap = {
-//         z: Object.keys(data[0])
-//           .filter((key) => key !== "연도" && key !== "합계")
-//           .map((category) => data.map((row) => row[category])),
-//         x: data.map((row) => row.연도),
-//         y: Object.keys(data[0]).filter(
-//           (key) => key !== "연도" && key !== "합계",
-//         ),
-//         type: "heatmap",
-//         colorscale: "Blues",
-//       };
-//       setHeatmapData([heatmap]);
-//     }
-//   }, [data, selectedCategory]);
-
-//   return (
-//     <div
-//       style={{
-//         padding: "20px",
-//         fontFamily: "Arial, sans-serif",
-//         backgroundColor: "#f9f9f9",
-//         color: "#333",
-//       }}
-//     >
-//       <h1 style={{ color: "#007aff" }}>판매단가 대시보드</h1>
-
-//       {/* 홈으로 돌아가기 버튼 */}
-//       <button
-//         onClick={() => router.push("/")}
-//         style={{
-//           marginBottom: "20px",
-//           padding: "10px 20px",
-//           backgroundColor: "#2ecc71",
-//           color: "#ffffff",
-//           border: "none",
-//           borderRadius: "5px",
-//         }}
-//       >
-//         홈으로 돌아가기
-//       </button>
-
-//       {/* KPI 카드 */}
-//       <div
-//         style={{
-//           display: "flex",
-//           justifyContent: "space-around",
-//           marginBottom: "20px",
-//         }}
-//       >
-//         <div
-//           style={{
-//             backgroundColor: "#17a2b8",
-//             padding: "20px",
-//             borderRadius: "10px",
-//             textAlign: "center",
-//           }}
-//         >
-//           <h3>범주별 평균</h3>
-//           <p style={{ fontSize: "24px" }}>{kpi.avgResidential}</p>
-//         </div>
-//         <div
-//           style={{
-//             backgroundColor: "#28a745",
-//             padding: "20px",
-//             borderRadius: "10px",
-//             textAlign: "center",
-//           }}
-//         >
-//           <h3>최고 판매단가</h3>
-//           <p style={{ fontSize: "24px" }}>{kpi.maxPriceYear}</p>
-//         </div>
-//         <div
-//           style={{
-//             backgroundColor: "#dc3545",
-//             padding: "20px",
-//             borderRadius: "10px",
-//             textAlign: "center",
-//           }}
-//         >
-//           <h3>전체 평균</h3>
-//           <p style={{ fontSize: "24px" }}>{kpi.overallAvg}</p>
-//         </div>
-//       </div>
-
-//       {/* 범주 선택 */}
-//       <div style={{ marginBottom: "20px" }}>
-//         <label style={{ marginRight: "10px" }}>범주 선택:</label>
-//         <select
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//           style={{ padding: "10px", borderRadius: "5px" }}
-//         >
-//           {Object.keys(data[0] || {})
-//             .filter((key) => key !== "연도" && key !== "합계")
-//             .map((category) => (
-//               <option key={category} value={category}>
-//                 {category}
-//               </option>
-//             ))}
-//         </select>
-//       </div>
-
-//       {/* 그래프 섹션 */}
-//       <div style={{ marginBottom: "40px" }}>
-//         <Plot
-//           data={lineChartData}
-//           layout={{
-//             title: "연도별 판매단가 추세",
-//             xaxis: { title: "연도" },
-//             yaxis: { title: "판매단가 (원/kWh)" },
-//           }}
-//         />
-//       </div>
-
-//       <div style={{ marginBottom: "40px" }}>
-//         <Plot
-//           data={boxPlotData}
-//           layout={{
-//             title: "범주별 판매단가 분포",
-//             xaxis: { title: "범주" },
-//             yaxis: { title: "판매단가 (원/kWh)" },
-//           }}
-//         />
-//       </div>
-
-//       <div style={{ marginBottom: "40px" }}>
-//         <Plot
-//           data={stackedAreaData}
-//           layout={{
-//             title: "연도별 판매단가 비중",
-//             xaxis: { title: "연도" },
-//             yaxis: { title: "판매단가 (원/kWh)" },
-//           }}
-//         />
-//       </div>
-
-//       <div style={{ marginBottom: "40px" }}>
-//         <Plot
-//           data={heatmapData}
-//           layout={{
-//             title: "히트맵: 연도 및 범주별 판매단가",
-//             xaxis: { title: "연도" },
-//             yaxis: { title: "범주" },
-//           }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-import React from "react";
-
-function page() {
-  return <div>page</div>;
+interface DataRow {
+  연도: number;
+  주택용: number;
+  일반용: number;
+  교육용: number;
+  산업용: number;
+  농사용: number;
+  가로등: number;
+  심야: number;
+  합계: number;
+  [key: string]: string | number;
 }
 
-export default page;
+const SalesPriceDashboard = () => {
+  const [data, setData] = useState<DataRow[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number>(2023);
+  const [currentData, setCurrentData] = useState<DataRow | null>(null);
+
+  // 데이터 불러오기
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await fetch("/assets/dashboards/HOME_Sales price.xlsx");
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+        type: "array",
+      });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData: DataRow[] = XLSX.utils
+        .sheet_to_json(worksheet)
+        .map((row: any) => ({
+          연도: Number(row["연도"]),
+          주택용: Number(row["주택용"]),
+          일반용: Number(row["일반용"]),
+          교육용: Number(row["교육용"]),
+          산업용: Number(row["산업용"]),
+          농사용: Number(row["농사용"]),
+          가로등: Number(row["가로등"]),
+          심야: Number(row["심야"]),
+          합계: Number(row["합계"]),
+        }));
+      setData(jsonData);
+      setSelectedYear(jsonData[0]?.연도 || 2023);
+      setCurrentData(jsonData[0]);
+    };
+
+    loadData();
+  }, []);
+
+  // 연도 변경
+  useEffect(() => {
+    const yearData = data.find((row) => row.연도 === selectedYear);
+    setCurrentData(yearData || null);
+  }, [selectedYear, data]);
+
+  // 데이터 다운로드
+  const handleDownload = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "SalesPrice");
+    XLSX.writeFile(workbook, "SalesPriceData.xlsx");
+  };
+
+  // 차트 데이터 생성
+  const generateBarChartData = (metric: keyof DataRow) => ({
+    labels: data.map((row) => row.연도),
+    datasets: [
+      {
+        label: metric,
+        data: data.map((row) => row[metric]),
+        backgroundColor: "#4ADE80",
+      },
+    ],
+  });
+
+  const generatePieChartData = () => ({
+    labels: [
+      "주택용",
+      "일반용",
+      "교육용",
+      "산업용",
+      "농사용",
+      "가로등",
+      "심야",
+    ],
+    datasets: [
+      {
+        label: "비중",
+        data: currentData
+          ? [
+              currentData.주택용,
+              currentData.일반용,
+              currentData.교육용,
+              currentData.산업용,
+              currentData.농사용,
+              currentData.가로등,
+              currentData.심야,
+            ]
+          : [],
+        backgroundColor: [
+          "#34D399",
+          "#60A5FA",
+          "#F87171",
+          "#93C5FD",
+          "#FBBF24",
+          "#A78BFA",
+          "#FCA5A5",
+        ],
+      },
+    ],
+  });
+
+  const kpiConfig = {
+    주택용: { color: "#34D399", unit: "원" },
+    일반용: { color: "#60A5FA", unit: "원" },
+    산업용: { color: "#F87171", unit: "원" },
+    합계: { color: "#93C5FD", unit: "원" },
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 p-6 text-white">
+      <h1 className="mb-6 text-center text-4xl font-bold">
+        판매 가격 대시보드
+      </h1>
+
+      <div className="mb-6 flex items-center justify-between">
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
+        >
+          {data.map((row) => (
+            <option key={row.연도} value={row.연도}>
+              {row.연도}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={handleDownload}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          데이터 다운로드
+        </button>
+      </div>
+
+      {currentData && (
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {Object.entries(currentData)
+            .filter(([key]) => kpiConfig[key as keyof typeof kpiConfig])
+            .map(([key, value]) => {
+              const config = kpiConfig[key as keyof typeof kpiConfig];
+              return (
+                <KPICard
+                  key={key}
+                  title={key}
+                  value={`${value.toLocaleString()} ${config.unit}`}
+                  backgroundColor={config.color}
+                />
+              );
+            })}
+        </div>
+      )}
+
+      <div className="flex flex-col gap-6">
+        <div className="w-full">
+          <BarChart data={generateBarChartData("합계")} />
+        </div>
+        <div className="w-full">
+          <PieChart data={generatePieChartData()} />
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <Table data={data.slice(0, 10)} />
+      </div>
+    </div>
+  );
+};
+
+export default SalesPriceDashboard;
