@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// 입찰 건수
+
 import clientPromise from "@/lib/mongodb";
 export async function GET() {
   try {

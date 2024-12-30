@@ -86,10 +86,10 @@ const teamInfo = [
 
 const TeamIntroduction = () => {
   return (
-    <section className="px-4 py-12 sm:py-20 md:py-32 lg:py-40">
+    <section className="px-4 py-12 sm:py-20 md:py-28 lg:py-40">
       <div className="container mx-auto px-1">
         <motion.h1
-          initial={{ opacity: 0, y: -50 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="mb-12 text-center text-3xl font-bold text-[rgb(7,15,38)] sm:mb-16 sm:text-4xl md:mb-20 md:text-5xl lg:mb-24"

@@ -1,4 +1,6 @@
 export type PowerSupplyData = {
+  currentSupply: any;
+  currentDemand: any;
   time: string;
   supply: number;
   demand: number;
