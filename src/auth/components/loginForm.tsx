@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { IoIosArrowBack } from "react-icons/io";
-import { useTheme } from "next-themes";
 
 import {
   Button,
@@ -29,7 +28,6 @@ export default function LoginForm() {
   const router = useRouter();
   const { showDialog, DialogComponent } = useDialog();
   const { resetAccessToken } = useAccessToken();
-  const { theme } = useTheme();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -57,10 +55,6 @@ export default function LoginForm() {
     nativeLogin(email, password);
   };
 
-  const handlePrevClick = () => {
-    router.back();
-  };
-
   // 에러 상태 감지 시 모달 표시
   useEffect(() => {
     if (error && message) {
@@ -80,12 +74,12 @@ export default function LoginForm() {
 
   return (
     <Card className="relative flex flex-col p-5">
-      <button onClick={handlePrevClick}>
+      <Link href={"/"}>
         <IoIosArrowBack
           size={"20px"}
           className="absolute left-1 top-2 opacity-50 hover:cursor-pointer hover:opacity-80"
         />
-      </button>
+      </Link>
       {/* 로그인 헤더 */}
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">로그인</CardTitle>

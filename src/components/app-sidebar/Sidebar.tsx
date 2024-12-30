@@ -3,17 +3,16 @@
 import {
   LayoutDashboard,
   BarChart2,
-  DollarSign,
-  RefreshCw,
-  Settings,
   TrendingUp,
   Search,
   PanelLeft,
   X,
+  FileText,
+  Users,
+  Database,
 } from "lucide-react";
 import { useState } from "react";
 
-import useCheckAccessToken from "@/auth/useCheckAccessToken";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/useAccessToken";
 
@@ -23,22 +22,42 @@ import { NavUser } from "./User";
 import { Input } from "../shadcn";
 import NotLogin from "./NotLogin";
 
-// Menu items
-const items = [
-  { icon: LayoutDashboard, label: "대시보드", href: "/dashboard" },
+// Menu defaultItems
+const defaultItems = [
   {
+    id: "dashboard",
+    icon: LayoutDashboard,
+    label: "대시보드",
+    href: "/dashboard",
+  },
+  {
+    id: "predict",
     icon: BarChart2,
     label: "태양광 발전량 예측",
     href: "/dashboard/predict",
   },
+  { id: "profit-analysis", icon: FileText, label: "데이터 분석", href: "/" },
   {
-    icon: DollarSign,
-    label: "수익성 분석",
-    href: "/",
+    id: "energy-trade",
+    icon: TrendingUp,
+    label: "전력 거래",
+    href: "/energy-trade",
   },
-  { icon: TrendingUp, label: "전력 거래", href: "/energy-trade" },
-  // { icon: RefreshCw, label: "Trading", href: "/trading" },
-  { icon: Settings, label: "설정", href: "/settings" },
+];
+
+const adminItems = [
+  {
+    id: "user-management",
+    icon: Users,
+    label: "사용자 관리",
+    href: "/admin/user-management",
+  },
+  {
+    id: "data-management",
+    icon: Database,
+    label: "데이터 관리",
+    href: "/admin/data-management",
+  },
 ];
 
 const user = {
@@ -48,11 +67,13 @@ const user = {
 };
 
 function Sidebar() {
-  useCheckAccessToken();
-
   const { isTablet } = useDeviceType();
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
   const { accessToken } = useAccessToken();
+  const [userState, setUserState] = useState<"admin" | "normal">("admin");
+
+  const items =
+    userState === "admin" ? [...defaultItems, ...adminItems] : defaultItems;
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
   return (
