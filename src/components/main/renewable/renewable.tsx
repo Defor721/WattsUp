@@ -60,7 +60,7 @@ const EnergyInfoPage = () => {
             transition={{ duration: 1 }}
           >
             <Image
-              src="/assets/images/map.jpg"
+              src="/assets/images/map.png"
               alt="Renewable Energy Visualization"
               fill
               className="object-cover opacity-50 mix-blend-overlay"

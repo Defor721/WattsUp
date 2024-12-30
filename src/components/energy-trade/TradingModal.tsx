@@ -101,28 +101,28 @@ export function TradingModal({ isOpen, onClose }: TradingModalProps) {
           {/* 모달 본문 */}
           <div className="p-6">
             {/* 매수/매도 선택 탭 */}
-            <Tabs
+            {/* <Tabs
               value={orderType}
               onValueChange={(value) => setOrderType(value as "buy" | "sell")} // 선택 시 상태 업데이트
               className="mb-6"
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                {/* 매수 탭 */}
-                <TabsTrigger
+            > */}
+            {/* <TabsList className="grid w-full grid-cols-2"> */}
+            {/* 매수 탭 */}
+            {/* <TabsTrigger
                   value="buy"
                   className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
                 >
                   매수
-                </TabsTrigger>
-                {/* 매도 탭 */}
-                <TabsTrigger
+                </TabsTrigger> */}
+            {/* 매도 탭 */}
+            {/* <TabsTrigger
                   value="sell"
                   className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
                 >
                   매도
                 </TabsTrigger>
               </TabsList>
-            </Tabs>
+            </Tabs> */}
 
             {/* 주문 입력 폼 */}
             <div className="space-y-4">
@@ -136,14 +136,14 @@ export function TradingModal({ isOpen, onClose }: TradingModalProps) {
                   placeholder="0"
                   value={orderAmount}
                   onChange={(e) => setOrderAmount(e.target.value)} // 입력값 변경
-                  className="w-full text-white"
+                  className="w-full text-black"
                   type="number"
                   min="0"
                   max="1000000"
                 />
               </div>
-              <div>
-                {/* 가격 입력 필드 */}
+              {/* <div>
+                {/* 가격 입력 필드
                 <Label htmlFor="price" className="mb-2 block">
                   가격
                 </Label>
@@ -152,20 +152,21 @@ export function TradingModal({ isOpen, onClose }: TradingModalProps) {
                   placeholder="000"
                   value={orderPrice}
                   onChange={(e) => setOrderPrice(e.target.value)} // 입력값 변경
-                  className="w-full text-white"
+                  className="w-full text-black"
                   type="number"
                   min="1000"
                   max="1000000"
                 />
-              </div>
+              </div> */}
 
               {/* 주문 버튼 */}
               <Button
-                className={`w-full ${
-                  orderType === "buy"
-                    ? "bg-green-500 hover:bg-green-600" // 매수 버튼 스타일
-                    : "bg-red-500 hover:bg-red-600" // 매도 버튼 스타일
-                } text-white`}
+                // className={`w-full ${
+                //   orderType === "buy"
+                //     ? "bg-green-500 hover:bg-green-600" // 매수 버튼 스타일
+                //     : "bg-red-500 hover:bg-red-600" // 매도 버튼 스타일
+                // } text-white`}
+                className={`w-full ${"bg-green-500 hover:bg-green-600"}`}
                 onClick={() => handleOrder(orderType)} // 클릭 시 주문 처리
               >
                 {orderType === "buy" ? "매수" : "매도"}

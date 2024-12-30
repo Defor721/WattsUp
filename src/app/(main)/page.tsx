@@ -1,7 +1,7 @@
 import Introduce from "@/components/main/introduce/Introduce";
 import VideoPart from "@/components/main/video/VideoPart";
 import FeaturesPart from "@/components/main/features/Features";
-import EnergyInfoPage from "@/components/main/renewable/renewable";
+import EnergyInfoPage from "@/components/main/renewable/Renewable";
 
 export default function Home() {
   return (
