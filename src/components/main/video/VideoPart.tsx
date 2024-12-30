@@ -11,7 +11,7 @@ const slides = [
     title: "스마트 에너지 거래",
     subtitle: "전력 교환의 혁신",
     description: "에너지 거래의 미래를 경험하세요",
-    cta: { text: "자세히 보기", href: "/trading" },
+    cta: { text: "자세히 보기", href: "/energy-trade" },
   },
   {
     title: "실시간 분석",

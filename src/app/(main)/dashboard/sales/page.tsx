@@ -24,39 +24,64 @@ const SalesPriceDashboard = () => {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [currentYearData, setCurrentYearData] = useState<DataRow | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/assets/dashboards/HOME_sales_Amount.xlsx");
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-      });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: DataRow[] = XLSX.utils
-        .sheet_to_json<DataRow>(worksheet)
-        .map((row: any) => ({
-          연도: row["연도"],
-          주택용: row["주택용"],
-          일반용: row["일반용"],
-          교육용: row["교육용"],
-          산업용: row["산업용"],
-          농사용: row["농사용"],
-          가로등: row["가로등"],
-          심야: row["심야"],
-          합계: row["합계"],
-        }));
-      setData(jsonData);
-      setSelectedYear(jsonData[0]?.연도 || null);
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          "/assets/dashboards/HOME_sales_Amount.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: DataRow[] = XLSX.utils
+          .sheet_to_json<Record<string, any>>(worksheet)
+          .map((row: any) => ({
+            연도: Number(row["연도"]) || 0,
+            주택용: Number(row["주택용"]) || 0,
+            일반용: Number(row["일반용"]) || 0,
+            교육용: Number(row["교육용"]) || 0,
+            산업용: Number(row["산업용"]) || 0,
+            농사용: Number(row["농사용"]) || 0,
+            가로등: Number(row["가로등"]) || 0,
+            심야: Number(row["심야"]) || 0,
+            합계: Number(row["합계"]) || 0,
+          }));
+        setData(jsonData);
+        setSelectedYear(jsonData[0]?.연도 || null); // 첫 번째 연도를 초기값으로 설정
+        setError(null);
+      } catch (err) {
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (selectedYear) {
+    if (selectedYear && data.length > 0) {
       const yearData = data.find((row) => row.연도 === selectedYear);
-      setCurrentYearData(yearData || null);
+      setCurrentYearData(
+        yearData || {
+          연도: selectedYear,
+          주택용: 0,
+          일반용: 0,
+          교육용: 0,
+          산업용: 0,
+          농사용: 0,
+          가로등: 0,
+          심야: 0,
+          합계: 0,
+        },
+      );
     }
   }, [selectedYear, data]);
 
@@ -73,7 +98,11 @@ const SalesPriceDashboard = () => {
         { title: "산업용", value: currentYearData.산업용, unit: "원" },
         { title: "합계", value: currentYearData.합계, unit: "원" },
       ]
-    : [];
+    : [
+        { title: "주택용", value: 0, unit: "원" },
+        { title: "산업용", value: 0, unit: "원" },
+        { title: "합계", value: 0, unit: "원" },
+      ];
 
   const pieChartData = currentYearData
     ? {
@@ -112,11 +141,11 @@ const SalesPriceDashboard = () => {
     : null;
 
   const lineChartData = {
-    labels: data.map((row) => row.연도),
+    labels: data.length > 0 ? data.map((row) => row.연도) : [],
     datasets: [
       {
         label: "합계",
-        data: data.map((row) => row.합계),
+        data: data.length > 0 ? data.map((row) => row.합계) : [],
         borderColor: "#34D399",
         backgroundColor: "rgba(52, 211, 153, 0.2)",
         fill: true,
@@ -124,9 +153,25 @@ const SalesPriceDashboard = () => {
     ],
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+        <div>데이터 로드 중...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+        <div>{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 p-4 text-white md:p-8">
-      <h1 className="mb-6 text-center text-4xl font-bold">판매단가 대시보드</h1>
+      <h1 className="mb-6 text-center text-4xl font-bold">판매금액 대시보드</h1>
 
       {/* 연도 선택 및 다운로드 */}
       <div className="mb-8 flex items-center justify-between">

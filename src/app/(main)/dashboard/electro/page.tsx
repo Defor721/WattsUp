@@ -74,7 +74,6 @@ const PowerDashboard: React.FC = () => {
         });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        // `sheet_to_json` 메서드의 반환 값을 PowerData 형식으로 명시적으로 지정
         const jsonData: PowerData[] = XLSX.utils
           .sheet_to_json<Record<string, any>>(worksheet)
           .map(normalizeData);
@@ -86,7 +85,7 @@ const PowerDashboard: React.FC = () => {
         setCurrentYearData(
           jsonData.find((item) => item.연도 === latestYear) || null,
         );
-        setError(null); // 성공 시 에러 초기화
+        setError(null);
       } catch (error) {
         console.error("Failed to load data:", error);
         setError("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -108,6 +107,10 @@ const PowerDashboard: React.FC = () => {
 
   // 다운로드 함수
   const handleDownload = () => {
+    if (!data.length) {
+      alert("다운로드할 데이터가 없습니다.");
+      return;
+    }
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Power Data");
@@ -266,10 +269,3 @@ const PowerDashboard: React.FC = () => {
 };
 
 export default PowerDashboard;
-// import React from "react";
-
-// function page() {
-//   return <div>page</div>;
-// }
-
-// export default page;

@@ -13,7 +13,7 @@ import {
 import KPICard from "@/components/dashboard/page3/KPICard";
 import LineChart from "@/components/dashboard/page3/LineChart";
 import DoughnutChart from "@/components/dashboard/page3/DoughnutChart";
-import BarChart from "@/components/dashboard/page3/BarChart";
+// import BarChart from "@/components/dashboard/page3/BarChart";
 import DataTable from "@/components/dashboard/page2/DataTable";
 
 interface EnergyData {
@@ -258,10 +258,3 @@ const EnergyDashboard: React.FC = () => {
 };
 
 export default EnergyDashboard;
-// import React from "react";
-
-// function page() {
-//   return <div>page</div>;
-// }
-
-// export default page;
