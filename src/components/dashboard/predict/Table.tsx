@@ -17,8 +17,8 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
   if (!tableData) return;
 
   return (
-    <div className="mt-5">
-      <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+    <div className="mt-3">
+      <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 테이블
       </h4>
       <div className="overflow-x-auto">
@@ -44,17 +44,15 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
                 key={row.date}
                 className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
               >
-                <td className="border border-gray-700 px-3 py-3">{row.date}</td>
-                <td className="border border-gray-700 px-3 py-3">
-                  {row.windSpeed}
-                </td>
-                <td className="border border-gray-700 px-3 py-3">
+                <td className="border border-gray-700 p-3">{row.date}</td>
+                <td className="border border-gray-700 p-3">{row.windSpeed}</td>
+                <td className="border border-gray-700 p-3">
                   {row.temperature}
                 </td>
-                <td className="border border-gray-700 px-3 py-3">
+                <td className="border border-gray-700 p-3">
                   {row.precipitation}
                 </td>
-                <td className="border border-gray-700 px-3 py-3">
+                <td className="border border-gray-700 p-3">
                   {row.amgo !== "-" ? row.amgo : "-"}
                 </td>
               </tr>

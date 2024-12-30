@@ -11,7 +11,7 @@ import {
   Users,
   Database,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/useAccessToken";
@@ -67,15 +67,17 @@ const user = {
 };
 
 function Sidebar() {
-  const { isTablet } = useDeviceType();
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
   const { accessToken } = useAccessToken();
   const [userState, setUserState] = useState<"admin" | "normal">("admin");
-
-  const items =
-    userState === "admin" ? [...defaultItems, ...adminItems] : defaultItems;
+  const { isTablet } = useDeviceType();
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
+
+  useEffect(() => {
+    console.log("isTablet: ", isTablet);
+  }, [isTablet]);
+
   return (
     <div className="relative flex">
       {/* 테블릿 화면에서 사이드바 확장시켰을 때 */}
@@ -122,11 +124,26 @@ function Sidebar() {
 
           {/* Content Section */}
           <div className="flex-1 overflow-y-auto">
+            {/* Default Items */}
             <NavMain
-              items={items}
+              items={defaultItems}
               isTablet={isTablet}
               isTabletExpanded={isTabletExpanded}
             />
+
+            {/* Separator */}
+            {userState === "admin" && (
+              <div className="my-4 border-t border-gray-700"></div>
+            )}
+
+            {/* Admin Items */}
+            {userState === "admin" && (
+              <NavMain
+                items={adminItems}
+                isTablet={isTablet}
+                isTabletExpanded={isTabletExpanded}
+              />
+            )}
           </div>
 
           {/* Footer Section */}

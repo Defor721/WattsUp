@@ -61,8 +61,6 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
 
       <ResponsiveContainer width={"100%"} aspect={16 / 5}>
         <LineChart
-          width={730}
-          height={500}
           data={data}
           // className="my-[5px] ml-5 mr-[30px]"
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

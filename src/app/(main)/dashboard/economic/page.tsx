@@ -77,6 +77,7 @@ const EconomicDashboard: React.FC = () => {
           .map(normalizeData);
 
         setData(jsonData);
+        console.log("jsonData: ", jsonData);
         const latestYear = jsonData[0]?.연도 || null;
         setSelectedYear(latestYear);
         setCurrentYearData(

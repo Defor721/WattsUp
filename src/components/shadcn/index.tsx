@@ -60,6 +60,18 @@ export { Input } from "./input";
 export { Label } from "./label";
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from "./select";
 export { Separator } from "./separator";
 export {
   Sheet,
