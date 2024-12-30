@@ -1,9 +1,11 @@
 // app/(main)/layout.tsx
 
+import { ReactNode } from "react";
+
 import Sidebar from "@/components/app-sidebar/Sidebar";
 import { SidebarProvider } from "@/components/shadcn";
 
-function MainLayout({ children }: { children: React.ReactNode }) {
+function MainLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar />

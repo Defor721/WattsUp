@@ -39,7 +39,6 @@ const EconomicDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 데이터 정규화 함수
   const normalizeData = (row: Record<string, any>): EconomicData => ({
     연도: Number(row["연도"]),
     생산자물가지수: Number(row["생산자물가지수(2015=100)"]),
@@ -54,7 +53,6 @@ const EconomicDashboard: React.FC = () => {
     콜금리: Number(row["콜금리(연%)"]),
   });
 
-  // 데이터 로드
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,7 +87,6 @@ const EconomicDashboard: React.FC = () => {
     fetchData();
   }, []);
 
-  // 연도 선택 변경
   useEffect(() => {
     if (selectedYear) {
       const yearData = data.find((item) => item.연도 === selectedYear);
@@ -97,7 +94,6 @@ const EconomicDashboard: React.FC = () => {
     }
   }, [selectedYear, data]);
 
-  // 데이터 다운로드
   const handleDownload = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -142,6 +138,9 @@ const EconomicDashboard: React.FC = () => {
           value={selectedYear || ""}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
         >
+          <option value="" disabled>
+            연도를 선택하세요
+          </option>
           {data.map((item) => (
             <option key={item.연도} value={item.연도}>
               {item.연도}
@@ -162,31 +161,15 @@ const EconomicDashboard: React.FC = () => {
         {[
           {
             title: "생산자물가지수",
-            value: `${currentYearData.생산자물가지수}`,
+            value: currentYearData.생산자물가지수,
             icon: <Activity size={24} color="#FFFFFF" />,
             bgColor: "#6D28D9",
-            iconColor: "#A855F7",
           },
           {
             title: "소비자물가지수",
-            value: `${currentYearData.소비자물가지수}`,
+            value: currentYearData.소비자물가지수,
             icon: <TrendingUp size={24} color="#FFFFFF" />,
             bgColor: "#22C55E",
-            iconColor: "#16A34A",
-          },
-          {
-            title: "경상수지",
-            value: `${currentYearData.경상수지.toLocaleString()} 백만US$`,
-            icon: <TrendingDown size={24} color="#FFFFFF" />,
-            bgColor: "#F59E0B",
-            iconColor: "#FACC15",
-          },
-          {
-            title: "외환보유액",
-            value: `${currentYearData.외환보유액.toLocaleString()} 백만US$`,
-            icon: <BatteryCharging size={24} color="#FFFFFF" />,
-            bgColor: "#3B82F6",
-            iconColor: "#2563EB",
           },
         ].map((kpi, idx) => (
           <KPICard
@@ -195,72 +178,8 @@ const EconomicDashboard: React.FC = () => {
             value={kpi.value}
             icon={kpi.icon}
             backgroundColor={kpi.bgColor}
-            iconColor={kpi.iconColor}
           />
         ))}
-      </div>
-
-      {/* 차트 섹션 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            연도별 주요 경제지표
-          </h2>
-          <LineChart
-            data={data.map((item) => ({
-              연도: item.연도,
-              수출액: item.수출액,
-              수입액: item.수입액,
-              환율: item.환율,
-            }))}
-          />
-        </div>
-
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            경제 구성 비율
-          </h2>
-          <DoughnutChart
-            data={{
-              수출액: currentYearData.수출액,
-              수입액: currentYearData.수입액,
-              경상수지: currentYearData.경상수지,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Data Table */}
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">데이터 테이블</h2>
-        <DataTable
-          data={data.map((item) => ({
-            연도: item.연도,
-            생산자물가지수: item.생산자물가지수,
-            소비자물가지수: item.소비자물가지수,
-            경상수지: item.경상수지,
-            자본수지: item.자본수지,
-            외환보유액: item.외환보유액,
-            수출액: item.수출액,
-            수입액: item.수입액,
-            환율: item.환율,
-            실업률: item.실업률,
-            콜금리: item.콜금리,
-          }))}
-          columns={[
-            { key: "연도", title: "연도" },
-            { key: "생산자물가지수", title: "생산자물가지수 (2015=100)" },
-            { key: "소비자물가지수", title: "소비자물가지수 (2020=100)" },
-            { key: "경상수지", title: "경상수지 (백만 US$)" },
-            { key: "자본수지", title: "자본수지 (백만 US$)" },
-            { key: "외환보유액", title: "외환보유액 (백만 US$)" },
-            { key: "수출액", title: "수출액 (백만 US$)" },
-            { key: "수입액", title: "수입액 (백만 US$)" },
-            { key: "환율", title: "환율 (원/US$)" },
-            { key: "실업률", title: "실업률 (%)" },
-            { key: "콜금리", title: "콜금리 (연%)" },
-          ]}
-        />
       </div>
     </div>
   );

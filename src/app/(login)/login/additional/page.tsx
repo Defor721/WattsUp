@@ -2,10 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IoIosArrowBack, IoMdInformationCircleOutline } from "react-icons/io";
+import Link from "next/link";
 
 import { businessInfoVerification } from "@/auth/authService";
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/useAccessToken";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/shadcn";
 
 export default function AdditionalPage() {
   const router = useRouter();
@@ -16,13 +33,17 @@ export default function AdditionalPage() {
     actions: { socialSignup, resetLoginState },
   } = useAuthStore();
 
+  // 현재 날짜(YYYYMMDD)
+  const [nowDate, setNowDate] = useState("");
+
+  const [principalName, setPrincipalName] = useState("");
   const [businessNumber, setBusinessNumber] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [pricipalName, setPricipleName] = useState("");
-  const [companyName, setCompanyName] = useState("");
   const [businessType, setBusinessType] = useState<"corporate" | "individual">(
     "corporate",
   );
+
+  const [companyName, setCompanyName] = useState("");
   const [corporateNumber, setCorporateNumber] = useState("");
   const [personalId, setPersonalId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +59,7 @@ export default function AdditionalPage() {
       await businessInfoVerification(
         businessNumber,
         startDate,
-        pricipalName,
+        principalName,
         companyName,
       );
       setIsBusinessValid(true);
@@ -56,7 +77,7 @@ export default function AdditionalPage() {
   const resetBusinessInfo = () => {
     setBusinessNumber("");
     setStartDate("");
-    setPricipleName("");
+    setPrincipalName("");
     setIsBusinessValid(false);
     setStatusMessage("");
   };
@@ -67,7 +88,7 @@ export default function AdditionalPage() {
       socialSignup({
         businessNumber,
         startDate,
-        pricipalName,
+        principalName,
         companyName,
         businessType,
         corporateNumber,
@@ -86,6 +107,14 @@ export default function AdditionalPage() {
     }
   }, [accessToken]);
 
+  useEffect(() => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (1 + date.getMonth())).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    setNowDate(year + month + day);
+  }, []);
+
   {
     /* TODO: 아래 인풋 예시 주석 모두 지울것 */
     /* 사업자 번호: 1118194369 */
@@ -95,155 +124,212 @@ export default function AdditionalPage() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-4 bg-slate-100 p-6">
-      <h1 className="text-xl font-bold">추가 정보 입력</h1>
-      {/* 사업자 번호 및 대표자 성명 검증 */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="businessNumber">사업자 번호</label>
-        <input
-          className="rounded border p-2"
-          id="businessNumber"
-          type="text"
-          placeholder="'-' 기호를 제외한 사업자 번호 10자리를 입력해주세요. 예) 0000000000"
-          value={businessNumber}
-          onChange={(e) => setBusinessNumber(e.target.value)}
-          required
-          disabled={isBusinessValid}
+    <Card className="relative flex flex-col p-5">
+      <Link href={"/login"}>
+        <IoIosArrowBack
+          size={"20px"}
+          className="absolute left-1 top-2 opacity-50 hover:cursor-pointer hover:opacity-80"
         />
-        <label htmlFor="startDate">개업일자</label>
-        <input
-          className="rounded border p-2"
-          id="startDate"
-          type="text"
-          placeholder="YYYYMMDD 포맷으로 개업일자 8자리를 입력해주세요. 예) 20000101"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          required
-          disabled={isBusinessValid}
-        />
-        <label htmlFor="companyName">상호</label>
-        <input
-          className="rounded border p-2"
-          id="companyName"
-          type="text"
-          placeholder="상호를 입력해주세요. 주식회사인 경우 예: (주)회사명, 주식회사 회사명"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-          required
-          disabled={isBusinessValid}
-        />
-        <label htmlFor="pricipalName">대표자 성명</label>
-        <input
-          className="rounded border p-2"
-          id="pricipalName"
-          type="text"
-          placeholder="대표자 이름을 입력해주세요. 외국인 사업자의 경우에는 영문명 입력해주세요."
-          value={pricipalName}
-          onChange={(e) => setPricipleName(e.target.value)}
-          required
-          disabled={isBusinessValid}
-        />
+      </Link>
+      <CardHeader>
+        <CardTitle>추가 정보 입력</CardTitle>
+        <CardDescription>로그인을 위한 정보를 입력해주세요.</CardDescription>
+      </CardHeader>
+      <form onSubmit={handleSubmit}>
+        <CardContent className="flex flex-col gap-5">
+          <TooltipProvider>
+            {/* 사업자 번호 및 대표자 성명 검증 */}
+            <div className="flex flex-col gap-2">
+              <Tooltip>
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="principalName">대표자 성명</Label>
+                  <TooltipTrigger>
+                    <IoMdInformationCircleOutline />
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    외국인 사업자의 경우에는 영문명 입력해주세요.
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+              <Input
+                id="principalName"
+                name="principalName"
+                placeholder="대표자 이름을 입력해주세요."
+                value={principalName}
+                onChange={(e) => setPrincipalName(e.target.value)}
+                required
+                disabled={isBusinessValid}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Tooltip>
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="businessNumber">사업자 번호</Label>
+                  <TooltipTrigger>
+                    <IoMdInformationCircleOutline />
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    {
+                      "'-' 기호를 제외한 사업자 번호 10자리를 입력해주세요. 예) 0123456789"
+                    }
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+              <Input
+                id="businessNumber"
+                name="businessNumber"
+                placeholder="사업자번호 10자리를 입력해주세요."
+                value={businessNumber}
+                onChange={(e) => setBusinessNumber(e.target.value)}
+                required
+                disabled={isBusinessValid}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Tooltip>
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="startDate">개업일자</Label>
+                  <TooltipTrigger>
+                    <IoMdInformationCircleOutline />
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    {`YYYYMMDD 포맷으로 개업일자 8자리를 입력해주세요. 예) ${nowDate}`}
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+              <Input
+                id="startDate"
+                name="startDate"
+                placeholder="YYYYMMDD"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                disabled={isBusinessValid}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Tooltip>
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="companyName">상호명</Label>
+                  <TooltipTrigger>
+                    <IoMdInformationCircleOutline />
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    {
+                      "상호를 입력해주세요. 주식회사인 경우 예: (주)회사명, 주식회사 회사명"
+                    }
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+              <Input
+                id="companyName"
+                name="companyName"
+                placeholder="(주)터빈크루"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                required
+                disabled={isBusinessValid}
+              />
+            </div>
+          </TooltipProvider>
 
-        {isBusinessValid ? (
-          <button
-            type="button"
-            onClick={resetBusinessInfo}
-            className="mt-2 rounded bg-gray-600 p-2 text-white hover:bg-gray-700"
-          >
-            사업자번호 수정
-          </button>
-        ) : (
-          <button
-            className={`mt-2 rounded p-2 text-white ${
-              isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-            type="button"
-            onClick={handleCheckBusinessNumber}
-            disabled={isLoading}
-          >
-            {isLoading ? "확인 중..." : "사업자번호 확인"}
-          </button>
-        )}
-        {statusMessage && (
-          <p
-            className={`mt-2 font-semibold ${
-              isBusinessValid ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {statusMessage}
-          </p>
-        )}
-      </div>
-      {/* 법인등록번호 및 주민등록번호 검증 */}
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-row gap-2">
-          <div>
-            <input
-              id="corporate"
-              type="radio"
-              name="businessType"
-              value="corporate"
-              checked={businessType === "corporate"}
-              onChange={() => setBusinessType("corporate")}
-            />
-            <label id="corporate">법인 사업자</label>
-          </div>
-          <div>
-            <input
-              id="individual"
-              type="radio"
-              name="businessType"
-              value="individual"
-              checked={businessType === "individual"}
-              onChange={() => setBusinessType("individual")}
-            />
-            <label id="individual">개인 사업자</label>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          {businessType === "corporate" ? (
-            <div className="flex flex-col gap-2">
-              <label id="corporateNumber">법인등록번호</label>
-              <input
-                className="rounded border p-2"
-                id="corporateNumber"
-                type="text"
-                name="corporateNumber"
-                placeholder="법인등록번호 13자리를 입력해주세요."
-                value={corporateNumber}
-                onChange={(e) => setCorporateNumber(e.target.value)}
-              />
-            </div>
+          {isBusinessValid ? (
+            <button
+              type="button"
+              onClick={resetBusinessInfo}
+              className="mt-2 rounded bg-gray-600 p-2 text-white hover:bg-gray-700"
+            >
+              사업자번호 수정
+            </button>
           ) : (
-            <div className="flex flex-col gap-2">
-              <label id="personalId">주민등록번호</label>
-              <input
-                className="rounded border p-2"
-                id="personalId"
-                type="text"
-                name="personalId"
-                placeholder="주민등록번호 앞 6자리를 입력해주세요."
-                value={personalId}
-                onChange={(e) => setPersonalId(e.target.value)}
-              />
-            </div>
+            <button
+              className={`mt-2 rounded p-2 text-white ${
+                isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              type="button"
+              onClick={handleCheckBusinessNumber}
+              disabled={isLoading}
+            >
+              {isLoading ? "확인 중..." : "사업자번호 확인"}
+            </button>
           )}
-        </div>
-      </div>
-      {/* 제출 */}
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-        <button
-          type="submit"
-          disabled={!isBusinessValid}
-          className={`rounded p-2 text-white ${
-            isBusinessValid
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "cursor-not-allowed bg-gray-400"
-          }`}
-        >
-          제출
-        </button>
+          {statusMessage && (
+            <p
+              className={`mt-2 font-semibold ${
+                isBusinessValid ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {statusMessage}
+            </p>
+          )}
+
+          {/* 법인등록번호 및 주민등록번호 검증 */}
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-3">
+              <div className="flex gap-1">
+                <input
+                  id="corporate"
+                  type="radio"
+                  name="businessType"
+                  value="corporate"
+                  checked={businessType === "corporate"}
+                  onChange={() => setBusinessType("corporate")}
+                />
+                <Label htmlFor="corporate">법인 사업자</Label>
+              </div>
+              <div className="flex gap-1">
+                <input
+                  id="individual"
+                  type="radio"
+                  name="businessType"
+                  value="individual"
+                  checked={businessType === "individual"}
+                  onChange={() => setBusinessType("individual")}
+                />
+                <Label htmlFor="individual">개인 사업자</Label>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {businessType === "corporate" ? (
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="corporateNumber">법인등록번호</Label>
+                  <Input
+                    id="corporateNumber"
+                    type="text"
+                    name="corporateNumber"
+                    placeholder="법인등록번호 13자리를 입력해주세요."
+                    value={corporateNumber}
+                    onChange={(e) => setCorporateNumber(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="personalId">주민등록번호</Label>
+                  <Input
+                    id="personalId"
+                    type="text"
+                    name="personalId"
+                    placeholder="주민등록번호 앞 6자리를 입력해주세요."
+                    value={personalId}
+                    onChange={(e) => setPersonalId(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          {/* 제출 */}
+          <Button
+            type="submit"
+            disabled={!isBusinessValid}
+            className={`w-full bg-mainColor text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+          >
+            제출
+          </Button>
+        </CardFooter>
       </form>
-    </div>
+    </Card>
   );
 }

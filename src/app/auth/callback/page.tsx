@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import { useDialog } from "@/hooks/use-dialog";
+import { useDialog } from "@/hooks/useDialog";
 import useAccessToken from "@/auth/useAccessToken";
 
 export default function AuthCallbackPage() {

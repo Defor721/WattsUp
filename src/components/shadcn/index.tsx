@@ -59,6 +59,7 @@ export {
 export { Input } from "./input";
 export { Label } from "./label";
 export { Progress } from "./progress";
+export { RadioGroup, RadioGroupItem } from "./radio-group";
 export { Separator } from "./separator";
 export {
   Sheet,

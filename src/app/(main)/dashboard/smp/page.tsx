@@ -8,6 +8,7 @@ import DoughnutChart from "@/components/dashboard/page8/DoughnutChart";
 import LineChart from "@/components/dashboard/page8/LineChart";
 import Table from "@/components/dashboard/page8/Table";
 
+// SMPData 타입 정의
 interface SMPData {
   기간: string;
   LNG: number;
@@ -23,7 +24,9 @@ const SMPDashboard = () => {
   const [filteredData, setFilteredData] = useState<SMPData[]>([]);
   const [selectedYear, setSelectedYear] = useState<string>("전체");
   const [selectedFuel, setSelectedFuel] = useState<string>("전체");
-  const [kpi, setKpi] = useState({
+  const [kpi, setKpi] = useState<{
+    [key in keyof Omit<SMPData, "기간">]: number;
+  }>({
     LNG: 0,
     유류: 0,
     무연탄: 0,

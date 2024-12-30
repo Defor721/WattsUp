@@ -49,7 +49,7 @@ export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
 export async function socialSignup({
   businessNumber,
   startDate,
-  pricipalName,
+  principalName,
   companyName,
   businessType,
   corporateNumber,
@@ -61,7 +61,7 @@ export async function socialSignup({
       {
         businessNumber,
         startDate,
-        pricipalName,
+        principalName,
         companyName,
         businessType,
         corporateNumber,

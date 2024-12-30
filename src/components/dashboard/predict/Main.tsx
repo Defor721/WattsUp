@@ -9,6 +9,7 @@ import { regions } from "@/utils/regions";
 import { get6Days } from "@/utils/get6Days";
 import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
+import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 
 import RegionButtons from "./RegionButtons";
 
@@ -42,7 +43,7 @@ async function loadModel() {
   if (!modelInstance) {
     try {
       console.time("Model Loading");
-      modelInstance = await tf.loadLayersModel("/assets/models/model-3.json");
+      modelInstance = await tf.loadLayersModel("/assets/models/model.json");
       console.log("Model loaded successfully!");
       console.timeEnd("Model Loading");
     } catch (error) {
@@ -171,11 +172,9 @@ function PredictMain() {
             acc[region] = dates.map((date, dateIndex) => ({
               date,
               amgo:
-                parseFloat(
-                  denormalizedPredictions[
-                    dateIndex * regions.length + regionIndex
-                  ].toFixed(2),
-                ) || 0,
+                denormalizedPredictions[
+                  dateIndex * regions.length + regionIndex
+                ] || 0,
             }));
             return acc;
           },
@@ -210,7 +209,9 @@ function PredictMain() {
         windSpeed: item.windSpeed,
         temperature: item.temperature,
         precipitation: item.precipitation,
-        amgo: chartData[selectedRegion]?.[index]?.amgo || "-",
+        amgo: chartData[selectedRegion]?.[index]?.amgo
+          ? formatNumberWithDecimal(chartData[selectedRegion][index].amgo)
+          : "-",
       }),
     );
   }, [chartData, selectedRegion]);

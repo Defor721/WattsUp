@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { IoIosArrowBack } from "react-icons/io";
-import { useTheme } from "next-themes";
 
 import {
   Button,
@@ -20,7 +19,7 @@ import {
 } from "@/components/shadcn";
 import { FindPasswordPopup } from "@/auth/components/FindPassword";
 import { useAuthStore } from "@/auth/useAuthStore";
-import { useDialog } from "@/hooks/use-dialog";
+import { useDialog } from "@/hooks/useDialog";
 
 import useAccessToken from "../useAccessToken";
 import GoogleLoginButton from "./GoogleLoginButton";
@@ -29,7 +28,6 @@ export default function LoginForm() {
   const router = useRouter();
   const { showDialog, DialogComponent } = useDialog();
   const { resetAccessToken } = useAccessToken();
-  const { theme } = useTheme();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -57,10 +55,6 @@ export default function LoginForm() {
     nativeLogin(email, password);
   };
 
-  const handlePrevClick = () => {
-    router.back();
-  };
-
   // 에러 상태 감지 시 모달 표시
   useEffect(() => {
     if (error && message) {
@@ -80,12 +74,12 @@ export default function LoginForm() {
 
   return (
     <Card className="relative flex flex-col p-5">
-      <button onClick={handlePrevClick}>
+      <Link href={"/"}>
         <IoIosArrowBack
           size={"20px"}
           className="absolute left-1 top-2 opacity-50 hover:cursor-pointer hover:opacity-80"
         />
-      </button>
+      </Link>
       {/* 로그인 헤더 */}
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">로그인</CardTitle>
@@ -165,7 +159,7 @@ export default function LoginForm() {
           className={`w-full bg-[#070f26] text-white dark:border-1`}
         />
 
-        <div className="text-center text-sm">
+        <div className="mt-3 text-center text-sm">
           계정이 없으신가요?
           <Link href={"/signup"} className="ml-2 text-sm underline">
             회원가입
@@ -174,13 +168,5 @@ export default function LoginForm() {
       </CardFooter>
       <DialogComponent />
     </Card>
-    // <div className="w-[200px] bg-gray-200">
-    //   <button className="bg-rose-500 text-green-500 dark:bg-blue-500 dark:text-purple-500">
-    //     글씨 테스트입니다.
-    //   </button>
-    //   <button className="bg-black text-green-500 dark:bg-yellow-500 dark:text-purple-500">
-    //     글씨 테스트입니다.
-    //   </button>
-    // </div>
   );
 }
