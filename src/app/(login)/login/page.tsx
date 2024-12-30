@@ -5,9 +5,9 @@ import { useEffect } from "react";
 
 import { Card } from "@/components/shadcn";
 import GoogleLoginButton from "@/auth/components/GoogleLoginButton";
-import LoginForm from "@/auth/components/loginForm";
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/useAccessToken";
+import LoginForm from "@/auth/components/loginForm";
 
 export default function LoginPage() {
   const router = useRouter();

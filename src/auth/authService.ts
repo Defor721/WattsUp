@@ -1,6 +1,11 @@
 import apiClient from "@/lib/axios";
 
-import { AuthResponse, GoogleTokenResponse, SocialSignupParams } from "./type";
+import {
+  AuthResponse,
+  GoogleTokenResponse,
+  NativeSignupParams,
+  SocialSignupParams,
+} from "./type";
 
 /**
  * 일반 로그인
@@ -63,6 +68,37 @@ export async function socialSignup({
         startDate,
         principalName,
         companyName,
+        businessType,
+        corporateNumber,
+        personalId,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+
+    return data;
+  } catch (error) {
+    console.log("추가정보를 입력받아 소셜 로그인 중 오류 발생", error);
+
+    throw error;
+  }
+}
+
+/**
+ * 일반 회원가입
+ */
+export async function nativeSignup({
+  password,
+  businessType,
+  corporateNumber,
+  personalId,
+}: NativeSignupParams): Promise<any> {
+  try {
+    const { data } = await apiClient.post(
+      "/api/auth/users",
+      {
+        password,
         businessType,
         corporateNumber,
         personalId,
