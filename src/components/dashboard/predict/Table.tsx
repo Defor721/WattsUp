@@ -1,5 +1,14 @@
 import React from "react";
 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/shadcn"; // shadcn/ui 컴포넌트 import
+
 interface IData {
   date: string;
   windSpeed: string;
@@ -14,7 +23,7 @@ interface PredictTableProps {
 }
 
 function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
-  if (!tableData) return;
+  if (!tableData) return null;
 
   return (
     <div className="mt-3">
@@ -22,43 +31,53 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
         {selectedRegion} 테이블
       </h4>
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse border border-gray-700 text-center text-[#070f26] dark:text-white">
-          <thead className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] dark:text-gray-300">
-            <tr>
-              <th className="border border-gray-700 px-3 py-2">날짜</th>
-              <th className="border border-gray-700 px-3 py-2">
+        <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
+          {/* 테이블 헤더 */}
+          <TableHeader>
+            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] dark:text-gray-300 [&>*]:text-center">
+              <TableHead className="border border-gray-700 px-3 py-2">
+                날짜
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
                 평균 풍속 (m/s)
-              </th>
-              <th className="border border-gray-700 px-3 py-2">
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
                 평균 기온 (°C)
-              </th>
-              <th className="border border-gray-700 px-3 py-2">강수량 (mm)</th>
-              <th className="border border-gray-700 px-3 py-2">
-                발전량 예측값
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                강수량 (mm)
+              </TableHead>
+              <TableHead className="border border-gray-700 px-3 py-2">
+                발전량 예측값(amgo)
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          {/* 테이블 본문 */}
+          <TableBody>
             {tableData.map((row) => (
-              <tr
+              <TableRow
                 key={row.date}
                 className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
               >
-                <td className="border border-gray-700 p-3">{row.date}</td>
-                <td className="border border-gray-700 p-3">{row.windSpeed}</td>
-                <td className="border border-gray-700 p-3">
+                <TableCell className="border border-gray-700 p-3">
+                  {row.date}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
+                  {row.windSpeed}
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
                   {row.temperature}
-                </td>
-                <td className="border border-gray-700 p-3">
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
                   {row.precipitation}
-                </td>
-                <td className="border border-gray-700 p-3">
+                </TableCell>
+                <TableCell className="border border-gray-700 p-3">
                   {row.amgo !== "-" ? row.amgo : "-"}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

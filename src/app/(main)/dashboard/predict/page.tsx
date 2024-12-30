@@ -2,8 +2,8 @@ import React from "react";
 
 import PredictMain from "@/components/dashboard/predict/Main";
 
-function Page() {
+function PredictPage() {
   return <PredictMain />;
 }
 
-export default Page;
+export default PredictPage;

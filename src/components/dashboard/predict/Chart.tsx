@@ -59,10 +59,9 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
         {selectedRegion} 발전량 예측 그래프
       </h4>
 
-      <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+      <ResponsiveContainer width={"100%"} aspect={16 / 4}>
         <LineChart
           data={data}
-          // className="my-[5px] ml-5 mr-[30px]"
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />

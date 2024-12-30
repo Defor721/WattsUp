@@ -5,6 +5,18 @@ import Link from "next/link";
 import { Separator } from "@radix-ui/react-separator";
 import { motion } from "framer-motion"; // Add this import
 
+import Title from "@/components/ui/Title";
+import {
+  Button,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/shadcn";
+
 interface TodoItem {
   id: number;
   작성자: string;
@@ -14,7 +26,7 @@ interface TodoItem {
   대시보드주제: string;
 }
 
-const DashboardPage = () => {
+function DashboardPage() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [kpi, setKpi] = useState({
     목표전력량: "",
@@ -43,6 +55,7 @@ const DashboardPage = () => {
   };
 
   const dashboards = [
+    { name: "발전원별 발전량", path: "/dashboard" },
     { name: "경제 지표 대시보드", path: "/dashboard/economic" },
     { name: "전력지표 대시보드", path: "/dashboard/electro" },
     { name: "에너지지표 대시보드", path: "/dashboard/energy" },
@@ -77,17 +90,38 @@ const DashboardPage = () => {
     },
   };
 
+  const [selectDashboard, setSelectDashboard] = useState("발전원별 발전량");
+
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-5xl font-bold">Dashboard</h1>
-      <div className="bg-gray-50 p-5 font-sans text-gray-800">
+    <div className="dark:bg-[#050a18] md:w-full">
+      <Title title={"대시보드"} />
+      <div className="flex items-center justify-end gap-3">
+        <div className="text-mainColor dark:text-white">대시보드 선택</div>
+        <Select value={selectDashboard} onValueChange={setSelectDashboard}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="지역 선택 " />
+          </SelectTrigger>
+          <SelectContent>
+            {dashboards.map((dashboard) => (
+              <SelectItem
+                className="z-10 bg-white dark:bg-subColor"
+                key={dashboard.name}
+                value={dashboard.name}
+              >
+                {dashboard.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      {/* <div className="bg-gray-50 p-5 font-sans text-gray-800">
         <div className="mb-10 p-4">
           <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
             대시보드 관리
-          </h1>
+          </h1> */}
 
-          {/* KPI 입력 섹션 */}
-          <div className="mb-6 flex flex-wrap justify-center gap-4">
+      {/* KPI 입력 섹션 */}
+      {/* <div className="mb-6 flex flex-wrap justify-center gap-4">
             <input
               type="text"
               placeholder="작성자 이름"
@@ -129,10 +163,10 @@ const DashboardPage = () => {
             >
               추가
             </button>
-          </div>
+          </div> */}
 
-          {/* TODO 리스트 테이블 */}
-          <div className="overflow-x-auto">
+      {/* TODO 리스트 테이블 */}
+      {/* <div className="overflow-x-auto">
             <table className="w-full overflow-hidden rounded-lg bg-white shadow-md">
               <thead className="bg-[rgb(7,15,38)] text-white">
                 <tr>
@@ -160,10 +194,10 @@ const DashboardPage = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
 
-        {/* 대시보드 선택 버튼 */}
-        <div className="border-rgb(7,15,38) border p-4">
+      {/* 대시보드 선택 버튼 */}
+      {/* <div className="border-rgb(7,15,38) border p-4">
           <h1 className="m-8 text-center text-3xl font-bold text-[rgb(7,15,38)]">
             대시보드 선택
           </h1>
@@ -185,9 +219,9 @@ const DashboardPage = () => {
             ))}
           </motion.div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
-};
+}
 
 export default DashboardPage;
