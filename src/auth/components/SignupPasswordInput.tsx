@@ -2,34 +2,37 @@ import { Dispatch, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 import { Button, Input, Label } from "@/components/shadcn";
-import { isPasswordsMatching, isPasswordValid } from "@/utils";
+import { isPasswordMatching, isValidPassword } from "@/utils";
 
 interface SignupPasswordInputProps {
   password: string;
+  isPasswordValid: boolean;
+  isConfirmPasswordValid: boolean;
   setPassword: Dispatch<React.SetStateAction<string>>;
+  setIsPasswordValid: Dispatch<React.SetStateAction<boolean>>;
+  setIsConfirmPasswordValid: Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SignupPasswordInput({
   password,
+  isPasswordValid,
+  isConfirmPasswordValid,
   setPassword,
+  setIsPasswordValid,
+  setIsConfirmPasswordValid,
 }: SignupPasswordInputProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isPasswordValidState, setIsPasswordValidState] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
-  const [isConfirmPasswordValidState, setIsConfirmPasswordValidState] =
-    useState(false);
 
   useEffect(() => {
-    setIsPasswordValidState(isPasswordValid(password));
-  }, [password]);
+    setIsPasswordValid(isValidPassword(password));
+  }, [password, setIsPasswordValid]);
 
   useEffect(() => {
-    setIsConfirmPasswordValidState(
-      isPasswordsMatching(password, confirmPassword),
-    );
-  }, [password, confirmPassword]);
+    setIsConfirmPasswordValid(isPasswordMatching(password, confirmPassword));
+  }, [password, confirmPassword, setIsConfirmPasswordValid]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -59,7 +62,7 @@ export default function SignupPasswordInput({
         </Button>
       </div>
       <div className="text-sm text-red-500">
-        {!isPasswordValidState && password.trim() !== "" && (
+        {!isPasswordValid && password.trim() !== "" && (
           <>공백을 제외한 알파벳 대/소문자, 숫자, 특수문자의 조합</>
         )}
       </div>
@@ -87,7 +90,7 @@ export default function SignupPasswordInput({
         </Button>
       </div>
       <div className="text-sm text-red-500">
-        {!isConfirmPasswordValidState && confirmPassword.trim() !== "" && (
+        {!isConfirmPasswordValid && confirmPassword.trim() !== "" && (
           <>비밀번호가 일치하지 않습니다.</>
         )}
       </div>

@@ -15,7 +15,7 @@ import {
   verifyEmailCode,
 } from "@/services/emailService";
 import { toast } from "@/hooks/useToast";
-import { isEmailValid } from "@/utils";
+import { isValidEmail } from "@/utils";
 
 interface SignupEmailInputProps {
   isEmailVerified: boolean;
@@ -107,7 +107,7 @@ export default function LoginEmailInput({
       setIsEmailValidState(false);
       return;
     }
-    setIsEmailValidState(isEmailValid(email));
+    setIsEmailValidState(isValidEmail(email));
   }, [email]);
 
   return (
@@ -134,7 +134,7 @@ export default function LoginEmailInput({
         )}
       </div>
       {/* 이메일 인증코드 섹션 */}
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col gap-2">
         <div className="flex gap-2">
           <InputOTP
             maxLength={6}
@@ -162,7 +162,7 @@ export default function LoginEmailInput({
         </div>
         {/* 인증코드 안내 메시지 */}
         <div className="text-sm text-gray-500">
-          {emailCode && (
+          {emailCode && !isEmailVerified && (
             <div>
               6자리를 모두 입력 후{" "}
               <span className="font-semibold text-blue-600">이메일 확인</span>{" "}
@@ -191,7 +191,7 @@ export default function LoginEmailInput({
       {/* 이메일 인증 섹션 */}
       {isEmailVerified ? (
         <Button
-          className="rounded bg-gray-600 p-2 text-white hover:bg-gray-700"
+          className="rounded bg-gray-600 p-2 text-white"
           type="button"
           onClick={resetEmailInfo}
         >
@@ -199,7 +199,7 @@ export default function LoginEmailInput({
         </Button>
       ) : (
         <Button
-          className={`rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:border-none disabled:bg-gray-400`}
+          className={`rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
           type="button"
           onClick={handleValidEmail}
           disabled={isVerifyButtonDisabled}

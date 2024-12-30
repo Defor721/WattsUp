@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 
 import {
@@ -22,31 +22,63 @@ import { useAuthStore } from "@/auth/useAuthStore";
 function Signup() {
   const router = useRouter();
   const {
+    message,
     actions: { nativeSignup },
   } = useAuthStore();
 
   // 추가 정보 상태들
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [password, setPassword] = useState("");
-  const [isBusinessValid, setIsBusinessValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
+  const [isBusinessVerified, setIsBusinessVerified] = useState(false);
   const [businessType, setBusinessType] = useState<"corporate" | "individual">(
     "corporate",
   );
   const [corporateNumber, setCorporateNumber] = useState("");
   const [personalId, setPersonalId] = useState("");
 
-  const isSubmitButtonDisabled = !isEmailVerified && !isBusinessValid;
+  const isSubmitButtonDisabled =
+    !isEmailVerified ||
+    !isPasswordValid ||
+    !isConfirmPasswordValid ||
+    !isBusinessVerified ||
+    !(corporateNumber.length === 13 || personalId.length === 6);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     nativeSignup({ password, businessType, corporateNumber, personalId });
 
-    router.push("/signup/additional");
+    // router.push("/");
   };
 
   const handlePrevClick = () => {
     router.back();
   };
+
+  const resetAllStates = () => {
+    setIsEmailVerified(false);
+    setPassword("");
+    setIsPasswordValid(false);
+    setIsConfirmPasswordValid(false);
+    setIsBusinessVerified(false);
+    setBusinessType("corporate");
+    setCorporateNumber("");
+    setPersonalId("");
+  };
+
+  useEffect(() => {
+    resetAllStates();
+  }, []);
+
+  {
+    /* TODO: 아래 인풋 예시 주석 모두 지울것 */
+    /* 사업자 번호: 1118194369 */
+    /* 개업일자: 20221201 */
+    /* 상호: (주)터빈크루 */
+    /* 대표자 성명: 전기은 */
+    /* 법인등록 번호: 2013110093748 */
+  }
 
   return (
     <Card className="relative flex flex-col p-5">
@@ -68,11 +100,18 @@ function Signup() {
             setIsEmailVerified={setIsEmailVerified}
           />
           {/* 비밀번호 섹션 */}
-          <SignupPasswordInput password={password} setPassword={setPassword} />
+          <SignupPasswordInput
+            password={password}
+            isPasswordValid={isPasswordValid}
+            isConfirmPasswordValid={isConfirmPasswordValid}
+            setPassword={setPassword}
+            setIsPasswordValid={setIsPasswordValid}
+            setIsConfirmPasswordValid={setIsConfirmPasswordValid}
+          />
           {/* 법인등록번호 및 주민등록번호 검증 섹션 */}
           <SignupBusinessNumberInput
-            isBusinessValid={isBusinessValid}
-            setIsBusinessValid={setIsBusinessValid}
+            isBusinessVerified={isBusinessVerified}
+            setIsBusinessVerified={setIsBusinessVerified}
           />
           {/* 사업자 선택 및 번호 입력 섹션 */}
           <BusinessTypeInput
@@ -88,8 +127,8 @@ function Signup() {
           {/* 버튼 섹션 */}
           <Button
             type="submit"
-            disabled={!isBusinessValid}
-            className={`w-full bg-mainColor text-white disabled:border-none disabled:bg-gray-400`}
+            disabled={isSubmitButtonDisabled}
+            className={`w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
           >
             가입하기
           </Button>

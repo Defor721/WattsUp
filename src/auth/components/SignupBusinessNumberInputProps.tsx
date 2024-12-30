@@ -14,13 +14,13 @@ import {
 import { businessInfoVerification } from "../authService";
 
 interface SignupBusinessNumberInputProps {
-  isBusinessValid: boolean;
-  setIsBusinessValid: Dispatch<React.SetStateAction<boolean>>;
+  isBusinessVerified: boolean;
+  setIsBusinessVerified: Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SignupBusinessNumberInput({
-  isBusinessValid,
-  setIsBusinessValid,
+  isBusinessVerified,
+  setIsBusinessVerified,
 }: SignupBusinessNumberInputProps) {
   const [businessNumber, setBusinessNumber] = useState("");
   const [principalName, setPrincipalName] = useState("");
@@ -39,7 +39,7 @@ export default function SignupBusinessNumberInput({
   const handleCheckBusinessNumber = async () => {
     setIsBusinessLoading(true);
     setBusinessStatusMessage("");
-    setIsBusinessValid(false);
+    setIsBusinessVerified(false);
     try {
       await businessInfoVerification(
         businessNumber,
@@ -47,37 +47,30 @@ export default function SignupBusinessNumberInput({
         principalName,
         companyName,
       );
-      setIsBusinessValid(true);
+      setIsBusinessVerified(true);
       setBusinessStatusMessage("유효한 사업자 등록번호입니다.");
     } catch (error: any) {
       setBusinessStatusMessage(
         error.response.data.message || `서버 오류가 발생했습니다.`,
       );
-      setIsBusinessValid(false);
+      setIsBusinessVerified(false);
     } finally {
       setIsBusinessLoading(false);
     }
   };
 
   const resetBusinessInfo = () => {
+    // TODO: 주석 풀기
     // setBusinessNumber("");
     // setStartDate("");
     // setPrincipalName("");
-    setIsBusinessValid(false);
+    setIsBusinessVerified(false);
     // setCompanyName("");
     // setBusinessStatusMessage("");
   };
 
-  {
-    /* TODO: 아래 인풋 예시 주석 모두 지울것 */
-    /* 사업자 번호: 1118194369 */
-    /* 개업일자: 20221201 */
-    // 상호: (주)터빈크루
-    /* 대표자 성명: 전기은 */
-  }
-
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <TooltipProvider>
         {/* 사업자 번호 */}
         <div className="flex flex-col gap-2">
@@ -103,7 +96,7 @@ export default function SignupBusinessNumberInput({
               setBusinessNumber(e.target.value.replace(/[^0-9]/g, ""));
             }}
             required
-            disabled={isBusinessValid}
+            disabled={isBusinessVerified}
           />
         </div>
         {/* 개업일자 */}
@@ -130,7 +123,7 @@ export default function SignupBusinessNumberInput({
               setStartDate(e.target.value.replace(/[^0-9]/g, ""))
             }
             required
-            disabled={isBusinessValid}
+            disabled={isBusinessVerified}
           />
         </div>
         {/* 상호 */}
@@ -156,7 +149,7 @@ export default function SignupBusinessNumberInput({
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             required
-            disabled={isBusinessValid}
+            disabled={isBusinessVerified}
           />
         </div>
         {/* 대표자 성명 */}
@@ -179,12 +172,22 @@ export default function SignupBusinessNumberInput({
             value={principalName}
             onChange={(e) => setPrincipalName(e.target.value)}
             required
-            disabled={isBusinessValid}
+            disabled={isBusinessVerified}
           />
         </div>
       </TooltipProvider>
       <div className="text-sm text-gray-500">
-        {
+        {/* 사업가 번호 확인 메시지 */}
+        {businessStatusMessage && (
+          <p
+            className={`text-sm ${
+              isBusinessVerified ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {businessStatusMessage}
+          </p>
+        )}
+        {!businessStatusMessage && (
           <>
             <p>사업자 번호, 개업일자, 상호, 대표자 성명을 올바르게</p>
             <p>
@@ -196,36 +199,26 @@ export default function SignupBusinessNumberInput({
               버튼을 눌러주세요.
             </p>
           </>
-        }
+        )}
       </div>
       {/* 사업가 번호 확인 버튼 */}
-      {isBusinessValid ? (
+      {isBusinessVerified ? (
         <Button
           type="button"
           onClick={resetBusinessInfo}
-          className="rounded bg-gray-600 p-2 text-white hover:bg-gray-700"
+          className="rounded bg-gray-600 p-2 text-white"
         >
           사업자번호 변경
         </Button>
       ) : (
         <Button
-          className={`rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:border-none disabled:bg-gray-400`}
+          className={`rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
           type="button"
           onClick={handleCheckBusinessNumber}
           disabled={isBusinessButtonDisabled}
         >
           {isBusinessLoading ? "확인 중..." : "사업자번호 확인"}
         </Button>
-      )}
-      {/* 사업가 번호 확인 메시지 */}
-      {businessStatusMessage && (
-        <p
-          className={`mt-2 font-semibold ${
-            isBusinessValid ? "text-green-500" : "text-red-500"
-          }`}
-        >
-          {businessStatusMessage}
-        </p>
       )}
     </div>
   );

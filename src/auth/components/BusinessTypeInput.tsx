@@ -56,8 +56,11 @@ export default function BusinessTypeInput({
               type="text"
               name="corporateNumber"
               placeholder="법인등록번호 13자리를 입력해주세요."
+              maxLength={13}
               value={corporateNumber}
-              onChange={(e) => setCorporateNumber(e.target.value)}
+              onChange={(e) =>
+                setCorporateNumber(e.target.value.replace(/[^0-9]/g, ""))
+              }
             />
           </div>
         ) : (
@@ -68,8 +71,11 @@ export default function BusinessTypeInput({
               type="text"
               name="personalId"
               placeholder="주민등록번호 앞 6자리를 입력해주세요."
+              maxLength={6}
               value={personalId}
-              onChange={(e) => setPersonalId(e.target.value)}
+              onChange={(e) =>
+                setPersonalId(e.target.value.replace(/[^0-9]/g, ""))
+              }
             />
           </div>
         )}

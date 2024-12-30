@@ -132,6 +132,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           message,
         });
       } catch (error: any) {
+        console.log(`auth error: `, error);
         set({
           redirectTo: "/signup",
           error: true,
