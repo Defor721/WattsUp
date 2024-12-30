@@ -14,7 +14,6 @@ import KPICard from "@/components/dashboard/page/KPIcard";
 import LineChart from "@/components/dashboard/page2/LineChart";
 import DoughnutChart from "@/components/dashboard/page2/DoughnutChart";
 import BarChart from "@/components/dashboard/page2/BarChart";
-import DataTable from "@/components/dashboard/page2/DataTable";
 
 interface EconomicData {
   연도: number;
@@ -39,26 +38,19 @@ const EconomicDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const normalizeData = (row: Record<string, any>): EconomicData => {
-    try {
-      return {
-        연도: Number(row["연도"]),
-        생산자물가지수: Number(row["생산자물가지수(2015=100)"]),
-        소비자물가지수: Number(row["소비자물가지수(2020=100)"]),
-        경상수지: Number(row["경상수지(백만US$)"]),
-        자본수지: Number(row["자본수지(백만US$)"]),
-        외환보유액: Number(row["외환보유액(백만US$)"]),
-        수출액: Number(row["수출액(백만US$)"]),
-        수입액: Number(row["수입액(백만US$)"]),
-        환율: Number(row["환율(원/US$)"]),
-        실업률: Number(row["실업률(%)"]),
-        콜금리: Number(row["콜금리(연%)"]),
-      };
-    } catch (err) {
-      console.error("Failed to normalize data:", row, err);
-      throw new Error("Invalid data format");
-    }
-  };
+  const normalizeData = (row: Record<string, any>): EconomicData => ({
+    연도: Number(row["연도"]),
+    생산자물가지수: Number(row["생산자물가지수(2015=100)"]),
+    소비자물가지수: Number(row["소비자물가지수(2020=100)"]),
+    경상수지: Number(row["경상수지(백만US$)"]),
+    자본수지: Number(row["자본수지(백만US$)"]),
+    외환보유액: Number(row["외환보유액(백만US$)"]),
+    수출액: Number(row["수출액(백만US$)"]),
+    수입액: Number(row["수입액(백만US$)"]),
+    환율: Number(row["환율(원/US$)"]),
+    실업률: Number(row["실업률(%)"]),
+    콜금리: Number(row["콜금리(연%)"]),
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,7 +104,7 @@ const EconomicDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>Loading...</div>
+        <div>데이터를 불러오는 중입니다...</div>
       </div>
     );
   }
@@ -146,9 +138,6 @@ const EconomicDashboard: React.FC = () => {
           value={selectedYear || ""}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
         >
-          <option value="" disabled>
-            연도를 선택하세요
-          </option>
           {data.map((item) => (
             <option key={item.연도} value={item.연도}>
               {item.연도}
@@ -243,41 +232,37 @@ const EconomicDashboard: React.FC = () => {
       </div>
 
       {/* Data Table */}
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">데이터 테이블</h2>
-        <DataTable
-          data={data.flatMap((item) => [
-            {
-              category: `${item.연도}년 - 생산자물가지수`,
-              value: item.생산자물가지수,
-            },
-            {
-              category: `${item.연도}년 - 소비자물가지수`,
-              value: item.소비자물가지수,
-            },
-            { category: `${item.연도}년 - 경상수지`, value: item.경상수지 },
-            { category: `${item.연도}년 - 자본수지`, value: item.자본수지 },
-            { category: `${item.연도}년 - 외환보유액`, value: item.외환보유액 },
-            { category: `${item.연도}년 - 수출액`, value: item.수출액 },
-            { category: `${item.연도}년 - 수입액`, value: item.수입액 },
-            { category: `${item.연도}년 - 환율`, value: item.환율 },
-            { category: `${item.연도}년 - 실업률`, value: item.실업률 },
-            { category: `${item.연도}년 - 콜금리`, value: item.콜금리 },
-          ])}
-          columns={[
-            { key: "연도", title: "연도" },
-            { key: "생산자물가지수", title: "생산자물가지수 (2015=100)" },
-            { key: "소비자물가지수", title: "소비자물가지수 (2020=100)" },
-            { key: "경상수지", title: "경상수지 (백만 US$)" },
-            { key: "자본수지", title: "자본수지 (백만 US$)" },
-            { key: "외환보유액", title: "외환보유액 (백만 US$)" },
-            { key: "수출액", title: "수출액 (백만 US$)" },
-            { key: "수입액", title: "수입액 (백만 US$)" },
-            { key: "환율", title: "환율 (원/US$)" },
-            { key: "실업률", title: "실업률 (%)" },
-            { key: "콜금리", title: "콜금리 (연%)" },
-          ]}
-        />
+      <div className="mt-8 overflow-auto rounded-lg bg-gray-800 p-4 shadow-md">
+        <table className="min-w-full table-auto">
+          <thead>
+            <tr className="border-b border-gray-700">
+              {Object.keys(currentYearData).map((key) => (
+                <th
+                  key={key}
+                  className="px-4 py-2 text-left text-sm font-semibold text-gray-300"
+                >
+                  {key}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr
+                key={index}
+                className={`border-b border-gray-700 ${
+                  index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"
+                } hover:bg-gray-700`}
+              >
+                {Object.values(row).map((value, idx) => (
+                  <td key={idx} className="px-4 py-2 text-sm text-gray-400">
+                    {typeof value === "number" ? value.toLocaleString() : value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

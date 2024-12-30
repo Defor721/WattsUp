@@ -2,17 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Separator } from "@radix-ui/react-separator";
-import { motion } from "framer-motion"; // Add this import
+import { motion } from "framer-motion";
 
 import Title from "@/components/ui/Title";
 import {
-  Button,
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/shadcn";
@@ -35,6 +31,66 @@ function DashboardPage() {
   });
   const [author, setAuthor] = useState("");
   const [extra, setExtra] = useState("");
+  const [recommended, setRecommended] = useState<string[]>([]);
+
+  const dashboards = [
+    {
+      name: "경제 지표 대시보드",
+      path: "/dashboard/economic",
+      tags: ["경제", "가격"],
+    },
+    {
+      name: "전력지표 대시보드",
+      path: "/dashboard/electro",
+      tags: ["전력", "전력량"],
+    },
+    {
+      name: "에너지지표 대시보드",
+      path: "/dashboard/energy",
+      tags: ["에너지", "효율"],
+    },
+    {
+      name: "국민계정 대시보드",
+      path: "/dashboard/people",
+      tags: ["통계", "계정"],
+    },
+    { name: "SMP 대시보드", path: "/dashboard/smp", tags: ["전력", "가격"] },
+    {
+      name: "전력사용량_계약종별 대시보드",
+      path: "/dashboard/power-usage",
+      tags: ["전력", "사용량"],
+    },
+    {
+      name: "전력사용량_시도별 대시보드",
+      path: "/dashboard/power-usage-by-region",
+      tags: ["지역", "전력"],
+    },
+    {
+      name: "전원별발전량 대시보드",
+      path: "/dashboard/power-generation",
+      tags: ["발전량", "전력"],
+    },
+    {
+      name: "판매단가 대시보드",
+      path: "/dashboard/power-price",
+      tags: ["판매", "가격"],
+    },
+    {
+      name: "판매금액 대시보드",
+      path: "/dashboard/sales",
+      tags: ["판매", "금액"],
+    },
+    {
+      name: "전력거래_연료비용 대시보드",
+      path: "/dashboard/cost",
+      tags: ["연료", "비용"],
+    },
+    {
+      name: "유형별전기고장추이 대시보드",
+      path: "/dashboard/failures",
+      tags: ["고장", "유형"],
+    },
+  ];
 
   const handleAddTodo = () => {
     if (author && kpi.목표전력량 && kpi.목표가격 && kpi.목표입찰금액) {
@@ -51,43 +107,27 @@ function DashboardPage() {
       setKpi({ 목표전력량: "", 목표가격: "", 목표입찰금액: "" });
       setAuthor("");
       setExtra("");
+
+      // 추천 로직 실행
+      recommendDashboards(newTodo);
     }
   };
 
-  const dashboards = [
-    { name: "발전원별 발전량", path: "/dashboard" },
-    { name: "경제 지표 대시보드", path: "/dashboard/economic" },
-    { name: "전력지표 대시보드", path: "/dashboard/electro" },
-    { name: "에너지지표 대시보드", path: "/dashboard/energy" },
-    { name: "국민계정 대시보드", path: "/dashboard/people" },
-    { name: "SMP 대시보드", path: "/dashboard/smp" },
-    { name: "전력사용량_계약종별 대시보드", path: "/dashboard/power-usage" },
-    {
-      name: "전력사용량_시도별 대시보드",
-      path: "/dashboard/power-usage-by-region",
-    },
-    { name: "전원별발전량 대시보드", path: "/dashboard/power-generation" },
-    { name: "판매단가 대시보드", path: "/dashboard/power-price" },
-    { name: "판매금액 대시보드", path: "/dashboard/sales" },
-  ];
+  const recommendDashboards = (todo: TodoItem) => {
+    const keywords = [
+      todo.목표전력량.toString(),
+      todo.목표가격.toString(),
+      todo.목표입찰금액.toString(),
+      todo.대시보드주제.toLowerCase(),
+    ];
 
-  // Add these variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+    const matches = dashboards.filter((dashboard) =>
+      dashboard.tags.some((tag) =>
+        keywords.some((keyword) => tag.includes(keyword.toLowerCase())),
+      ),
+    );
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
+    setRecommended(matches.map((dashboard) => dashboard.name));
   };
 
   const [selectDashboard, setSelectDashboard] = useState("발전원별 발전량");
@@ -114,14 +154,14 @@ function DashboardPage() {
           </SelectContent>
         </Select>
       </div>
-      {/* <div className="bg-gray-50 p-5 font-sans text-gray-800">
+      <div className="bg-gray-50 p-5 font-sans text-gray-800">
         <div className="mb-10 p-4">
           <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
             대시보드 관리
-          </h1> */}
+          </h1>
 
-      {/* KPI 입력 섹션 */}
-      {/* <div className="mb-6 flex flex-wrap justify-center gap-4">
+          {/* KPI 입력 섹션 */}
+          <div className="mb-6 flex flex-wrap justify-center gap-4">
             <input
               type="text"
               placeholder="작성자 이름"
@@ -163,10 +203,10 @@ function DashboardPage() {
             >
               추가
             </button>
-          </div> */}
+          </div>
 
-      {/* TODO 리스트 테이블 */}
-      {/* <div className="overflow-x-auto">
+          {/* TODO 리스트 테이블  */}
+          <div className="overflow-x-auto">
             <table className="w-full overflow-hidden rounded-lg bg-white shadow-md">
               <thead className="bg-[rgb(7,15,38)] text-white">
                 <tr>
@@ -181,37 +221,53 @@ function DashboardPage() {
               <tbody>
                 {todos.map((todo) => (
                   <tr key={todo.id} className="border-b border-gray-200">
-                    <td className="p-3">{todo.id}</td>
-                    <td className="p-3">{todo.작성자}</td>
-                    <td className="p-3">{todo.목표전력량} kWh</td>
-                    <td className="p-3">₩{todo.목표가격.toLocaleString()}</td>
-                    <td className="p-3">
+                    <td className="p-3 text-center">{todo.id}</td>
+                    <td className="p-3 text-center">{todo.작성자}</td>
+                    <td className="p-3 text-center">{todo.목표전력량} kWh</td>
+                    <td className="p-3 text-center">
+                      ₩{todo.목표가격.toLocaleString()}
+                    </td>
+                    <td className="p-3 text-center">
                       ₩{todo.목표입찰금액.toLocaleString()}
                     </td>
-                    <td className="p-3">{todo.대시보드주제}</td>
+                    <td className="p-3 text-center">{todo.대시보드주제}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div> */}
+        </div>
 
-      {/* 대시보드 선택 버튼 */}
-      {/* <div className="border-rgb(7,15,38) border p-4">
+        {/* 대시보드 선택 버튼 */}
+        <div className="border-rgb(7,15,38) border p-4">
           <h1 className="m-8 text-center text-3xl font-bold text-[rgb(7,15,38)]">
             대시보드 선택
           </h1>
           <motion.div
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-            variants={containerVariants}
             initial="hidden"
             animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
           >
             {dashboards.map((dashboard) => (
-              <motion.div key={dashboard.name} variants={itemVariants}>
+              <motion.div
+                key={dashboard.name}
+                variants={{
+                  hidden: { y: 20, opacity: 0 },
+                  visible: { y: 0, opacity: 1 },
+                }}
+              >
                 <Link
                   href={dashboard.path}
-                  className="my-2 block rounded-lg border border-gray-200 bg-white p-4 text-center font-bold text-[rgb(7,15,38)] shadow-md transition-all hover:scale-105 hover:bg-gray-50"
+                  className="block rounded-lg border border-gray-200 bg-white p-4 text-center font-bold text-[rgb(7,15,38)] shadow-md transition-all hover:scale-105 hover:bg-gray-50"
                 >
                   {dashboard.name}
                 </Link>
@@ -219,7 +275,7 @@ function DashboardPage() {
             ))}
           </motion.div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -26,6 +26,13 @@ export interface SocialSignupParams {
   personalId: string | null;
 }
 
+export interface NativeSignupParams {
+  password: string;
+  businessType: "individual" | "corporate";
+  corporateNumber: string | null;
+  personalId: string | null;
+}
+
 export interface AuthState {
   user: User | null;
   accessToken: string | null;
@@ -36,6 +43,7 @@ export interface AuthState {
     nativeLogin: (email: string, password: string) => Promise<void>;
     socialLogin: (code: string) => Promise<void>;
     socialSignup: (params: SocialSignupParams) => Promise<void>;
+    nativeSignup: (params: NativeSignupParams) => Promise<void>;
     fetchCurrentUser: () => Promise<void>;
     resetLoginState: () => void;
   };

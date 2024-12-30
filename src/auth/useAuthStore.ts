@@ -5,6 +5,7 @@ import { create } from "zustand";
 import {
   exchangeSocialToken,
   loginWithEmailAndPassword,
+  nativeSignup,
   socialSignup,
 } from "@/auth/authService";
 import { fetchCurrentUser } from "@/services/userService";
@@ -108,6 +109,36 @@ export const useAuthStore = create<AuthState>((set) => ({
           message:
             error.response.data.message ||
             "추가정보를 입력받아 로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
+        });
+      }
+    },
+
+    async nativeSignup({
+      password,
+      businessType,
+      corporateNumber,
+      personalId,
+    }) {
+      try {
+        const { message } = await nativeSignup({
+          password,
+          businessType,
+          corporateNumber,
+          personalId,
+        });
+        set({
+          redirectTo: "/login",
+          error: false,
+          message,
+        });
+      } catch (error: any) {
+        console.log(`auth error: `, error);
+        set({
+          redirectTo: "/signup",
+          error: true,
+          message:
+            error.response.data.message ||
+            "회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
         });
       }
     },
