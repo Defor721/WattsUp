@@ -1,10 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
 
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/shadcn";
 import Title from "@/components/ui/Title";
+import PowerGenerationByPowerSource from "@/components/dashboard/main/power-generation-by-power-source/PowerGenerationByPowerSource";
+import Economic from "@/components/dashboard/main/economic/Economic";
+import SMP from "@/components/dashboard/main/smp/Smp";
+import People from "@/components/dashboard/main/people/People";
+import Energy from "@/components/dashboard/main/energy/Energy";
+import Failures from "@/components/dashboard/main/failures/Failures";
+import Cost from "@/components/dashboard/main/cost/Cost";
+import PowerUsage from "@/components/dashboard/main/power-usage/PowerUsage";
+import PowerUsageByRegion from "@/components/dashboard/main/power-usage-by-region/PowerUsageByRegion";
+import Electro from "@/components/dashboard/main/electro/Electro";
+import PowerGeneration from "@/components/dashboard/main/power-generation/PowerGeneration";
+import PowerPrice from "@/components/dashboard/main/power-price/PowerPrice";
+import Sales from "@/components/dashboard/main/sales/Sales";
 
 interface TodoItem {
   id: number;
@@ -25,63 +43,74 @@ function DashboardPage() {
   const [author, setAuthor] = useState("");
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
+  const [selectedDashboard, setSelectedDashboard] =
+    useState<string>("경제 지표");
 
   const dashboards = [
     {
-      name: "경제 지표 대시보드",
+      name: "SMP",
+      path: "/dashboard/smp",
+      tags: ["전력", "가격"],
+    },
+    {
+      name: "경제 지표",
       path: "/dashboard/economic",
       tags: ["경제", "가격"],
     },
     {
-      name: "전력지표 대시보드",
-      path: "/dashboard/electro",
-      tags: ["전력", "전력량"],
+      name: "국민 계정",
+      path: "/dashboard/people",
+      tags: ["통계", "계정"],
     },
     {
-      name: "에너지지표 대시보드",
+      name: "발전원별 발전량",
+      path: "/dashboard",
+      tags: ["발전량"],
+    },
+    {
+      name: "에너지 지표",
       path: "/dashboard/energy",
       tags: ["에너지", "효율"],
     },
     {
-      name: "국민계정 대시보드",
-      path: "/dashboard/people",
-      tags: ["통계", "계정"],
-    },
-    { name: "SMP 대시보드", path: "/dashboard/smp", tags: ["전력", "가격"] },
-    {
-      name: "전력사용량_계약종별 대시보드",
-      path: "/dashboard/power-usage",
-      tags: ["전력", "사용량"],
+      name: "유형별 전기 고장 추이",
+      path: "/dashboard/failures",
+      tags: ["고장", "유형"],
     },
     {
-      name: "전력사용량_시도별 대시보드",
-      path: "/dashboard/power-usage-by-region",
-      tags: ["지역", "전력"],
-    },
-    {
-      name: "전원별발전량 대시보드",
-      path: "/dashboard/power-generation",
-      tags: ["발전량", "전력"],
-    },
-    {
-      name: "판매단가 대시보드",
-      path: "/dashboard/power-price",
-      tags: ["판매", "가격"],
-    },
-    {
-      name: "판매금액 대시보드",
-      path: "/dashboard/sales",
-      tags: ["판매", "금액"],
-    },
-    {
-      name: "전력거래_연료비용 대시보드",
+      name: "전력 거래 연료 비용",
       path: "/dashboard/cost",
       tags: ["연료", "비용"],
     },
     {
-      name: "유형별전기고장추이 대시보드",
-      path: "/dashboard/failures",
-      tags: ["고장", "유형"],
+      name: "전력 사용량 계약 종별",
+      path: "/dashboard/power-usage",
+      tags: ["전력", "사용량"],
+    },
+    {
+      name: "전력 사용량 시도별",
+      path: "/dashboard/power-usage-by-region",
+      tags: ["지역", "전력"],
+    },
+    {
+      name: "전력 지표",
+      path: "/dashboard/electro",
+      tags: ["전력", "전력량"],
+    },
+    {
+      name: "전원별 발전량",
+      path: "/dashboard/power-generation",
+      tags: ["발전량", "전력"],
+    },
+    {
+      name: "판매 단가",
+      path: "/dashboard/power-price",
+      tags: ["판매", "가격"],
+    },
+    {
+      name: "판매 금액",
+      path: "/dashboard/sales",
+      tags: ["판매", "금액"],
     },
   ];
 
@@ -123,16 +152,64 @@ function DashboardPage() {
     setRecommended(matches.map((dashboard) => dashboard.name));
   };
 
-  return (
-    <div className="bg-gray-50 p-5 font-sans text-gray-800">
-      <Title title={"대시보드"} />
-      <div className="mb-10 p-4">
-        <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
-          대시보드 관리
-        </h1>
+  interface DashboardComponents {
+    [key: string]: React.FC;
+  }
 
-        {/* KPI 입력 섹션 */}
-        <div className="mb-6 flex flex-wrap justify-center gap-4">
+  const dashboardComponents: DashboardComponents = {
+    SMP: SMP,
+    "경제 지표": Economic,
+    "국민 계정": People,
+    "발전원별 발전량": PowerGenerationByPowerSource,
+    "에너지 지표": Energy,
+    "유형별 전기 고장 추이": Failures,
+    "전력 거래 연료 비용": Cost,
+    "전력 사용량 계약 종별": PowerUsage,
+    "전력 사용량 시도별": PowerUsageByRegion,
+    "전력 지표": Electro,
+    "전원별 발전량": PowerGeneration,
+    "판매 단가": PowerPrice,
+    "판매 금액": Sales,
+  };
+
+  return (
+    <div className="p-5 dark:bg-subColor">
+      <Title title={"대시보드"} />
+      {/* 대시보드 선택 */}
+      <div className="flex items-center justify-end gap-3">
+        <div className="text-mainColor dark:text-white">대시보드 선택</div>
+        <Select value={selectedDashboard} onValueChange={setSelectedDashboard}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="대시보드 선택" />
+          </SelectTrigger>
+          <SelectContent>
+            {dashboards.map((dashboard) => (
+              <SelectItem
+                className="bg-white dark:bg-subColor"
+                key={dashboard.name}
+                value={dashboard.name}
+              >
+                {dashboard.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      {/* 대시보드 보여주는 곳 */}
+      <div>
+        {dashboardComponents[selectedDashboard] ? (
+          React.createElement(dashboardComponents[selectedDashboard])
+        ) : (
+          <p>대시보드를 선택해주세요.</p>
+        )}
+      </div>
+      {/* <div className="mb-10 p-4"> */}
+      {/* <h1 className="mb-6 text-center text-3xl font-bold text-[rgb(7,15,38)]">
+          대시보드 관리
+        </h1> */}
+
+      {/* KPI 입력 섹션 */}
+      {/* <div className="mb-6 flex flex-wrap justify-center gap-4">
           <input
             type="text"
             placeholder="작성자 이름"
@@ -174,10 +251,10 @@ function DashboardPage() {
           >
             추가
           </button>
-        </div>
+        </div> */}
 
-        {/* TODO 리스트 테이블  */}
-        <div className="overflow-x-auto">
+      {/* TODO 리스트 테이블  */}
+      {/* <div className="overflow-x-auto">
           <table className="w-full overflow-hidden rounded-lg bg-white shadow-md">
             <thead className="bg-[rgb(7,15,38)] text-white">
               <tr>
@@ -206,14 +283,14 @@ function DashboardPage() {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-      대시보드 선택 버튼
-      <div className="border-rgb(7,15,38) border p-4">
-        <h1 className="m-8 text-center text-3xl font-bold text-[rgb(7,15,38)]">
+        </div> */}
+      {/* </div> */}
+      {/* 대시보드 선택 버튼 */}
+      {/* <div className="border-rgb(7,15,38) border p-4"> */}
+      {/* <h1 className="m-8 text-center text-3xl font-bold text-[rgb(7,15,38)]">
           대시보드 선택
-        </h1>
-        <motion.div
+        </h1> */}
+      {/* <motion.div
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           initial="hidden"
           animate="visible"
@@ -243,8 +320,8 @@ function DashboardPage() {
               </Link>
             </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </motion.div> */}
+      {/* </div> */}
     </div>
   );
 }

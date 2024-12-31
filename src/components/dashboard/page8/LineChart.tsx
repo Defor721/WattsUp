@@ -42,10 +42,6 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
       legend: {
         position: "top" as const,
       },
-      title: {
-        display: true,
-        text: "기간별 SMP 추이",
-      },
     },
     scales: {
       x: {

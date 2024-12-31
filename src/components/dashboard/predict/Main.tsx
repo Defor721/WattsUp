@@ -214,12 +214,12 @@ function PredictMain() {
           : "-",
       }),
     );
-  }, [chartData, selectedRegion]);
+  }, [chartData, selectedRegion, weatherData]);
 
   if (loading) return <Loading />;
 
   return (
-    <div className="min-w-[704px] p-5 dark:bg-[#050a18] md:w-full">
+    <div className="min-w-[704px] p-5 dark:bg-subColor md:w-full">
       <Title title={"태양광 발전량 예측"} />
       <RegionButtons
         regions={regions}

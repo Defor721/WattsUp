@@ -1,12 +1,10 @@
 import React from "react";
 
 import {
-  Button,
+  Label,
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/shadcn";
@@ -24,9 +22,14 @@ function RegionButtons({
 }: RegionButtonsProps) {
   return (
     <div className="flex items-center justify-end gap-3">
-      <div className="text-mainColor dark:text-white">지역 선택</div>
+      <Label
+        htmlFor="region"
+        className="text-mainColor dark:text-white md:text-base"
+      >
+        지역 선택
+      </Label>
       <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger id="region" className="w-[180px]">
           <SelectValue placeholder="지역 선택 " />
         </SelectTrigger>
         <SelectContent>
