@@ -1,321 +1,230 @@
-// "use client";
+"use client";
 
-// import React, { useState, useEffect } from "react";
-// import dynamic from "next/dynamic";
-// import * as XLSX from "xlsx";
-// import Plot from "react-plotly.js";
-// import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 
-// interface PowerUsageData {
-//   연도: number;
-//   주택용: number;
-//   일반용: number;
-//   교육용: number;
-//   산업용: number;
-//   농사용: number;
-//   가로등: number;
-//   심야: number;
-//   합계: number;
-// }
+import KPICard from "@/components/dashboard/page9/KPICard";
+import DoughnutChart from "@/components/dashboard/page9/DoughnutChart";
+import LineChart from "@/components/dashboard/page9/LineChart";
+import Table from "@/components/dashboard/page9/Table";
 
-// const PowerUsageDashboard = () => {
-//   const [data, setData] = useState<PowerUsageData[]>([]);
-//   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-//   const [filteredData, setFilteredData] = useState<PowerUsageData | null>(null);
-
-//   // 데이터 로드
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await fetch(
-//           "/assets/dashboards/HOME_CUSTOMR_CONTRACT.xlsx",
-//         );
-//         const arrayBuffer = await response.arrayBuffer();
-//         const workbook = XLSX.read(arrayBuffer, { type: "array" });
-//         const sheetName = workbook.SheetNames[0];
-//         const worksheet = workbook.Sheets[sheetName];
-//         const jsonData: PowerUsageData[] = XLSX.utils.sheet_to_json(worksheet);
-//         setData(jsonData);
-
-//         // 최신 연도로 기본값 설정
-//         const latestYear = Math.max(...jsonData.map((item) => item.연도));
-//         setSelectedYear(latestYear);
-//       } catch (error) {
-//         console.error("Error loading data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   // 선택된 연도에 따라 데이터 필터링
-//   useEffect(() => {
-//     if (selectedYear !== null) {
-//       const filtered = data.find((item) => item.연도 === selectedYear);
-//       setFilteredData(filtered || null);
-//     }
-//   }, [selectedYear, data]);
-
-//   // 데이터 다운로드
-//   const handleDownload = () => {
-//     const worksheet = XLSX.utils.json_to_sheet(data);
-//     const workbook = XLSX.utils.book_new();
-//     XLSX.utils.book_append_sheet(workbook, worksheet, "전력사용량");
-//     XLSX.writeFile(workbook, "전력사용량_데이터.xlsx");
-//   };
-
-//   if (!filteredData) {
-//     return <p>Loading...</p>;
-//   }
-
-//   // Plotly 색상 팔레트
-//   const colorPalette = [
-//     "#636EFA",
-//     "#EF553B",
-//     "#00CC96",
-//     "#AB63FA",
-//     "#FFA15A",
-//     "#19D3F3",
-//     "#FF6692",
-//   ];
-
-//   // 연도별 추세 (라인 차트)
-//   const lineChartData = [
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.주택용),
-//       name: "주택용",
-//       type: "scatter",
-//       mode: "lines+markers",
-//       marker: { color: colorPalette[0] },
-//     },
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.일반용),
-//       name: "일반용",
-//       type: "scatter",
-//       mode: "lines+markers",
-//       marker: { color: colorPalette[1] },
-//     },
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.산업용),
-//       name: "산업용",
-//       type: "scatter",
-//       mode: "lines+markers",
-//       marker: { color: colorPalette[2] },
-//     },
-//   ];
-
-//   // 선택된 연도별 사용량 비율 (파이 차트)
-//   const pieChartData = [
-//     {
-//       labels: [
-//         "주택용",
-//         "일반용",
-//         "교육용",
-//         "산업용",
-//         "농사용",
-//         "가로등",
-//         "심야",
-//       ],
-//       values: [
-//         filteredData.주택용,
-//         filteredData.일반용,
-//         filteredData.교육용,
-//         filteredData.산업용,
-//         filteredData.농사용,
-//         filteredData.가로등,
-//         filteredData.심야,
-//       ],
-//       type: "pie",
-//       marker: { colors: colorPalette },
-//     },
-//   ];
-
-//   // 주요 구분 비교 (스택형 막대 차트)
-//   const barChartData = [
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.주택용),
-//       name: "주택용",
-//       type: "bar",
-//       marker: { color: colorPalette[0] },
-//     },
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.일반용),
-//       name: "일반용",
-//       type: "bar",
-//       marker: { color: colorPalette[1] },
-//     },
-//     {
-//       x: data.map((item) => item.연도),
-//       y: data.map((item) => item.산업용),
-//       name: "산업용",
-//       type: "bar",
-//       marker: { color: colorPalette[2] },
-//     },
-//   ];
-
-//   return (
-//     <div
-//       style={{
-//         padding: "20px",
-//         fontFamily: "Arial, sans-serif",
-//         color: "#ffffff",
-//         backgroundColor: "#1c1c1e",
-//       }}
-//     >
-//       {/* 홈으로 돌아가기 */}
-//       <Link
-//         href="/dashboard"
-//         style={{
-//           padding: "10px 20px",
-//           backgroundColor: "#007aff",
-//           color: "#ffffff",
-//           textDecoration: "none",
-//           borderRadius: "8px",
-//         }}
-//       >
-//         홈으로 돌아가기
-//       </Link>
-
-//       <h1 style={{ marginTop: "20px", color: "#007aff" }}>
-//         전력 사용량 대시보드
-//       </h1>
-
-//       {/* 카드 */}
-//       <div
-//         style={{
-//           display: "flex",
-//           justifyContent: "space-between",
-//           marginBottom: "20px",
-//         }}
-//       >
-//         <div
-//           style={{
-//             padding: "20px",
-//             backgroundColor: "#282c34",
-//             borderRadius: "8px",
-//             width: "30%",
-//           }}
-//         >
-//           <h3>총 전력 사용량 (MWh)</h3>
-//           <p style={{ fontSize: "24px", color: "#00CC96" }}>
-//             {filteredData.합계.toLocaleString()} MWh
-//           </p>
-//         </div>
-//         <div
-//           style={{
-//             padding: "20px",
-//             backgroundColor: "#282c34",
-//             borderRadius: "8px",
-//             width: "30%",
-//           }}
-//         >
-//           <h3>주택용 사용량 (MWh)</h3>
-//           <p style={{ fontSize: "24px", color: "#636EFA" }}>
-//             {filteredData.주택용.toLocaleString()} MWh
-//           </p>
-//         </div>
-//         <div
-//           style={{
-//             padding: "20px",
-//             backgroundColor: "#282c34",
-//             borderRadius: "8px",
-//             width: "30%",
-//           }}
-//         >
-//           <h3>산업용 사용량 (MWh)</h3>
-//           <p style={{ fontSize: "24px", color: "#EF553B" }}>
-//             {filteredData.산업용.toLocaleString()} MWh
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* 그래프 */}
-//       <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-//         <div
-//           style={{
-//             flex: 1,
-//             backgroundColor: "#282c34",
-//             borderRadius: "8px",
-//             padding: "10px",
-//           }}
-//         >
-//           <h3>연도별 전력 사용량 추세</h3>
-//           <Plot
-//             data={lineChartData}
-//             layout={{
-//               title: "",
-//               paper_bgcolor: "#282c34",
-//               font: { color: "#ffffff" },
-//             }}
-//           />
-//         </div>
-//         <div
-//           style={{
-//             flex: 1,
-//             backgroundColor: "#282c34",
-//             borderRadius: "8px",
-//             padding: "10px",
-//           }}
-//         >
-//           <h3>{selectedYear}년 사용량 비율</h3>
-//           <Plot
-//             data={pieChartData}
-//             layout={{
-//               title: "",
-//               paper_bgcolor: "#282c34",
-//               font: { color: "#ffffff" },
-//             }}
-//           />
-//         </div>
-//       </div>
-
-//       <div
-//         style={{
-//           backgroundColor: "#282c34",
-//           borderRadius: "8px",
-//           padding: "10px",
-//         }}
-//       >
-//         <h3>연도별 주요 구분 비교</h3>
-//         <Plot
-//           data={barChartData}
-//           layout={{
-//             barmode: "stack",
-//             paper_bgcolor: "#282c34",
-//             font: { color: "#ffffff" },
-//           }}
-//         />
-//       </div>
-
-//       {/* 데이터 다운로드 버튼 */}
-//       <div style={{ marginTop: "20px" }}>
-//         <button
-//           onClick={handleDownload}
-//           style={{
-//             padding: "10px 20px",
-//             backgroundColor: "#007aff",
-//             color: "#ffffff",
-//             border: "none",
-//             borderRadius: "8px",
-//           }}
-//         >
-//           데이터 다운로드
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PowerUsageDashboard;
-import React from "react";
-
-function page() {
-  return <div>page</div>;
+interface CustomerData {
+  연도: number;
+  주택용: number;
+  일반용: number;
+  교육용: number;
+  산업용: number;
+  농사용: number;
+  가로등: number;
+  심야: number;
+  합계: number;
+  [key: string]: string | number;
 }
 
-export default page;
+const CustomerDashboard = () => {
+  const [data, setData] = useState<CustomerData[]>([]);
+  const [filteredData, setFilteredData] = useState<CustomerData | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [kpi, setKpi] = useState({
+    주택용: 0,
+    일반용: 0,
+    교육용: 0,
+    산업용: 0,
+    농사용: 0,
+    가로등: 0,
+    심야: 0,
+    합계: 0,
+  });
+
+  // 데이터 로드
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "/assets/dashboards/HOME_Generation·Sales_Customer Number_Contract Type.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: CustomerData[] = XLSX.utils
+          .sheet_to_json<CustomerData>(worksheet)
+          .map((row: any) => ({
+            연도: Number(row["연도"]),
+            주택용: Number(row["주택용"]),
+            일반용: Number(row["일반용"]),
+            교육용: Number(row["교육용"]),
+            산업용: Number(row["산업용"]),
+            농사용: Number(row["농사용"]),
+            가로등: Number(row["가로등"]),
+            심야: Number(row["심야"]),
+            합계: Number(row["합계"]),
+          }));
+        setData(jsonData);
+        setSelectedYear(jsonData[0]?.연도 || null);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 연도 선택 시 데이터 필터링
+  useEffect(() => {
+    if (selectedYear !== null) {
+      const selectedData = data.find((item) => item.연도 === selectedYear);
+      setFilteredData(selectedData || null);
+
+      if (selectedData) {
+        setKpi({
+          주택용: selectedData.주택용,
+          일반용: selectedData.일반용,
+          교육용: selectedData.교육용,
+          산업용: selectedData.산업용,
+          농사용: selectedData.농사용,
+          가로등: selectedData.가로등,
+          심야: selectedData.심야,
+          합계: selectedData.합계,
+        });
+      } else {
+        setKpi({
+          주택용: 0,
+          일반용: 0,
+          교육용: 0,
+          산업용: 0,
+          농사용: 0,
+          가로등: 0,
+          심야: 0,
+          합계: 0,
+        });
+      }
+    }
+  }, [selectedYear, data]);
+
+  // 데이터 다운로드
+  const handleDownload = () => {
+    if (!filteredData) return;
+
+    const worksheet = XLSX.utils.json_to_sheet([filteredData]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Customer Data");
+    XLSX.writeFile(workbook, `Customer_Data_${selectedYear}.xlsx`);
+  };
+
+  // 도넛 차트 데이터
+  const doughnutData = {
+    labels: [
+      "주택용",
+      "일반용",
+      "교육용",
+      "산업용",
+      "농사용",
+      "가로등",
+      "심야",
+    ],
+    datasets: [
+      {
+        data: [
+          kpi.주택용,
+          kpi.일반용,
+          kpi.교육용,
+          kpi.산업용,
+          kpi.농사용,
+          kpi.가로등,
+          kpi.심야,
+        ],
+        backgroundColor: [
+          "#34D399",
+          "#60A5FA",
+          "#F87171",
+          "#93C5FD",
+          "#FBBF24",
+          "#A78BFA",
+          "#FCA5A5",
+        ],
+      },
+    ],
+  };
+
+  // 라인 차트 데이터
+  const lineChartData = {
+    labels: data.map((item) => item.연도.toString()),
+    datasets: [
+      {
+        label: "합계",
+        data: data.map((item) => item.합계),
+        borderColor: "#34D399",
+        backgroundColor: "rgba(52, 211, 153, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 p-4 text-white md:p-8">
+      <h1 className="mb-6 text-center text-4xl font-bold">
+        전력사용량_계약종별 대시보드
+      </h1>
+
+      {/* 필터와 다운로드 */}
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <label className="text-sm text-gray-300">연도 선택:</label>
+          <select
+            value={selectedYear || ""}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="ml-2 rounded-md bg-gray-800 p-2 text-white"
+          >
+            {data.map((item) => (
+              <option key={item.연도} value={item.연도}>
+                {item.연도}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          onClick={handleDownload}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          데이터 다운로드
+        </button>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
+        {Object.keys(kpi).map((key) => (
+          <KPICard
+            key={key}
+            title={key}
+            value={(kpi[key as keyof typeof kpi] as number).toLocaleString()}
+            unit="명"
+            backgroundColor="#3B82F6"
+            iconColor="#1D4ED8"
+          />
+        ))}
+      </div>
+
+      {/* Charts */}
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="rounded-lg bg-gray-800 p-4">
+          <h2 className="text-lg font-semibold">계약 유형별 비율</h2>
+          <DoughnutChart data={doughnutData} />
+        </div>
+        <div className="rounded-lg bg-gray-800 p-4">
+          <h2 className="text-lg font-semibold">연도별 고객 합계 추이</h2>
+          <LineChart data={lineChartData} />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
+        <Table data={filteredData ? [filteredData] : []} />
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDashboard;

@@ -32,6 +32,8 @@ export function mockPowerSupplyData(): PowerSupplyData[] {
       demand,
       reserve,
       reserveRate,
+      currentSupply: undefined,
+      currentDemand: undefined,
     });
   }
 
