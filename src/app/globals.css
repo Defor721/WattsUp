@@ -23,6 +23,29 @@ body {
   /* background-color: #fafaf5; */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+section {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+section.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+
+
 @keyframes riseUp {
   0% {
     transform: translateY(100%);

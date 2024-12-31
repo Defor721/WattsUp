@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 function FeaturesPart() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F5F5F5]">
+    <div className="flex h-screen min-h-screen flex-col bg-[#F5F5F5]">
       {/* Hero Section */}
       <div className="relative flex h-[50vh] flex-col items-center justify-center text-center">
         <motion.div

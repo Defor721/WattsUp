@@ -12,6 +12,14 @@ import {
   Database,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import {
+  FaBullseye,
+  FaFlag,
+  FaLaptopCode,
+  FaLightbulb,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { MdOutlineStar } from "react-icons/md";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/useAccessToken";
@@ -42,6 +50,12 @@ const defaultItems = [
     icon: TrendingUp,
     label: "전력 거래",
     href: "/energy-trade",
+  },
+  {
+    id: "introduce",
+    icon: FaLaptopCode,
+    label: "소개",
+    href: "/introduce",
   },
 ];
 
