@@ -13,43 +13,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn";
-import SignupEmailInput from "@/auth/components/SignupEmailInput";
+import SignupEmailInput from "@/auth/components/signup/SignupEmailInput";
 import SignupPasswordInput from "@/auth/components/SignupPasswordInput";
-import SignupBusinessNumberInput from "@/auth/components/SignupBusinessNumberInputProps";
-import BusinessTypeInput from "@/auth/components/BusinessTypeInput";
+import SignupBusinessNumberInput from "@/auth/components/SignupBusinessNumberInput";
 import { useAuthStore } from "@/auth/useAuthStore";
+import { toast } from "@/hooks/useToast";
 
 function Signup() {
   const router = useRouter();
+
   const {
-    message,
-    actions: { nativeSignup },
+    actions: { nativeSignup, resetLoginState },
   } = useAuthStore();
 
-  // 추가 정보 상태들
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
   const [isBusinessVerified, setIsBusinessVerified] = useState(false);
-  const [businessType, setBusinessType] = useState<"corporate" | "individual">(
-    "corporate",
-  );
-  const [corporateNumber, setCorporateNumber] = useState("");
-  const [personalId, setPersonalId] = useState("");
 
-  const isSubmitButtonDisabled =
+  const isSubmitButtonDisabled = () =>
     !isEmailVerified ||
     !isPasswordValid ||
     !isConfirmPasswordValid ||
-    !isBusinessVerified ||
-    !(corporateNumber.length === 13 || personalId.length === 6);
+    !isBusinessVerified;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    nativeSignup({ password, businessType, corporateNumber, personalId });
+  const handleSubmit = async (e: React.FormEvent) => {
+    try {
+      e.preventDefault();
+      await nativeSignup(password);
 
-    // router.push("/");
+      router.push("/login");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "회원가입에 실패했습니다.",
+        description: `${error.response.data.message}`,
+      });
+    }
   };
 
   const handlePrevClick = () => {
@@ -62,23 +63,12 @@ function Signup() {
     setIsPasswordValid(false);
     setIsConfirmPasswordValid(false);
     setIsBusinessVerified(false);
-    setBusinessType("corporate");
-    setCorporateNumber("");
-    setPersonalId("");
+    resetLoginState();
   };
 
   useEffect(() => {
     resetAllStates();
   }, []);
-
-  {
-    /* TODO: 아래 인풋 예시 주석 모두 지울것 */
-    /* 사업자 번호: 1118194369 */
-    /* 개업일자: 20221201 */
-    /* 상호: (주)터빈크루 */
-    /* 대표자 성명: 전기은 */
-    /* 법인등록 번호: 2013110093748 */
-  }
 
   return (
     <Card className="relative flex flex-col p-5">
@@ -113,21 +103,12 @@ function Signup() {
             isBusinessVerified={isBusinessVerified}
             setIsBusinessVerified={setIsBusinessVerified}
           />
-          {/* 사업자 선택 및 번호 입력 섹션 */}
-          <BusinessTypeInput
-            businessType={businessType}
-            corporateNumber={corporateNumber}
-            personalId={personalId}
-            setBusinessType={setBusinessType}
-            setCorporateNumber={setCorporateNumber}
-            setPersonalId={setPersonalId}
-          />
         </CardContent>
         <CardFooter>
           {/* 버튼 섹션 */}
           <Button
             type="submit"
-            disabled={isSubmitButtonDisabled}
+            disabled={isSubmitButtonDisabled()}
             className={`w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
           >
             가입하기

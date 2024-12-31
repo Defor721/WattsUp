@@ -1,5 +1,9 @@
 import { http, HttpResponse } from "msw";
 
+interface EmailRequestBody {
+  email: string;
+}
+
 /**
  * id: DB 고유 아이디
  * email: 이메일
@@ -42,6 +46,59 @@ const users = [
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
 export const handlers = [
+  //   // 이메일 코드 전송
+  //   http.post(`${baseUrl}/api/auth/email-code`, async ({ request }) => {
+  //     const { email } = (await request.json()) as { email: string };
+  //     return HttpResponse.json(
+  //       { message: "해당 메일로 코드 전송 완료" },
+  //       { status: 200 },
+  //     );
+  //   }),
+  //   // 이메일 코드 인증
+  //   http.post(`${baseUrl}/api/auth/email-code/verify`, async ({ request }) => {
+  //     const { email, emailCode } = (await request.json()) as {
+  //       email: string;
+  //       emailCode: string;
+  //     };
+  //     return HttpResponse.json(
+  //       { message: "이메일 인증을 완료했습니다." },
+  //       { status: 200 },
+  //     );
+  //   }),
+  //   // 사업자 등록번호 확인
+  //   http.post(`${baseUrl}/api/auth/business-info/verify`, async ({ request }) => {
+  //     const {
+  //       businessNumber,
+  //       startDate,
+  //       principalName,
+  //       companyName,
+  //       corporateNumber,
+  //     } = (await request.json()) as {
+  //       businessNumber: string;
+  //       startDate: string;
+  //       principalName: string;
+  //       companyName: string;
+  //       corporateNumber: string;
+  //     };
+  //     return HttpResponse.json(
+  //       { message: "이메일 인증을 완료했습니다." },
+  //       { status: 200 },
+  //     );
+  //   }),
+  //   // 일반회원 가입
+  //   http.post(`${baseUrl}/api/auth/users`, async ({ request }) => {
+  //     const { password } = (await request.json()) as { password: string };
+  //     if (password) {
+  //       return HttpResponse.json(
+  //         { message: "입력값을 모두 입력해야 합니다." },
+  //         { status: 400 },
+  //       );
+  //     }
+  //     return HttpResponse.json(
+  //       { message: "해당 메일로 코드 전송 완료" },
+  //       { status: 200 },
+  //     );
+  //   }),
   // Google 토큰 요청 가로채기
   // http.post("https://oauth2.googleapis.com/token", async ({ request }) => {
   //   const body = await request.json();

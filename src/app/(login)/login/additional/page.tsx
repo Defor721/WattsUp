@@ -57,6 +57,7 @@ export default function AdditionalPage() {
         startDate,
         principalName,
         companyName,
+        corporateNumber,
       );
       setIsBusinessValid(true);
       setBusinessStatusMessage("유효한 사업자 등록번호입니다.");
