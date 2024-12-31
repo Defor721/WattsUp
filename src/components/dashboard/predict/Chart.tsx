@@ -49,7 +49,7 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
-  // console.log("Chart Data:", typeof data[0].amgo);
+  console.log("Chart Data:", data);
 
   if (!data) return;
 
@@ -59,12 +59,9 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
         {selectedRegion} 발전량 예측 그래프
       </h4>
 
-      <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+      <ResponsiveContainer width={"100%"} aspect={16 / 4}>
         <LineChart
-          width={730}
-          height={500}
           data={data}
-          // className="my-[5px] ml-5 mr-[30px]"
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />

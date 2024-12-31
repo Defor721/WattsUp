@@ -15,6 +15,9 @@ import LineChart from "@/components/dashboard/page2/LineChart";
 import DoughnutChart from "@/components/dashboard/page2/DoughnutChart";
 import BarChart from "@/components/dashboard/page2/BarChart";
 
+import Table from "./Table";
+import Container from "../Container";
+
 interface EconomicData {
   연도: number;
   생산자물가지수: number;
@@ -29,7 +32,7 @@ interface EconomicData {
   콜금리: number;
 }
 
-const EconomicDashboard: React.FC = () => {
+function Economic() {
   const [data, setData] = useState<EconomicData[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [currentYearData, setCurrentYearData] = useState<EconomicData | null>(
@@ -126,7 +129,7 @@ const EconomicDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4 md:p-8">
+    <Container>
       <h1 className="mb-6 text-center text-4xl font-bold text-white">
         경제지표 대시보드
       </h1>
@@ -231,41 +234,13 @@ const EconomicDashboard: React.FC = () => {
         />
       </div>
 
-      {/* Data Table */}
-      <div className="mt-8 overflow-auto rounded-lg bg-gray-800 p-4 shadow-md">
-        <table className="min-w-full table-auto">
-          <thead>
-            <tr className="border-b border-gray-700">
-              {Object.keys(currentYearData).map((key) => (
-                <th
-                  key={key}
-                  className="px-4 py-2 text-left text-sm font-semibold text-gray-300"
-                >
-                  {key}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, index) => (
-              <tr
-                key={index}
-                className={`border-b border-gray-700 ${
-                  index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"
-                } hover:bg-gray-700`}
-              >
-                {Object.values(row).map((value, idx) => (
-                  <td key={idx} className="px-4 py-2 text-sm text-gray-400">
-                    {typeof value === "number" ? value.toLocaleString() : value}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Table */}
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
+        <Table />
       </div>
-    </div>
+    </Container>
   );
-};
+}
 
-export default EconomicDashboard;
+export default Economic;

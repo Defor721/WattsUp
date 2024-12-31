@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 
 import KPICard from "@/components/dashboard/page8/KPICard";
-import DoughnutChart from "@/components/dashboard/page8/DoughnutChart";
 import LineChart from "@/components/dashboard/page8/LineChart";
 import Table from "@/components/dashboard/page8/Table";
+import DoughnutChart from "@/components/dashboard/main/smp/PieChart";
 
 // SMPData 타입 정의
 interface SMPData {
@@ -98,21 +98,14 @@ const SMPDashboard = () => {
   };
 
   // 도넛 차트 데이터
-  const doughnutData = {
-    labels: ["LNG", "유류", "무연탄", "유연탄", "원자력"],
-    datasets: [
-      {
-        data: [kpi.LNG, kpi.유류, kpi.무연탄, kpi.유연탄, kpi.원자력],
-        backgroundColor: [
-          "#34D399",
-          "#60A5FA",
-          "#F87171",
-          "#93C5FD",
-          "#FBBF24",
-        ],
-      },
-    ],
-  };
+  const doughnutData = Object.keys(kpi)
+    .filter((key) => key !== "총계") // 총계 제외
+    .map((key) => ({
+      name: key,
+      value: kpi[key as keyof typeof kpi],
+    }));
+
+  const colors = ["#34D399", "#60A5FA", "#F87171", "#93C5FD", "#FBBF24"];
 
   // 라인 차트 데이터
   const lineChartData = {
@@ -198,7 +191,7 @@ const SMPDashboard = () => {
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="rounded-lg bg-gray-800 p-4">
           <h2 className="text-lg font-semibold">연료원별 비율</h2>
-          <DoughnutChart data={doughnutData} />
+          <DoughnutChart data={doughnutData} colors={colors} />
         </div>
         <div className="rounded-lg bg-gray-800 p-4">
           <h2 className="text-lg font-semibold">기간별 SMP 추이</h2>

@@ -28,6 +28,9 @@ const config: Config = {
         mainColor: {
           DEFAULT: "#070f26",
         },
+        subColor: {
+          DEFAULT: "#050a18",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           100: "var(--primary-100)",

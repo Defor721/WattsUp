@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  PieChart,
+  PieChart as RechartsPieChart,
   Pie,
   Cell,
   Tooltip,
@@ -13,10 +13,10 @@ interface DoughnutChartProps {
   colors: string[];
 }
 
-const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, colors }) => {
+const PieChart: React.FC<DoughnutChartProps> = ({ data, colors }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <PieChart>
+      <RechartsPieChart>
         <Pie
           data={data}
           dataKey="value"
@@ -33,9 +33,9 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, colors }) => {
         </Pie>
         <Tooltip />
         <Legend />
-      </PieChart>
+      </RechartsPieChart>
     </ResponsiveContainer>
   );
 };
 
-export default DoughnutChart;
+export default PieChart;

@@ -6,10 +6,11 @@ import * as tf from "@tensorflow/tfjs";
 import PredictChart from "@/components/dashboard/predict/Chart";
 import PredictTable from "@/components/dashboard/predict/Table";
 import { regions } from "@/utils/regions";
-import { get6Days } from "@/utils/get6Days";
 import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
+import Title from "@/components/ui/Title";
+import { get6Days } from "@/utils";
 
 import RegionButtons from "./RegionButtons";
 
@@ -122,7 +123,6 @@ function PredictMain() {
         });
 
         setWeatherData(processedWeatherData);
-        // console.log("Processed Weather Data:", processedWeatherData);
       } catch (error) {
         console.error("Error fetching weather data:", error);
       } finally {
@@ -214,12 +214,13 @@ function PredictMain() {
           : "-",
       }),
     );
-  }, [chartData, selectedRegion]);
+  }, [chartData, selectedRegion, weatherData]);
 
   if (loading) return <Loading />;
 
   return (
-    <div className="min-w-[704px] p-3 dark:bg-[#050a18] md:w-full md:p-5 lg:p-10">
+    <div className="min-w-[704px] p-5 dark:bg-subColor md:w-full">
+      <Title title={"태양광 발전량 예측"} />
       <RegionButtons
         regions={regions}
         selectedRegion={selectedRegion}

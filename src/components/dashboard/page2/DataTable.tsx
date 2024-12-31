@@ -31,7 +31,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns }) => {
             >
               {columns.map((column) => (
                 <td key={column.key} className="px-6 py-4 text-sm">
-                  {row[column.key]?.toString() || ""}
+                  {row[column.title]?.toString() || ""}
                 </td>
               ))}
             </tr>
