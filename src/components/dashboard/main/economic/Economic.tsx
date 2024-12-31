@@ -113,27 +113,15 @@ function Economic() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>데이터를 불러오는 중입니다...</div>
-      </div>
-    );
+    return <div>데이터를 불러오는 중입니다...</div>;
   }
 
   if (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>{error}</div>
-      </div>
-    );
+    return <div>{error}</div>;
   }
 
   if (!currentYearData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>데이터가 없습니다.</div>
-      </div>
-    );
+    return <div>데이터가 없습니다.</div>;
   }
 
   return (
