@@ -105,14 +105,6 @@ export default function AdditionalPage() {
     }
   }, [accessToken]);
 
-  {
-    /* TODO: 아래 인풋 예시 주석 모두 지울것 */
-    /* 사업자 번호: 1118194369 */
-    /* 개업일자: 20221201 */
-    // 상호: (주)터빈크루
-    /* 대표자 성명: 전기은 */
-  }
-
   return (
     <Card className="relative flex flex-col p-5">
       <Link href={"/login"}>

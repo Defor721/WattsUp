@@ -1,10 +1,13 @@
+import { Dispatch } from "react";
+
 import { Button } from "@/components/shadcn";
 
 interface EmailVerificationButtonProps {
   isEmailVerified: boolean;
   isEmailVerificationLoading: boolean;
   isVerifyButtonDisabled: boolean;
-  resetEmailInfo: () => void;
+  setEmailCode: Dispatch<React.SetStateAction<string>>;
+  setIsEmailVerified: Dispatch<React.SetStateAction<boolean>>;
   handleVerifyEmail: () => void;
 }
 
@@ -12,9 +15,15 @@ export default function EmailVerificationButton({
   isEmailVerified,
   isEmailVerificationLoading,
   isVerifyButtonDisabled,
-  resetEmailInfo,
+  setEmailCode,
+  setIsEmailVerified,
   handleVerifyEmail,
 }: EmailVerificationButtonProps) {
+  const resetEmailInfo = () => {
+    setEmailCode("");
+    setIsEmailVerified(false);
+  };
+
   if (isEmailVerified) {
     return (
       <Button

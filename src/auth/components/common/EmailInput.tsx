@@ -4,8 +4,9 @@ import { Input, Label } from "@/components/shadcn";
 
 interface EmailInputProps {
   email: string;
-  isEmailValid: boolean;
+  isEmailValid?: boolean;
   isEmailVerified?: boolean;
+  showMessage?: boolean;
   setEmail: Dispatch<React.SetStateAction<string>>;
 }
 
@@ -13,6 +14,7 @@ export default function EmailInput({
   email,
   isEmailValid,
   isEmailVerified,
+  showMessage,
   setEmail,
 }: EmailInputProps) {
   return (
@@ -22,22 +24,25 @@ export default function EmailInput({
         id="email"
         type="email"
         placeholder="이메일을 입력해주세요."
+        maxLength={320}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         disabled={isEmailVerified}
         required
       />
       {/* 이메일 입력 안내 */}
-      <div className="text-sm text-gray-500">
-        {!isEmailValid && email.trim() !== "" && (
-          <div className="text-red-600">
-            올바른 형식의 이메일을 입력해주세요.
-          </div>
-        )}
-        {isEmailValid && (
-          <div className="text-green-500">올바른 형식의 이메일입니다.</div>
-        )}
-      </div>
+      {showMessage && (
+        <div className="text-sm text-gray-500">
+          {!isEmailValid && email.trim() !== "" && (
+            <div className="text-red-600">
+              올바른 형식의 이메일을 입력해주세요.
+            </div>
+          )}
+          {isEmailValid && (
+            <div className="text-green-500">올바른 형식의 이메일입니다.</div>
+          )}
+        </div>
+      )}
     </>
   );
 }

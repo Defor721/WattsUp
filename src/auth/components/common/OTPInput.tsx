@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 
 import {
   Button,
@@ -12,6 +12,7 @@ interface OTPInputProps {
   isEmailVerified: boolean;
   cooldown: number;
   isSendButtonDisabled: boolean;
+  setCooldown: Dispatch<React.SetStateAction<number>>;
   setEmailCode: Dispatch<React.SetStateAction<string>>;
   handleSendEmailCode: () => void;
 }
@@ -21,9 +22,21 @@ export default function OTPInput({
   isEmailVerified,
   cooldown,
   isSendButtonDisabled,
+  setCooldown,
   setEmailCode,
   handleSendEmailCode,
 }: OTPInputProps) {
+  const handleCooldownTimer = () => {
+    if (cooldown > 0) {
+      const timer = setInterval(() => {
+        setCooldown((prev) => Math.max(prev - 1, 0));
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  };
+
+  useEffect(handleCooldownTimer, [cooldown]);
+
   return (
     <div className="flex gap-2">
       <InputOTP

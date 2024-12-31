@@ -14,15 +14,15 @@ import { toast } from "@/hooks/useToast";
 
 import { businessInfoVerification } from "../authService";
 
-interface SignupBusinessNumberInputProps {
+interface BusinessNumberSectionProps {
   isBusinessVerified: boolean;
   setIsBusinessVerified: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SignupBusinessNumberInput({
+export default function BusinessNumberSection({
   isBusinessVerified,
   setIsBusinessVerified,
-}: SignupBusinessNumberInputProps) {
+}: BusinessNumberSectionProps) {
   const [businessNumber, setBusinessNumber] = useState("");
   const [principalName, setPrincipalName] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -178,7 +178,7 @@ export default function SignupBusinessNumberInput({
                 <IoMdInformationCircleOutline />
               </TooltipTrigger>
               <TooltipContent side="right">
-                {"'-' 기호를 제외한 사업자 번호 13자리를 입력해주세요."}
+                {"'-' 기호를 제외한 법인등록번호 13자리를 입력해주세요."}
               </TooltipContent>
             </div>
           </Tooltip>
