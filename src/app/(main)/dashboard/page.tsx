@@ -44,7 +44,7 @@ function DashboardPage() {
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("유형별 전기 고장 추이");
+    useState<string>("전력 사용량 시도별");
 
   const dashboards = [
     {

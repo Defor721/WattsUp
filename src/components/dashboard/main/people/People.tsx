@@ -17,8 +17,6 @@ import {
   Label,
   Button,
 } from "@/components/shadcn";
-import RecentOrders from "@/components/dashboard/page4/RecentOrder";
-import UsersByCountry from "@/components/dashboard/page4/UserByCountry";
 
 import Container from "../Container";
 import KPICard from "./KPICard";

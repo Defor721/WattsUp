@@ -12,13 +12,32 @@ import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 interface PieChartProps {
   data: { name: string; value: number }[];
-  colors: string[];
 }
 
-const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
+const COLORS = [
+  "#34D399",
+  "#60A5FA",
+  "#F87171",
+  "#93C5FD",
+  "#FBBF24",
+  "#A78BFA",
+  "#FCA5A5",
+  "#2DD4BF",
+  "#4ADE80",
+  "#FB7185",
+  "#C084FC",
+  "#FACC15",
+  "#F97316",
+  "#10B981",
+  "#6366F1",
+  "#EAB308",
+  "#8B5CF6",
+];
+
+const PieChart: React.FC<PieChartProps> = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <RechartsPieChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <RechartsPieChart margin={{ top: 20, right: 30, left: 20, bottom: 0 }}>
         <Pie
           data={data}
           dataKey="value"
@@ -29,8 +48,8 @@ const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
           fill="#8884d8"
           label={({ name }) => `${name}`}
         >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+          {data.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <Tooltip
