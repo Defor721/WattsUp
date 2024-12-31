@@ -1,11 +1,6 @@
 import apiClient from "@/lib/axios";
 
-import {
-  AuthResponse,
-  GoogleTokenResponse,
-  NativeSignupParams,
-  SocialSignupParams,
-} from "./type";
+import { AuthResponse, GoogleTokenResponse, SocialSignupParams } from "./type";
 
 /**
  * 일반 로그인
@@ -90,18 +85,14 @@ export async function socialSignup({
  */
 export async function nativeSignup({
   password,
-  businessType,
-  corporateNumber,
-  personalId,
-}: NativeSignupParams): Promise<any> {
+}: {
+  password: string;
+}): Promise<any> {
   try {
     const { data } = await apiClient.post(
       "/api/auth/users",
       {
         password,
-        businessType,
-        corporateNumber,
-        personalId,
       },
       {
         withCredentials: true,
@@ -211,6 +202,7 @@ export async function businessInfoVerification(
   startDate: string,
   principalName: string,
   companyName: string,
+  corporateNumber: string,
 ): Promise<any> {
   try {
     const { data } = await apiClient.post("/api/auth/business-info/verify", {
@@ -218,6 +210,7 @@ export async function businessInfoVerification(
       startDate,
       principalName,
       companyName,
+      corporateNumber,
     });
 
     return data;

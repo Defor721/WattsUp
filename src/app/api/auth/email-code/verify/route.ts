@@ -50,14 +50,14 @@ export async function POST(request: NextRequest) {
     if (!storedCode) {
       return NextResponse.json(
         {
-          message: "인증 코드가 만료되었거나 존재하지 않습니다.",
+          message: "해당 인증코드는 만료되었거나 존재하지 않습니다.",
         },
         { status: 400 },
       );
     }
     if (storedCode !== emailCode) {
       return NextResponse.json(
-        { message: "인증 코드가 유효하지 않습니다." },
+        { message: "인증코드가 유효하지 않습니다." },
         { status: 400 },
       );
     }
@@ -69,11 +69,12 @@ export async function POST(request: NextRequest) {
         provider: null,
       },
       process.env.TEMP_TOKEN_SECRET!,
+      //TODO: 시험중 끝나고 바꿀것
       { expiresIn: "15m" },
     );
 
     const response = NextResponse.json(
-      { message: "인증 성공" },
+      { message: "이메일 인증을 완료했습니다." },
       { status: 200 },
     );
     response.cookies.set("emailVerificationToken", emailVerificationToken, {
