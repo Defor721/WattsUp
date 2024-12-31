@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
+import { Download } from "lucide-react";
 
 import {
   Select,
@@ -10,10 +11,11 @@ import {
   SelectContent,
   SelectItem,
   Label,
+  Button,
 } from "@/components/shadcn";
 
 import Container from "../Container";
-import DoughnutChart from "./PieChart";
+import PieChart from "./PieChart";
 import LineChart from "./LineChart";
 import KPICard from "./KPICard";
 import Table from "./Table";
@@ -176,7 +178,7 @@ function SMP() {
             <SelectTrigger id="fuel" className="w-[180px]">
               <SelectValue placeholder="연료원 선택" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white dark:bg-subColor">
               {["전체", "LNG", "유류", "무연탄", "유연탄", "원자력"].map(
                 (fuel) => (
                   <SelectItem
@@ -191,12 +193,13 @@ function SMP() {
             </SelectContent>
           </Select>
         </div>
-        <button
+        <Button
           onClick={handleDownload}
           className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
+          <Download size={16} />
           데이터 다운로드
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
@@ -215,7 +218,7 @@ function SMP() {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="flex flex-col items-center">
           <h2 className="text-lg font-semibold">연료원별 전체 비율</h2>
-          <DoughnutChart data={doughnutData} colors={colors} />
+          <PieChart data={doughnutData} colors={colors} />
         </div>
         <div className="flex flex-col items-center">
           <h2 className="text-lg font-semibold">

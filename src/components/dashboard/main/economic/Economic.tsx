@@ -10,13 +10,22 @@ import {
   Download,
 } from "lucide-react";
 
-import KPICard from "@/components/dashboard/page/KPIcard";
-import LineChart from "@/components/dashboard/page2/LineChart";
-import DoughnutChart from "@/components/dashboard/page2/DoughnutChart";
-import BarChart from "@/components/dashboard/page2/BarChart";
+import {
+  Label,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  Button,
+} from "@/components/shadcn";
 
 import Table from "./Table";
 import Container from "../Container";
+import KPICard from "./KPICard";
+import LineChart from "./LineChart";
+import PieChart from "./PieChart";
+import BarChart from "./BarChart";
 
 interface EconomicData {
   연도: number;
@@ -72,7 +81,6 @@ function Economic() {
           .map(normalizeData);
 
         setData(jsonData);
-        console.log("jsonData: ", jsonData);
         const latestYear = jsonData[0]?.연도 || null;
         setSelectedYear(latestYear);
         setCurrentYearData(
@@ -130,30 +138,42 @@ function Economic() {
 
   return (
     <Container>
-      <h1 className="mb-6 text-center text-4xl font-bold text-white">
-        경제지표 대시보드
-      </h1>
-
       {/* 연도 선택 및 다운로드 */}
-      <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:justify-end">
-        <select
-          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
-          value={selectedYear || ""}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-        >
-          {data.map((item) => (
-            <option key={item.연도} value={item.연도}>
-              {item.연도}
-            </option>
-          ))}
-        </select>
-        <button
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center justify-end gap-3">
+          <Label
+            htmlFor="year"
+            className="text-mainColor dark:text-white md:text-base"
+          >
+            연도 선택
+          </Label>
+          <Select
+            value={selectedYear ? String(selectedYear) : ""}
+            onValueChange={(value) => setSelectedYear(Number(value))}
+          >
+            <SelectTrigger id="year" className="w-[180px]">
+              <SelectValue placeholder="연도 선택" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-subColor">
+              {data.map((item) => (
+                <SelectItem
+                  className="z-10 bg-white dark:bg-subColor"
+                  key={item.연도}
+                  value={String(item.연도)}
+                >
+                  {item.연도}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Button
           onClick={handleDownload}
           className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <Download size={16} />
           데이터 다운로드
-        </button>
+        </Button>
       </div>
 
       {/* KPI Cards */}
@@ -189,26 +209,24 @@ function Economic() {
       </div>
 
       {/* 차트 섹션 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            연도별 주요 경제지표
-          </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="flex flex-col items-center">
+          <h2 className="text-lg font-semibold">연도별 주요 경제지표</h2>
           <LineChart
-            data={data.map((item) => ({
-              연도: item.연도,
-              수출액: item.수출액,
-              수입액: item.수입액,
-              환율: item.환율,
-            }))}
+            data={[...data]
+              .sort((a, b) => a.연도 - b.연도) // 연도를 기준으로 역순 정렬
+              .map((item) => ({
+                연도: item.연도,
+                수출액: item.수출액,
+                수입액: item.수입액,
+                환율: item.환율,
+              }))}
           />
         </div>
 
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            경제 구성 비율
-          </h2>
-          <DoughnutChart
+        <div className="flex flex-col items-center">
+          <h2 className="text-lg font-semibold">경제 구성 비율</h2>
+          <PieChart
             data={{
               수출액: currentYearData.수출액,
               수입액: currentYearData.수입액,
@@ -220,24 +238,23 @@ function Economic() {
 
       {/* Bar Chart */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">
+        <h2 className="text-center text-lg font-semibold">
           연도별 데이터 비교
         </h2>
         <BarChart
-          data={data.map((item) => ({
-            category: `${item.연도}년`,
-            value: item.수출액,
-          }))}
-          title="연도별 수출액"
-          xAxisLabel="연도"
-          yAxisLabel="수출액 (백만 US$)"
+          data={[...data]
+            .sort((a, b) => a.연도 - b.연도)
+            .map((item) => ({
+              category: `${item.연도}년`,
+              value: item.수출액,
+            }))}
         />
       </div>
 
       {/* Table */}
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
-        <Table />
+        <Table currentYearData={currentYearData} data={data} />
       </div>
     </Container>
   );

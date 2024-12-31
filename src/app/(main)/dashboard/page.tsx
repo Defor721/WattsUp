@@ -174,7 +174,7 @@ function DashboardPage() {
 
   return (
     <div className="p-5 dark:bg-subColor">
-      <Title title={"대시보드"} />
+      <Title title={`${selectedDashboard} 대시보드`} />
       {/* 대시보드 선택 */}
       <div className="flex items-center justify-end gap-3">
         <div className="text-mainColor dark:text-white">대시보드 선택</div>

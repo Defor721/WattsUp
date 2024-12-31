@@ -32,7 +32,7 @@ function RegionButtons({
         <SelectTrigger id="region" className="w-[180px]">
           <SelectValue placeholder="지역 선택 " />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white dark:bg-subColor">
           {regions.map((region) => (
             <SelectItem
               className="z-10 bg-white dark:bg-subColor"

@@ -154,7 +154,7 @@ function PowerGenerationByPowerSource() {
     fetchData();
   }, []);
 
-  if (!chartData || chartData.length === 0) return <Loading />;
+  if (!chartData || chartData.length === 0) return <div>로딩중...</div>;
 
   return (
     <Container>
