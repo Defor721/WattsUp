@@ -113,18 +113,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
-    async nativeSignup({
-      password,
-      businessType,
-      corporateNumber,
-      personalId,
-    }) {
+    async nativeSignup(password) {
       try {
         const { message } = await nativeSignup({
           password,
-          businessType,
-          corporateNumber,
-          personalId,
         });
         set({
           redirectTo: "/login",
@@ -132,7 +124,6 @@ export const useAuthStore = create<AuthState>((set) => ({
           message,
         });
       } catch (error: any) {
-        console.log(`auth error: `, error);
         set({
           redirectTo: "/signup",
           error: true,
@@ -140,6 +131,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             error.response.data.message ||
             "회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
         });
+        throw error;
       }
     },
 

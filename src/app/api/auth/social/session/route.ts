@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
       startDate,
       name,
       companyName,
+      corporateNumber,
     );
 
     const existingBusiness = await collection.findOne({ businessNumber });

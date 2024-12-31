@@ -4,7 +4,6 @@ export async function sendVerificationEmail({ email }: { email: string }) {
   try {
     await apiClient.post("/api/auth/email-code", { email });
   } catch (error) {
-    console.log("이메일 인증 코드 전송중 오류 발생", error);
     throw error;
   }
 }
@@ -17,9 +16,13 @@ export async function verifyEmailCode({
   emailCode: string;
 }) {
   try {
-    await apiClient.post("/api/auth/email-code/verify", { email, emailCode });
+    const { data } = await apiClient.post("/api/auth/email-code/verify", {
+      email,
+      emailCode,
+    });
+
+    return data;
   } catch (error) {
-    console.log("이메일 인증 코드 전송중 오류 발생", error);
     throw error;
   }
 }
