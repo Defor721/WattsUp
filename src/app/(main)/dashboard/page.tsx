@@ -44,7 +44,7 @@ function DashboardPage() {
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("경제 지표");
+    useState<string>("에너지 지표");
 
   const dashboards = [
     {
