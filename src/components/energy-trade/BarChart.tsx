@@ -1,3 +1,7 @@
+"use client";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -17,46 +21,85 @@ import {
 } from "@/components/shadcn/card";
 import { PowerSupplyData } from "@/components/energy-trade/mock/types";
 
-// Props 타입 정의 (PowerSupplyData 배열을 받음)
-interface BarChartProps {
-  data: PowerSupplyData[]; // 전력 수급 데이터를 나타냄
-}
+export function BarChartComponent() {
+  const [data, setData] = useState<PowerSupplyData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-// BarChartComponent: 바 차트를 렌더링하는 컴포넌트
-export function BarChartComponent({ data }: BarChartProps) {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/trade/tradedata");
+      setData(response.data);
+    } catch (err: any) {
+      setError(err.message || "데이터를 가져오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="mb-8">
+        <CardContent className="flex h-[400px] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="mb-8">
+        <CardContent className="flex h-[400px] items-center justify-center">
+          <div className="text-center text-red-500">
+            <p className="mb-2 text-lg font-semibold">오류 발생</p>
+            <p>{error}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    // 전체 컴포넌트를 감싸는 카드
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle>시간대별 전력수급 현황</CardTitle> {/* 카드 제목 */}
+        <CardTitle>시간대별 전력수급 현황</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[400px]">
-          {/* 반응형 컨테이너 */}
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data} // 차트에 전달할 데이터
-              margin={{
-                top: 15, // 상단 여백
-                right: 30, // 오른쪽 여백
-                left: 20, // 왼쪽 여백
-                bottom: 5, // 하단 여백
-              }}
+              data={data}
+              margin={{ top: 15, right: 30, left: 20, bottom: 5 }}
             >
-              {/* 차트 배경 그리드 */}
               <CartesianGrid strokeDasharray="3 3" />
-              {/* X축 (시간 데이터) */}
               <XAxis dataKey="time" />
-              {/* Y축 */}
               <YAxis />
-              {/* 마우스 오버 시 데이터 툴팁 */}
               <Tooltip />
-              {/* 데이터 키 설명 */}
               <Legend />
-              {/* 데이터 바: 공급 */}
-              <Bar dataKey="supply" fill="#FF85A1" name="공급" barSize={15} />
-              {/* 데이터 바: 수요 */}
-              <Bar dataKey="demand" fill="#42C9FF" name="수요" barSize={15} />
+              <Bar
+                dataKey="supply"
+                fill="#FF85A1"
+                name="공급"
+                barSize={15}
+                isAnimationActive={true}
+                animationBegin={0}
+                animationDuration={1500}
+              />
+              <Bar
+                dataKey="demand"
+                fill="#42C9FF"
+                name="수요"
+                barSize={15}
+                isAnimationActive={true}
+                animationBegin={0}
+                animationDuration={1500}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
