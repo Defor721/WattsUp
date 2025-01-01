@@ -236,7 +236,11 @@ function SMP() {
       {/* Table */}
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
-        <Table data={filteredData} />
+        <Table
+          data={[...filteredData].sort(
+            (a, b) => Number(b.기간) - Number(a.기간), // '기간'을 숫자로 변환하여 정렬
+          )}
+        />
       </div>
     </Container>
   );

@@ -49,7 +49,7 @@ const PowerGenerationTable = ({ data }: TableProps) => {
           {data.map((row) => (
             <TableRow
               key={row.연도}
-              className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] [&>*]:text-center"
+              className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)] [&>*]:text-center"
             >
               <TableCell className="border border-gray-700 px-3 py-2">
                 {row.연도}

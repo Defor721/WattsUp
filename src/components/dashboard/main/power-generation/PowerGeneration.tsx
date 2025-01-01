@@ -244,7 +244,9 @@ function PowerGeneration() {
 
       {/* 최근 데이터 테이블 */}
       <div>
-        <h2 className="mb-4 text-center text-xl font-bold">최근 발전 데이터</h2>
+        <h2 className="mb-4 text-center text-xl font-bold">
+          최근 발전량 데이터
+        </h2>
         <Table data={tableData.slice(0, 5)} />
       </div>
     </Container>
