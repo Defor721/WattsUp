@@ -9,6 +9,15 @@ import BarChart from "@/components/dashboard/page11/BarChart";
 import KPICard from "@/components/dashboard/page11/KPICard";
 import RecentOrders from "@/components/dashboard/page11/RecentOrders";
 import UsersByCountry from "@/components/dashboard/page11/UsersByCountry";
+import {
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/shadcn";
 
 import Container from "../Container";
 
@@ -106,29 +115,42 @@ function Cost() {
 
   return (
     <Container>
-      <h1 className="mb-6 text-center text-4xl font-bold">
-        연료 단가 대시보드
-      </h1>
-
       {/* 기간 선택 및 다운로드 */}
-      <div className="mb-6 flex items-center justify-between">
-        <select
-          value={selectedPeriod}
-          onChange={(e) => setSelectedPeriod(e.target.value)}
-          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
-        >
-          {data.map((row) => (
-            <option key={row.기간} value={row.기간}>
-              {row.기간}
-            </option>
-          ))}
-        </select>
-        <button
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center justify-end gap-3">
+          <Label
+            htmlFor="year"
+            className="text-mainColor dark:text-white md:text-base"
+          >
+            연도 선택
+          </Label>
+          <Select
+            value={selectedPeriod}
+            onValueChange={(value) => setSelectedPeriod(value)}
+          >
+            <SelectTrigger
+              id="year"
+              className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
+            >
+              <SelectValue placeholder="기간 선택" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 text-white">
+              {data.map((row) => (
+                <SelectItem key={row.기간} value={row.기간}>
+                  {row.기간}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* 다운로드 버튼 */}
+        <Button
           onClick={handleDownload}
-          className="rounded-md bg-blue-600 px-4 py-2 hover:bg-blue-700"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           데이터 다운로드
-        </button>
+        </Button>
       </div>
 
       {/* KPI 카드 */}

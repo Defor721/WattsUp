@@ -14,6 +14,7 @@ import {
   Button,
   Card,
 } from "@/components/shadcn";
+import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 
 import KPICard from "./KPICard";
 import BarChart from "./BarChart";
@@ -160,7 +161,7 @@ function PowerPrice() {
         {/* 데이터 다운로드 버튼 */}
         <Button
           onClick={handleDownload}
-          className="flex items-center gap-2 rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -192,7 +193,37 @@ function PowerPrice() {
         </Card>
         <Card className="flex-1 p-6 shadow-lg">
           <h2 className="mb-4 text-center text-xl font-bold">비중 차트</h2>
-          <PieChart data={generatePieChartData()} colors={pieChartColors} />
+          <div className="flex items-center justify-center">
+            {/* 파이차트 */}
+            <div className="w-[450px]">
+              <PieChart data={generatePieChartData()} colors={pieChartColors} />
+            </div>
+
+            {/* 데이터 항목 표시 */}
+            <div className="flex flex-col gap-2">
+              {generatePieChartData()
+                .sort((a, b) => b.value - a.value) // 값을 기준으로 내림차순 정렬
+                .map((item, index) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                  >
+                    {/* 색상 점 */}
+                    <div
+                      className="h-4 w-4 rounded-full"
+                      style={{
+                        backgroundColor:
+                          pieChartColors[index % pieChartColors.length],
+                      }}
+                    ></div>
+                    {/* 데이터 이름과 값 */}
+                    <span>
+                      {item.name}: {formatNumberWithDecimal(item.value)} 원
+                    </span>
+                  </div>
+                ))}
+            </div>
+          </div>
         </Card>
       </div>
 

@@ -106,7 +106,7 @@ function Failures() {
         </div>
         <Button
           onClick={handleDownload}
-          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드

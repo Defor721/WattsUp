@@ -18,7 +18,9 @@ import {
   SelectContent,
   SelectItem,
   Button,
+  Card,
 } from "@/components/shadcn";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import Table from "./Table";
 import Container from "../Container";
@@ -157,7 +159,7 @@ function Economic() {
         </div>
         <Button
           onClick={handleDownload}
-          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -197,8 +199,8 @@ function Economic() {
       </div>
 
       {/* 차트 섹션 */}
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="flex flex-col items-center">
+      <div className="flex gap-6">
+        <Card className="flex flex-1 flex-col items-center p-6 shadow-lg">
           <h2 className="text-lg font-semibold">연도별 주요 경제지표</h2>
           <LineChart
             data={[...data]
@@ -210,18 +212,60 @@ function Economic() {
                 환율: item.환율,
               }))}
           />
-        </div>
+        </Card>
+        <Card className="flex flex-col items-center p-6 shadow-lg">
+          <h2 className="text-center text-lg font-semibold">경제 구성 비율</h2>
+          <div className="flex items-center justify-center">
+            {/* 파이차트 */}
+            <div className="w-[450px]">
+              <PieChart
+                data={{
+                  수출액: currentYearData.수출액,
+                  수입액: currentYearData.수입액,
+                  경상수지: currentYearData.경상수지,
+                }}
+              />
+            </div>
 
-        <div className="flex flex-col items-center">
-          <h2 className="text-lg font-semibold">경제 구성 비율</h2>
-          <PieChart
-            data={{
-              수출액: currentYearData.수출액,
-              수입액: currentYearData.수입액,
-              경상수지: currentYearData.경상수지,
-            }}
-          />
-        </div>
+            {/* 데이터 항목 표시 */}
+            <div className="flex flex-col gap-2">
+              {[
+                {
+                  name: "수출액",
+                  value: currentYearData.수출액,
+                  color: "#4A90E2",
+                },
+                {
+                  name: "수입액",
+                  value: currentYearData.수입액,
+                  color: "#F5A623",
+                },
+                {
+                  name: "경상수지",
+                  value: currentYearData.경상수지,
+                  color: "#D0021B",
+                },
+              ]
+                .sort((a, b) => b.value - a.value)
+                .map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                  >
+                    {/* 색상 점 표시 */}
+                    <div
+                      className="h-4 w-4 rounded-full"
+                      style={{ backgroundColor: item.color }}
+                    ></div>
+                    {/* 데이터 이름과 값 표시 */}
+                    <span>
+                      {item.name}: {formatNumberWithoutDecimal(item.value)}
+                    </span>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Bar Chart */}

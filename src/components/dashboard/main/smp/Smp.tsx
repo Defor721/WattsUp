@@ -12,7 +12,9 @@ import {
   SelectItem,
   Label,
   Button,
+  Card,
 } from "@/components/shadcn";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import Container from "../Container";
 import PieChart from "./PieChart";
@@ -195,43 +197,53 @@ function SMP() {
         </div>
         <Button
           onClick={handleDownload}
-          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
-        {Object.keys(kpi).map((key) => (
-          <KPICard
-            key={key}
-            title={key}
-            value={kpi[key as keyof typeof kpi].toLocaleString()}
-            unit="MWh"
-            backgroundColor="#3B82F6"
-            iconColor="#1D4ED8"
-          />
-        ))}
-      </div>
+      <Card className="flex flex-col items-center p-6 shadow-lg">
+        <h2 className="text-lg font-semibold">
+          {selectedFuel} 기간별 SMP 추이
+        </h2>
+        <LineChart
+          data={lineChartData}
+          xKey="name"
+          yKey="value"
+          lineColor="#34D399"
+        />
+      </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="flex flex-col items-center">
-          <h2 className="text-lg font-semibold">연료원별 전체 비율</h2>
-          <PieChart data={doughnutData} colors={colors} />
+      <Card className="mt-6 flex flex-col p-6 shadow-lg">
+        <h2 className="text-center text-lg font-semibold">
+          연료원별 전체 비율
+        </h2>
+        <div className="flex items-center justify-center">
+          <div className="w-[450px]">
+            <PieChart data={doughnutData} colors={colors} />
+          </div>
+          <div className="flex flex-col gap-2">
+            {doughnutData
+              .sort((a, b) => b.value - a.value)
+              .map((item, index) => (
+                <div
+                  key={item.name}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                >
+                  <div
+                    className="h-4 w-4 rounded-full"
+                    style={{ backgroundColor: colors[index % colors.length] }}
+                  ></div>
+                  <span>
+                    {item.name}: {formatNumberWithoutDecimal(item.value)} MWh
+                  </span>
+                </div>
+              ))}
+          </div>
         </div>
-        <div className="flex flex-col items-center">
-          <h2 className="text-lg font-semibold">
-            {selectedFuel} 기간별 SMP 추이
-          </h2>
-          <LineChart
-            data={lineChartData}
-            xKey="name"
-            yKey="value"
-            lineColor="#34D399"
-          />
-        </div>
-      </div>
+      </Card>
 
       {/* Table */}
       <div className="mt-8">

@@ -43,8 +43,7 @@ function DashboardPage() {
   const [author, setAuthor] = useState("");
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
-  const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("판매 금액");
+  const [selectedDashboard, setSelectedDashboard] = useState<string>("SMP");
 
   const dashboards = [
     {

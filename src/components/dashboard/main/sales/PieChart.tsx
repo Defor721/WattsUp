@@ -1,31 +1,29 @@
-// DoughnutChart.tsx
 import React from "react";
 import {
   PieChart as RechartsPieChart,
   Pie,
   Cell,
-  Legend,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
-import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 
 interface PieChartProps {
   data: {
     labels: string[];
-    datasets: {
-      data: number[];
-      backgroundColor: string[];
-    }[];
+    datasets: { data: number[]; backgroundColor: string[] }[];
   } | null;
+  colors?: string[];
 }
 
-const PieChart: React.FC<PieChartProps> = ({ data }) => {
-  if (!data) {
-    return <p>데이터가 없습니다.</p>;
+const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
+  // 데이터가 null일 경우 처리
+  if (!data || !data.datasets || !data.labels) {
+    return <div>데이터가 없습니다.</div>;
   }
 
+  // 차트 데이터 변환
   const chartData = data.labels.map((label, index) => ({
     name: label,
     value: data.datasets[0].data[index],
@@ -41,9 +39,8 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
           nameKey="name"
           cx="50%"
           cy="50%"
-          innerRadius={70}
-          outerRadius={100}
-          fill="#8884d8"
+          innerRadius={80}
+          outerRadius={120}
           label={({ name }) => `${name}`}
         >
           {chartData.map((entry, index) => (
@@ -51,11 +48,8 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) =>
-            `${formatNumberWithoutDecimal(value)} 원`
-          }
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} 원`}
         />
-        <Legend />
       </RechartsPieChart>
     </ResponsiveContainer>
   );

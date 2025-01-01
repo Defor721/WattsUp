@@ -14,6 +14,7 @@ import {
   Button,
   Card,
 } from "@/components/shadcn";
+import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 
 import KPICard from "./KPICard";
 import PieChart from "./PieChart";
@@ -202,7 +203,7 @@ function Sales() {
         </div>
         <Button
           onClick={handleDownload}
-          className="flex items-center gap-2 rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -225,10 +226,58 @@ function Sales() {
 
       {/* Charts */}
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="p-6 shadow-lg">
+        <Card className="mt-6 flex flex-col p-6 shadow-lg">
           <h2 className="text-center text-lg font-semibold">항목별 비율</h2>
-          <PieChart data={pieChartData} />
+          <div className="flex items-center justify-center">
+            {/* 파이 차트 */}
+            <div className="w-[450px]">
+              <PieChart
+                data={pieChartData}
+                colors={[
+                  "#34D399",
+                  "#60A5FA",
+                  "#F87171",
+                  "#93C5FD",
+                  "#FBBF24",
+                  "#A78BFA",
+                  "#FCA5A5",
+                ]}
+              />
+            </div>
+
+            {/* 데이터 항목 표시 */}
+            <div className="flex flex-col gap-2">
+              {pieChartData &&
+                // 데이터를 정렬
+                pieChartData.labels
+                  .map((label, index) => ({
+                    label,
+                    value: pieChartData.datasets[0].data[index],
+                    color: pieChartData.datasets[0].backgroundColor[index],
+                  }))
+                  .sort((a, b) => b.value - a.value) // 높은 값부터 낮은 값으로 정렬
+                  .map((item, index) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      {/* 색상 점 */}
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{
+                          backgroundColor: item.color || "#000",
+                        }}
+                      ></div>
+                      {/* 항목 이름과 값 */}
+                      <span>
+                        {item.label}: {formatNumberWithDecimal(item.value)} 원
+                      </span>
+                    </div>
+                  ))}
+            </div>
+          </div>
         </Card>
+
         <Card className="p-6 shadow-lg">
           <h2 className="text-center text-lg font-semibold">
             연도별 합계 변화

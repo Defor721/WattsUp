@@ -46,7 +46,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
         <Tooltip
           formatter={(value: number) => formatNumberWithDecimal(value)}
         />
-        <Legend />
+        {/* <Legend /> */}
       </RechartsPieChart>
     </ResponsiveContainer>
   );

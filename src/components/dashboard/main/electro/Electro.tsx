@@ -20,6 +20,7 @@ import {
   Button,
   Card,
 } from "@/components/shadcn";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import Container from "../Container";
 import KPICard from "./KPICard";
@@ -184,7 +185,7 @@ function Electro() {
         </div>
         <Button
           onClick={handleDownload}
-          className="flex items-center gap-2 rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -255,18 +256,66 @@ function Electro() {
                 }))}
             />
           </Card>
-          <Card className="flex-1 p-6 shadow-lg">
-            <h2 className="mb-4 text-center text-lg font-semibold">
-              총발전량 비율
-            </h2>
-            <PieChart
-              data={{
-                수력: currentYearData["수력(GWh)"],
-                화력: currentYearData["화력(GWh)"],
-                원자력: currentYearData["원자력(GWh)"],
-                자가용: currentYearData["자가용(GWh)"],
-              }}
-            />
+          <Card className="mt-6 flex flex-col p-6 shadow-lg">
+            <h2 className="text-center text-lg font-semibold">총발전량 비율</h2>
+            <div className="flex items-center justify-center">
+              {/* 파이차트 */}
+              <div className="w-[450px]">
+                <PieChart
+                  data={{
+                    수력: currentYearData["수력(GWh)"],
+                    화력: currentYearData["화력(GWh)"],
+                    원자력: currentYearData["원자력(GWh)"],
+                    자가용: currentYearData["자가용(GWh)"],
+                  }}
+                  colors={["#3B82F6", "#F59E0B", "#EF4444", "#22C55E"]}
+                />
+              </div>
+
+              {/* 데이터 항목 표시 */}
+              <div className="flex flex-col gap-2">
+                {[
+                  {
+                    name: "수력",
+                    value: currentYearData["수력(GWh)"],
+                    color: "#3B82F6",
+                  },
+                  {
+                    name: "화력",
+                    value: currentYearData["화력(GWh)"],
+                    color: "#F59E0B",
+                  },
+                  {
+                    name: "원자력",
+                    value: currentYearData["원자력(GWh)"],
+                    color: "#EF4444",
+                  },
+                  {
+                    name: "자가용",
+                    value: currentYearData["자가용(GWh)"],
+                    color: "#22C55E",
+                  },
+                ]
+                  .sort((a, b) => b.value - a.value)
+                  .map((item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      {/* 색상 점 */}
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      {/* 데이터 값 */}
+                      <span>
+                        {item.name}: {formatNumberWithoutDecimal(item.value)}
+                        GWh
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </Card>
         </div>
         <Card className="mt-8 w-full p-6 shadow-lg">
