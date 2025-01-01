@@ -22,7 +22,7 @@ const PowerList: React.FC<PowerListProps> = ({ data }) => {
   const total = powerDataArray.reduce((acc, curr) => acc + curr.value, 0);
 
   return (
-    <Card className="flex-1 p-6 shadow-lg">
+    <div className="flex flex-col">
       <h2 className="mb-4 text-lg font-semibold">
         가장 많이 생산하는 전력 종류
       </h2>
@@ -48,7 +48,7 @@ const PowerList: React.FC<PowerListProps> = ({ data }) => {
             );
           })}
       </div>
-    </Card>
+    </div>
   );
 };
 

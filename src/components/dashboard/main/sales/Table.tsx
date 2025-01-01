@@ -49,7 +49,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
                     key === "연도"
                       ? value // 연도는 그대로 표시
                       : typeof value === "number"
-                        ? formatNumberWithoutDecimal(value) + "원" // 숫자는 포맷팅
+                        ? formatNumberWithoutDecimal(value) // 숫자는 포맷팅
                         : value // 나머지 값은 그대로 표시
                   }
                 </TableCell>

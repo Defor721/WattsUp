@@ -32,7 +32,9 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         <XAxis dataKey="year" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} 명`
+          }
         />
         <Legend />
         <Line type="monotone" dataKey="total" stroke="#34D399" name="총합" />

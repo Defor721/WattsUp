@@ -21,7 +21,7 @@ const AverageCost: React.FC<AverageCostProps> = ({ value, maxValue = 200 }) => {
   const COLORS = ["#2DD4BF", "#1E293B"]; // 민트와 어두운 배경
 
   return (
-    <Card className="flex flex-col items-center justify-center rounded-lg p-6 shadow-lg">
+    <div className="flex flex-col items-center justify-center">
       <h2 className="mb-2 text-lg font-semibold">평균 판매단가</h2>
       <p className="mb-4 text-4xl font-bold text-teal-300">
         {value.toLocaleString()} 원/kWh
@@ -55,7 +55,7 @@ const AverageCost: React.FC<AverageCostProps> = ({ value, maxValue = 200 }) => {
           <span className="text-2xl font-semibold">{percentage}%</span>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

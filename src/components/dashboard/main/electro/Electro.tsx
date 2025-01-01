@@ -225,17 +225,21 @@ function Electro() {
 
       {/* Average Cost and PowerList */}
       <div className="flex gap-6">
-        <AverageCost
-          value={currentYearData["평균판매단가(원/kWh)"]}
-          maxValue={200}
-        />
-        <PowerList data={currentYearData} />
+        <Card className="flex-1 rounded-lg p-6 shadow-lg">
+          <AverageCost
+            value={currentYearData["평균판매단가(원/kWh)"]}
+            maxValue={200}
+          />
+        </Card>
+        <Card className="flex-1 rounded-lg p-6 shadow-lg">
+          <PowerList data={currentYearData} />
+        </Card>
       </div>
 
       {/* 차트 섹션 */}
       <div className="mt-8">
         <div className="flex gap-6">
-          <Card className="p-6 shadow-lg">
+          <Card className="flex-1 p-6 shadow-lg">
             <h2 className="mb-4 text-center text-lg font-semibold">
               연도별 발전량 추이
             </h2>
@@ -251,7 +255,7 @@ function Electro() {
                 }))}
             />
           </Card>
-          <Card className="p-6 shadow-lg">
+          <Card className="flex-1 p-6 shadow-lg">
             <h2 className="mb-4 text-center text-lg font-semibold">
               총발전량 비율
             </h2>

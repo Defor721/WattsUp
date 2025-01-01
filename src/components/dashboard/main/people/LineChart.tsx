@@ -10,10 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import {
-  formatNumberWithDecimal,
-  formatNumberWithoutDecimal,
-} from "@/hooks/useNumberFormatter";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 interface LineChartProps {
   data: { 연도: number; 값: number }[]; // Recharts에서 사용할 데이터 형식
@@ -32,7 +29,9 @@ const LineChart: React.FC<LineChartProps> = ({ data, xKey, yKey }) => {
         <XAxis dataKey={xKey} />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} 억원`
+          }
         />
         <Legend />
         <Line

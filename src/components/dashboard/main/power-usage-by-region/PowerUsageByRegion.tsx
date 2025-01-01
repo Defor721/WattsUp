@@ -321,7 +321,7 @@ function PowerUsageByRegion() {
 
       {/* Table */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
+        <h2 className="mb-4 text-lg font-semibold">세부 데이터(단위: 명)</h2>
         <Table data={data.map((item) => ({ ...item }))} />
       </div>
     </Container>

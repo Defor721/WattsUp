@@ -33,7 +33,9 @@ function LineChart({ data }: LineChartProps) {
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} MWh`
+          }
         />
         <Legend />
         <Line

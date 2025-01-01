@@ -48,11 +48,11 @@ const Table = ({ data }: { data: DataRow[] }) => {
               </TableCell>
               <TableCell className="border border-gray-700 px-3 py-2">
                 {row.국민총소득
-                  ? `${row.국민총소득.toLocaleString()}억원`
+                  ? `${row.국민총소득.toLocaleString()} 억원`
                   : "데이터 없음"}
               </TableCell>
               <TableCell className="border border-gray-700 px-3 py-2">
-                {`${row.경제성장률.toFixed(2)}%`}
+                {`${row.경제성장률.toFixed(2)} %`}
               </TableCell>
               <TableCell
                 className={`border border-gray-700 px-3 py-2 ${

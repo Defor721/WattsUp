@@ -29,7 +29,9 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         />
         <XAxis dataKey="year" />
         <YAxis className="text-sm" tickFormatter={formatNumberWithoutDecimal} />
-        <Tooltip formatter={(value: number) => `${value.toLocaleString()}원`} />
+        <Tooltip
+          formatter={(value: number) => `${value.toLocaleString()} 원`}
+        />
         <Legend wrapperStyle={{ color: "#fff" }} />
         <Line
           type="monotone"

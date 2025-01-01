@@ -52,7 +52,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
         </Pie>
         <Tooltip
           formatter={(value: number) =>
-            `${formatNumberWithoutDecimal(value)}원`
+            `${formatNumberWithoutDecimal(value)} 원`
           }
         />
         <Legend />

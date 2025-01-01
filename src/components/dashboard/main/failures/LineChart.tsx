@@ -28,7 +28,9 @@ const LineChart: React.FC<LineChartProps> = ({ data, dataKey }) => {
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} 건`
+          }
         />
         <Legend />
         <Line

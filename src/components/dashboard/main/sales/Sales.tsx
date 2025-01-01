@@ -239,7 +239,9 @@ function Sales() {
 
       {/* Table */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">최근 10년 데이터</h2>
+        <h2 className="mb-4 text-lg font-semibold">
+          최근 10년 데이터(단위: 원)
+        </h2>
         <Table data={data.slice(0, 10).map((row) => ({ ...row }))} />
       </div>
     </Container>

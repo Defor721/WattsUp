@@ -20,7 +20,7 @@ import {
 
 import Container from "../Container";
 import KPICard from "./KPICard";
-import BarChart from "./BarChart";
+import AreaChart from "./AreaChart";
 import LineChart from "./LineChart";
 import Table from "./Table";
 
@@ -183,7 +183,7 @@ function People() {
           <h2 className="mb-3 text-center text-lg font-semibold">
             경제 성장률 데이터
           </h2>
-          <BarChart
+          <AreaChart
             data={[...data]
               .sort((a, b) => a.연도 - b.연도)
               .map((row) => ({ 연도: row.연도, 값: row.경제성장률 }))}
