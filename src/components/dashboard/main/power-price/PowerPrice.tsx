@@ -197,7 +197,7 @@ function PowerPrice() {
       </div>
 
       <div className="mt-6">
-        <h2 className="mb-4 text-center text-xl font-bold">최근 10년 데이터</h2>
+        <h2 className="mb-4 text-xl font-bold">최근 10년 데이터</h2>
         <Table data={[...data].sort((a, b) => b.연도 - a.연도).slice(0, 10)} />
       </div>
     </Container>

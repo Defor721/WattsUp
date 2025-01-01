@@ -27,7 +27,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) => `${formatNumberWithDecimal(value)}원`}
         />
         <Legend />
         <Bar dataKey="value" fill="#8884d8" name={"판매 단가 총합"} />

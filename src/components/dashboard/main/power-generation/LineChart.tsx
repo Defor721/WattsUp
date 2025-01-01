@@ -10,6 +10,11 @@ import {
   Legend,
 } from "recharts";
 
+import {
+  formatNumberWithDecimal,
+  formatNumberWithoutDecimal,
+} from "@/hooks/useNumberFormatter";
+
 interface LineChartProps {
   data: {
     연도: number;
@@ -22,12 +27,14 @@ function LineChart({ data }: LineChartProps) {
     <ResponsiveContainer width="100%" height={400}>
       <RechartsLineChart
         data={data}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 20, left: 45, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="연도" />
-        <YAxis />
-        <Tooltip />
+        <YAxis tickFormatter={formatNumberWithoutDecimal} />
+        <Tooltip
+          formatter={(value: number) => formatNumberWithDecimal(value)}
+        />
         <Legend />
         <Line
           type="monotone"
