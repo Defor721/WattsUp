@@ -119,7 +119,6 @@ function People() {
     <Container>
       {/* 연도 선택 및 다운로드 */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        {/* 연료원 선택 */}
         <div className="flex items-center justify-end gap-3">
           <Label
             htmlFor="year"

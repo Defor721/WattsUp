@@ -103,14 +103,14 @@ function PowerUsageByRegion() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log("Response received:", response);
+      // console.log("Response received:", response);
       const arrayBuffer = await response.arrayBuffer();
-      console.log("Array buffer received");
+      // console.log("Array buffer received");
 
       const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
         type: "array",
       });
-      console.log("Workbook loaded:", workbook.SheetNames);
+      // console.log("Workbook loaded:", workbook.SheetNames);
 
       if (workbook.SheetNames.length === 0) {
         throw new Error("Excel file contains no sheets");
@@ -120,7 +120,7 @@ function PowerUsageByRegion() {
       const jsonData: CustomerData[] = XLSX.utils
         .sheet_to_json(worksheet)
         .map((row: any) => {
-          console.log("Processing row:", row);
+          // console.log("Processing row:", row);
           const processedRow = {
             연도: Number(row["연도"]),
             서울: Number(row["서울"] || 0),
@@ -152,7 +152,7 @@ function PowerUsageByRegion() {
         })
         .filter((row): row is CustomerData => row !== null); // Filter out invalid rows
 
-      console.log("Processed data:", jsonData);
+      // console.log("Processed data:", jsonData);
 
       if (jsonData.length === 0) {
         throw new Error("No valid data found in Excel file");
