@@ -93,12 +93,12 @@ export default function Dashboard() {
       </header>
 
       {/* 현재 전력 상태 카드 섹션 */}
-      <section className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatusCards currentSupply={currentSupply} />
-      </section>
+      </div>
 
       {/* 그래프 및 거래 버튼 섹션 */}
-      <section className="mb-6">
+      <div className="mb-6">
         <div className="flex items-center">
           <span className="text-lg font-bold">시간대별 전력수급 현황</span>{" "}
           {/* 섹션 제목 */}
@@ -129,10 +129,10 @@ export default function Dashboard() {
             </Button>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* 선택된 그래프 렌더링 */}
-      <section className="bg-card rounded-lg p-4">{renderGraph()}</section>
+      <div className="bg-card rounded-lg p-4">{renderGraph()}</div>
 
       {/* 거래 모달 */}
       <TradingModal
