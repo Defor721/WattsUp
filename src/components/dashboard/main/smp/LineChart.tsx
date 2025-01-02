@@ -35,7 +35,9 @@ const LineChart: React.FC<LineChartProps> = ({
         <XAxis dataKey={xKey} />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} 회`
+          }
         />
         <Legend />
         <Line type="monotone" dataKey={yKey} stroke={lineColor} />
