@@ -12,9 +12,14 @@ import {
 
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
-import { DataRow } from "./PowerGeneration";
+interface TotalProps {
+  data: {
+    연도: number;
+    총발전량: number;
+  }[];
+}
 
-function BarChart({ data }: { data: DataRow[] }) {
+function Total({ data }: TotalProps) {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <RechartsBarChart
@@ -25,15 +30,15 @@ function BarChart({ data }: { data: DataRow[] }) {
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} MWh`
+          }
         />
         <Legend />
-        <Bar dataKey="수력소계" fill="#4ADE80" />
-        <Bar dataKey="원자력" fill="#60A5FA" />
-        <Bar dataKey="신재생" fill="#FBBF24" />
+        <Bar dataKey="총발전량" fill="#4ADE80" />
       </RechartsBarChart>
     </ResponsiveContainer>
   );
 }
 
-export default BarChart;
+export default Total;

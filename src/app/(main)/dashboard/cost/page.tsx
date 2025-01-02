@@ -181,6 +181,19 @@ const FuelCostDashboard = () => {
           }}
           title="LNG 연료 단가 추이"
         />
+        <BarChart
+          data={{
+            labels: data.map((row) => row.기간),
+            datasets: [
+              {
+                label: "연료단가_유연탄",
+                data: data.map((row) => row.연료단가_유연탄),
+                backgroundColor: "#F59E0B",
+              },
+            ],
+          }}
+          title="유연탄 연료 단가 추이"
+        />
       </div>
 
       {/* 최근 데이터 및 국가별 사용자 */}
