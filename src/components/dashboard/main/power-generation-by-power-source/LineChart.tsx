@@ -36,7 +36,10 @@ function LineChart({ chartData }: { chartData: any }) {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="hour" />
-        <YAxis tickFormatter={formatNumberWithoutDecimal} />
+        <YAxis
+          tickFormatter={formatNumberWithoutDecimal}
+          domain={[0, "auto"]}
+        />
         <Tooltip
           formatter={(value: number) => `${formatNumberWithDecimal(value)} MWh`}
         />
