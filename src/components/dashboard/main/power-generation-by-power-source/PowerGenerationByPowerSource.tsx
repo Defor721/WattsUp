@@ -67,85 +67,109 @@ function PowerGenerationByPowerSource() {
         const yesterdayItems = yesterdayData.response.body.items.item;
         const todayItems = todayData.response.body.items.item;
 
-        const combinedData = [...yesterdayItems, ...todayItems];
+        const todayItemsLength = todayItems.length;
+        const yesterdayItemsLength = 287 - todayItemsLength;
+        const formatYesterdayItems =
+          yesterdayItems.slice(-yesterdayItemsLength);
 
-        const hourlyData: HourlyData[] = [];
-        combinedData.forEach((item: any) => {
-          const itemDate = new Date(
-            `${item.baseDatetime.slice(0, 4)}-${item.baseDatetime.slice(
-              4,
-              6,
-            )}-${item.baseDatetime.slice(6, 8)}T${item.baseDatetime.slice(
-              8,
-              10,
-            )}:${item.baseDatetime.slice(10, 12)}:00`,
-          );
+        const processHourlyData = (items: any[]) => {
+          const hourlyData: HourlyData[] = [];
 
-          const hour = `${itemDate.getHours()}:00`;
+          items.forEach((item: any) => {
+            // 시간 추출 (HH:00 형식으로 변환)
+            const itemDate = new Date(
+              `${item.baseDatetime.slice(0, 4)}-${item.baseDatetime.slice(
+                4,
+                6,
+              )}-${item.baseDatetime.slice(6, 8)}T${item.baseDatetime.slice(
+                8,
+                10,
+              )}:${item.baseDatetime.slice(10, 12)}:00`,
+            );
+            const hour = `${itemDate.getHours()}:00`;
 
-          const existingHourData = hourlyData.find(
-            (data) => data.hour === hour,
-          );
+            // 해당 시간 데이터 찾기
+            const existingHourData = hourlyData.find(
+              (data) => data.hour === hour,
+            );
 
-          if (existingHourData) {
-            existingHourData.수력 += item.fuelPwr1 || 0;
-            existingHourData.유류 += item.fuelPwr2 || 0;
-            existingHourData.유연탄 += item.fuelPwr3 || 0;
-            existingHourData.원자력 += item.fuelPwr4 || 0;
-            existingHourData.가스 += item.fuelPwr6 || 0;
-            existingHourData.국내탄 += item.fuelPwr7 || 0;
-            existingHourData.신재생 += item.fuelPwr8 || 0;
-            existingHourData.태양광 += item.fuelPwr9 || 0;
-          } else {
-            hourlyData.push({
-              hour,
-              수력: item.fuelPwr1 || 0,
-              유류: item.fuelPwr2 || 0,
-              유연탄: item.fuelPwr3 || 0,
-              원자력: item.fuelPwr4 || 0,
-              가스: item.fuelPwr6 || 0,
-              국내탄: item.fuelPwr7 || 0,
-              신재생: item.fuelPwr8 || 0,
-              태양광: item.fuelPwr9 || 0,
-            });
-          }
-        });
+            if (existingHourData) {
+              // 동일 시간 데이터가 있다면 합산
+              existingHourData.수력 += item.fuelPwr1 || 0;
+              existingHourData.유류 += item.fuelPwr2 || 0;
+              existingHourData.유연탄 += item.fuelPwr3 || 0;
+              existingHourData.원자력 += item.fuelPwr4 || 0;
+              existingHourData.가스 += item.fuelPwr6 || 0;
+              existingHourData.국내탄 += item.fuelPwr7 || 0;
+              existingHourData.신재생 += item.fuelPwr8 || 0;
+              existingHourData.태양광 += item.fuelPwr9 || 0;
+            } else {
+              // 새로운 시간 데이터 추가
+              hourlyData.push({
+                hour,
+                수력: item.fuelPwr1 || 0,
+                유류: item.fuelPwr2 || 0,
+                유연탄: item.fuelPwr3 || 0,
+                원자력: item.fuelPwr4 || 0,
+                가스: item.fuelPwr6 || 0,
+                국내탄: item.fuelPwr7 || 0,
+                신재생: item.fuelPwr8 || 0,
+                태양광: item.fuelPwr9 || 0,
+              });
+            }
+          });
 
-        hourlyData.sort((a, b) =>
-          parseInt(a.hour) > parseInt(b.hour) ? 1 : -1,
-        );
+          // 시간 순서대로 정렬
+          hourlyData.sort((a, b) => parseInt(a.hour) - parseInt(b.hour));
 
-        const totals = hourlyData.reduce(
-          (acc, curr) => {
-            acc.수력 += curr.수력;
-            acc.유류 += curr.유류;
-            acc.유연탄 += curr.유연탄;
-            acc.원자력 += curr.원자력;
-            acc.가스 += curr.가스;
-            acc.국내탄 += curr.국내탄;
-            acc.신재생 += curr.신재생;
-            acc.태양광 += curr.태양광;
-            return acc;
-          },
-          {
-            수력: 0,
-            유류: 0,
-            유연탄: 0,
-            원자력: 0,
-            가스: 0,
-            국내탄: 0,
-            신재생: 0,
-            태양광: 0,
-          },
-        );
+          return hourlyData;
+        };
 
-        const totalPieData = Object.entries(totals).map(([name, value]) => ({
-          name,
-          value,
+        const hourlyYesterday = processHourlyData(formatYesterdayItems);
+        const hourlyToday = processHourlyData(todayItems);
+
+        const combinedData = [...hourlyYesterday, ...hourlyToday];
+
+        const pieData = Object.entries(
+          combinedData.reduce(
+            (acc, curr) => {
+              acc["수력"] += curr.수력 || 0;
+              acc["유류"] += curr.유류 || 0;
+              acc["유연탄"] += curr.유연탄 || 0;
+              acc["원자력"] += curr.원자력 || 0;
+              acc["가스"] += curr.가스 || 0;
+              acc["국내탄"] += curr.국내탄 || 0;
+              acc["신재생"] += curr.신재생 || 0;
+              acc["태양광"] += curr.태양광 || 0;
+              return acc;
+            },
+            {
+              수력: 0,
+              유류: 0,
+              유연탄: 0,
+              원자력: 0,
+              가스: 0,
+              국내탄: 0,
+              신재생: 0,
+              태양광: 0,
+            },
+          ),
+        ).map(([name, value]) => ({ name, value }));
+
+        const filteredData = combinedData.map((data) => ({
+          ...data,
+          수력: data.수력 > 0 ? data.수력 : 0,
+          유류: data.유류 > 0 ? data.유류 : 0,
+          유연탄: data.유연탄 > 0 ? data.유연탄 : 0,
+          원자력: data.원자력 > 0 ? data.원자력 : 0,
+          가스: data.가스 > 0 ? data.가스 : 0,
+          국내탄: data.국내탄 > 0 ? data.국내탄 : 0,
+          신재생: data.신재생 > 0 ? data.신재생 : 0,
+          태양광: data.태양광 > 0 ? data.태양광 : 0,
         }));
 
-        setChartData(hourlyData);
-        setTotalData(totalPieData);
+        setChartData(filteredData);
+        setTotalData(pieData);
       } catch (error) {
         console.error("fetchData error: ", error);
       }

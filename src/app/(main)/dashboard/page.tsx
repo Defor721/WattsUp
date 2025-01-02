@@ -44,7 +44,7 @@ function DashboardPage() {
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("SMP 결정 횟수");
+    useState<string>("발전원별 시간별 발전량");
 
   const dashboards = [
     {
