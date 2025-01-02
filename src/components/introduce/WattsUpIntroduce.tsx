@@ -24,14 +24,14 @@ const teamInfo = [
     icon: <Code />,
     title: "프론트엔드 전문가",
     description: (
-      <>
+      <div>
         <strong>최신 웹 기술</strong>을 활용하여 사용자 친화적이고 효율적인
         인터페이스를 구현합니다. <strong>React, Next.js, TypeScript</strong> 등
         현대적인 프레임워크와 라이브러리를 능숙하게 다루며,{" "}
         <strong>반응형 디자인과 접근성</strong>을 고려한 개발을 지향합니다.
         지속적인 학습과 기술 향상을 통해 <strong>최적화된 사용자 경험</strong>을
         제공하는 것이 우리의 목표입니다.
-      </>
+      </div>
     ),
   },
   {
@@ -128,7 +128,7 @@ const TeamIntroduction = () => {
                 <h2 className="mb-2 text-2xl font-semibold text-[rgb(7,15,38)] sm:mb-3 sm:text-3xl md:mb-4">
                   {info.title}
                 </h2>
-                <p className="text-base leading-relaxed text-neutral-600 sm:text-lg md:text-xl">
+                <p className="px-12 pt-5 text-base leading-relaxed text-neutral-600 sm:text-lg md:text-xl">
                   {info.description}
                 </p>
               </div>
