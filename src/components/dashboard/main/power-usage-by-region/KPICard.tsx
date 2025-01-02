@@ -3,44 +3,45 @@ import React from "react";
 interface KPICardProps {
   title: string;
   value: string | number;
-  icon: React.ReactNode;
-  backgroundColor: string; // 카드 배경색
-  iconColor: string; // 아이콘 배경색
+  unit: string;
+  backgroundColor: string;
+  iconColor: string;
+  icon?: React.ReactNode;
 }
 
 const KPICard: React.FC<KPICardProps> = ({
   title,
   value,
-  icon,
+  unit,
   backgroundColor,
   iconColor,
+  icon,
 }) => {
   return (
     <div
       className="flex items-center justify-between rounded-lg p-4 shadow-md"
       style={{
-        backgroundColor: backgroundColor || "#1E293B", // 카드 배경색
-        color: "#FFFFFF", // 텍스트 색상
+        backgroundColor: backgroundColor,
+        color: "#FFFFFF",
       }}
     >
-      {/* 아이콘 */}
+      {/* Icon Section */}
       <div
         className="flex h-12 w-12 items-center justify-center rounded-full"
         style={{
-          backgroundColor: iconColor || "#334155", // 아이콘 배경색
+          backgroundColor: iconColor,
         }}
       >
-        {icon}
+        {icon || "📊"}
       </div>
 
-      {/* 제목 및 값 */}
+      {/* Title and Value Section */}
       <div className="ml-4 flex-1">
         <p className="text-sm font-semibold text-gray-300">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-2xl font-bold">
+          {value} <span className="text-base">{unit}</span>
+        </p>
       </div>
-
-      {/* 메뉴 아이콘 */}
-      <div className="cursor-pointer text-gray-500">⋮</div>
     </div>
   );
 };

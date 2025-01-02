@@ -13,35 +13,26 @@ import {
   formatNumberWithoutDecimal,
 } from "@/hooks/useNumberFormatter";
 
-interface EconomicData {
-  연도: number;
-  생산자물가지수: number;
-  소비자물가지수: number;
-  경상수지: number;
-  자본수지: number;
-  외환보유액: number;
-  수출액: number;
-  수입액: number;
-  환율: number;
-  실업률: number;
-  콜금리: number;
+interface TableProps {
+  data: { [key: string]: string | number }[];
 }
 
-function Table({
-  data,
-  currentYearData,
-}: {
-  data: EconomicData[];
-  currentYearData: EconomicData;
-}) {
+const Table: React.FC<TableProps> = ({ data }) => {
+  if (data.length === 0) return <p>데이터가 없습니다.</p>;
+
+  const headers = Object.keys(data[0]);
+
   return (
     <div className="overflow-x-auto">
       <ShadcnTable className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
         <TableHeader>
           <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
-            {Object.keys(currentYearData).map((key) => (
-              <TableHead key={key} className="border border-gray-700 px-3 py-2">
-                {key}
+            {headers.map((header) => (
+              <TableHead
+                key={header}
+                className="border border-gray-700 px-3 py-2"
+              >
+                {header}
               </TableHead>
             ))}
           </TableRow>
@@ -54,11 +45,13 @@ function Table({
             >
               {Object.entries(row).map(([key, value], idx) => (
                 <TableCell key={idx} className="border border-gray-700 p-3">
-                  {key === "연도"
-                    ? value
-                    : typeof value === "number"
-                      ? formatNumberWithDecimal(value)
-                      : value}
+                  {
+                    key === "연도"
+                      ? value // 연도는 그대로 표시
+                      : typeof value === "number"
+                        ? formatNumberWithoutDecimal(value) // 숫자는 포맷팅
+                        : value // 나머지 값은 그대로 표시
+                  }
                 </TableCell>
               ))}
             </TableRow>
@@ -67,6 +60,6 @@ function Table({
       </ShadcnTable>
     </div>
   );
-}
+};
 
 export default Table;

@@ -43,8 +43,7 @@ function DashboardPage() {
   const [author, setAuthor] = useState("");
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
-  const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("경제 지표");
+  const [selectedDashboard, setSelectedDashboard] = useState<string>("SMP");
 
   const dashboards = [
     {
@@ -63,7 +62,7 @@ function DashboardPage() {
       tags: ["통계", "계정"],
     },
     {
-      name: "발전원별 발전량",
+      name: "발전원별 시간별 발전량",
       path: "/dashboard",
       tags: ["발전량"],
     },
@@ -160,7 +159,7 @@ function DashboardPage() {
     SMP: SMP,
     "경제 지표": Economic,
     "국민 계정": People,
-    "발전원별 발전량": PowerGenerationByPowerSource,
+    "발전원별 시간별 발전량": PowerGenerationByPowerSource,
     "에너지 지표": Energy,
     "유형별 전기 고장 추이": Failures,
     "전력 거래 연료 비용": Cost,
@@ -174,7 +173,7 @@ function DashboardPage() {
 
   return (
     <div className="p-5 dark:bg-subColor">
-      <Title title={"대시보드"} />
+      <Title title={`${selectedDashboard} 대시보드`} />
       {/* 대시보드 선택 */}
       <div className="flex items-center justify-end gap-3">
         <div className="text-mainColor dark:text-white">대시보드 선택</div>

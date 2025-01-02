@@ -4,49 +4,49 @@ import {
   Pie,
   Cell,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
+
 interface PieChartProps {
   data: {
-    수출액: number;
-    수입액: number;
-    경상수지: number;
+    수력: number;
+    화력: number;
+    원자력: number;
+    자가용: number;
   };
+  colors: string[]; // 색상을 상위에서 전달받도록 추가
 }
 
-const PieChart: React.FC<PieChartProps> = ({ data }) => {
+const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
   const chartData = [
-    { name: "수출액", value: data.수출액 },
-    { name: "수입액", value: data.수입액 },
-    { name: "경상수지", value: data.경상수지 },
+    { name: "수력", value: data.수력 },
+    { name: "화력", value: data.화력 },
+    { name: "원자력", value: data.원자력 },
+    { name: "자가용", value: data.자가용 },
   ];
-
-  const COLORS = ["#3B82F6", "#F59E0B", "#EF4444"];
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <RechartsPieChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <RechartsPieChart>
         <Pie
           data={chartData}
           dataKey="value"
           nameKey="name"
           cx="50%"
           cy="50%"
-          outerRadius={100}
-          fill="#8884d8"
+          innerRadius={80}
+          outerRadius={120}
           label={({ name }) => `${name}`}
         >
           {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} GWh`}
         />
-        {/* <Legend /> */}
       </RechartsPieChart>
     </ResponsiveContainer>
   );

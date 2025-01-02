@@ -255,11 +255,7 @@ const CustomerDashboard: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div className="text-2xl">데이터를 불러오는 중...</div>
-      </div>
-    );
+    return <div className="text-2xl">데이터를 불러오는 중...</div>;
   }
 
   if (error) {

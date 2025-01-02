@@ -194,7 +194,7 @@ const NationalAccountDashboard = () => {
         />
         <UsersByCountry
           data={data.map((row) => ({
-            label: `${row.연도}년`,
+            label: `${row.연도}`,
             value: row.국민총소득,
           }))}
         />

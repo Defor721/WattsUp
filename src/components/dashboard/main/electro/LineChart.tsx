@@ -18,9 +18,10 @@ import {
 interface LineChartProps {
   data: {
     연도: number;
-    수출액: number;
-    수입액: number;
-    환율: number;
+    수력: number;
+    화력: number;
+    원자력: number;
+    자가용: number;
   }[];
 }
 
@@ -35,12 +36,13 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} GWh`}
         />
         <Legend />
-        <Line type="monotone" dataKey="수출액" stroke="#3B82F6" />
-        <Line type="monotone" dataKey="수입액" stroke="#F59E0B" />
-        <Line type="monotone" dataKey="환율" stroke="#22C55E" />
+        <Line type="monotone" dataKey="수력" stroke="#3B82F6" />
+        <Line type="monotone" dataKey="화력" stroke="#F59E0B" />
+        <Line type="monotone" dataKey="원자력" stroke="#EF4444" />
+        <Line type="monotone" dataKey="자가용" stroke="#22C55E" />
       </RechartsLineChart>
     </ResponsiveContainer>
   );
