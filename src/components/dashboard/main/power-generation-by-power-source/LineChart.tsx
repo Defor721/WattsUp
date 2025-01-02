@@ -14,20 +14,13 @@ import {
   formatNumberWithoutDecimal,
 } from "@/hooks/useNumberFormatter";
 
-const COLORS = [
-  "#1F77B4",
-  "#FF7F0E",
-  "#2CA02C",
-  "#D62728",
-  "#9467BD",
-  "#8C564B",
-  "#E377C2",
-  "#7F7F7F",
-  "#BCBD22",
-  "#17BECF",
-];
-
-function LineChart({ chartData }: { chartData: any }) {
+function LineChart({
+  chartData,
+  colors,
+}: {
+  chartData: any;
+  colors: Record<string, string>;
+}) {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <RechartsLineChart
@@ -50,7 +43,7 @@ function LineChart({ chartData }: { chartData: any }) {
                 key={key}
                 type="monotone"
                 dataKey={key}
-                stroke={COLORS[index % COLORS.length]}
+                stroke={colors[key]}
               />
             ),
         )}

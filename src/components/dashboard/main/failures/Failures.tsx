@@ -32,6 +32,7 @@ function Failures() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [currentKPI, setCurrentKPI] = useState<DataRow | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDownload = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -42,27 +43,33 @@ function Failures() {
 
   useEffect(() => {
     const loadData = async () => {
-      const response = await fetch(
-        "/assets/dashboards/HOME_Electrical equipment_Trend of electrical failures by type.xlsx",
-      );
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-      });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: DataRow[] = XLSX.utils
-        .sheet_to_json(worksheet)
-        .map((row: any) => ({
-          연도: Number(row["연도"]),
-          발전설비_건: Number(row["발전설비(건)"]),
-          송전설비_건: Number(row["송전설비(건)"]),
-          변전설비_건: Number(row["변전설비(건)"]),
-          배전설비_건: Number(row["배전설비(건)"]),
-          총계_건: Number(row["총계(건)"]),
-        }));
-      setData(jsonData);
-      setSelectedYear(jsonData[0]?.연도 || null);
-      setCurrentKPI(jsonData[0]);
+      try {
+        const response = await fetch(
+          "/assets/dashboards/HOME_Electrical equipment_Trend of electrical failures by type.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: DataRow[] = XLSX.utils
+          .sheet_to_json(worksheet)
+          .map((row: any) => ({
+            연도: Number(row["연도"]),
+            발전설비_건: Number(row["발전설비(건)"]),
+            송전설비_건: Number(row["송전설비(건)"]),
+            변전설비_건: Number(row["변전설비(건)"]),
+            배전설비_건: Number(row["배전설비(건)"]),
+            총계_건: Number(row["총계(건)"]),
+          }));
+        setData(jsonData);
+        setSelectedYear(jsonData[0]?.연도 || null);
+        setCurrentKPI(jsonData[0]);
+      } catch (error) {
+        console.log("Error: ", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadData();

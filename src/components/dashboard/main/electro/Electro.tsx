@@ -21,6 +21,7 @@ import {
   Card,
 } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
 import Container from "../Container";
 import KPICard from "./KPICard";
@@ -146,8 +147,8 @@ function Electro() {
     XLSX.writeFile(workbook, "PowerDashboardData.xlsx");
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (isLoading) return <Loading />;
+
   if (!currentYearData) return <div>데이터가 없습니다.</div>;
 
   return (

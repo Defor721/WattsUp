@@ -15,6 +15,7 @@ import {
   Card,
 } from "@/components/shadcn";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
 import KPICard from "./KPICard";
 import PieChart from "./PieChart";
@@ -161,11 +162,7 @@ function Sales() {
     }));
 
   if (isLoading) {
-    return <div>데이터 로드 중...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
+    return <Loading />;
   }
 
   return (
