@@ -28,19 +28,14 @@ html {
 
 body {
   overflow-x: hidden;
+
+  height: 100%;
+  margin: 0;
 }
 
-section {
-  opacity: 0;
-  transform: translateY(50px);
-  transition:
-    opacity 1s ease,
-    transform 1s ease;
-}
 
-section.active {
-  opacity: 1;
-  transform: translateY(0);
+#fullpage {
+  height: 100%;
 }
 
 @keyframes riseUp {

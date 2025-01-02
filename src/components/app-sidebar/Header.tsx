@@ -31,6 +31,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
                 height={30}
                 alt="WattsUp Logo"
                 className={`rounded-md opacity-70`}
+                priority
               />
             </Link>
           </SidebarMenuButton>
@@ -47,6 +48,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
         height={80}
         alt="WattsUp Logo"
         className={`rounded-md opacity-70`}
+        priority
       />
       <SidebarGroupLabel className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[26px] font-bold text-transparent">
         {"WattsUp"}
