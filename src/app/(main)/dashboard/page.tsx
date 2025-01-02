@@ -43,11 +43,12 @@ function DashboardPage() {
   const [author, setAuthor] = useState("");
   const [extra, setExtra] = useState("");
   const [recommended, setRecommended] = useState<string[]>([]);
-  const [selectedDashboard, setSelectedDashboard] = useState<string>("SMP");
+  const [selectedDashboard, setSelectedDashboard] =
+    useState<string>("SMP 결정 횟수");
 
   const dashboards = [
     {
-      name: "SMP",
+      name: "SMP 결정 횟수",
       path: "/dashboard/smp",
       tags: ["전력", "가격"],
     },
@@ -65,6 +66,11 @@ function DashboardPage() {
       name: "발전원별 시간별 발전량",
       path: "/dashboard",
       tags: ["발전량"],
+    },
+    {
+      name: "발전원별 연도별 발전량",
+      path: "/dashboard/power-generation",
+      tags: ["발전량", "전력"],
     },
     {
       name: "에너지 지표",
@@ -96,11 +102,7 @@ function DashboardPage() {
       path: "/dashboard/electro",
       tags: ["전력", "전력량"],
     },
-    {
-      name: "전원별 발전량",
-      path: "/dashboard/power-generation",
-      tags: ["발전량", "전력"],
-    },
+
     {
       name: "판매 단가",
       path: "/dashboard/power-price",
@@ -156,17 +158,17 @@ function DashboardPage() {
   }
 
   const dashboardComponents: DashboardComponents = {
-    SMP: SMP,
+    "SMP 결정 횟수": SMP,
     "경제 지표": Economic,
     "국민 계정": People,
     "발전원별 시간별 발전량": PowerGenerationByPowerSource,
+    "발전원별 연도별 발전량": PowerGeneration,
     "에너지 지표": Energy,
     "유형별 전기 고장 추이": Failures,
     "전력 거래 연료 비용": Cost,
     "전력 사용량 계약 종별": PowerUsage,
     "전력 사용량 시도별": PowerUsageByRegion,
     "전력 지표": Electro,
-    "전원별 발전량": PowerGeneration,
     "판매 단가": PowerPrice,
     "판매 금액": Sales,
   };

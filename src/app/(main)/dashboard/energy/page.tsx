@@ -202,7 +202,7 @@ const EnergyDashboard: React.FC = () => {
               },
               {
                 category: "석탄",
-                values: data.map((item) => item.석유합계),
+                values: data.map((item) => item.석탄합계),
               },
               {
                 category: "석유",

@@ -147,10 +147,6 @@ const GenerationDashboard = () => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        if (jsonData.length === 0) {
-          throw new Error("데이터를 찾을 수 없습니다");
-        }
-
         const formattedData: DataRow[] = jsonData.map((row: any) => ({
           연도: Number(row["연도"]),
           일반수력: Number(row["일반수력"] || 0),
@@ -171,7 +167,7 @@ const GenerationDashboard = () => {
           내연력: Number(row["내연력"] || 0),
           기타: Number(row["기타"] || 0),
           총계: Number(row["총계"] || 0),
-          총발전량: Number(row["총발전량"] || 0),
+          총발전량: Number(row["총발전량(사업자+한전구입)"] || 0),
         }));
 
         setData(formattedData);
@@ -192,14 +188,14 @@ const GenerationDashboard = () => {
     loadData();
   }, []);
 
-  const currentYearData = data.find((row) => row.연도 === selectedYear);
-
-  const kpiConfig = {
-    총발전량: { color: "#4ADE80", unit: "MWh" },
-    수력소계: { color: "#60A5FA", unit: "MWh" },
-    원자력: { color: "#FBBF24", unit: "MWh" },
-    신재생: { color: "#F87171", unit: "MWh" },
+  const downloadData = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Generation Data");
+    XLSX.writeFile(workbook, "generation_data.xlsx");
   };
+
+  const currentYearData = data.find((row) => row.연도 === selectedYear);
 
   if (error) {
     return (
@@ -226,8 +222,8 @@ const GenerationDashboard = () => {
     <div className="min-h-screen bg-gray-900 p-6 text-white">
       <h1 className="mb-6 text-center text-4xl font-bold">발전량 대시보드</h1>
 
-      {/* 연도 선택 */}
-      <div className="mb-6 flex items-center justify-center">
+      {/* 연도 선택 및 다운로드 버튼 */}
+      <div className="mb-6 flex items-center justify-between">
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
@@ -239,17 +235,23 @@ const GenerationDashboard = () => {
             </option>
           ))}
         </select>
+        <button
+          onClick={downloadData}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          데이터 다운로드
+        </button>
       </div>
 
       {/* KPI 카드 그리드 */}
       {currentYearData && (
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Object.entries(kpiConfig).map(([key, config]) => (
+          {Object.entries(currentYearData).map(([key, value]) => (
             <KPICard
               key={key}
               title={key}
-              value={`${currentYearData[key as keyof DataRow].toLocaleString()} ${config.unit}`}
-              backgroundColor={config.color}
+              value={Number(value).toLocaleString()}
+              backgroundColor="#4ADE80"
             />
           ))}
         </div>

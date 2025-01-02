@@ -34,7 +34,10 @@ function Failures() {
   const [currentKPI, setCurrentKPI] = useState<DataRow | null>(null);
 
   const handleDownload = () => {
-    console.log("다운로드 클릭");
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Equipment Data");
+    XLSX.writeFile(workbook, "EquipmentDashboardData.xlsx");
   };
 
   useEffect(() => {

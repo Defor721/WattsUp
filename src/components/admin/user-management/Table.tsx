@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Table,
@@ -8,6 +8,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/shadcn";
+import apiClient from "@/lib/axios";
 
 const users = [
   {
@@ -58,6 +59,19 @@ const users = [
 ];
 
 function UserManageMentTable() {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        console.log("렌더링 완료~");
+        // const requests = await apiClient.get()
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <div className="mt-3">
       <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
