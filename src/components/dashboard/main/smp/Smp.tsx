@@ -208,7 +208,7 @@ function SMP() {
       <div className="flex gap-6">
         <Card className="flex flex-1 flex-col items-center p-6 shadow-lg">
           <h2 className="text-lg font-semibold">
-            {selectedFuel} 기간별 SMP 추이
+            {selectedFuel} 기간별 SMP 결정 횟수
           </h2>
           <LineChart
             data={lineChartData}
