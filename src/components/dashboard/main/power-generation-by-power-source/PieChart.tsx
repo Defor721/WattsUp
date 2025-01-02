@@ -39,7 +39,9 @@ function PieChart({
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+          formatter={(value: number) =>
+            `${formatNumberWithoutDecimal(value)} MWh`
+          }
         />
         {/* <Legend /> */}
       </RechartsPieChart>

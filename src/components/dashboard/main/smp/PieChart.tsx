@@ -8,15 +8,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface DoughnutChartProps {
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+
+interface PieChartProps {
   data: { name: string; value: number }[];
   colors: string[];
 }
 
-const PieChart: React.FC<DoughnutChartProps> = ({ data, colors }) => {
+const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <RechartsPieChart>
+      <RechartsPieChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
         <Pie
           data={data}
           dataKey="value"
@@ -31,8 +33,10 @@ const PieChart: React.FC<DoughnutChartProps> = ({ data, colors }) => {
             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
-        <Tooltip />
-        <Legend />
+        <Tooltip
+          formatter={(value: number) => formatNumberWithoutDecimal(value)}
+        />
+        {/* <Legend /> */}
       </RechartsPieChart>
     </ResponsiveContainer>
   );

@@ -38,7 +38,7 @@ function LineChart({ chartData }: { chartData: any }) {
         <XAxis dataKey="hour" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
-          formatter={(value: number) => formatNumberWithDecimal(value)}
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} MWh`}
         />
         {Object.keys(chartData[0] || {}).map(
           (key, index) =>

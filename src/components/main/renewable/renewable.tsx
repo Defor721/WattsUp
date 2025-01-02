@@ -13,14 +13,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-import { PowerMarketStructure } from "@/components/main/renewable/PowerMarket";
-
 const EnergyInfoPage = () => {
   return (
     <div className="min-h-screen">
-      {/* 전력시장 구조 섹션 */}
-      <PowerMarketStructure />
-
       {/* 한전거래소 전력시장 운영 섹션 */}
       <section className="relative flex min-h-screen flex-col lg:flex-row">
         {/* 왼쪽 섹션: 텍스트 콘텐츠 */}
