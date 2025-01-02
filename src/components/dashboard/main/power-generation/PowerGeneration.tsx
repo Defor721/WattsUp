@@ -11,6 +11,7 @@ import {
   Label,
   Button,
 } from "@/components/shadcn";
+import Loading from "@/app/loading";
 
 import { KPICard } from "./KPICard";
 import Table from "./Table";
@@ -171,21 +172,8 @@ function PowerGeneration() {
     };
   });
 
-  if (error) {
-    return (
-      <div className="text-center text-red-500">
-        <h2 className="mb-4 text-2xl font-bold">오류 발생</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   if (loading) {
-    return (
-      <div className="text-center">
-        <h2 className="mb-4 text-2xl font-bold">데이터 로딩 중...</h2>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

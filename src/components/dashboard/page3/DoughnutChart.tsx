@@ -1,5 +1,9 @@
 import React from "react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+
+// Chart.js 플러그인 등록
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
   data: { [key: string]: number };
@@ -13,7 +17,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, title }) => {
       {
         data: Object.values(data),
         backgroundColor: ["#3B82F6", "#22C55E", "#F59E0B", "#EF4444"],
-        hoverBackgroundColor: ["#2563EB", "#16A34A", "#D97706", "#DC2626"], // hover 색상 추가
+        hoverBackgroundColor: ["#2563EB", "#16A34A", "#D97706", "#DC2626"], // Hover 색상
       },
     ],
   };

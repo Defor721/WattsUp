@@ -21,6 +21,7 @@ import {
   Card,
 } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
 import Table from "./Table";
 import Container from "../Container";
@@ -115,11 +116,7 @@ function Economic() {
   };
 
   if (isLoading) {
-    return <div>데이터를 불러오는 중입니다...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
+    return <Loading />;
   }
 
   if (!currentYearData) {

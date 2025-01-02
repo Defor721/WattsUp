@@ -39,32 +39,41 @@ function PowerPrice() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2023);
   const [currentData, setCurrentData] = useState<DataRow | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 데이터 불러오기
   useEffect(() => {
     const loadData = async () => {
-      const response = await fetch("/assets/dashboards/HOME_Sales price.xlsx");
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-      });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: DataRow[] = XLSX.utils
-        .sheet_to_json(worksheet)
-        .map((row: any) => ({
-          연도: Number(row["연도"]),
-          주택용: Number(row["주택용"]),
-          일반용: Number(row["일반용"]),
-          교육용: Number(row["교육용"]),
-          산업용: Number(row["산업용"]),
-          농사용: Number(row["농사용"]),
-          가로등: Number(row["가로등"]),
-          심야: Number(row["심야"]),
-          합계: Number(row["합계"]),
-        }));
-      setData(jsonData);
-      setSelectedYear(jsonData[0]?.연도 || 2023);
-      setCurrentData(jsonData[0]);
+      try {
+        const response = await fetch(
+          "/assets/dashboards/HOME_Sales price.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: DataRow[] = XLSX.utils
+          .sheet_to_json(worksheet)
+          .map((row: any) => ({
+            연도: Number(row["연도"]),
+            주택용: Number(row["주택용"]),
+            일반용: Number(row["일반용"]),
+            교육용: Number(row["교육용"]),
+            산업용: Number(row["산업용"]),
+            농사용: Number(row["농사용"]),
+            가로등: Number(row["가로등"]),
+            심야: Number(row["심야"]),
+            합계: Number(row["합계"]),
+          }));
+        setData(jsonData);
+        setSelectedYear(jsonData[0]?.연도 || 2023);
+        setCurrentData(jsonData[0]);
+      } catch (error) {
+        console.log("Error: ", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadData();

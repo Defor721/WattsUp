@@ -19,7 +19,7 @@ function PieChart({
   colors,
 }: {
   totalData: TotalData[];
-  colors: string[];
+  colors: Record<string, string>;
 }) {
   return (
     <ResponsiveContainer width="100%" height={400}>
@@ -35,7 +35,7 @@ function PieChart({
           label={({ name }) => `${name}`} // 라벨에 이름만 표시
         >
           {totalData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            <Cell key={`cell-${index}`} fill={colors[entry.name]} />
           ))}
         </Pie>
         <Tooltip
