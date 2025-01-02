@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
-import { verifyToken } from "@/utils/tokenHelper";
+import { verifyToken } from "@/utils/server/tokenHelper";
 
 async function insertUserToDB(collection: any, userData: any) {
   try {
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       businessNumber,
     });
 
-    return NextResponse.json({ message: "가입 성공" }, { status: 200 });
+    return NextResponse.json({ message: "회원가입 성공" }, { status: 201 });
   } catch (error: any) {
     if (error.message.startsWith("TokenExpiredError")) {
       let response = NextResponse.json(

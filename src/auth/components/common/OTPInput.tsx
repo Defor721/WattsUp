@@ -42,7 +42,7 @@ export default function OTPInput({
       <InputOTP
         maxLength={6}
         value={emailCode}
-        onChange={(value) => setEmailCode(value)}
+        onChange={(value) => setEmailCode(value.replace(/[^0-9]/g, ""))}
         disabled={isEmailVerified}
       >
         <InputOTPGroup>

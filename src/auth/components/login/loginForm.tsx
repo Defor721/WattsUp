@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 import { FindPasswordPopup } from "@/auth/components/FindPassword";
@@ -18,10 +19,8 @@ export default function LoginForm() {
   const router = useRouter();
 
   const {
-    error,
     message,
-    redirectTo,
-    actions: { nativeLogin, resetLoginState },
+    actions: { nativeLogin },
   } = useAuthStore();
 
   const { showDialog, DialogComponent } = useDialog();
@@ -30,27 +29,35 @@ export default function LoginForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<ReactNode>("");
 
   const handleLogin = async () => {
-    nativeLogin(email, password);
-  };
-
-  // 에러 상태 감지 시 모달 표시
-  useEffect(() => {
-    if (error && message) {
-      setShowPassword(false);
-      showDialog({
-        title: "로그인 안내",
-        description: message,
-        confirmText: "확인",
-        onConfirm: () => {
-          router.push(redirectTo);
-          resetAccessToken();
-          resetLoginState();
-        },
-      });
+    if (!email) {
+      setErrorMessage(
+        <>
+          <strong className="font-bold">이메일</strong>을 입력해주세요.
+        </>,
+      );
+      return;
     }
-  }, [error]);
+
+    if (!password) {
+      setErrorMessage(
+        <>
+          <strong className="font-bold">비밀번호</strong>를 입력해주세요.
+        </>,
+      );
+      return;
+    }
+
+    setErrorMessage("");
+
+    try {
+      await nativeLogin(email, password);
+    } catch (error: any) {
+      setErrorMessage(error.message || "로그인 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <>
@@ -69,9 +76,12 @@ export default function LoginForm() {
           />
         </div>
       </CardContent>
+      {/* 에러 메시지 */}
+      {errorMessage && (
+        <p className="text-center text-sm text-red-500">{errorMessage}</p>
+      )}
       {/* 로그인 푸터 */}
       <CardFooter className="flex flex-col gap-4">
-        {!email && <>이메일 입력</>}
         <Button
           className={`w-full bg-[#070f26] text-white dark:border-1`}
           onClick={handleLogin}
@@ -88,11 +98,9 @@ export default function LoginForm() {
             </span>
           </div>
         </div>
-
-        <GoogleLoginButton
-          className={`w-full bg-[#070f26] text-white dark:border-1`}
-        />
-
+        {/* 구글 로그인 버튼 */}
+        <GoogleLoginButton />
+        {/* 비밀번호 및 회원가입 링크 */}
         <div className="mt-3 flex text-center text-sm">
           <FindPasswordPopup>
             <p className="inline-block cursor-pointer text-sm underline">

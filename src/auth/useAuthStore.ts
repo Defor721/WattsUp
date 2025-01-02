@@ -24,59 +24,6 @@ const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
 export const useAuthStore = create<AuthState>((set) => ({
   ...NULL_AUTH_STATE,
   actions: {
-    async nativeLogin(email: string, password: string) {
-      try {
-        const { accessToken } = await loginWithEmailAndPassword(
-          email,
-          password,
-        );
-        set({
-          accessToken: accessToken,
-          redirectTo: "/",
-          error: false,
-          message: null,
-        });
-      } catch (error: any) {
-        set({
-          redirectTo: "/login",
-          error: true,
-          message:
-            error.response.data.message ||
-            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
-        });
-      }
-    },
-
-    async socialLogin(code: string) {
-      try {
-        const { accessToken, message } = await exchangeSocialToken(code);
-
-        if (message === "추가 정보 입력이 필요합니다.") {
-          set({
-            accessToken: null,
-            message,
-            redirectTo: "/login/additional",
-            error: true,
-          });
-        } else {
-          set({
-            accessToken,
-            redirectTo: "/",
-            message,
-            error: false,
-          });
-        }
-      } catch (error: any) {
-        set({
-          redirectTo: "/login",
-          error: true,
-          message:
-            error.response.data.message ||
-            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
-        });
-      }
-    },
-
     async socialSignup({
       businessNumber,
       startDate,
@@ -113,6 +60,36 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
+    async socialLogin(code: string) {
+      try {
+        const { accessToken, message } = await exchangeSocialToken(code);
+
+        if (message === "추가 정보 입력이 필요합니다.") {
+          set({
+            accessToken: null,
+            message,
+            redirectTo: "/login/additional",
+            error: true,
+          });
+        } else {
+          set({
+            accessToken,
+            redirectTo: "/",
+            message,
+            error: false,
+          });
+        }
+      } catch (error: any) {
+        set({
+          redirectTo: "/login",
+          error: true,
+          message:
+            error.response.data.message ||
+            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
+        });
+      }
+    },
+
     async nativeSignup(password) {
       try {
         const { message } = await nativeSignup({
@@ -132,6 +109,23 @@ export const useAuthStore = create<AuthState>((set) => ({
             "회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
         });
         throw error;
+      }
+    },
+
+    async nativeLogin(email: string, password: string) {
+      try {
+        const { accessToken } = await loginWithEmailAndPassword(
+          email,
+          password,
+        );
+        set({
+          accessToken: accessToken,
+          redirectTo: "/",
+        });
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "잘못된 로그인 시도입니다.",
+        );
       }
     },
 

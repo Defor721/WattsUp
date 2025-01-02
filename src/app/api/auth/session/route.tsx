@@ -11,10 +11,18 @@ export async function POST(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
+
     const user = await collection.findOne({ email });
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        {
+          message:
+            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
+        },
+        { status: 400 },
+      );
     }
+
     if (user.password === password) {
       const payload = { email: email };
       const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
@@ -28,7 +36,7 @@ export async function POST(request: NextRequest) {
         { $set: { refreshToken: refreshToken } },
       );
       const response = NextResponse.json(
-        { message: "Login Successfully", accessToken },
+        { message: "로그인 성공", accessToken },
         { status: 201 },
       );
       response.cookies.set("refreshToken", refreshToken, {
@@ -41,8 +49,11 @@ export async function POST(request: NextRequest) {
       return response;
     } else {
       return NextResponse.json(
-        { message: "Password invalid" },
-        { status: 401 },
+        {
+          message:
+            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
+        },
+        { status: 400 },
       );
     }
   } catch (error: unknown) {
