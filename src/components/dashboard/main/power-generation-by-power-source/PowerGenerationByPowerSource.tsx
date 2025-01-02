@@ -10,7 +10,9 @@ import Container from "../Container";
 import LineChart from "./LineChart";
 import PieChart from "./PieChart";
 
-const SERVICE_KEY = process.env.NEXT_PUBLIC_DATA_PORTAL_SERVICE_KEY;
+// const SERVICE_KEY = process.env.NEXT_PUBLIC_DATA_PORTAL_SERVICE_KEY;
+const SERVICE_KEY =
+  "clU8FdFV5AjUB0cF0LYErXsHT8KUPSq78yitDKHIZ8R4q6lb%2FL%2BUQVNzOKztZgJWNweqAWOVMSPWFAvOozgMgQ%3D%3D";
 
 const COLORS = [
   "#1F77B4",
