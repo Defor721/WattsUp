@@ -1,5 +1,26 @@
 import React from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { Line } from "react-chartjs-2";
+
+// Chart.js 플러그인 및 스케일 등록
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 interface LineChartProps {
   data: { category: string; values: number[] }[];
@@ -9,7 +30,7 @@ interface LineChartProps {
 const LineChart: React.FC<LineChartProps> = ({ data, title }) => {
   const chartData = {
     labels:
-      data.length > 0 ? data[0].values.map((_, idx) => `Year ${idx + 1}`) : [],
+      data.length > 0 ? data[0].values.map((_, idx) => `${2023 - idx}`) : [],
     datasets: data.map((item, index) => ({
       label: item.category,
       data: item.values,

@@ -17,6 +17,7 @@ import {
   Label,
   Button,
 } from "@/components/shadcn";
+import Loading from "@/app/loading";
 
 import Container from "../Container";
 import KPICard from "./KPICard";
@@ -38,34 +39,40 @@ function People() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2023);
   const [currentKPI, setCurrentKPI] = useState<DataRow | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 데이터 불러오기
   useEffect(() => {
     const loadData = async () => {
-      const response = await fetch(
-        "/assets/dashboards/HOME_Main indicators_National accounts.xlsx",
-      );
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-      });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: DataRow[] = XLSX.utils
-        .sheet_to_json(worksheet)
-        .map((row: any) => ({
-          연도: Number(row["연도"]),
-          경제성장률: Number(row["경제성장률(%)"]),
-          국내총생산: Number(row["국내총생산(10억원)"]),
-          국민총소득: Number(row["국민총소득(10억원)"]),
-          국민총소득_1인당: Number(row["1인당 국민총소득(US$)"]),
-          총저축률: Number(row["총저축률(%)"]),
-          국내총투자율: Number(row["국내총투자율(%)"]),
-        }));
-      setData(jsonData);
-      setSelectedYear(jsonData[0]?.연도 || 2023); // 최신 연도로 초기화
-      setCurrentKPI(jsonData[0]);
+      try {
+        const response = await fetch(
+          "/assets/dashboards/HOME_Main indicators_National accounts.xlsx",
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+          type: "array",
+        });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData: DataRow[] = XLSX.utils
+          .sheet_to_json(worksheet)
+          .map((row: any) => ({
+            연도: Number(row["연도"]),
+            경제성장률: Number(row["경제성장률(%)"]),
+            국내총생산: Number(row["국내총생산(10억원)"]),
+            국민총소득: Number(row["국민총소득(10억원)"]),
+            국민총소득_1인당: Number(row["1인당 국민총소득(US$)"]),
+            총저축률: Number(row["총저축률(%)"]),
+            국내총투자율: Number(row["국내총투자율(%)"]),
+          }));
+        setData(jsonData);
+        setSelectedYear(jsonData[0]?.연도 || 2023); // 최신 연도로 초기화
+        setCurrentKPI(jsonData[0]);
+      } catch (error) {
+        console.log("Error: ", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-
     loadData();
   }, []);
 
@@ -114,6 +121,10 @@ function People() {
       unit: "%",
     },
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container>

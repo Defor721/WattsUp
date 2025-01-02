@@ -64,6 +64,15 @@ export {
   InputOTPSeparator,
 } from "./input-otp";
 export { Label } from "./label";
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./pagination";
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";
 export {

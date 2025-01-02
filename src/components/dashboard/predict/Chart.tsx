@@ -56,7 +56,7 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
   return (
     <div className="mt-5">
       <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-        {selectedRegion} 발전량 예측 그래프
+        {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
 
       <ResponsiveContainer width={"100%"} aspect={16 / 4}>
@@ -72,7 +72,12 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
             formatter={(value: number) => formatNumberWithDecimal(value)}
           />
           <Legend />
-          <Line type="monotone" dataKey="amgo" stroke={strokeColor} />
+          <Line
+            type="monotone"
+            dataKey="amgo"
+            stroke={strokeColor}
+            name="태양광 발전량"
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

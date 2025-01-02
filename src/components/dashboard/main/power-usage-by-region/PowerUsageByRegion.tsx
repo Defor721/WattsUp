@@ -24,6 +24,7 @@ import {
   Card,
 } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
 import KPICard from "./KPICard";
 import Container from "../Container";
@@ -251,7 +252,7 @@ function PowerUsageByRegion() {
     }));
 
   if (isLoading) {
-    return <div className="text-2xl">데이터를 불러오는 중...</div>;
+    return <Loading />;
   }
 
   if (error) {

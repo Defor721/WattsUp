@@ -102,170 +102,154 @@ const EconomicDashboard: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>데이터를 불러오는 중입니다...</div>
-      </div>
-    );
+    return <div>로딩중..</div>;
   }
 
-  if (error) {
+  if (currentYearData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>{error}</div>
-      </div>
-    );
-  }
+      <div className="min-h-screen bg-gray-900 p-4 md:p-8">
+        <h1 className="mb-6 text-center text-4xl font-bold text-white">
+          경제지표 대시보드
+        </h1>
 
-  if (!currentYearData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <div>데이터가 없습니다.</div>
-      </div>
-    );
-  }
+        {/* 연도 선택 및 다운로드 */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:justify-end">
+          <select
+            className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
+            value={selectedYear || ""}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+          >
+            {data.map((item) => (
+              <option key={item.연도} value={item.연도}>
+                {item.연도}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={handleDownload}
+            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            <Download size={16} />
+            데이터 다운로드
+          </button>
+        </div>
 
-  return (
-    <div className="min-h-screen bg-gray-900 p-4 md:p-8">
-      <h1 className="mb-6 text-center text-4xl font-bold text-white">
-        경제지표 대시보드
-      </h1>
+        {/* KPI Cards */}
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <KPICard
+            title="생산자물가지수"
+            value={`${currentYearData.생산자물가지수}`}
+            icon={<Activity size={24} color="#FFFFFF" />}
+            backgroundColor="#6D28D9"
+            iconColor="#A855F7"
+          />
+          <KPICard
+            title="소비자물가지수"
+            value={`${currentYearData.소비자물가지수}`}
+            icon={<TrendingUp size={24} color="#FFFFFF" />}
+            backgroundColor="#22C55E"
+            iconColor="#16A34A"
+          />
+          <KPICard
+            title="경상수지"
+            value={`${currentYearData.경상수지.toLocaleString()} 백만US$`}
+            icon={<TrendingDown size={24} color="#FFFFFF" />}
+            backgroundColor="#F59E0B"
+            iconColor="#FACC15"
+          />
+          <KPICard
+            title="외환보유액"
+            value={`${currentYearData.외환보유액.toLocaleString()} 백만US$`}
+            icon={<BatteryCharging size={24} color="#FFFFFF" />}
+            backgroundColor="#3B82F6"
+            iconColor="#2563EB"
+          />
+        </div>
 
-      {/* 연도 선택 및 다운로드 */}
-      <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:justify-end">
-        <select
-          className="rounded-md border border-gray-300 bg-gray-800 p-2 text-white"
-          value={selectedYear || ""}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-        >
-          {data.map((item) => (
-            <option key={item.연도} value={item.연도}>
-              {item.연도}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={handleDownload}
-          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          <Download size={16} />
-          데이터 다운로드
-        </button>
-      </div>
+        {/* 차트 섹션 */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
+            <h2 className="mb-4 text-lg font-semibold text-white">
+              연도별 주요 경제지표
+            </h2>
+            <LineChart
+              data={data.map((item) => ({
+                연도: item.연도,
+                수출액: item.수출액,
+                수입액: item.수입액,
+                환율: item.환율,
+              }))}
+            />
+          </div>
 
-      {/* KPI Cards */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <KPICard
-          title="생산자물가지수"
-          value={`${currentYearData.생산자물가지수}`}
-          icon={<Activity size={24} color="#FFFFFF" />}
-          backgroundColor="#6D28D9"
-          iconColor="#A855F7"
-        />
-        <KPICard
-          title="소비자물가지수"
-          value={`${currentYearData.소비자물가지수}`}
-          icon={<TrendingUp size={24} color="#FFFFFF" />}
-          backgroundColor="#22C55E"
-          iconColor="#16A34A"
-        />
-        <KPICard
-          title="경상수지"
-          value={`${currentYearData.경상수지.toLocaleString()} 백만US$`}
-          icon={<TrendingDown size={24} color="#FFFFFF" />}
-          backgroundColor="#F59E0B"
-          iconColor="#FACC15"
-        />
-        <KPICard
-          title="외환보유액"
-          value={`${currentYearData.외환보유액.toLocaleString()} 백만US$`}
-          icon={<BatteryCharging size={24} color="#FFFFFF" />}
-          backgroundColor="#3B82F6"
-          iconColor="#2563EB"
-        />
-      </div>
+          <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
+            <h2 className="mb-4 text-lg font-semibold text-white">
+              경제 구성 비율
+            </h2>
+            <DoughnutChart
+              data={{
+                수출액: currentYearData.수출액,
+                수입액: currentYearData.수입액,
+                경상수지: currentYearData.경상수지,
+              }}
+            />
+          </div>
+        </div>
 
-      {/* 차트 섹션 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
+        {/* Bar Chart */}
+        <div className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-white">
-            연도별 주요 경제지표
+            연도별 데이터 비교
           </h2>
-          <LineChart
+          <BarChart
             data={data.map((item) => ({
-              연도: item.연도,
-              수출액: item.수출액,
-              수입액: item.수입액,
-              환율: item.환율,
+              category: `${item.연도}년`,
+              value: item.수출액,
             }))}
+            title="연도별 수출액"
+            xAxisLabel="연도"
+            yAxisLabel="수출액 (백만 US$)"
           />
         </div>
 
-        <div className="w-full rounded-lg bg-gray-800 p-4 shadow-md">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            경제 구성 비율
-          </h2>
-          <DoughnutChart
-            data={{
-              수출액: currentYearData.수출액,
-              수입액: currentYearData.수입액,
-              경상수지: currentYearData.경상수지,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Bar Chart */}
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">
-          연도별 데이터 비교
-        </h2>
-        <BarChart
-          data={data.map((item) => ({
-            category: `${item.연도}년`,
-            value: item.수출액,
-          }))}
-          title="연도별 수출액"
-          xAxisLabel="연도"
-          yAxisLabel="수출액 (백만 US$)"
-        />
-      </div>
-
-      {/* Data Table */}
-      <div className="mt-8 overflow-auto rounded-lg bg-gray-800 p-4 shadow-md">
-        <table className="min-w-full table-auto">
-          <thead>
-            <tr className="border-b border-gray-700">
-              {Object.keys(currentYearData).map((key) => (
-                <th
-                  key={key}
-                  className="px-4 py-2 text-left text-sm font-semibold text-gray-300"
-                >
-                  {key}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, index) => (
-              <tr
-                key={index}
-                className={`border-b border-gray-700 ${
-                  index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"
-                } hover:bg-gray-700`}
-              >
-                {Object.values(row).map((value, idx) => (
-                  <td key={idx} className="px-4 py-2 text-sm text-gray-400">
-                    {typeof value === "number" ? value.toLocaleString() : value}
-                  </td>
+        {/* Data Table */}
+        <div className="mt-8 overflow-auto rounded-lg bg-gray-800 p-4 shadow-md">
+          <table className="min-w-full table-auto">
+            <thead>
+              <tr className="border-b border-gray-700">
+                {Object.keys(currentYearData).map((key) => (
+                  <th
+                    key={key}
+                    className="px-4 py-2 text-left text-sm font-semibold text-gray-300"
+                  >
+                    {key}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <tr
+                  key={index}
+                  className={`border-b border-gray-700 ${
+                    index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"
+                  } hover:bg-gray-700`}
+                >
+                  {Object.values(row).map((value, idx) => (
+                    <td key={idx} className="px-4 py-2 text-sm text-gray-400">
+                      {typeof value === "number"
+                        ? value.toLocaleString()
+                        : value}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default EconomicDashboard;

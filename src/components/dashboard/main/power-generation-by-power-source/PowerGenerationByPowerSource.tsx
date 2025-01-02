@@ -14,18 +14,16 @@ import PieChart from "./PieChart";
 const SERVICE_KEY =
   "clU8FdFV5AjUB0cF0LYErXsHT8KUPSq78yitDKHIZ8R4q6lb%2FL%2BUQVNzOKztZgJWNweqAWOVMSPWFAvOozgMgQ%3D%3D";
 
-const COLORS = [
-  "#1F77B4",
-  "#FF7F0E",
-  "#2CA02C",
-  "#D62728",
-  "#9467BD",
-  "#8C564B",
-  "#E377C2",
-  "#7F7F7F",
-  "#BCBD22",
-  "#17BECF",
-];
+const COLORS: Record<string, string> = {
+  수력: "#1F77B4",
+  유류: "#FF7F0E",
+  유연탄: "#2CA02C",
+  원자력: "#D62728",
+  가스: "#9467BD",
+  국내탄: "#8C564B",
+  신재생: "#E377C2",
+  태양광: "#17BECF",
+};
 
 interface HourlyData {
   hour: string;
@@ -121,9 +119,6 @@ function PowerGenerationByPowerSource() {
             }
           });
 
-          // 시간 순서대로 정렬
-          hourlyData.sort((a, b) => parseInt(a.hour) - parseInt(b.hour));
-
           return hourlyData;
         };
 
@@ -180,7 +175,7 @@ function PowerGenerationByPowerSource() {
     fetchData();
   }, []);
 
-  if (!chartData || chartData.length === 0) return <div>로딩중...</div>;
+  if (!chartData || chartData.length === 0) return <Loading />;
 
   return (
     <Container>
@@ -188,13 +183,13 @@ function PowerGenerationByPowerSource() {
       <h2 className="mb-4 mt-8 text-center text-lg font-semibold">
         발전원별 시간당 발전량
       </h2>
-      <LineChart chartData={chartData} />
+      <LineChart chartData={chartData} colors={COLORS} />
 
       {/* 파이 그래프 */}
       <h2 className="mb-4 mt-8 text-center text-lg font-semibold">
         발전원별 누적 비율
       </h2>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center gap-5">
         <div className="w-[450px]">
           <PieChart totalData={totalData} colors={COLORS} />
         </div>
@@ -209,7 +204,7 @@ function PowerGenerationByPowerSource() {
               >
                 <div
                   className="h-4 w-4 rounded-full"
-                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  style={{ backgroundColor: COLORS[item.name] }}
                 ></div>
                 <span>
                   {item.name}: {formatNumberWithoutDecimal(item.value)} MWh

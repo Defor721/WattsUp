@@ -15,6 +15,7 @@ import {
   Card,
 } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
 import Container from "../Container";
 import PieChart from "./PieChart";
@@ -33,6 +34,8 @@ interface SMPData {
 }
 
 function SMP() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [data, setData] = useState<SMPData[]>([]);
   const [filteredData, setFilteredData] = useState<SMPData[]>([]);
   const [selectedYear, setSelectedYear] = useState<string>("전체");
@@ -52,6 +55,7 @@ function SMP() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/assets/dashboards/HOME_SMP.xlsx");
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
@@ -70,9 +74,11 @@ function SMP() {
             총계: isNaN(Number(row["총계"])) ? 0 : Number(row["총계"]),
           }));
         setData(jsonData);
-        console.log("jsonData: ", jsonData);
+        // console.log("jsonData: ", jsonData);
       } catch (error) {
         console.error("Error loading data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -162,6 +168,10 @@ function SMP() {
         ? item.총계
         : Number(item[selectedFuel as keyof SMPData] || 0),
   }));
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container>
