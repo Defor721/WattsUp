@@ -2,14 +2,31 @@
 
 import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Globe, Heart, Building, Star } from "lucide-react";
+import {
+  Zap,
+  Factory,
+  DollarSign,
+  Users,
+  Globe,
+  Heart,
+  Building,
+  Star,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+
+type MarketEntity = {
+  title: string;
+  icon: LucideIcon;
+  color: string;
+  description: string;
+};
 
 type ESGItem = {
   title: string;
   icon: LucideIcon;
   color: string;
   description: string;
+  style?: React.CSSProperties;
 };
 
 export const ESGItems = () => {
@@ -19,7 +36,7 @@ export const ESGItems = () => {
 
   const esgItems: ESGItem[] = [
     {
-      title: "환경 (Environmental)",
+      title: "환경",
       icon: Globe,
       color: "text-green-500",
       description:
@@ -29,7 +46,7 @@ export const ESGItems = () => {
         "지구 환경을 보존하기 위해 에너지 전환을 가속화하고 있습니다.",
     },
     {
-      title: "사회 (Social)",
+      title: "사회",
       icon: Heart,
       color: "text-red-500",
       description:
@@ -39,7 +56,7 @@ export const ESGItems = () => {
         "다양성과 포용성을 존중하며 지속 가능한 사회를 구현하고 있습니다.",
     },
     {
-      title: "지배구조 (Governance)",
+      title: "지배구조",
       icon: Building,
       color: "text-blue-500",
       description:
@@ -69,41 +86,116 @@ export const ESGItems = () => {
   };
 
   return (
-    <motion.div
-      ref={esgRef}
-      className="flex w-full max-w-6xl flex-col items-center justify-between md:flex-row-reverse"
-      initial={{ opacity: 0, y: 50 }}
-      animate={isESGInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
-      <div className="mb-8 w-full md:mb-0 md:w-1/3">
-        <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
-          ESG 경영 활동
-        </h2>
-        <p className="mb-4 pb-8 text-center text-lg text-neutral-600 md:text-left">
-          우리는 환경(Environmental), 사회(Social), 지배구조(Governance)를
-          중심으로 한 ESG 경영을 통해 지속 가능한 미래를 만들어갑니다. WattsUp은
-          이러한 ESG 가치를 실현하는 혁신적인 솔루션을 제공합니다.
-        </p>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-gray-600"
-        >
-          <div className="flex flex-col">
-            <div className="mb-2 font-bold">
-              {esgItems.find((item) => item.title === selectedESGItem)?.title}
+    <section className="flex flex-col items-center justify-center overflow-hidden bg-white px-4 py-24">
+      {/* ESG 경영 활동 */}
+      <motion.div
+        ref={esgRef}
+        className="flex w-full max-w-6xl flex-col items-center justify-between md:flex-row"
+        initial={{ opacity: 0, y: 50 }}
+        animate={isESGInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="mb-8 w-full md:mb-0 md:w-1/3">
+          <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
+            ESG 경영 활동
+          </h2>
+          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 md:text-left">
+            우리는 환경(Environmental), 사회(Social), 지배구조(Governance)를
+            중심으로 한 ESG 경영을 통해 지속 가능한 미래를 만들어갑니다.
+            WattsUp은 이러한 ESG 가치를 실현하는 혁신적인 솔루션을 제공합니다.
+          </p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-gray-600"
+          >
+            <div className="flex flex-col">
+              <div className="mb-2 font-bold">
+                {esgItems.find((item) => item.title === selectedESGItem)?.title}
+              </div>
+              <div>
+                {
+                  esgItems.find((item) => item.title === selectedESGItem)
+                    ?.description
+                }
+              </div>
             </div>
-            <div>
-              {
-                esgItems.find((item) => item.title === selectedESGItem)
-                  ?.description
-              }
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
+          </motion.div>
+        </div>
+        <div className="relative h-[500px] w-full md:w-2/3">
+          <svg className="h-full w-full" viewBox="0 0 600 600">
+            <g transform="translate(300, 300)">
+              <circle r="60" fill="#f0f0f0" />
+              <text
+                textAnchor="middle"
+                dy=".3em"
+                fontSize="20"
+                fontWeight="bold"
+                fill="#333"
+              >
+                ESG
+              </text>
+            </g>
+
+            <motion.g
+              animate={{
+                rotate: 360,
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 60,
+                ease: "linear",
+              }}
+              style={{ transformOrigin: "300px 300px" }}
+            >
+              {esgItems.map((item, index) => {
+                const angle = (index * 2 * Math.PI) / 4;
+                const x = 300 + Math.cos(angle) * 190;
+                const y = 300 + Math.sin(angle) * 190;
+
+                return (
+                  <g key={index} transform={`translate(${x}, ${y})`}>
+                    <circle r="80" fill="white" />
+                    <motion.g
+                      animate={{
+                        rotate: -360,
+                      }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 60,
+                        ease: "linear",
+                      }}
+                    >
+                      <motion.g>
+                        <item.icon
+                          className={`h-10 w-10 ${item.color} cursor-pointer`}
+                          x="-16"
+                          y="-40"
+                          onClick={() => handleESGItemClick(item.title)}
+                        />
+                      </motion.g>
+                      <text
+                        textAnchor="middle"
+                        fontSize="20"
+                        fontWeight="bold"
+                        fill="#333"
+                        x="0"
+                        y="10"
+                        style={item.style}
+                        className="cursor-pointer"
+                        onClick={() => handleESGItemClick(item.title)}
+                      >
+                        {item.title}
+                      </text>
+                    </motion.g>
+                  </g>
+                );
+              })}
+            </motion.g>
+          </svg>
+        </div>
+      </motion.div>
+    </section>
   );
 };
