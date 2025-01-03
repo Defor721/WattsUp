@@ -182,7 +182,7 @@ function PredictMain() {
         );
 
         setChartData(formattedChartData);
-        // console.log("Predicted Chart Data:", formattedChartData);
+        console.log("Predicted Chart Data:", formattedChartData);
       } catch (error) {
         console.error("Error during prediction:", error);
       }
