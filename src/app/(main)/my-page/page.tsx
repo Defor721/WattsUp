@@ -273,52 +273,6 @@ export default function Mypage() {
           </div>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>최근 활동</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-4">
-            {[
-              {
-                icon: Zap,
-                text: "거래 완료: 1.2 GWh (75원/kWh)",
-                time: "2시간 전",
-              },
-              { icon: FileText, text: "월간 보고서 제출", time: "1일 전" },
-              { icon: Bell, text: "새로운 시장 공지사항", time: "3일 전" },
-              {
-                icon: DollarSign,
-                text: "정산 완료: 9,000,000원",
-                time: "4일 전",
-              },
-              {
-                icon: TrendingUp,
-                text: "거래량 목표 달성: 100GWh",
-                time: "1주일 전",
-              },
-              {
-                icon: Calendar,
-                text: "다음 달 거래 계획 수립",
-                time: "2주일 전",
-              },
-            ].map((activity, index) => (
-              <li key={index} className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgb(15,30,75)]">
-                  <activity.icon className="h-5 w-5" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{activity.text}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {activity.time}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
     </div>
   );
 }

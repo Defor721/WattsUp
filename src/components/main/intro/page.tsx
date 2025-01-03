@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, Users, LeafyGreen } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Card } from "@/components/shadcn/card";
+import KakaoMap from "@/components/introduce/KakaoMap";
 
 export default function IntroPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function IntroPage() {
 
   return (
     <div className="flex h-screen items-center justify-center p-6">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto flex w-1/2 max-w-7xl flex-col">
         <h1 className="mb-8 text-center text-4xl font-bold">전력 정보</h1>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((card, index) => (
@@ -60,6 +61,9 @@ export default function IntroPage() {
             </motion.div>
           ))}
         </div>
+      </div>
+      <div className="flex h-full w-1/2 flex-col p-8">
+        <KakaoMap />
       </div>
     </div>
   );

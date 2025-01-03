@@ -19,7 +19,7 @@ interface SignupEmailInputProps {
   setIsEmailVerified: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function LoginEmailInput({
+export default function SignupEmailSection({
   isEmailVerified,
   setIsEmailVerified,
 }: SignupEmailInputProps) {
@@ -68,7 +68,6 @@ export default function LoginEmailInput({
     }
   };
 
-  // TODO: 에러 메시지 표시
   const handleVerifyEmail = async () => {
     if (isVerifyButtonDisabled()) return;
     try {
@@ -90,20 +89,6 @@ export default function LoginEmailInput({
     }
   };
 
-  const resetEmailInfo = () => {
-    setEmailCode("");
-    setIsEmailVerified(false);
-  };
-
-  const handleCooldownTimer = () => {
-    if (cooldown > 0) {
-      const timer = setInterval(() => {
-        setCooldown((prev) => Math.max(prev - 1, 0));
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  };
-
   const validateEmail = () => {
     if (email.trim() === "") {
       setIsEmailValid(false);
@@ -112,7 +97,6 @@ export default function LoginEmailInput({
     }
   };
 
-  useEffect(handleCooldownTimer, [cooldown]);
   useEffect(validateEmail, [email]);
 
   return (
@@ -122,6 +106,7 @@ export default function LoginEmailInput({
         email={email}
         isEmailVerified={isEmailVerified}
         isEmailValid={isEmailValid}
+        showMessage={true}
         setEmail={setEmail}
       />
       {/* 이메일 인증코드 입력 */}
@@ -130,6 +115,7 @@ export default function LoginEmailInput({
           emailCode={emailCode}
           isEmailVerified={isEmailVerified}
           cooldown={cooldown}
+          setCooldown={setCooldown}
           setEmailCode={setEmailCode}
           isSendButtonDisabled={isSendButtonDisabled()}
           handleSendEmailCode={handleSendEmailCode}
@@ -150,7 +136,8 @@ export default function LoginEmailInput({
         isEmailVerified={isEmailVerified}
         isEmailVerificationLoading={isEmailVerificationLoading}
         isVerifyButtonDisabled={isVerifyButtonDisabled()}
-        resetEmailInfo={resetEmailInfo}
+        setEmailCode={setEmailCode}
+        setIsEmailVerified={setIsEmailVerified}
         handleVerifyEmail={handleVerifyEmail}
       />
     </div>

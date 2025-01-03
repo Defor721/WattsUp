@@ -21,9 +21,7 @@ export interface SocialSignupParams {
   startDate: string;
   principalName: string;
   companyName: string;
-  businessType: "individual" | "corporate";
   corporateNumber: string | null;
-  personalId: string | null;
 }
 
 export interface AuthState {
@@ -32,6 +30,7 @@ export interface AuthState {
   redirectTo: string;
   error: boolean;
   message: string | null;
+  loading: boolean;
   actions: {
     nativeLogin: (email: string, password: string) => Promise<void>;
     socialLogin: (code: string) => Promise<void>;

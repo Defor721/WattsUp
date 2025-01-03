@@ -1,7 +1,7 @@
-"use client"; // Next.js에서 클라이언트 사이드 렌더링을 활성화하는 선언
+"use client";
 
-import React, { useRef } from "react"; // React와 useRef 훅 가져오기
-import { motion, useInView } from "framer-motion"; // 애니메이션 훅 및 컴포넌트
+import React, { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import {
   Zap,
   Factory,
@@ -11,99 +11,143 @@ import {
   Heart,
   Building,
   Star,
-} from "lucide-react"; // Lucide-react에서 아이콘 가져오기
-import type { LucideIcon } from "lucide-react"; // LucideIcon 타입 정의 가져오기
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-// MarketEntity 타입 정의: 전력시장 구성 요소를 정의
 type MarketEntity = {
-  title: string; // 구성 요소 이름
-  icon: LucideIcon; // 아이콘 컴포넌트
-  color: string; // Tailwind CSS 색상 클래스
+  title: string;
+  icon: LucideIcon;
+  color: string;
+  description: string;
 };
 
-// ESGItem 타입 정의: ESG 활동 항목을 정의
 type ESGItem = {
-  title: string; // 항목 이름
-  icon: LucideIcon; // 아이콘 컴포넌트
-  color: string; // Tailwind CSS 색상 클래스
-  description: string; // 항목 설명
-  style?: React.CSSProperties; // 선택적 스타일 정의
+  title: string;
+  icon: LucideIcon;
+  color: string;
+  description: string;
+  style?: React.CSSProperties;
 };
 
-export const PowerMarketStructure = () => {
-  const marketRef = useRef(null); // 전력시장 섹션의 DOM 참조를 위한 useRef
-  const esgRef = useRef(null); // ESG 섹션의 DOM 참조를 위한 useRef
+export const PowerMarket = () => {
+  const marketRef = useRef(null);
 
-  const isMarketInView = useInView(marketRef, { once: true, amount: 0.5 }); // marketRef가 50% 화면에 보일 때 true
-  const isESGInView = useInView(esgRef, { once: true, amount: 0.5 }); // esgRef가 50% 화면에 보일 때 true
+  const isMarketInView = useInView(marketRef, { once: true, amount: 0.5 });
 
-  // 전력시장 구성 요소 배열
   const marketEntities: MarketEntity[] = [
-    { title: "발전회사", icon: Zap, color: "text-yellow-500" }, // 발전회사의 데이터
-    { title: "한국전력거래소", icon: DollarSign, color: "text-blue-500" }, // 한국전력거래소 데이터
-    { title: "한국전력공사", icon: Factory, color: "text-green-500" }, // 한국전력공사의 데이터
-    { title: "소비자", icon: Users, color: "text-purple-500" }, // 소비자 데이터를 포함
-  ];
-
-  // ESG 활동 항목 배열
-  const esgItems: ESGItem[] = [
     {
-      title: "환경 (Environmental)",
-      icon: Globe,
-      color: "text-green-500",
+      title: "발전회사",
+      icon: Zap,
+      color: "text-yellow-500",
       description:
-        "신재생에너지 확대 및 온실가스 감축을 통한 친환경 전력시장 조성", // ESG 항목 설명
+        "발전회사는 전력을 생산하여 전력시장에 공급하는 역할을 합니다. " +
+        "이들은 화력, 원자력, 신재생에너지 등을 이용하여 전력을 생산합니다. " +
+        "생산된 전력은 전력거래소를 통해 전력망에 전달되어 소비자에게 공급됩니다. " +
+        "전력 생산의 안정성과 효율성은 국가 에너지 정책의 중요한 축입니다.",
     },
     {
-      title: "사회 (Social)",
-      icon: Heart,
-      color: "text-red-500",
-      description: "공정하고 투명한 전력거래 문화 조성 및 사회적 가치 실현", // 사회적 책임 강조
-    },
-    {
-      title: "지배구조 (Governance)",
-      icon: Building,
+      title: "한국전력거래소",
+      icon: DollarSign,
       color: "text-blue-500",
       description:
-        "윤리경영 강화 및 이해관계자와의 소통을 통한 투명한 기업 운영", // 윤리경영과 관련된 설명
+        "한국전력거래소는 전력시장을 운영하며 전력거래를 중개하는 핵심 기관입니다. " +
+        "발전회사와 전력 공급자 간의 전력 거래를 조정하고 최적의 전력 분배를 관리합니다. " +
+        "공정하고 투명한 전력거래를 위해 시장 규칙을 제정하고 이를 시행합니다. " +
+        "효율적인 전력 시스템 운영을 통해 전력 수급 안정성을 유지합니다.",
     },
     {
-      title: "WattsUp",
-      icon: Star,
-      color: "text-orange-500",
-      description: "혁신적인 에너지 솔루션으로 지속 가능한 미래 창출", // 프로젝트 설명
+      title: "한국전력공사",
+      icon: Factory,
+      color: "text-green-500",
+      description:
+        "한국전력공사는 발전회사로부터 구매한 전력을 소비자에게 공급하는 국가 공기업입니다. " +
+        "전력망을 관리하고 송배전 설비의 유지보수를 책임집니다. " +
+        "신재생에너지 확대 및 에너지 절약 캠페인을 통해 친환경 경영을 실천하고 있습니다. " +
+        "안정적인 전력 공급을 통해 국민 생활과 산업의 기반을 지원합니다.",
+    },
+    {
+      title: "소비자",
+      icon: Users,
+      color: "text-purple-500",
+      description:
+        "소비자는 전력을 사용하는 개인 및 기업 고객을 말합니다. " +
+        "가정, 상업, 산업 등 다양한 용도로 전력을 소비합니다. " +
+        "최근에는 에너지 효율성을 높이기 위해 스마트 계량기와 같은 기술을 활용하고 있습니다. " +
+        "소비자의 전력 사용 패턴은 전력시장의 수요와 공급을 결정하는 중요한 요소입니다.",
     },
   ];
 
+  const [selectedMarketItem, setSelectedMarketItem] = useState<string>(
+    marketEntities[0].title,
+  );
+
+  const handleMarketItemClick = (title: string) => {
+    setSelectedMarketItem(title);
+  };
+
   return (
-    <section className="flex flex-col items-center justify-center gap-32 overflow-hidden bg-white px-4 py-24">
+    <section className="flex flex-col items-center justify-center overflow-hidden bg-white px-4 py-24">
       {/* 전력시장 구조 */}
       <motion.div
-        ref={marketRef} // 전력시장 섹션의 DOM 참조
+        ref={marketRef}
         className="flex w-full max-w-6xl flex-col items-center justify-between md:flex-row"
-        initial={{ opacity: 0, y: 50 }} // 초기 상태: 아래로 이동 & 투명
-        animate={isMarketInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }} // isMarketInView 상태에 따라 애니메이션
-        transition={{ duration: 0.8, ease: "easeOut" }} // 애니메이션 지속 시간과 효과
+        initial={{ opacity: 0, y: 50 }}
+        animate={isMarketInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="mb-8 w-full md:mb-0 md:w-1/3">
           <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
             전력시장 구조
           </h2>
-          <p className="mb-4 text-center text-lg text-neutral-600 md:text-left">
+          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 md:text-left">
             한국의 전력시장은 다양한 주체들의 상호작용으로 운영됩니다. 발전회사,
             한국전력거래소, 한국전력공사, 그리고 소비자가 핵심 구성원으로
             참여하고 있습니다.
           </p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }} // Transition 효과 추가
+            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-gray-600"
+          >
+            <div className="flex flex-col">
+              {/* Title Hover 효과 추가 */}
+              <motion.div
+                className="mb-2 font-bold"
+                initial={{ scale: 1 }} // 초기 상태
+                whileHover={{ scale: 1.1 }} // Hover 시 크기 증가
+                transition={{ type: "spring", stiffness: 300, damping: 15 }} // 자연스러운 애니메이션
+              >
+                {
+                  marketEntities.find(
+                    (item) => item.title === selectedMarketItem,
+                  )?.title
+                }
+              </motion.div>
+
+              {/* Description Transition 효과 추가 */}
+              <motion.div
+                initial={{ opacity: 0 }} // 초기 상태
+                animate={{ opacity: 1 }} // 애니메이션 상태
+                transition={{ duration: 0.5, ease: "easeOut" }} // 부드러운 전환 효과
+              >
+                {
+                  marketEntities.find(
+                    (item) => item.title === selectedMarketItem,
+                  )?.description
+                }
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
         <div className="relative h-[500px] w-full md:w-2/3">
           <svg className="h-full w-full" viewBox="0 0 500 500">
-            {/* 중앙 노드 */}
             <g transform="translate(250, 250)">
-              <circle r="60" fill="#f0f0f0" /> {/* 중앙 원 */}
+              <circle r="60" fill="#f0f0f0" />
               <text
                 textAnchor="middle"
                 dy=".3em"
-                fontSize="18"
+                fontSize="20"
                 fontWeight="bold"
                 fill="#333"
               >
@@ -111,29 +155,28 @@ export const PowerMarketStructure = () => {
               </text>
             </g>
 
-            {/* 회전하는 엔티티 그룹 */}
             <motion.g
               animate={{
-                rotate: 360, // 360도 회전
+                rotate: 360,
               }}
               transition={{
-                repeat: Infinity, // 무한 반복
-                duration: 40, // 40초에 한 번 회전
-                ease: "linear", // 일정한 속도
+                repeat: Infinity,
+                duration: 40,
+                ease: "linear",
               }}
-              style={{ transformOrigin: "250px 250px" }} // 회전 중심 설정
+              style={{ transformOrigin: "250px 250px" }}
             >
               {marketEntities.map((entity, index) => {
-                const angle = (index * 2 * Math.PI) / 4; // 위치 계산
-                const x = 250 + Math.cos(angle) * 170; // x축 좌표 계산
-                const y = 250 + Math.sin(angle) * 170; // y축 좌표 계산
+                const angle = (index * 2 * Math.PI) / 4;
+                const x = 250 + Math.cos(angle) * 170;
+                const y = 250 + Math.sin(angle) * 170;
 
                 return (
                   <g key={index} transform={`translate(${x}, ${y})`}>
-                    <circle r="50" fill="#fff" /> {/* 아이콘 배경 원 */}
+                    <circle r="50" fill="#fff" />
                     <motion.g
                       animate={{
-                        rotate: -360, // 개별 아이콘 반대 방향 회전
+                        rotate: -360,
                       }}
                       transition={{
                         repeat: Infinity,
@@ -141,126 +184,24 @@ export const PowerMarketStructure = () => {
                         ease: "linear",
                       }}
                     >
-                      <entity.icon
-                        className={`h-8 w-8 ${entity.color}`} // 아이콘 크기와 색상
-                        x="-16"
-                        y="-16"
-                      />
+                      <motion.g>
+                        <entity.icon
+                          className={`h-8 w-8 ${entity.color} cursor-pointer`}
+                          x="-16"
+                          y="-8"
+                          onClick={() => handleMarketItemClick(entity.title)}
+                        />
+                      </motion.g>
                       <text
                         textAnchor="middle"
                         dy="2em"
-                        fontSize="16"
+                        fontSize="20"
                         fontWeight="bold"
                         fill="#333"
+                        className="cursor-pointer"
+                        onClick={() => handleMarketItemClick(entity.title)}
                       >
                         {entity.title}
-                      </text>
-                    </motion.g>
-                  </g>
-                );
-              })}
-            </motion.g>
-          </svg>
-        </div>
-      </motion.div>
-
-      {/* ESG 경영 활동 */}
-      <motion.div
-        ref={esgRef} // ESG 섹션 DOM 참조
-        className="flex w-full max-w-6xl flex-col items-center justify-between md:flex-row-reverse"
-        initial={{ opacity: 0, y: 50 }} // 초기 상태: 아래로 이동 & 투명
-        animate={isESGInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }} // isESGInView 상태에 따라 애니메이션
-        transition={{ duration: 0.8, ease: "easeOut" }} // 애니메이션 지속 시간과 효과
-      >
-        <div className="mb-8 w-full md:mb-0 md:w-1/3">
-          <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
-            ESG 경영 활동
-          </h2>
-          <p className="mb-4 text-center text-lg text-neutral-600 md:text-left">
-            우리는 환경(Environmental), 사회(Social), 지배구조(Governance)를
-            중심으로 한 ESG 경영을 통해 지속 가능한 미래를 만들어갑니다.
-            WattsUp은 이러한 ESG 가치를 실현하는 혁신적인 솔루션을 제공합니다.
-          </p>
-        </div>
-        <div className="relative h-[600px] w-full md:w-2/3">
-          <svg className="h-full w-full" viewBox="0 0 600 600">
-            {/* 중앙 노드 */}
-            <g transform="translate(300, 300)">
-              <circle r="60" fill="#f0f0f0" /> {/* 중앙 원 */}
-              <text
-                textAnchor="middle"
-                dy=".3em"
-                fontSize="18"
-                fontWeight="bold"
-                fill="#333"
-              >
-                ESG
-              </text>
-            </g>
-
-            {/* 회전하는 ESG 항목 그룹 */}
-            <motion.g
-              animate={{
-                rotate: 360, // 360도 회전
-              }}
-              transition={{
-                repeat: Infinity, // 무한 반복
-                duration: 60, // 60초에 한 번 회전
-                ease: "linear", // 일정한 속도
-              }}
-              style={{ transformOrigin: "300px 300px" }} // 회전 중심 설정
-            >
-              {esgItems.map((item, index) => {
-                const angle = (index * 2 * Math.PI) / 4; // 위치 계산
-                const x = 300 + Math.cos(angle) * 190; // x축 좌표 계산
-                const y = 300 + Math.sin(angle) * 190; // y축 좌표 계산
-
-                return (
-                  <g key={index} transform={`translate(${x}, ${y})`}>
-                    <circle r="80" fill="white" /> {/* 아이콘 배경 원 */}
-                    <motion.g
-                      animate={{
-                        rotate: -360, // 개별 아이콘 반대 방향 회전
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 60,
-                        ease: "linear",
-                      }}
-                    >
-                      <item.icon
-                        className={`h-10 w-10 ${item.color}`} // 아이콘 크기와 색상
-                        x="-20"
-                        y="-40"
-                      />
-                      <text
-                        textAnchor="middle"
-                        fontSize="16"
-                        fontWeight="bold"
-                        fill="#333"
-                        x="0"
-                        y="10"
-                        style={item.style} // 선택적 스타일
-                      >
-                        {item.title}
-                      </text>
-                      <text
-                        textAnchor="middle"
-                        fontSize="10"
-                        fill="#666"
-                        x="0"
-                        y="30"
-                        width="140"
-                      >
-                        <tspan x="0" dy="0">
-                          {item.description.split(" ").slice(0, 4).join(" ")}
-                        </tspan>
-                        <tspan x="0" dy="12">
-                          {item.description.split(" ").slice(4, 8).join(" ")}
-                        </tspan>
-                        <tspan x="0" dy="12">
-                          {item.description.split(" ").slice(8).join(" ")}
-                        </tspan>
                       </text>
                     </motion.g>
                   </g>

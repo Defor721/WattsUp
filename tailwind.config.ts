@@ -86,6 +86,32 @@ const config: Config = {
           DEFAULT: "#FF5B1A",
           dark: "#FF6B31",
         },
+        google: {
+          text: "#1f1f1f",
+          "text-dark": "#FFFFFF",
+          bg: "#f2f2f2",
+          "bg-dark": "#131314",
+        },
+        toast: {
+          background: "#ffffff",
+          foreground: "#000000",
+          dark: {
+            background: "#1a1a1a",
+            foreground: "#f5f5f5",
+          },
+          destructive: "#ff4d4f",
+          "destructive-foreground": "#ffffff",
+        },
+        dialog: {
+          background: "#ffffff",
+          foreground: "#000000",
+          text: "#1f1f1f",
+          dark: {
+            background: "#1a1a1a",
+            foreground: "#f5f5f5",
+            text: "#FFFFFF",
+          },
+        },
       },
       keyframes: {
         insideout: {
