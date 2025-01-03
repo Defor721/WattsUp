@@ -46,7 +46,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<ReactNode>("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!email) {
       setErrorMessage(
         <>
@@ -70,6 +71,7 @@ export default function LoginForm() {
     try {
       await nativeLogin(email, password);
     } catch (error: any) {
+      console.error("nativeLogin 실패:", error);
       setErrorMessage(error.message || "로그인 중 오류가 발생했습니다.");
     }
   };

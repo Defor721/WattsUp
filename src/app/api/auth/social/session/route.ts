@@ -14,7 +14,6 @@ async function insertUserToDB(collection: any, userData: any) {
   try {
     await collection.insertOne(userData);
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { message: "데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다." },
       { status: 500 },
@@ -102,8 +101,6 @@ export async function POST(request: NextRequest) {
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
       expiresIn: "7d",
     });
-
-    console.log(`principalName: `, principalName);
 
     await insertUserToDB(collection, {
       email,

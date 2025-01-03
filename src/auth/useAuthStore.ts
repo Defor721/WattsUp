@@ -35,7 +35,6 @@ export const useAuthStore = create<AuthState>((set) => ({
           message,
         });
       } catch (error: any) {
-        console.log(error);
         throw new Error(
           error.response?.data?.message || "잘못된 소셜로그인 시도입니다.",
         );
@@ -101,27 +100,37 @@ export const useAuthStore = create<AuthState>((set) => ({
             "회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
         });
         throw error;
+      } finally {
+        set({ loading: false });
       }
     },
 
     async nativeLogin(email: string, password: string) {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
       try {
-        const { accessToken } = await loginWithEmailAndPassword(
+        const { accessToken, message } = await loginWithEmailAndPassword(
           email,
           password,
         );
+
         set({
           accessToken: accessToken,
           redirectTo: "/",
+          message,
         });
       } catch (error: any) {
         throw new Error(
           error.response?.data?.message || "잘못된 로그인 시도입니다.",
         );
+      } finally {
+        set({ loading: false });
       }
     },
 
     async fetchCurrentUser() {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
       try {
         const user = await fetchCurrentUser();
         set((state) => {
@@ -138,6 +147,8 @@ export const useAuthStore = create<AuthState>((set) => ({
             error.response.data.message ||
             "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
         });
+      } finally {
+        set({ loading: false });
       }
     },
 

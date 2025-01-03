@@ -1,4 +1,4 @@
-import { AuthResponse, SocialSignupParams } from "@/auth/type";
+import { AuthResponse } from "@/auth/type";
 import apiClient from "@/lib/axios";
 
 /**
@@ -9,15 +9,14 @@ export const loginWithEmailAndPassword = async (
   password: string,
 ) => {
   try {
-    const { data } = await apiClient.post("/api/auth/session", {
+    const response = await apiClient.post("/api/auth/session", {
       email,
       password,
     });
+    const { data } = response;
 
     return data;
   } catch (error) {
-    console.log("일반 로그인 중 오류 발생", error);
-
     throw error;
   }
 };
@@ -36,8 +35,6 @@ export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
 
     return data;
   } catch (error) {
-    console.log("소셜 토큰 교환 중 오류 발생", error);
-
     throw error;
   }
 }
@@ -104,7 +101,6 @@ export async function reissueToken(): Promise<any> {
 
     return data;
   } catch (error) {
-    console.log("토큰 재발급 중 오류 발생", error);
     throw error;
   }
 }
@@ -119,7 +115,6 @@ export async function businessstatus(businessNumber: string): Promise<any> {
     });
     return data;
   } catch (error: any) {
-    console.log("사업자 등록번호 확인 중 오류 발생", error);
     throw error;
   }
 }
@@ -145,7 +140,6 @@ export async function businessInfoVerification(
 
     return data;
   } catch (error: any) {
-    console.log("사업자 등록번호 확인 중 오류 발생", error);
     throw error;
   }
 }

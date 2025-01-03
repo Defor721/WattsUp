@@ -7,7 +7,6 @@ async function insertUserToDB(collection: any, userData: any) {
   try {
     await collection.insertOne(userData);
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { message: "데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다." },
       { status: 500 },
@@ -15,6 +14,7 @@ async function insertUserToDB(collection: any, userData: any) {
   }
 }
 
+/** 일반 회원가입 */
 export async function POST(request: NextRequest) {
   try {
     const client = await clientPromise;
@@ -114,7 +114,28 @@ export async function POST(request: NextRequest) {
       businessNumber,
     });
 
-    return NextResponse.json({ message: "회원가입 성공" }, { status: 201 });
+    const response = NextResponse.json(
+      { message: "회원가입 성공" },
+      { status: 201 },
+    );
+
+    response.cookies.set("emailVerificationToken", "", {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      sameSite: "strict",
+      maxAge: 0,
+    });
+
+    response.cookies.set("businessVerificationToken", "", {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      sameSite: "strict",
+      maxAge: 0,
+    });
+
+    return response;
   } catch (error: any) {
     if (error.message.startsWith("TokenExpiredError")) {
       let response = NextResponse.json(
