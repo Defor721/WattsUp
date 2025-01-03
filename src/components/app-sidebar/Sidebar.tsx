@@ -11,15 +11,8 @@ import {
   Users,
   Database,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import {
-  FaBullseye,
-  FaFlag,
-  FaLaptopCode,
-  FaLightbulb,
-  FaMapMarkerAlt,
-} from "react-icons/fa";
-import { MdOutlineStar } from "react-icons/md";
+import { useState } from "react";
+import { FaLaptopCode } from "react-icons/fa";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/useAccessToken";
@@ -37,12 +30,14 @@ const defaultItems = [
     icon: LayoutDashboard,
     label: "대시보드",
     href: "/dashboard",
-  },
-  {
-    id: "predict",
-    icon: BarChart2,
-    label: "태양광 발전량 예측",
-    href: "/dashboard/predict",
+    subItems: [
+      {
+        id: "add-information",
+        icon: BarChart2,
+        label: "추가 정보",
+        href: "/dashboard/add-information",
+      },
+    ],
   },
   { id: "profit-analysis", icon: FileText, label: "데이터 분석", href: "/" },
   {

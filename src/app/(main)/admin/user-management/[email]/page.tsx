@@ -13,6 +13,7 @@ function Page() {
     const fetchUserData = async () => {
       try {
         const decodedEmail = decodeURIComponent(email);
+        console.log("decodedEmail: ", decodedEmail);
         const response = await apiClient.get(
           `http://localhost:3000//api/admin/userinfo/${decodedEmail}`,
         );
@@ -26,7 +27,7 @@ function Page() {
     };
 
     fetchUserData();
-  }, []);
+  }, [email]);
 
   return <div>test</div>;
 }

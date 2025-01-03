@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 
-import PredictChart from "@/components/dashboard/predict/Chart";
-import PredictTable from "@/components/dashboard/predict/Table";
 import { regions } from "@/utils/regions";
-import apiClient from "@/lib/axios";
-import Loading from "@/app/loading";
-import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
-import Title from "@/components/ui/Title";
 import { get6Days } from "@/utils";
+import apiClient from "@/lib/axios";
+import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
+import Container from "./Container";
+import TodayValue from "./TodayValue";
 import RegionButtons from "./RegionButtons";
+import PredictChart from "./Chart";
+import PredictTable from "./Table";
 
 // OpenWeather API 설정
 const LOCATIONS = [
@@ -60,11 +61,11 @@ const normalize = (data: number[], min: number, max: number) =>
 const denormalize = (data: number[], min: number, max: number) =>
   data.map((value) => value * (max - min) + min);
 
-function PredictMain() {
-  const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
-  const [chartData, setChartData] = useState<Record<string, any[]>>({});
+function DashboardMain() {
   const [selectedRegion, setSelectedRegion] = useState("서울시");
+  const [chartData, setChartData] = useState<Record<string, any[]>>({});
+  const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -219,24 +220,34 @@ function PredictMain() {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-w-[704px] p-5 dark:bg-subColor md:w-full">
-      <Title title={"태양광 발전량 예측"} />
-      <RegionButtons
-        regions={regions}
-        selectedRegion={selectedRegion}
-        setSelectedRegion={setSelectedRegion}
-      />
-      <PredictChart
-        data={chartData[selectedRegion]}
-        region={selectedRegion}
-        selectedRegion={selectedRegion}
-      />
+    <Container>
+      <div className="mb-10 flex items-center justify-between">
+        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+          대시보드
+        </h2>
+        <RegionButtons
+          regions={regions}
+          selectedRegion={selectedRegion}
+          setSelectedRegion={setSelectedRegion}
+        />
+      </div>
+      <div className="mb-10 flex gap-6">
+        <TodayValue
+          selectedRegion={selectedRegion}
+          data={chartData[selectedRegion]}
+        />
+        <PredictChart
+          data={chartData[selectedRegion]}
+          region={selectedRegion}
+          selectedRegion={selectedRegion}
+        />
+      </div>
       <PredictTable
         tableData={tableData || []}
         selectedRegion={selectedRegion}
       />
-    </div>
+    </Container>
   );
 }
 
-export default PredictMain;
+export default DashboardMain;

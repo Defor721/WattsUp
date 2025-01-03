@@ -49,12 +49,12 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
-  console.log("Chart Data:", data);
+  // console.log("Chart Data:", data);
 
   if (!data) return;
 
   return (
-    <div className="mt-5">
+    <div className="flex-1">
       <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
