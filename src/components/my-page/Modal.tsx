@@ -120,7 +120,7 @@ function Modal() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="w-full border-[rgb(40,70,150)] hover:bg-slate-100 sm:w-auto"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Settings className="mr-2 h-4 w-4" />
           비밀번호 수정
@@ -150,7 +150,7 @@ function Modal() {
               <div className="flex justify-end">
                 <Button
                   onClick={handleVerifyPassword}
-                  className="bg-mainColor text-white dark:border-1"
+                  className="bg-subColor text-white dark:bg-white dark:text-subColor"
                 >
                   확인
                 </Button>
@@ -177,14 +177,12 @@ function Modal() {
               </div>
               <div className="flex items-center justify-end gap-3">
                 <DialogClose asChild>
-                  <Button variant="ghost" className="">
-                    닫기
-                  </Button>
+                  <Button variant="ghost">닫기</Button>
                 </DialogClose>
 
                 <Button
                   onClick={handleChangePassword}
-                  className="bg-mainColor text-white dark:border-1"
+                  className="bg-subColor text-white dark:bg-white dark:text-subColor"
                 >
                   변경
                 </Button>

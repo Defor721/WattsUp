@@ -36,7 +36,7 @@ function Info() {
   };
 
   return (
-    <Card className="col-span-1 flex flex-col items-center border-0 pt-20 md:col-span-1">
+    <Card className="flex w-full max-w-[400px] flex-col items-center border-0 shadow-none">
       <CardHeader className="flex flex-col items-center text-center">
         <Avatar
           className="h-24 w-24 cursor-pointer"
@@ -56,11 +56,11 @@ function Info() {
         <CardDescription>김터빈@gmail.com</CardDescription>
       </CardHeader>
       <CardContent className="flex w-full flex-col items-center">
-        <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">
+        <div className="flex w-full flex-col justify-center gap-3">
           <Modal />
           <Button
             variant="outline"
-            className="w-full border-[rgb(40,70,150)] hover:bg-slate-100 sm:w-auto"
+            className="w-full bg-subColor text-white dark:bg-white dark:text-subColor"
           >
             <LogOut className="mr-2 h-4 w-4" />
             로그아웃
