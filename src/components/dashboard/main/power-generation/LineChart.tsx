@@ -10,19 +10,23 @@ import {
   Legend,
 } from "recharts";
 
-import {
-  formatNumberWithDecimal,
-  formatNumberWithoutDecimal,
-} from "@/hooks/useNumberFormatter";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 interface LineChartProps {
   data: {
     연도: number;
-    총발전량: number;
+    수력: number;
+    원자력: number;
+    신재생: number;
+    가스: number;
+    유연탄: number;
   }[];
+  colors: { [key: string]: string };
 }
 
-function LineChart({ data }: LineChartProps) {
+function LineChart({ data, colors }: LineChartProps) {
+  const keys = ["수력", "원자력", "신재생", "가스", "유연탄"];
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <RechartsLineChart
@@ -38,12 +42,15 @@ function LineChart({ data }: LineChartProps) {
           }
         />
         <Legend />
-        <Line
-          type="monotone"
-          dataKey="총발전량"
-          stroke="#4ADE80"
-          strokeWidth={2}
-        />
+        {keys.map((key) => (
+          <Line
+            key={key}
+            type="monotone"
+            dataKey={key}
+            stroke={colors[key]}
+            strokeWidth={2}
+          />
+        ))}
       </RechartsLineChart>
     </ResponsiveContainer>
   );

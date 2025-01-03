@@ -70,6 +70,7 @@ function SMP() {
             총계: isNaN(Number(row["총계"])) ? 0 : Number(row["총계"]),
           }));
         setData(jsonData);
+        console.log("jsonData: ", jsonData);
       } catch (error) {
         console.error("Error loading data:", error);
       }
@@ -88,16 +89,16 @@ function SMP() {
           기간: year,
           LNG: 0,
           유류: 0,
-          무연탄: 0,
           유연탄: 0,
+          무연탄: 0,
           원자력: 0,
           총계: 0,
         };
       }
       acc[year].LNG += curr.LNG;
       acc[year].유류 += curr.유류;
-      acc[year].무연탄 += curr.무연탄;
       acc[year].유연탄 += curr.유연탄;
+      acc[year].무연탄 += curr.무연탄;
       acc[year].원자력 += curr.원자력;
       acc[year].총계 += curr.총계;
 
@@ -116,8 +117,8 @@ function SMP() {
       (totals, item) => {
         totals.LNG += item.LNG;
         totals.유류 += item.유류;
-        totals.무연탄 += item.무연탄;
         totals.유연탄 += item.유연탄;
+        totals.무연탄 += item.무연탄;
         totals.원자력 += item.원자력;
         totals.총계 += item.총계;
         return totals;
@@ -125,8 +126,8 @@ function SMP() {
       {
         LNG: 0,
         유류: 0,
-        무연탄: 0,
         유연탄: 0,
+        무연탄: 0,
         원자력: 0,
         총계: 0,
       },
@@ -181,7 +182,7 @@ function SMP() {
               <SelectValue placeholder="연료원 선택" />
             </SelectTrigger>
             <SelectContent className="bg-white dark:bg-subColor">
-              {["전체", "LNG", "유류", "무연탄", "유연탄", "원자력"].map(
+              {["전체", "LNG", "무연탄", "유류", "유연탄", "원자력"].map(
                 (fuel) => (
                   <SelectItem
                     className="z-10 bg-white dark:bg-subColor"
@@ -204,46 +205,48 @@ function SMP() {
         </Button>
       </div>
 
-      <Card className="flex flex-col items-center p-6 shadow-lg">
-        <h2 className="text-lg font-semibold">
-          {selectedFuel} 기간별 SMP 추이
-        </h2>
-        <LineChart
-          data={lineChartData}
-          xKey="name"
-          yKey="value"
-          lineColor="#34D399"
-        />
-      </Card>
+      <div className="flex gap-6">
+        <Card className="flex flex-1 flex-col items-center p-6 shadow-lg">
+          <h2 className="text-lg font-semibold">
+            {selectedFuel} 기간별 SMP 추이
+          </h2>
+          <LineChart
+            data={lineChartData}
+            xKey="name"
+            yKey="value"
+            lineColor="#34D399"
+          />
+        </Card>
 
-      <Card className="mt-6 flex flex-col p-6 shadow-lg">
-        <h2 className="text-center text-lg font-semibold">
-          연료원별 전체 비율
-        </h2>
-        <div className="flex items-center justify-center">
-          <div className="w-[450px]">
-            <PieChart data={doughnutData} colors={colors} />
-          </div>
-          <div className="flex flex-col gap-2">
-            {doughnutData
-              .sort((a, b) => b.value - a.value)
-              .map((item, index) => (
-                <div
-                  key={item.name}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-                >
+        <Card className="flex flex-1 flex-col p-6 shadow-lg">
+          <h2 className="text-center text-lg font-semibold">
+            연료원별 전체 비율
+          </h2>
+          <div className="flex items-center justify-center">
+            <div className="w-[450px]">
+              <PieChart data={doughnutData} colors={colors} />
+            </div>
+            <div className="flex flex-col gap-2">
+              {doughnutData
+                .sort((a, b) => b.value - a.value)
+                .map((item, index) => (
                   <div
-                    className="h-4 w-4 rounded-full"
-                    style={{ backgroundColor: colors[index % colors.length] }}
-                  ></div>
-                  <span>
-                    {item.name}: {formatNumberWithoutDecimal(item.value)} MWh
-                  </span>
-                </div>
-              ))}
+                    key={item.name}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                  >
+                    <div
+                      className="h-4 w-4 rounded-full"
+                      style={{ backgroundColor: colors[index % colors.length] }}
+                    ></div>
+                    <span>
+                      {item.name}: {formatNumberWithoutDecimal(item.value)}
+                    </span>
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
 
       {/* Table */}
       <div className="mt-8">

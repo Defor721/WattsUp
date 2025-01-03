@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import { Download } from "lucide-react";
 
 import BarChart from "@/components/dashboard/page12/BarChart";
 import LineChart from "@/components/dashboard/page12/LineChart";
@@ -54,6 +55,13 @@ const EquipmentDashboard = () => {
     setCurrentKPI(yearData || null);
   }, [selectedYear, data]);
 
+  const handleDownload = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Equipment Data");
+    XLSX.writeFile(workbook, "EquipmentDashboardData.xlsx");
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-6 text-white">
       <h1 className="mb-6 text-center text-4xl font-bold">
@@ -73,6 +81,13 @@ const EquipmentDashboard = () => {
             </option>
           ))}
         </select>
+        <button
+          onClick={handleDownload}
+          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          <Download size={16} />
+          데이터 다운로드
+        </button>
       </div>
 
       {/* KPI 카드 */}

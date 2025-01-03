@@ -13,32 +13,20 @@ import {
 } from "@/components/shadcn";
 
 import { KPICard } from "./KPICard";
-import LineChart from "./LineChart";
-import BarChart from "./BarChart";
 import Table from "./Table";
 import Container from "../Container";
+import Total from "./Total";
+import LineChart from "./LineChart";
 
 export interface DataRow {
   연도: number;
-  일반수력: number;
-  양수: number;
-  소수력: number;
-  수력: number;
-  무연탄: number;
-  유연탄: number;
-  중유: number;
-  가스: number;
-  기력소계: number;
-  복합화력일반: number;
-  복합화력열공급: number;
-  복합화력총계: number;
   원자력: number;
+  가스: number;
+  유연탄: number;
   신재생: number;
-  집단: number;
-  내연력: number;
-  기타: number;
-  총계: number;
-  총발전량: number;
+  수력: number;
+  // 총계: number;
+  // 총발전량: number;
 }
 
 interface KPIConfig {
@@ -48,6 +36,14 @@ interface KPIConfig {
     value?: number; // `value`는 선택 속성
   };
 }
+
+export const colorConfig = {
+  수력: "#60A5FA", // 파란색 (수력)
+  원자력: "#FF5733", // 오렌지색 (원자력)
+  신재생: "#F87171", // 빨간색 (신재생)
+  가스: "#34D399", // 초록색 (가스)
+  유연탄: "#6B7280", // 회색 (유연탄)
+};
 
 function PowerGeneration() {
   const [data, setData] = useState<DataRow[]>([]);
@@ -77,31 +73,19 @@ function PowerGeneration() {
           throw new Error("데이터를 찾을 수 없습니다");
         }
 
+        // 원하는 값만 추출
         const formattedData: DataRow[] = jsonData.map((row: any) => ({
           연도: Number(row["연도"]),
-          일반수력: Number(row["일반수력"] || 0),
-          양수: Number(row["양수"] || 0),
-          소수력: Number(row["소수력"] || 0),
-          수력: Number(row["수력소계"] || 0),
-          무연탄: Number(row["무연탄"] || 0),
-          유연탄: Number(row["유연탄"] || 0),
-          중유: Number(row["중유"] || 0),
-          가스: Number(row["가스"] || 0),
-          기력소계: Number(row["기력소계"] || 0),
-          복합화력일반: Number(row["복합화력일반"] || 0),
-          복합화력열공급: Number(row["복합화력열공급"] || 0),
-          복합화력총계: Number(row["복합화력총계"] || 0),
           원자력: Number(row["원자력"] || 0),
+          가스: Number(row["가스"] || 0),
+          유연탄: Number(row["유연탄"] || 0),
           신재생: Number(row["신재생"] || 0),
-          집단: Number(row["집단"] || 0),
-          내연력: Number(row["내연력"] || 0),
-          기타: Number(row["기타"] || 0),
-          총계: Number(row["총계"] || 0),
-          총발전량: Number(row["총발전량"] || 0),
+          수력: Number(row["수력소계"] || 0),
+          // 국내탄: Number(row["국내탄"] || 0),
         }));
 
         setData(formattedData);
-        console.log("formattedData: ", formattedData);
+        // console.log("Filtered Data: ", formattedData);
         setSelectedYear(formattedData[0]?.연도 || 2023);
         setError(null);
       } catch (error) {
@@ -124,32 +108,68 @@ function PowerGeneration() {
   };
 
   const currentYearData = data.find((row) => row.연도 === selectedYear);
-
-  const totalRenewableEnergy =
+  const totalGeneration =
     (currentYearData?.수력 || 0) +
     (currentYearData?.원자력 || 0) +
-    (currentYearData?.신재생 || 0);
-  console.log("totalRenewableEnergy: ", totalRenewableEnergy);
+    (currentYearData?.신재생 || 0) +
+    (currentYearData?.가스 || 0) +
+    (currentYearData?.유연탄 || 0);
 
   const kpiConfig: KPIConfig = {
-    총발전량: { color: "#4ADE80", unit: "MWh", value: totalRenewableEnergy },
-    수력: { color: "#60A5FA", unit: "MWh" },
-    원자력: { color: "#FBBF24", unit: "MWh" },
-    신재생: { color: "#F87171", unit: "MWh" },
+    수력: {
+      color: colorConfig.수력,
+      unit: "MWh",
+      value: currentYearData?.수력 || 0,
+    },
+    원자력: {
+      color: colorConfig.원자력,
+      unit: "MWh",
+      value: currentYearData?.원자력 || 0,
+    },
+    신재생: {
+      color: colorConfig.신재생,
+      unit: "MWh",
+      value: currentYearData?.신재생 || 0,
+    },
+    가스: {
+      color: colorConfig.가스,
+      unit: "MWh",
+      value: currentYearData?.가스 || 0,
+    },
+    유연탄: {
+      color: colorConfig.유연탄,
+      unit: "MWh",
+      value: currentYearData?.유연탄 || 0,
+    },
+    총발전량: {
+      color: "#4ADE80", // 총발전량의 색상은 고정
+      unit: "MWh",
+      value: totalGeneration,
+    },
   };
 
-  const chartData = data.map((row) => ({
-    연도: row.연도,
-    총발전량: row.수력 + row.원자력 + row.신재생,
-  }));
+  const totalData = data.map((row) => {
+    const totalGeneration =
+      row.원자력 + row.가스 + row.유연탄 + row.신재생 + row.수력;
+    return {
+      연도: row.연도,
+      총발전량: totalGeneration,
+    };
+  });
 
-  const tableData = data.map((row) => ({
-    연도: row.연도,
-    수력: row.수력,
-    원자력: row.원자력,
-    신재생: row.신재생,
-    총발전량: row.수력 + row.원자력 + row.신재생,
-  }));
+  const tableData = data.map((row) => {
+    const totalGeneration =
+      row.원자력 + row.가스 + row.유연탄 + row.신재생 + row.수력; // 모든 필요한 필드 합산
+    return {
+      연도: row.연도,
+      수력: row.수력,
+      원자력: row.원자력,
+      신재생: row.신재생,
+      가스: row.가스,
+      유연탄: row.유연탄,
+      총발전량: totalGeneration,
+    };
+  });
 
   if (error) {
     return (
@@ -231,14 +251,17 @@ function PowerGeneration() {
       {/* 차트 섹션 */}
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div>
-          <h2 className="mb-4 text-center text-xl font-bold">총발전량 추이</h2>
-          <LineChart data={[...chartData].sort((a, b) => a.연도 - b.연도)} />
-        </div>
-        <div>
           <h2 className="mb-4 text-center text-xl font-bold">
             발전원별 발전량
           </h2>
-          <BarChart data={[...data].sort((a, b) => a.연도 - b.연도)} />
+          <LineChart
+            data={[...data].sort((a, b) => a.연도 - b.연도)}
+            colors={colorConfig}
+          />
+        </div>
+        <div>
+          <h2 className="mb-4 text-center text-xl font-bold">총발전량 추이</h2>
+          <Total data={[...totalData].sort((a, b) => a.연도 - b.연도)} />
         </div>
       </div>
 
