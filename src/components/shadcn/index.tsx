@@ -138,7 +138,7 @@ export {
   TableCell,
   TableCaption,
 } from "./table";
-export { Tabs } from "./tabs";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export {
   type ToastProps,
   type ToastActionElement,
