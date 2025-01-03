@@ -52,12 +52,12 @@ export default function OTPInput({
         </InputOTPGroup>
       </InputOTP>
       <Button
-        className={`w-[62px] rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:bg-gray-400`}
+        className={`w-[108px] rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:bg-gray-400`}
         type="button"
         onClick={handleSendEmailCode}
         disabled={isSendButtonDisabled}
       >
-        {cooldown > 0 ? `${cooldown}초` : "전송"}
+        {cooldown > 0 ? `${cooldown}초 뒤 활성화` : "인증코드 전송"}
       </Button>
     </div>
   );

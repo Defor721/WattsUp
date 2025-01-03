@@ -2,29 +2,44 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 import { FindPasswordPopup } from "@/auth/components/FindPassword";
 import { useAuthStore } from "@/auth/useAuthStore";
-import { useDialog } from "@/hooks/useDialog";
 
-import useAccessToken from "../../useAccessToken";
 import GoogleLoginButton from "./GoogleLoginButton";
 import EmailInput from "../common/EmailInput";
 import PasswordInput from "../common/PasswordInput";
 
-export default function LoginForm() {
-  const router = useRouter();
+interface DividerProps {
+  children?: React.ReactNode;
+}
 
+function Divider({ children }: DividerProps) {
+  return (
+    <div className="my-1 flex w-full items-center text-sm">
+      <div
+        className={`flex-grow border-t ${
+          children ? "mr-4" : ""
+        } border-gray-300`}
+      ></div>
+      {children && (
+        <span className="text-gray-500 dark:text-gray-300">{children}</span>
+      )}
+      <div
+        className={`flex-grow border-t ${
+          children ? "ml-4" : ""
+        } border-gray-300`}
+      ></div>
+    </div>
+  );
+}
+
+export default function LoginForm() {
   const {
-    message,
     actions: { nativeLogin },
   } = useAuthStore();
-
-  const { showDialog, DialogComponent } = useDialog();
-  const { resetAccessToken } = useAccessToken();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -60,7 +75,7 @@ export default function LoginForm() {
   };
 
   return (
-    <>
+    <form>
       <CardContent className="grid gap-6">
         {/* 이메일 섹션 */}
         <div className="flex flex-col gap-2">
@@ -88,16 +103,7 @@ export default function LoginForm() {
         >
           로그인
         </Button>
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t"></span>
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background text-muted-foreground z-10 px-2">
-              Or continue with
-            </span>
-          </div>
-        </div>
+        <Divider>또는</Divider>
         {/* 구글 로그인 버튼 */}
         <GoogleLoginButton />
         {/* 비밀번호 및 회원가입 링크 */}
@@ -112,7 +118,6 @@ export default function LoginForm() {
           </Link>
         </div>
       </CardFooter>
-      <DialogComponent />
-    </>
+    </form>
   );
 }

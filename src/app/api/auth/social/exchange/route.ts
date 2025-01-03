@@ -2,14 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
-import { fetchGoogleTokens, fetchGoogleUserInfo } from "@/auth/authService";
+import {
+  fetchGoogleTokens,
+  fetchGoogleUserInfo,
+} from "@/auth/services/server/authService";
 
 // 환경 변수 검증 함수
 const validateEnv = () => {
   if (
     !process.env.ACCESS_TOKEN_SECRET ||
     !process.env.REFRESH_TOKEN_SECRET ||
-    !process.env.TEMP_TOKEN_SECRET
+    !process.env.TEMP_TOKEN_SECRET ||
+    !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+    !process.env.GOOGLE_CLIENT_SECRET ||
+    !process.env.NEXT_PUBLIC_REDIRECT_URI
   ) {
     throw new Error("환경 변수가 설정되지 않았습니다.");
   }
@@ -33,7 +39,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
+    await new Promise((resolve) => setTimeout(resolve, 100));
     // Google에서 토큰 요청
     const { access_token } = await fetchGoogleTokens(authorizationCode);
 
@@ -87,13 +93,14 @@ export async function POST(request: NextRequest) {
     }
 
     // 추가 정보 입력이 필요한 경우: 임시 토큰 반환
-    const signupToken = jwt.sign(
+    const emailVerificationToken = jwt.sign(
       {
         email: googleUser.email,
         signupType: "social",
         provider: "google",
       },
       process.env.TEMP_TOKEN_SECRET!,
+
       { expiresIn: "15m" },
     );
 
@@ -102,7 +109,7 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
 
-    response.cookies.set("signupToken", signupToken, {
+    response.cookies.set("emailVerificationToken", emailVerificationToken, {
       httpOnly: true,
       secure: true,
       path: "/",
@@ -111,10 +118,9 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("auth exchange 로직에서 에러 발생:", error);
     return NextResponse.json(
       {
-        message: "내부 서버 오류가 발생했습니다.",
+        message: `${error || "내부 서버 오류가 발생했습니다."}`,
       },
       { status: 500 },
     );

@@ -1,6 +1,5 @@
+import { AuthResponse, SocialSignupParams } from "@/auth/type";
 import apiClient from "@/lib/axios";
-
-import { AuthResponse, GoogleTokenResponse, SocialSignupParams } from "./type";
 
 /**
  * 일반 로그인
@@ -46,38 +45,16 @@ export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
 /**
  * 소셜 로그인(회원가입)
  */
-export async function socialSignup({
-  businessNumber,
-  startDate,
-  principalName,
-  companyName,
-  businessType,
-  corporateNumber,
-  personalId,
-}: SocialSignupParams): Promise<any> {
-  try {
-    const { data } = await apiClient.post(
-      "/api/auth/social/session",
-      {
-        businessNumber,
-        startDate,
-        principalName,
-        companyName,
-        businessType,
-        corporateNumber,
-        personalId,
-      },
-      {
-        withCredentials: true,
-      },
-    );
+export async function socialSignup(): Promise<any> {
+  const { data } = await apiClient.post(
+    "/api/auth/social/session",
 
-    return data;
-  } catch (error) {
-    console.log("추가정보를 입력받아 소셜 로그인 중 오류 발생", error);
+    {
+      withCredentials: true,
+    },
+  );
 
-    throw error;
-  }
+  return data;
 }
 
 /**
@@ -101,8 +78,6 @@ export async function nativeSignup({
 
     return data;
   } catch (error) {
-    console.log("추가정보를 입력받아 소셜 로그인 중 오류 발생", error);
-
     throw error;
   }
 }
@@ -117,51 +92,6 @@ export const logout = async () => {
     console.error("로그아웃 실패:", error);
   }
 };
-
-/**
- * Google에 토큰 요청
- */
-export async function fetchGoogleTokens(
-  authorizationCode: string,
-): Promise<GoogleTokenResponse> {
-  try {
-    const { data } = await apiClient.post<GoogleTokenResponse>(
-      "https://oauth2.googleapis.com/token",
-      {
-        code: authorizationCode,
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
-        grant_type: "authorization_code",
-      },
-    );
-
-    return data;
-  } catch (error) {
-    console.log("소셜 토큰 요청 중 오류 발생", error);
-
-    throw error;
-  }
-}
-
-/**
- * Google에 사용자 정보 요청
- */
-export async function fetchGoogleUserInfo(accessToken: string): Promise<any> {
-  try {
-    const { data } = await apiClient.get(
-      "https://openidconnect.googleapis.com/v1/userinfo",
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    );
-    return data;
-  } catch (error) {
-    console.log("Google에 사용자 정보 요청 중 오류 발생", error);
-
-    throw error;
-  }
-}
 
 /**
  * 엑세스 및 리프레시 토큰 재발급

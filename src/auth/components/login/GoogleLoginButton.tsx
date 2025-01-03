@@ -15,6 +15,7 @@ export default function GoogleLoginButton() {
 
   return (
     <Button
+      type="button"
       onClick={handleLogin}
       className={`flex w-full items-center justify-center gap-0 rounded-lg bg-google-bg px-2 py-2`}
     >

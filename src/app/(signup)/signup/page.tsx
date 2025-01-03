@@ -11,7 +11,7 @@ function Signup() {
   return (
     <Card className="relative flex flex-col p-5">
       <ArrowBack />
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle className="text-2xl">회원가입</CardTitle>
         <CardDescription>회원가입을 위한 정보를 입력해주세요.</CardDescription>
       </CardHeader>

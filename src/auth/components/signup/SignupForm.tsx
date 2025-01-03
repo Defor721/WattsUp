@@ -22,6 +22,11 @@ export default function SignupForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
   const [isBusinessVerified, setIsBusinessVerified] = useState(false);
+  const [businessNumber, setBusinessNumber] = useState("");
+  const [principalName, setPrincipalName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [corporateNumber, setCorporateNumber] = useState("");
 
   const isSubmitButtonDisabled = () =>
     !isEmailVerified ||
@@ -58,7 +63,7 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardContent className="flex flex-col gap-5">
+      <CardContent className="flex flex-col gap-5 p-0">
         {/* 이메일 섹션 */}
         <SignupEmailSection
           isEmailVerified={isEmailVerified}
@@ -76,10 +81,20 @@ export default function SignupForm() {
         {/* 법인등록번호 및 주민등록번호 검증 섹션 */}
         <BusinessNumberSection
           isBusinessVerified={isBusinessVerified}
+          businessNumber={businessNumber}
+          principalName={principalName}
+          startDate={startDate}
+          companyName={companyName}
+          corporateNumber={corporateNumber}
           setIsBusinessVerified={setIsBusinessVerified}
+          setBusinessNumber={setBusinessNumber}
+          setPrincipalName={setPrincipalName}
+          setStartDate={setStartDate}
+          setCompanyName={setCompanyName}
+          setCorporateNumber={setCorporateNumber}
         />
       </CardContent>
-      <CardFooter>
+      <CardFooter className="px-0">
         {/* 버튼 섹션 */}
         <Button
           type="submit"

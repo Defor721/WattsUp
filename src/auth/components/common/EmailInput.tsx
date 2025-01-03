@@ -28,6 +28,7 @@ export default function EmailInput({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         disabled={isEmailVerified}
+        autoComplete="email"
         required
       />
       {/* 이메일 입력 안내 */}

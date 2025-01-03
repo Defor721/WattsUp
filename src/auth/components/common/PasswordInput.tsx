@@ -34,6 +34,7 @@ export default function PasswordInput({
           maxLength={16}
           value={password}
           onChange={(e) => setPassword(e.target.value.replace(/\s/g, ""))}
+          autoComplete="current-password"
           required
         />
         <EyeButton show={showPassword} setShow={setShowPassword} />

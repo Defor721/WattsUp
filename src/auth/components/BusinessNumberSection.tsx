@@ -12,22 +12,37 @@ import {
 } from "@/components/shadcn";
 import { toast } from "@/hooks/useToast";
 
-import { businessInfoVerification } from "../authService";
+import { businessInfoVerification } from "../services/client/authService";
 
 interface BusinessNumberSectionProps {
   isBusinessVerified: boolean;
+  businessNumber: string;
+  principalName: string;
+  startDate: string;
+  companyName: string;
+  corporateNumber: string;
   setIsBusinessVerified: Dispatch<React.SetStateAction<boolean>>;
+  setBusinessNumber: Dispatch<React.SetStateAction<string>>;
+  setPrincipalName: Dispatch<React.SetStateAction<string>>;
+  setStartDate: Dispatch<React.SetStateAction<string>>;
+  setCompanyName: Dispatch<React.SetStateAction<string>>;
+  setCorporateNumber: Dispatch<React.SetStateAction<string>>;
 }
 
 export default function BusinessNumberSection({
   isBusinessVerified,
+  businessNumber,
+  principalName,
+  startDate,
+  companyName,
+  corporateNumber,
   setIsBusinessVerified,
+  setBusinessNumber,
+  setPrincipalName,
+  setStartDate,
+  setCompanyName,
+  setCorporateNumber,
 }: BusinessNumberSectionProps) {
-  const [businessNumber, setBusinessNumber] = useState("");
-  const [principalName, setPrincipalName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [corporateNumber, setCorporateNumber] = useState("");
   const [isBusinessLoading, setIsBusinessLoading] = useState(false);
   const [businessStatusMessage, setBusinessStatusMessage] = useState("");
 
