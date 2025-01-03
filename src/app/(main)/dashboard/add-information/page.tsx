@@ -10,37 +10,18 @@ import {
   SelectItem,
 } from "@/components/shadcn";
 import Title from "@/components/ui/Title";
-
-import PowerGenerationByPowerSource from "@/components/dashboard/main/power-generation-by-power-source/PowerGenerationByPowerSource";
-import Economic from "@/components/dashboard/main/economic/Economic";
-import SMP from "@/components/dashboard/main/smp/Smp";
-import People from "@/components/dashboard/main/people/People";
-import Failures from "@/components/dashboard/main/failures/Failures";
-import PowerUsageByRegion from "@/components/dashboard/main/power-usage-by-region/PowerUsageByRegion";
-import Electro from "@/components/dashboard/main/electro/Electro";
-import PowerGeneration from "@/components/dashboard/main/power-generation/PowerGeneration";
-import PowerPrice from "@/components/dashboard/main/power-price/PowerPrice";
-import Sales from "@/components/dashboard/main/sales/Sales";
-
-interface TodoItem {
-  id: number;
-  작성자: string;
-  목표전력량: number;
-  목표가격: number;
-  목표입찰금액: number;
-  대시보드주제: string;
-}
+import PowerGenerationByPowerSource from "@/components/dashboard/add-information/power-generation-by-power-source/PowerGenerationByPowerSource";
+import Economic from "@/components/dashboard/add-information/economic/Economic";
+import SMP from "@/components/dashboard/add-information/smp/Smp";
+import People from "@/components/dashboard/add-information/people/People";
+import Failures from "@/components/dashboard/add-information/failures/Failures";
+import PowerUsageByRegion from "@/components/dashboard/add-information/power-usage-by-region/PowerUsageByRegion";
+import Electro from "@/components/dashboard/add-information/electro/Electro";
+import PowerGeneration from "@/components/dashboard/add-information/power-generation/PowerGeneration";
+import PowerPrice from "@/components/dashboard/add-information/power-price/PowerPrice";
+import Sales from "@/components/dashboard/add-information/sales/Sales";
 
 function DashboardPage() {
-  const [todos, setTodos] = useState<TodoItem[]>([]);
-  const [kpi, setKpi] = useState({
-    목표전력량: "",
-    목표가격: "",
-    목표입찰금액: "",
-  });
-  const [author, setAuthor] = useState("");
-  const [extra, setExtra] = useState("");
-  const [recommended, setRecommended] = useState<string[]>([]);
   const [selectedDashboard, setSelectedDashboard] =
     useState<string>("SMP 결정 횟수");
 

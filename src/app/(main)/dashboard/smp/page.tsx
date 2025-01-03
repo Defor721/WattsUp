@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import KPICard from "@/components/dashboard/page8/KPICard";
 import LineChart from "@/components/dashboard/page8/LineChart";
 import Table from "@/components/dashboard/page8/Table";
+
 import DoughnutChart from "@/components/dashboard/main/smp/PieChart";
 
 // SMPData 타입 정의
