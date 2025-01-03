@@ -186,7 +186,7 @@ function Electro() {
         </div>
         <Button
           onClick={handleDownload}
-          className="bg-subColor text-white dark:bg-white dark:text-subColor"
+          className="bg-subColor text-white dark:border-1"
         >
           <Download size={16} />
           데이터 다운로드

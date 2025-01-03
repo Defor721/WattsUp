@@ -1,16 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import {
-  Settings,
-  LogOut,
-  Zap,
-  FileText,
-  Bell,
-  DollarSign,
-  TrendingUp,
-  Calendar,
-} from "lucide-react";
 import {
   PieChart,
   Pie,
@@ -22,29 +11,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useState, useRef } from "react";
 
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/shadcn/card";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/shadcn/avatar";
-import { Button } from "@/components/shadcn/button";
-import { Progress } from "@/components/shadcn/progress";
-import {
+  Progress,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/shadcn/tabs";
-import { Input } from "@/components/shadcn/input";
+} from "@/components/shadcn";
+import Info from "@/components/my-page/Info";
 
 const tradeData = [
   { name: "실시간 거래", value: 35 },
@@ -65,68 +44,13 @@ const monthlyTradeData = [
 ];
 
 export default function Mypage() {
-  const router = useRouter();
-  const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatarSrc(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
-    <div className="container mx-auto space-y-6 p-4 sm:p-6">
-      <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">마이페이지</h1>
+    <div className="p-5">
+      <h2 className="mb-10 scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+        마이 페이지
+      </h2>
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="col-span-1 flex flex-col items-center border-0 pt-20 md:col-span-1">
-          <CardHeader className="flex flex-col items-center text-center">
-            <Avatar
-              className="h-24 w-24 cursor-pointer"
-              onClick={handleAvatarClick}
-            >
-              <AvatarImage src={avatarSrc} alt="김터빈" />
-              <AvatarFallback>김터빈</AvatarFallback>
-            </Avatar>
-            <Input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleFileChange}
-              accept="image/*"
-            />
-            <CardTitle className="mt-4">김터빈</CardTitle>
-            <CardDescription>김터빈@gmail.com</CardDescription>
-          </CardHeader>
-          <CardContent className="flex w-full flex-col items-center">
-            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">
-              <Button
-                variant="outline"
-                onClick={() => router.push("/edit-profile")}
-                className="w-full border-[rgb(40,70,150)] hover:bg-slate-100 sm:w-auto"
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                프로필 수정
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[rgb(40,70,150)] hover:bg-slate-100 sm:w-auto"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                로그아웃
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <Info />
 
         <Card className="col-span-1 md:col-span-2">
           <CardHeader>

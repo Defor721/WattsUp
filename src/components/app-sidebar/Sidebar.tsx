@@ -30,14 +30,12 @@ const defaultItems = [
     icon: LayoutDashboard,
     label: "대시보드",
     href: "/dashboard",
-    subItems: [
-      {
-        id: "add-information",
-        icon: BarChart2,
-        label: "추가 정보",
-        href: "/dashboard/add-information",
-      },
-    ],
+  },
+  {
+    id: "add-information",
+    icon: BarChart2,
+    label: "대시보드 추가 정보",
+    href: "/dashboard/add-information",
   },
   { id: "profit-analysis", icon: FileText, label: "데이터 분석", href: "/" },
   {
