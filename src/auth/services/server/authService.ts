@@ -46,8 +46,6 @@ export async function fetchGoogleUserInfo(accessToken: string): Promise<any> {
     );
     return data;
   } catch (error) {
-    console.log("Google에 사용자 정보 요청 중 오류 발생", error);
-
     throw error;
   }
 }

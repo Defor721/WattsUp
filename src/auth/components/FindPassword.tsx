@@ -66,7 +66,7 @@ function FindPasswordPopup({ children }: Props) {
         <AlertDialogFooter>
           <AlertDialogCancel>취소</AlertDialogCancel>
           <AlertDialogAction
-            className="bg-[#E79057] hover:bg-[#E79057]"
+            className="bg-[#070f26] dark:border-1"
             onClick={handleSendConfirmEmail}
           >
             전송

@@ -102,6 +102,16 @@ const config: Config = {
           destructive: "#ff4d4f",
           "destructive-foreground": "#ffffff",
         },
+        dialog: {
+          background: "#ffffff",
+          foreground: "#000000",
+          text: "#1f1f1f",
+          dark: {
+            background: "#1a1a1a",
+            foreground: "#f5f5f5",
+            text: "#FFFFFF",
+          },
+        },
       },
       keyframes: {
         insideout: {

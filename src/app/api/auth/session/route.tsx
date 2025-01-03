@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
         path: "/",
         sameSite: "none",
       });
+
       return response;
     } else {
       return NextResponse.json(

@@ -21,7 +21,7 @@ const mockingEnabledPromise =
 function onUnhandledRequest(request: Request, print: any) {
   if (request.url.includes("_next")) return;
 
-  print.warning();
+  // print.warning();
 }
 
 /**
