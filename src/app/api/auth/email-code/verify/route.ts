@@ -69,7 +69,6 @@ export async function POST(request: NextRequest) {
         provider: null,
       },
       process.env.TEMP_TOKEN_SECRET!,
-      //TODO: 시험중 끝나고 바꿀것
       { expiresIn: "15m" },
     );
 

@@ -12,22 +12,37 @@ import {
 } from "@/components/shadcn";
 import { toast } from "@/hooks/useToast";
 
-import { businessInfoVerification } from "../authService";
+import { businessInfoVerification } from "../services/client/authService";
 
-interface SignupBusinessNumberInputProps {
+interface BusinessNumberSectionProps {
   isBusinessVerified: boolean;
+  businessNumber: string;
+  principalName: string;
+  startDate: string;
+  companyName: string;
+  corporateNumber: string;
   setIsBusinessVerified: Dispatch<React.SetStateAction<boolean>>;
+  setBusinessNumber: Dispatch<React.SetStateAction<string>>;
+  setPrincipalName: Dispatch<React.SetStateAction<string>>;
+  setStartDate: Dispatch<React.SetStateAction<string>>;
+  setCompanyName: Dispatch<React.SetStateAction<string>>;
+  setCorporateNumber: Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SignupBusinessNumberInput({
+export default function BusinessNumberSection({
   isBusinessVerified,
+  businessNumber,
+  principalName,
+  startDate,
+  companyName,
+  corporateNumber,
   setIsBusinessVerified,
-}: SignupBusinessNumberInputProps) {
-  const [businessNumber, setBusinessNumber] = useState("");
-  const [principalName, setPrincipalName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [corporateNumber, setCorporateNumber] = useState("");
+  setBusinessNumber,
+  setPrincipalName,
+  setStartDate,
+  setCompanyName,
+  setCorporateNumber,
+}: BusinessNumberSectionProps) {
   const [isBusinessLoading, setIsBusinessLoading] = useState(false);
   const [businessStatusMessage, setBusinessStatusMessage] = useState("");
 
@@ -178,7 +193,7 @@ export default function SignupBusinessNumberInput({
                 <IoMdInformationCircleOutline />
               </TooltipTrigger>
               <TooltipContent side="right">
-                {"'-' 기호를 제외한 사업자 번호 13자리를 입력해주세요."}
+                {"'-' 기호를 제외한 법인등록번호 13자리를 입력해주세요."}
               </TooltipContent>
             </div>
           </Tooltip>

@@ -7,7 +7,7 @@ import {
   loginWithEmailAndPassword,
   nativeSignup,
   socialSignup,
-} from "@/auth/authService";
+} from "@/auth/services/client/authService";
 import { fetchCurrentUser } from "@/services/userService";
 import { deleteCookie } from "@/utils";
 
@@ -19,36 +19,36 @@ const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
   redirectTo: "/",
   error: false,
   message: null,
+  loading: false,
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
   ...NULL_AUTH_STATE,
   actions: {
-    async nativeLogin(email: string, password: string) {
+    async socialSignup() {
       try {
-        const { accessToken } = await loginWithEmailAndPassword(
-          email,
-          password,
-        );
+        const { accessToken, message } = await socialSignup();
         set({
-          accessToken: accessToken,
+          accessToken,
           redirectTo: "/",
           error: false,
-          message: null,
+          message,
         });
       } catch (error: any) {
-        set({
-          redirectTo: "/login",
-          error: true,
-          message:
-            error.response.data.message ||
-            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
-        });
+        console.log(error);
+        throw new Error(
+          error.response?.data?.message || "잘못된 소셜로그인 시도입니다.",
+        );
+      } finally {
+        set({ loading: false });
       }
     },
 
     async socialLogin(code: string) {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
       try {
+        set({ loading: true });
         const { accessToken, message } = await exchangeSocialToken(code);
 
         if (message === "추가 정보 입력이 필요합니다.") {
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             accessToken: null,
             message,
             redirectTo: "/login/additional",
-            error: true,
+            error: false,
           });
         } else {
           set({
@@ -68,53 +68,22 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
       } catch (error: any) {
         set({
-          redirectTo: "/login",
+          redirectTo: "/login/error",
           error: true,
           message:
             error.response.data.message ||
             "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
         });
-      }
-    },
-
-    async socialSignup({
-      businessNumber,
-      startDate,
-      principalName,
-      companyName,
-      businessType,
-      corporateNumber,
-      personalId,
-    }) {
-      try {
-        const { accessToken, message } = await socialSignup({
-          businessNumber,
-          startDate,
-          principalName,
-          companyName,
-          businessType,
-          corporateNumber,
-          personalId,
-        });
-        set({
-          accessToken,
-          redirectTo: "/",
-          error: false,
-          message,
-        });
-      } catch (error: any) {
-        set({
-          redirectTo: "/additional",
-          error: true,
-          message:
-            error.response.data.message ||
-            "추가정보를 입력받아 로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
-        });
+      } finally {
+        set({ loading: false });
       }
     },
 
     async nativeSignup(password) {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
       try {
+        set({ loading: true });
         const { message } = await nativeSignup({
           password,
         });
@@ -132,6 +101,23 @@ export const useAuthStore = create<AuthState>((set) => ({
             "회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
         });
         throw error;
+      }
+    },
+
+    async nativeLogin(email: string, password: string) {
+      try {
+        const { accessToken } = await loginWithEmailAndPassword(
+          email,
+          password,
+        );
+        set({
+          accessToken: accessToken,
+          redirectTo: "/",
+        });
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "잘못된 로그인 시도입니다.",
+        );
       }
     },
 
