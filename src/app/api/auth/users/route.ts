@@ -21,6 +21,8 @@ export async function POST(request: NextRequest) {
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
 
+    const { password } = await request.json();
+
     const emailVerificationToken = request.cookies.get(
       "emailVerificationToken",
     )?.value;
@@ -58,6 +60,29 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, signupType, provider } = emailVerification;
+    const user = await collection.findOne({ email });
+
+    if (user?.signupType === "native") {
+      return NextResponse.json(
+        {
+          accessToken: "",
+          message:
+            "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요.",
+        },
+        { status: 409 },
+      );
+    }
+
+    if (user?.signupType === "social") {
+      return NextResponse.json(
+        {
+          accessToken: "",
+          message:
+            "해당 이메일은 소셜 회원으로 등록되어 있습니다. 소셜 로그인을 이용해 주세요.",
+        },
+        { status: 409 },
+      );
+    }
 
     const businessVerification = await verifyToken(
       businessVerificationToken,
@@ -76,8 +101,6 @@ export async function POST(request: NextRequest) {
     }
     const { principalName, businessNumber, companyName, corporateNumber } =
       businessVerification;
-
-    const { password } = await request.json();
 
     if (!password) {
       return NextResponse.json(

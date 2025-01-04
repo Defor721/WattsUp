@@ -8,13 +8,10 @@ import {
   nativeSignup,
   socialSignup,
 } from "@/auth/services/client/authService";
-import { fetchCurrentUser } from "@/services/userService";
-import { deleteCookie } from "@/utils";
 
 import { AuthState } from "./type";
 
 const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
-  user: null,
   accessToken: null,
   redirectTo: "/",
   error: false,
@@ -25,8 +22,12 @@ const NULL_AUTH_STATE: Omit<AuthState, "actions"> = {
 export const useAuthStore = create<AuthState>((set) => ({
   ...NULL_AUTH_STATE,
   actions: {
+    /** 소셜 회원가입 */
     async socialSignup() {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
       try {
+        set({ loading: true });
         const { accessToken, message } = await socialSignup();
         set({
           accessToken,
@@ -43,6 +44,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
+    /** 소셜 로그인 */
     async socialLogin(code: string) {
       const state = useAuthStore.getState();
       if (state.loading) return;
@@ -78,6 +80,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
+    /** 일반 회원가입 */
     async nativeSignup(password) {
       const state = useAuthStore.getState();
       if (state.loading) return;
@@ -105,10 +108,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
+    /** 일반 로그인 */
     async nativeLogin(email: string, password: string) {
       const state = useAuthStore.getState();
       if (state.loading) return;
       try {
+        set({ loading: true });
         const { accessToken, message } = await loginWithEmailAndPassword(
           email,
           password,
@@ -118,6 +123,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           accessToken: accessToken,
           redirectTo: "/",
           message,
+          error: false,
         });
       } catch (error: any) {
         throw new Error(
@@ -128,30 +134,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
-    async fetchCurrentUser() {
-      const state = useAuthStore.getState();
-      if (state.loading) return;
-      try {
-        const user = await fetchCurrentUser();
-        set((state) => {
-          if (state.user?.email !== user.userData.email) {
-            return { ...state, user: user.userData };
-          }
-          return state;
-        });
-      } catch (error: any) {
-        deleteCookie("accessToken");
-        set({
-          user: null,
-          message:
-            error.response.data.message ||
-            "잘못된 로그인 시도입니다. 옳바른 방법으로 다시 시도해주세요.",
-        });
-      } finally {
-        set({ loading: false });
-      }
-    },
-
-    resetLoginState: () => set(NULL_AUTH_STATE),
+    /** 스토어 상태 초기화 */
+    resetAuthState: () => set(NULL_AUTH_STATE),
   },
 }));

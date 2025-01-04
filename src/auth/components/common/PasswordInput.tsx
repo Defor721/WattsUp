@@ -1,11 +1,11 @@
-import { Eye, EyeOff } from "lucide-react";
 import { Dispatch } from "react";
 
-import { Button, Input, Label } from "@/components/shadcn";
+import { Input, Label } from "@/components/shadcn";
 
 import EyeButton from "./EyeButton";
 
 interface PasswordInputProps {
+  passwordLabel?: string;
   password: string;
   showPassword: boolean;
   showMessage?: boolean;
@@ -15,6 +15,7 @@ interface PasswordInputProps {
 }
 
 export default function PasswordInput({
+  passwordLabel,
   password,
   showPassword,
   showMessage,
@@ -24,7 +25,7 @@ export default function PasswordInput({
 }: PasswordInputProps) {
   return (
     <>
-      <Label htmlFor="password">비밀번호</Label>
+      <Label htmlFor="password">{passwordLabel || "비밀번호"}</Label>
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}

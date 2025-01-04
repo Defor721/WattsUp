@@ -21,3 +21,21 @@ export async function fetchCurrentUser() {
 
   return data;
 }
+
+export async function updatePasswordByPassword() {
+  const { data } = await apiClient.patch("/api/users/password");
+
+  return data;
+}
+
+export async function updatePasswordByEmail(newPassword: string) {
+  const { data } = await apiClient.patch(
+    "/api/users/password/reset",
+    { newPassword },
+    {
+      withCredentials: true,
+    },
+  );
+
+  return data;
+}

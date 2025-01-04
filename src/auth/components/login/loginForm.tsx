@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
-import { FindPasswordPopup } from "@/auth/components/FindPassword";
+import { FindPasswordPopup } from "@/auth/components/common/FindPassword";
 import { useAuthStore } from "@/auth/useAuthStore";
 
 import GoogleLoginButton from "./GoogleLoginButton";

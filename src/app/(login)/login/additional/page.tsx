@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn";
-import BusinessNumberSection from "@/auth/components/BusinessNumberSection";
+import BusinessNumberSection from "@/auth/components/common/BusinessNumberSection";
 
 export default function AdditionalPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function AdditionalPage() {
   const {
     accessToken,
     redirectTo,
-    actions: { socialSignup, resetLoginState },
+    actions: { socialSignup, resetAuthState },
   } = useAuthStore();
 
   const [principalName, setPrincipalName] = useState("");
@@ -52,7 +52,7 @@ export default function AdditionalPage() {
   useEffect(() => {
     if (accessToken) {
       setAccessToken(accessToken);
-      resetLoginState();
+      resetAuthState();
       router.push(redirectTo);
     }
   }, [accessToken]);

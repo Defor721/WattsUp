@@ -25,7 +25,6 @@ export interface SocialSignupParams {
 }
 
 export interface AuthState {
-  user: User | null;
   accessToken: string | null;
   redirectTo: string;
   error: boolean;
@@ -36,8 +35,7 @@ export interface AuthState {
     socialLogin: (code: string) => Promise<void>;
     socialSignup: (params: SocialSignupParams) => Promise<void>;
     nativeSignup: (password: string) => Promise<void>;
-    fetchCurrentUser: () => Promise<void>;
-    resetLoginState: () => void;
+    resetAuthState: () => void;
   };
 }
 

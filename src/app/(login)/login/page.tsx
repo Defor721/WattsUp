@@ -12,8 +12,8 @@ import {
 } from "@/components/shadcn";
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/useAccessToken";
-import LoginForm from "@/auth/components/login/loginForm";
 import ArrowBack from "@/components/common/ArrowBack";
+import LoginForm from "@/auth/components/login/LoginForm";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,17 +22,17 @@ export default function LoginPage() {
   const {
     accessToken,
     redirectTo,
-    actions: { resetLoginState },
+    actions: { resetAuthState },
   } = useAuthStore();
 
   useEffect(() => {
-    resetLoginState();
+    resetAuthState();
   }, []);
 
   useEffect(() => {
     if (accessToken) {
       setAccessToken(accessToken);
-      resetLoginState();
+      resetAuthState();
       router.push(redirectTo);
     }
   }, [accessToken]);

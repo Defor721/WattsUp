@@ -11,8 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/shadcn";
 import { toast } from "@/hooks/useToast";
-
-import { businessInfoVerification } from "../services/client/authService";
+import { businessInfoVerification } from "@/auth/services/client/authService";
 
 interface BusinessNumberSectionProps {
   isBusinessVerified: boolean;
