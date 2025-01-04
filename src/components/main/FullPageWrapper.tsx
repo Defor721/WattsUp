@@ -17,7 +17,7 @@ const FullPageWrapper: React.FC = () => {
       // 페이지 오른쪽에 섹션 네비게이션 표시 여부
       navigation
       // 각 섹션의 앵커 (URL 해시와 연결됨)
-      anchors={["video", "energy", "features"]}
+      anchors={["video", "introduce", "energy", "features"]}
       // 섹션 스냅 기능 활성화
       fitToSection={true}
       // Fullpage.js 하단 저작권 표시 설정
@@ -30,19 +30,19 @@ const FullPageWrapper: React.FC = () => {
       render={() => (
         <ReactFullpage.Wrapper>
           {/* 섹션 1: VideoPart 컴포넌트 */}
-          <div className="section" style={{ backgroundColor: "#e5e7eb" }}>
+          <div className="section">
             <VideoPart />
           </div>
-          {/* 섹션 2: IntroPage 컴포넌트 */}
-          <div className="section" style={{ backgroundColor: "#f3f4f6" }}>
+          {/* 섹션 2: MainIntroPage 컴포넌트 */}
+          <div className="section">
             <IntroPage />
           </div>
           {/* 섹션 3: EnergyInfoPage 컴포넌트 */}
-          <div className="section" style={{ backgroundColor: "#f3f4f6" }}>
+          <div className="section">
             <EnergyInfoPage />
           </div>
           {/* 섹션 4: FeaturesPart 컴포넌트 */}
-          <div className="section" style={{ backgroundColor: "#ffffff" }}>
+          <div className="section">
             <FeaturesPart />
           </div>
         </ReactFullpage.Wrapper>

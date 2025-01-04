@@ -62,9 +62,9 @@ export default function IntroPage() {
           ))}
         </div>
       </div>
-      <div className="flex h-full w-1/2 flex-col p-8">
+      {/* <div className="flex h-full w-1/2 flex-col p-8">
         <KakaoMap />
-      </div>
+      </div> */}
     </div>
   );
 }
