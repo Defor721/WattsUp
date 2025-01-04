@@ -112,6 +112,10 @@ const config: Config = {
             text: "#FFFFFF",
           },
         },
+        tabs: {
+          mutedLight: "hsl(240 4.8% 95.9%)",
+          mutedDark: "hsl(240, 3.7%, 15.9%)",
+        },
       },
       keyframes: {
         insideout: {
