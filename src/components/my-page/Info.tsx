@@ -14,7 +14,7 @@ import {
   Input,
 } from "@/components/shadcn";
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 import Modal from "./Modal";
 

@@ -24,7 +24,7 @@ import {
   SidebarMenuItem,
 } from "@/components/shadcn/sidebar";
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 import { Button } from "../shadcn";
 
@@ -111,7 +111,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
-                  href="/mypage"
+                  href="/my-page"
                   className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
                 >
                   <User />

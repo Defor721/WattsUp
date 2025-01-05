@@ -6,7 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 import {
   Button,
   Card,

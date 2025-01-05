@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Triangle } from "react-loader-spinner";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 export default function AuthCallbackPage() {
   const router = useRouter();

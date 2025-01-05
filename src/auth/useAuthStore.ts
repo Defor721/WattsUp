@@ -3,6 +3,7 @@
 import { create } from "zustand";
 
 import {
+  deleteUser,
   exchangeSocialToken,
   loginWithEmailAndPassword,
   logout,
@@ -151,6 +152,27 @@ export const useAuthStore = create<AuthState>((set) => ({
       } catch (error: any) {
         throw new Error(
           error.response?.data?.message || "잘못된 로그아웃 시도입니다.",
+        );
+      } finally {
+        set({ loading: false });
+      }
+    },
+
+    async withdrawalAccount() {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
+      try {
+        set({ loading: true });
+        const { message } = await deleteUser();
+
+        set({
+          redirectTo: "/",
+          message,
+          error: false,
+        });
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "잘못된 회원탈퇴 시도입니다.",
         );
       } finally {
         set({ loading: false });

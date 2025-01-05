@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/shadcn";
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 import ArrowBack from "@/components/common/ArrowBack";
 import LoginForm from "@/auth/components/login/LoginForm";
 

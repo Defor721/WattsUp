@@ -15,7 +15,7 @@ import { useState } from "react";
 import { FaLaptopCode } from "react-icons/fa";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 import NavHeader from "./Header";
 import NavMain from "./Main";

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChevronUp, ChevronDown, User, Settings, LogOut } from "lucide-react";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 import { Button } from "../shadcn";
 
