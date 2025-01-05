@@ -27,6 +27,7 @@ type Message = {
   id: number;
   role: "user" | "assistant";
   content: string;
+  attachments?: Array<{ type: "image" | "file"; name: string; url: string }>;
 };
 
 type UploadedItem = {
@@ -50,34 +51,41 @@ function DataReport() {
 
   useEffect(scrollToBottom, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      const newMessage: Message = {
-        id: Date.now(),
-        role: "user",
-        content: input.trim(),
-      };
-      setMessages([...messages, newMessage]);
-      setInput("");
-
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "40px"; // 초기 높이로 설정
-      }
-
-      // 가짜 AI 응답 추가
-      setTimeout(() => {
-        const aiResponse: Message = {
-          id: Date.now() + 1,
-          role: "assistant",
-          content: "안녕하세요! 어떤 도움이 필요하신가요?",
-        };
-        setMessages((prev) => [...prev, aiResponse]);
-      }, 1000);
+  const handleSend = () => {
+    if (!input.trim() && uploadedItems.length === 0) {
+      return; // 텍스트와 업로드 항목이 없으면 전송하지 않음
     }
+
+    const newMessage: Message = {
+      id: Date.now(),
+      role: "user",
+      content: input.trim(),
+      attachments: uploadedItems.map((item) => ({
+        type: item.type,
+        name: item.file.name,
+        url: URL.createObjectURL(item.file),
+      })),
+    };
+
+    setMessages((prev) => [...prev, newMessage]); // 메시지 추가
+    setInput(""); // 텍스트 초기화
+    setUploadedItems([]); // 업로드 항목 초기화
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "40px"; // 초기 높이로 설정
+    }
+
+    // 가짜 AI 응답 추가
+    setTimeout(() => {
+      const aiResponse: Message = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: "안녕하세요! 어떤 도움이 필요하신가요?",
+      };
+      setMessages((prev) => [...prev, aiResponse]);
+    }, 1000);
   };
 
-  // 파일 및 이미지 업로드 처리 함수
   const handleUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "image" | "file",
@@ -86,7 +94,6 @@ function DataReport() {
     if (files) {
       const fileArray = Array.from(files).map((file) => ({ file, type }));
 
-      // 업로드 가능한 파일 및 이미지가 10개를 초과하면 Toast 표시
       if (uploadedItems.length + fileArray.length > 10) {
         toast({
           title: "파일 및 이미지는 총 10개까지만 업로드 가능합니다.",
@@ -99,7 +106,6 @@ function DataReport() {
     }
   };
 
-  // 업로드 항목 삭제 함수
   const removeItem = (index: number) => {
     setUploadedItems((prev) => prev.filter((_, i) => i !== index)); // 특정 항목 삭제
   };
@@ -114,6 +120,13 @@ function DataReport() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend(); // 엔터 키로 메시지 전송
+    }
+  };
+
   return (
     <Container>
       <Title title="데이터 분석 리포트" />
@@ -124,15 +137,18 @@ function DataReport() {
         <CardContent>
           <Chatting messages={messages} />
 
-          {/* 텍스트 or 파일/이미지 업로드 부분 */}
+          {/* 텍스트와 업로드 미리 보기 섹션 */}
           <form
-            onSubmit={handleSubmit}
-            className="mt-4 flex flex-col px-[10px] py-[4px]"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="flex flex-col bg-gray-100 dark:bg-gray-800"
           >
-            {/* 업로드 미리 보기 섹션 */}
+            {/* 업로드 미리 보기 */}
             <div
               className={cn(
-                "overflow-x-auto rounded-tl-md rounded-tr-md bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200",
+                "overflow-x-auto bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200",
                 uploadedItems.length > 0 ? "h-auto p-[6px]" : "h-0",
               )}
             >
@@ -199,20 +215,12 @@ function DataReport() {
                 setInput(e.target.value);
                 handleTextareaInput(); // 동적 높이 조정
               }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault(); // 기본 줄바꿈 동작 막기
-                  handleSubmit(e); // 메시지 보내기
-                }
-              }}
+              onKeyDown={handleKeyDown}
               placeholder="메시지를 입력하세요..."
-              className={cn(
-                "h-10 w-full resize-none overflow-y-auto bg-gray-100 pl-2 pt-2 text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-200",
-                uploadedItems.length > 0 ? "" : "rounded-tl-md rounded-tr-md",
-              )}
+              className="h-10 w-full resize-none overflow-y-auto rounded-lg bg-gray-100 pl-2 pt-2 text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-200"
             />
 
-            <div className="flex w-full items-center gap-3 rounded-bl-md rounded-br-md bg-gray-100 px-4 py-2 dark:bg-gray-800">
+            <div className="flex w-full items-center gap-3 bg-gray-100 px-4 py-2 dark:bg-gray-800">
               {/* 파일 업로드 */}
               <Label
                 htmlFor="file-upload"
@@ -223,6 +231,7 @@ function DataReport() {
               <Input
                 id="file-upload"
                 type="file"
+                accept=".pdf,.doc,.docx,.hwp"
                 onChange={(e) => handleUpload(e, "file")}
                 className="hidden"
               />
