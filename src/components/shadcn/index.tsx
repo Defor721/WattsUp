@@ -75,6 +75,7 @@ export {
 } from "./pagination";
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";
+export { ScrollArea, ScrollBar } from "./scroll-area";
 export {
   Select,
   SelectGroup,
