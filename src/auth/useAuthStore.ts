@@ -5,6 +5,7 @@ import { create } from "zustand";
 import {
   exchangeSocialToken,
   loginWithEmailAndPassword,
+  logout,
   nativeSignup,
   socialSignup,
 } from "@/auth/services/client/authService";
@@ -128,6 +129,28 @@ export const useAuthStore = create<AuthState>((set) => ({
       } catch (error: any) {
         throw new Error(
           error.response?.data?.message || "잘못된 로그인 시도입니다.",
+        );
+      } finally {
+        set({ loading: false });
+      }
+    },
+
+    /** 로그아웃 */
+    async logout() {
+      const state = useAuthStore.getState();
+      if (state.loading) return;
+      try {
+        set({ loading: true });
+        const { message } = await logout();
+
+        set({
+          redirectTo: "/",
+          message,
+          error: false,
+        });
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "잘못된 로그아웃 시도입니다.",
         );
       } finally {
         set({ loading: false });

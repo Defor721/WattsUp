@@ -35,6 +35,7 @@ export interface AuthState {
     socialLogin: (code: string) => Promise<void>;
     socialSignup: (params: SocialSignupParams) => Promise<void>;
     nativeSignup: (password: string) => Promise<void>;
+    logout: () => Promise<void>;
     resetAuthState: () => void;
   };
 }

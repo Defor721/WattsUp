@@ -84,9 +84,13 @@ export async function nativeSignup({
  */
 export const logout = async () => {
   try {
-    await apiClient.delete("/api/logout");
+    const { data } = await apiClient.delete("/api/auth/session", {
+      withCredentials: true,
+    });
+
+    return data;
   } catch (error) {
-    console.error("로그아웃 실패:", error);
+    throw error;
   }
 };
 

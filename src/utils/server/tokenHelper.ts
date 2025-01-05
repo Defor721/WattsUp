@@ -6,8 +6,6 @@ export async function verifyToken(
   tokenType: string,
 ): Promise<JwtPayload> {
   try {
-    console.log(`token: `, token);
-    console.log(`secret: `, secret);
     return jwt.verify(token, secret) as JwtPayload;
   } catch (error) {
     if (error instanceof TokenExpiredError) {
