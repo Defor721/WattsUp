@@ -33,6 +33,7 @@ function PieChart({
           outerRadius={150}
           fill="#8884d8"
           label={({ name }) => `${name}`} // 라벨에 이름만 표시
+          stroke="none"
         >
           {totalData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colors[entry.name]} />

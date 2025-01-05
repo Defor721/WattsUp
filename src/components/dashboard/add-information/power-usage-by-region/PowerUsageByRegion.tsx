@@ -91,25 +91,24 @@ function PowerUsageByRegion() {
     세종: 0,
   });
 
-  const COLORS = [
-    "#34D399",
-    "#60A5FA",
-    "#F87171",
-    "#93C5FD",
-    "#FBBF24",
-    "#A78BFA",
-    "#FCA5A5",
-    "#2DD4BF",
-    "#4ADE80",
-    "#FB7185",
-    "#C084FC",
-    "#FACC15",
-    "#F97316",
-    "#10B981",
-    "#6366F1",
-    "#EAB308",
-    "#8B5CF6",
-  ];
+  const COLORS: Record<string, string> = {
+    경기: "#34D399", // 경기 - 초록색
+    서울: "#60A5FA", // 서울 - 파란색
+    경북: "#F87171", // 경북 - 빨간색
+    경남: "#93C5FD", // 경남 - 하늘색
+    전남: "#FBBF24", // 전남 - 노란색
+    충남: "#A78BFA", // 충남 - 보라색
+    전북: "#FCA5A5", // 전북 - 연한 빨강
+    부산: "#2DD4BF", // 부산 - 청록색
+    강원: "#4ADE80", // 강원 - 라임색
+    충북: "#FB7185", // 충북 - 핑크색
+    인천: "#C084FC", // 인천 - 연보라
+    대구: "#FACC15", // 대구 - 진노랑
+    대전: "#F97316", // 대전 - 주황색
+    광주: "#10B981", // 광주 - 진초록
+    울산: "#6366F1", // 울산 - 짙은 남색
+    세종: "#EAB308", // 세종 - 금색
+  };
 
   // Data loading function
   const fetchData = async (): Promise<void> => {
@@ -324,8 +323,7 @@ function PowerUsageByRegion() {
             title={key}
             value={value.toLocaleString()}
             unit="명"
-            backgroundColor="#3B82F6"
-            iconColor="#1D4ED8"
+            backgroundColor={COLORS[key]}
           />
         ))}
       </div>
@@ -343,14 +341,14 @@ function PowerUsageByRegion() {
             <div className="flex flex-col gap-2">
               {doughnutData
                 .sort((a, b) => b.value - a.value)
-                .map((item, index) => (
+                .map((item) => (
                   <div
                     key={item.name}
                     className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
                   >
                     <div
                       className="h-4 w-4 rounded-full"
-                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      style={{ backgroundColor: COLORS[item.name] }} // 지역 이름에 따라 색상 적용
                     ></div>
                     <span>
                       {item.name}: {formatNumberWithoutDecimal(item.value)} 명
@@ -370,8 +368,10 @@ function PowerUsageByRegion() {
 
       {/* Table */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">세부 데이터(단위: 명)</h2>
-        <Table data={data.map((item) => ({ ...item }))} />
+        <h2 className="mb-4 text-lg font-semibold">
+          최근 10년간 전력 사용량 시도별 대시보드 데이터(단위: 명)
+        </h2>
+        <Table data={data.map((item) => ({ ...item })).slice(0, 10)} />
       </div>
     </Container>
   );
