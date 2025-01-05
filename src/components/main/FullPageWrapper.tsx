@@ -5,7 +5,8 @@ import ReactFullpage from "@fullpage/react-fullpage";
 import VideoPart from "./video/VideoPart";
 import EnergyInfoPage from "./renewable/Renewable";
 import FeaturesPart from "./features/Features";
-import IntroPage from "./intro/page";
+import TodayValue from "./value/page";
+import OurWeb from "./web/OurWeb";
 
 const FullPageWrapper: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const FullPageWrapper: React.FC = () => {
       // 페이지 오른쪽에 섹션 네비게이션 표시 여부
       navigation
       // 각 섹션의 앵커 (URL 해시와 연결됨)
-      anchors={["video", "introduce", "energy", "features"]}
+      anchors={["video", "ourweb", "value", "energy", "features"]}
       // 섹션 스냅 기능 활성화
       fitToSection={true}
       // Fullpage.js 하단 저작권 표시 설정
@@ -33,15 +34,19 @@ const FullPageWrapper: React.FC = () => {
           <div className="section">
             <VideoPart />
           </div>
-          {/* 섹션 2: MainIntroPage 컴포넌트 */}
+          {/* 섹션 2: web소개 컴포넌트 */}
           <div className="section">
-            <IntroPage />
+            <OurWeb />
           </div>
-          {/* 섹션 3: EnergyInfoPage 컴포넌트 */}
+          {/* 섹션 3: MainIntroPage 컴포넌트 */}
+          <div className="section">
+            <TodayValue selectedRegion={""} data={[]} />
+          </div>
+          {/* 섹션 4: EnergyInfoPage 컴포넌트 */}
           <div className="section">
             <EnergyInfoPage />
           </div>
-          {/* 섹션 4: FeaturesPart 컴포넌트 */}
+          {/* 섹션 5: FeaturesPart 컴포넌트 */}
           <div className="section">
             <FeaturesPart />
           </div>

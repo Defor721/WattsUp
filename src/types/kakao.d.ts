@@ -6,6 +6,12 @@ declare namespace kakao.maps {
   }
 
   class Map {
+    setZoomable(arg0: boolean) {
+      throw new Error("Method not implemented.");
+    }
+    setDraggable(arg0: boolean) {
+      throw new Error("Method not implemented.");
+    }
     constructor(
       container: HTMLElement,
       options: {
@@ -25,6 +31,7 @@ declare namespace kakao.maps {
       map?: Map;
       title?: string;
       zIndex?: number;
+      image?: undefined;
     });
     setMap(map: Map | null): void;
     setPosition(position: LatLng): void;
@@ -67,7 +74,17 @@ declare namespace kakao.maps {
 declare global {
   interface Window {
     kakao: {
-      maps: typeof kakao.maps;
+      maps: {
+        CustomOverlay: any;
+        load(arg0: () => void): unknown;
+        LatLng: typeof kakao.maps.LatLng;
+        Map: typeof kakao.maps.Map;
+        Marker: typeof kakao.maps.Marker;
+        MarkerImage: typeof kakao.maps.MarkerImage;
+        Size: typeof kakao.maps.Size;
+        InfoWindow: typeof kakao.maps.InfoWindow;
+        event: typeof kakao.maps.event;
+      };
     };
   }
 }

@@ -11,7 +11,6 @@ import Loading from "@/app/loading";
 import KakaoMap from "@/components/introduce/KakaoMap";
 
 import Container from "./Container";
-import TodayValue from "./TodayValue";
 import RegionButtons from "./RegionButtons";
 import PredictChart from "./Chart";
 import PredictTable from "./Table";
