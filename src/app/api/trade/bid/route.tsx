@@ -7,8 +7,23 @@ export async function POST(request: NextRequest) {
     const { userId, item, price } = await request.json();
     const client = await clientPromise;
     const db = client.db("wattsup");
-    const collection = db.collection("bid");
-    const result = await collection.insertOne({ userId, item, price });
+    const bidCollection = db.collection("bid");
+    const supplyCollection = db.collection("supply");
+    const today = new Date();
+    const dailySupply = await supplyCollection.findOne({ date: today });
+    if (dailySupply && typeof dailySupply.supply === "number") {
+      const updatedSupply = dailySupply.supply - price;
+      const updateResult = await supplyCollection.updateOne(
+        { _id: dailySupply._id },
+        { $set: { supply: updatedSupply } },
+      );
+    } else {
+      return NextResponse.json(
+        { message: "Invalid input data" },
+        { status: 400 },
+      );
+    }
+    const result = await bidCollection.insertOne({ userId, item, price });
     return NextResponse.json(
       { message: "Successfully insert bid", result },
       { status: 200 },
