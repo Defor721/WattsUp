@@ -1,4 +1,5 @@
 import apiClient from "@/lib/axios";
+import { changePasswordProps } from "@/stores/useUserStore";
 
 export interface CheckUserResponse {
   businessNumber: any;
@@ -22,8 +23,17 @@ export async function fetchCurrentUser() {
   return data;
 }
 
-export async function updatePasswordByPassword() {
-  const { data } = await apiClient.patch("/api/users/password");
+export async function updatePasswordByPassword({
+  currentPassword,
+  newPassword,
+}: changePasswordProps) {
+  const { data } = await apiClient.patch(
+    "/api/users/password",
+    { currentPassword, newPassword },
+    {
+      withCredentials: true,
+    },
+  );
 
   return data;
 }

@@ -1,9 +1,9 @@
 import { Dispatch, useEffect, useState } from "react";
 
-import { isPasswordMatching, isValidPassword } from "@/utils";
+import { isPasswordMatching } from "@/utils";
 
 import PasswordInput from "./PasswordInput";
-import ConfirmPasswordInput from "./confirmPasswordInput";
+import ConfirmPasswordInput from "./ConfirmPasswordInput";
 
 interface PasswordSectionProps {
   passwordLabel?: string;
@@ -32,10 +32,6 @@ export default function PasswordSection({
     useState<boolean>(false);
 
   useEffect(() => {
-    setIsPasswordValid(isValidPassword(password));
-  }, [password, setIsPasswordValid]);
-
-  useEffect(() => {
     setIsConfirmPasswordValid(isPasswordMatching(password, confirmPassword));
   }, [password, confirmPassword, setIsConfirmPasswordValid]);
 
@@ -49,6 +45,7 @@ export default function PasswordSection({
         showMessage={true}
         setPassword={setPassword}
         setShowPassword={setShowPassword}
+        setIsPasswordValid={setIsPasswordValid}
       />
       <ConfirmPasswordInput
         confirmPasswordLabel={confirmPasswordLabel}

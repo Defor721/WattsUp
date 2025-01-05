@@ -4,7 +4,13 @@ import { User } from "@/auth/type";
 import {
   fetchCurrentUser,
   updatePasswordByEmail,
+  updatePasswordByPassword,
 } from "@/services/userService";
+
+export interface changePasswordProps {
+  currentPassword: string;
+  newPassword: string;
+}
 
 export interface UserState {
   user: User | null;
@@ -13,7 +19,11 @@ export interface UserState {
   message: string;
   actions: {
     fetchCurrentUser: () => Promise<void>;
-    changePassword: (newPassword: string) => Promise<void>;
+    resetPassword: (newPassword: string) => Promise<void>;
+    changePassword: ({
+      currentPassword,
+      newPassword,
+    }: changePasswordProps) => Promise<void>;
     resetUserState: () => void;
   };
 }
@@ -54,10 +64,26 @@ export const useUserStore = create<UserState>((set) => ({
     },
 
     /** 비밀번호 리셋 */
-    async changePassword(newPassword: string) {
+    async resetPassword(newPassword: string) {
       try {
         set({ loading: true });
         await updatePasswordByEmail(newPassword);
+        set({ error: false });
+      } catch (error: any) {
+        set({ error: true, message: error.response.data.message });
+      } finally {
+        set({ loading: false });
+      }
+    },
+
+    /** 비밀번호 변경 */
+    async changePassword({
+      currentPassword,
+      newPassword,
+    }: changePasswordProps) {
+      try {
+        set({ loading: true });
+        await updatePasswordByPassword({ currentPassword, newPassword });
         set({ error: false });
       } catch (error: any) {
         set({ error: true, message: error.response.data.message });

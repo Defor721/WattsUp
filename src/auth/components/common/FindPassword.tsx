@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
   Button,
+  DialogClose,
 } from "@/components/shadcn";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -23,10 +23,9 @@ interface Props {
 }
 
 function FindPasswordPopup({ children }: Props) {
-  const router = useRouter();
   const {
     message,
-    actions: { changePassword, resetUserState },
+    actions: { resetPassword, resetUserState },
   } = useUserStore();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -38,7 +37,7 @@ function FindPasswordPopup({ children }: Props) {
 
   const handleSendConfirmEmail = async () => {
     try {
-      await changePassword(newPassword);
+      await resetPassword(newPassword);
       setIsDialogOpen(false);
     } catch (error) {
       console.error(error);
@@ -47,7 +46,6 @@ function FindPasswordPopup({ children }: Props) {
 
   useEffect(() => {
     if (!isDialogOpen) {
-      // 다이얼로그 닫힐 때 상태 초기화
       setIsEmailVerified(false);
       setNewPassword("");
       setIsNewPasswordValid(false);
@@ -84,16 +82,14 @@ function FindPasswordPopup({ children }: Props) {
           <p className="text-center text-sm text-red-500">{message}</p>
         )}
         <DialogFooter>
+          <DialogClose>
+            <Button type="button" variant="ghost" className="border-1">
+              취소
+            </Button>
+          </DialogClose>
           <Button
             type="button"
-            className="border-1 border-black dark:border-white"
-            onClick={() => setIsDialogOpen(false)}
-          >
-            취소
-          </Button>
-          <Button
-            type="button"
-            className="bg-[#070f26] dark:border-1"
+            className="bg-subColor text-white dark:bg-white dark:text-subColor"
             onClick={handleSendConfirmEmail}
             disabled={
               !isEmailVerified ||

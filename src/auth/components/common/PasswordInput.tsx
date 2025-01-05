@@ -1,6 +1,7 @@
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 
 import { Input, Label } from "@/components/shadcn";
+import { isValidPassword } from "@/utils";
 
 import EyeButton from "./EyeButton";
 
@@ -12,6 +13,7 @@ interface PasswordInputProps {
   isPasswordValid?: boolean;
   setPassword: Dispatch<React.SetStateAction<string>>;
   setShowPassword: Dispatch<React.SetStateAction<boolean>>;
+  setIsPasswordValid: Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function PasswordInput({
@@ -22,7 +24,12 @@ export default function PasswordInput({
   isPasswordValid,
   setPassword,
   setShowPassword,
+  setIsPasswordValid,
 }: PasswordInputProps) {
+  useEffect(() => {
+    setIsPasswordValid(isValidPassword(password));
+  }, [password, setIsPasswordValid]);
+
   return (
     <>
       <Label htmlFor="password">{passwordLabel || "비밀번호"}</Label>
