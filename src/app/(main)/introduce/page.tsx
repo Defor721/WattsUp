@@ -11,7 +11,6 @@ import {
   TabsTrigger,
 } from "@/components/shadcn/tabs";
 import { ESGItems } from "@/components/introduce/EsgItem";
-import KakaoMap from "@/components/introduce/KakaoMap";
 
 function IntroducePage() {
   const [activeTab, setActiveTab] = useState("wattsup");
