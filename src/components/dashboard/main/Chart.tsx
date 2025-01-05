@@ -54,8 +54,8 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
   if (!data) return;
 
   return (
-    <div className="flex-1">
-      <h4 className="my-2 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+    <div className="flex-1 p-4">
+      <h4 className="my-2 scroll-m-20 pb-8 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
 

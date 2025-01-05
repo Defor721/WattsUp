@@ -111,7 +111,7 @@ const TeamIntroduction = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className={`mb-12 grid grid-cols-1 items-center gap-4 rounded-lg bg-white p-6 sm:mb-16 sm:gap-6 sm:p-8 md:mb-20 md:grid-cols-2 md:gap-8 md:p-10 lg:mb-24 lg:gap-12 lg:p-12 ${
+              className={`mb-12 grid grid-cols-1 items-center gap-4 rounded-lg bg-white p-6 sm:mb-16 sm:gap-6 sm:p-8 md:mb-20 md:grid-cols-1 md:gap-8 md:p-10 lg:mb-24 lg:grid-cols-2 lg:gap-12 lg:p-12 ${
                 index % 2 === 0 ? "md:text-left" : "md:text-right"
               }`}
             >
