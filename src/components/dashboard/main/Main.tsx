@@ -15,6 +15,18 @@ import RegionButtons from "./RegionButtons";
 import PredictChart from "./Chart";
 import PredictTable from "./Table";
 
+interface WeatherEntry {
+  dt_txt: string;
+  wind: { speed: number };
+  main: { temp: number };
+  rain?: { "3h"?: number };
+}
+
+interface WeatherResult {
+  location: string;
+  data: WeatherEntry[];
+}
+
 // OpenWeather API 설정
 const LOCATIONS = [
   { name: "강원도", latitude: 37.8228, longitude: 128.1555 },
@@ -37,7 +49,6 @@ const LOCATIONS = [
 
 const INPUT_STATS = { min: -24.6, max: 33.3 };
 const OUTPUT_STATS = { min: 1.574659, max: 5263.160841499999 };
-const API_KEY = "79eb1cc0bb4be154c5d7cba7344315bc";
 
 let modelInstance: tf.LayersModel | null = null;
 
@@ -71,43 +82,69 @@ function DashboardMain() {
     const fetchWeatherData = async () => {
       try {
         setLoading(true);
-        const requests = LOCATIONS.map((location) => {
-          const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${API_KEY}&units=metric`;
 
-          return apiClient.get(url).then((response) => ({
-            location: location.name,
-            data: response.data.list,
-          }));
-        });
+        // 모든 위치에 대한 날씨 데이터를 병렬로 요청
+        const requests = LOCATIONS.map((location) =>
+          apiClient
+            .get(
+              `/api/weather?lat=${location.latitude}&lon=${location.longitude}`,
+            )
+            .then((response) => ({
+              location: location.name,
+              data: response.data.list as WeatherEntry[],
+            }))
+            .catch((error) => {
+              console.error(
+                `Failed to fetch weather for ${location.name}:`,
+                error,
+              );
+              return null; // 실패한 요청은 null 반환
+            }),
+        );
 
-        const results = await Promise.all(requests);
+        // 모든 요청의 결과 처리
+        const results = await Promise.allSettled(requests);
 
+        // 성공한 요청만 필터링
+        const successfulResults = results
+          .filter(
+            (result): result is PromiseFulfilledResult<WeatherResult> =>
+              result.status === "fulfilled" && result.value !== null,
+          )
+          .map((result) => result.value);
+
+        // 데이터 가공
         const processedWeatherData: Record<string, any[]> = {};
 
-        results.forEach(({ location, data }) => {
-          const groupedByDate = data.reduce((acc: any, entry: any) => {
-            const date = entry.dt_txt.split(" ")[0];
-            const windSpeed = entry.wind.speed || 0;
-            const temperature = entry.main.temp || 0;
-            const precipitation = entry.rain?.["3h"] || 0;
+        successfulResults.forEach(({ location, data }) => {
+          const groupedByDate = data.reduce(
+            (acc: Record<string, any>, entry) => {
+              const date = entry.dt_txt.split(" ")[0];
+              const windSpeed = entry.wind?.speed || 0;
+              const temperature = entry.main?.temp || 0;
+              const precipitation = entry.rain?.["3h"] || 0;
 
-            if (!acc[date]) {
-              acc[date] = {
-                date,
-                windSpeed: 0,
-                temperature: 0,
-                precipitation: 0,
-                count: 0,
-              };
-            }
+              if (!acc[date]) {
+                acc[date] = {
+                  date,
+                  windSpeed: 0,
+                  temperature: 0,
+                  precipitation: 0,
+                  count: 0,
+                };
+              }
 
-            acc[date].windSpeed += windSpeed;
-            acc[date].temperature += temperature;
-            acc[date].precipitation += precipitation;
-            acc[date].count += 1;
-            return acc;
-          }, {});
+              acc[date].windSpeed += windSpeed;
+              acc[date].temperature += temperature;
+              acc[date].precipitation += precipitation;
+              acc[date].count += 1;
 
+              return acc;
+            },
+            {},
+          );
+
+          // 평균 값 계산
           const processedData = Object.values(groupedByDate).map(
             (entry: any) => ({
               date: entry.date,
