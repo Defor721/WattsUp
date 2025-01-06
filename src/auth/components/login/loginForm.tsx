@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
-import { FindPasswordPopup } from "@/auth/components/FindPassword";
+import { FindPasswordPopup } from "@/auth/components/common/FindPassword";
 import { useAuthStore } from "@/auth/useAuthStore";
 
 import GoogleLoginButton from "./GoogleLoginButton";
@@ -45,6 +45,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<ReactNode>("");
+  const [, setIsPasswordValid] = useState(false);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -90,6 +91,7 @@ export default function LoginForm() {
             showPassword={showPassword}
             setPassword={setPassword}
             setShowPassword={setShowPassword}
+            setIsPasswordValid={setIsPasswordValid}
           />
         </div>
       </CardContent>

@@ -23,6 +23,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/shadcn/sidebar";
+import { useAuthStore } from "@/auth/useAuthStore";
+import useAccessToken from "@/auth/hooks/useAccessToken";
+
+import { Button } from "../shadcn";
 
 interface User {
   name: string;
@@ -37,6 +41,16 @@ interface UserProps {
 }
 
 export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
+  const {
+    actions: { logout },
+  } = useAuthStore();
+  const { resetAccessToken } = useAccessToken();
+
+  const handleLogout = async () => {
+    await logout();
+    resetAccessToken();
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -97,7 +111,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
-                  href="/mypage"
+                  href="/my-page"
                   className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
                 >
                   <User />
@@ -118,13 +132,13 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             </DropdownMenuGroup>
 
             <DropdownMenuItem>
-              <Link
-                href="#"
-                className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
+              <Button
+                className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
+                onClick={handleLogout}
               >
                 <LogOut />
                 Log out
-              </Link>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

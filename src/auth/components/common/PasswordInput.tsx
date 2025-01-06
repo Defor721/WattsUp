@@ -1,30 +1,38 @@
-import { Eye, EyeOff } from "lucide-react";
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 
-import { Button, Input, Label } from "@/components/shadcn";
+import { Input, Label } from "@/components/shadcn";
+import { isValidPassword } from "@/utils";
 
 import EyeButton from "./EyeButton";
 
 interface PasswordInputProps {
+  passwordLabel?: string;
   password: string;
   showPassword: boolean;
   showMessage?: boolean;
   isPasswordValid?: boolean;
   setPassword: Dispatch<React.SetStateAction<string>>;
   setShowPassword: Dispatch<React.SetStateAction<boolean>>;
+  setIsPasswordValid: Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function PasswordInput({
+  passwordLabel,
   password,
   showPassword,
   showMessage,
   isPasswordValid,
   setPassword,
   setShowPassword,
+  setIsPasswordValid,
 }: PasswordInputProps) {
+  useEffect(() => {
+    setIsPasswordValid(isValidPassword(password));
+  }, [password, setIsPasswordValid]);
+
   return (
     <>
-      <Label htmlFor="password">비밀번호</Label>
+      <Label htmlFor="password">{passwordLabel || "비밀번호"}</Label>
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}
