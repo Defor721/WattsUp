@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(request.nextUrl.searchParams.get("offset") || "0");
     const users = await collection
       .find({})
-      .project({ _id: 0, password: 0 })
+      .project({ _id: 0, password: 0, refreshToken: 0 })
       .skip(offset)
       .limit(limit)
       .toArray();

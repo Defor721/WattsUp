@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
 
-/** 유저 조회 */
+// 유저 거래기록 불러오는 api
+
 export async function GET(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ message: "Token Missing" }, { status: 403 });
     }
+
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
@@ -40,16 +42,9 @@ export async function GET(request: NextRequest) {
       { email },
       {
         projection: {
-          email: 1,
-          name: 1,
-          signupType: 1,
-          provider: 1,
-          companyName: 1,
-          corporateNumber: 1,
-          businessNumber: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          role: 1,
+          NumberOfTransaction: 1,
+          AveragePrice: 1,
+          SuccessRate: 1,
         },
       },
     );

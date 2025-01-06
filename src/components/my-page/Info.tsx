@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
   Avatar,
@@ -49,6 +50,7 @@ function Info() {
   const handleLogout = async () => {
     await logout();
     resetAccessToken();
+    router.push("/");
     router.push("/");
   };
 

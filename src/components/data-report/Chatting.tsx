@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import { FileText } from "lucide-react";
 
-import { Avatar, AvatarFallback, ScrollArea } from "../shadcn";
+import { ScrollArea } from "../shadcn";
 
 type Message = {
   id: number;
@@ -13,9 +13,15 @@ type Message = {
   attachments?: Array<{ type: "image" | "file"; name: string; url: string }>;
 };
 
-function Chatting({ messages }: { messages: Message[] }) {
+function Chatting({
+  messages,
+  messagesEndRef,
+}: {
+  messages: Message[];
+  messagesEndRef: React.RefObject<HTMLDivElement | null>; // null 허용
+}) {
   return (
-    <div id="chat-container" className="flex flex-col gap-4 overflow-auto">
+    <ScrollArea id="chat-container" className="mb-5 h-[60vh] pr-4">
       {messages.map((message) => (
         <div
           key={message.id}
@@ -31,7 +37,7 @@ function Chatting({ messages }: { messages: Message[] }) {
                   key={index}
                   className={`flex items-center ${
                     attachment.type === "image" ? "h-20 w-20" : "w-80"
-                  } rounded-lg bg-gray-200 p-2 dark:bg-gray-700`}
+                  } rounded-3xl bg-gray-200 p-2 dark:bg-gray-700`}
                 >
                   {attachment.type === "image" ? (
                     <Image
@@ -39,7 +45,7 @@ function Chatting({ messages }: { messages: Message[] }) {
                       alt={attachment.name}
                       width={56}
                       height={56}
-                      className="rounded-lg object-cover"
+                      className="rounded-3xl object-cover"
                     />
                   ) : (
                     <div className="flex items-center gap-2">
@@ -63,13 +69,14 @@ function Chatting({ messages }: { messages: Message[] }) {
 
           {/* 텍스트 메시지 */}
           {message.content && (
-            <div className="mt-2 rounded-lg bg-gray-200 p-3 dark:bg-gray-700">
+            <div className="mt-2 rounded-3xl bg-gray-200 px-5 py-[10px] dark:bg-gray-700">
               {message.content}
             </div>
           )}
         </div>
       ))}
-    </div>
+      <div ref={messagesEndRef} />
+    </ScrollArea>
   );
 }
 

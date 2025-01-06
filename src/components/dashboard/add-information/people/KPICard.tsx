@@ -13,7 +13,7 @@ const KPICard: React.FC<KPICardProps> = ({ title, value, backgroundColor }) => {
       style={{ backgroundColor: backgroundColor }}
     >
       {/* 제목 및 값 */}
-      <div className="ml-4 flex-1 text-subColor">
+      <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <p className="text-2xl font-bold">{value}</p>
       </div>

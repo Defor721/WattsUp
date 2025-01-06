@@ -22,7 +22,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
         {items.map((item) => (
           <Link
             key={item.id}
-            className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80"
+            className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white"
             href={item.href}
           >
             <item.icon />
@@ -37,7 +37,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
       {items.map((item) => (
         <Link
           key={item.id}
-          className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[rgb(7,15,38)] hover:opacity-80 md:text-base"
+          className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium transition-all duration-200 hover:bg-[rgb(20,35,80)] hover:text-white focus:bg-[rgb(20,35,80)] focus:text-white md:text-base"
           href={item.href}
         >
           <item.icon />

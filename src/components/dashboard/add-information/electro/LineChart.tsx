@@ -39,10 +39,10 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
           formatter={(value: number) => `${formatNumberWithDecimal(value)} GWh`}
         />
         <Legend />
-        <Line type="monotone" dataKey="수력" stroke="#3B82F6" />
-        <Line type="monotone" dataKey="화력" stroke="#F59E0B" />
-        <Line type="monotone" dataKey="원자력" stroke="#EF4444" />
-        <Line type="monotone" dataKey="자가용" stroke="#22C55E" />
+        <Line type="monotone" dataKey="수력" stroke="#60a5fa" />
+        <Line type="monotone" dataKey="화력" stroke="#facc15" />
+        <Line type="monotone" dataKey="원자력" stroke="#f87171" />
+        <Line type="monotone" dataKey="자가용" stroke="#4ade80" />
       </RechartsLineChart>
     </ResponsiveContainer>
   );

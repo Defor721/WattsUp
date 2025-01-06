@@ -1,18 +1,5 @@
 import type { Config } from "tailwindcss";
 
-{
-  /*
-import { toneMap } from '@nextcss/color-tools';
-function generateColors(color) {
-    console.log(color, toneMap(color));
-    return {
-        DEFAULT: color,
-        ...toneMap(color),
-    };
-}
-*/
-}
-
 const config: Config = {
   mode: "jit",
   content: [
@@ -21,8 +8,7 @@ const config: Config = {
     "./src/styles/**/*.{js,ts,jsx,tsx}",
     "./src/auth/**/*.{js,ts,jsx,tsx}",
   ],
-
-  darkMode: ["class"], // 다크모드 변수 활성화
+  darkMode: ["class"], // 다크모드 활성화
   theme: {
     extend: {
       colors: {
@@ -145,11 +131,6 @@ const config: Config = {
         1: "1px",
       },
     },
-    // screens: {
-    //   sm: { min: "390px", max: "819px" },
-    //   md: { min: "820px", max: "1023px" },
-    //   lg: { min: "1080px" },
-    // },
   },
   plugins: [],
 };

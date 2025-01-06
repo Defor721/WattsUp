@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const collection = db.collection("userdata");
     const users = await collection
       .find({})
-      .project({ _id: 0, password: 0 })
+      .project({ _id: 0, password: 0, refreshToken: 0 })
       .toArray();
     return NextResponse.json({ message: "success", users }, { status: 200 });
   } catch (error: unknown) {

@@ -34,6 +34,17 @@ interface DataRow {
   심야: number;
   합계: number;
 }
+
+const COLORS = {
+  주택용: "#34D399", // 녹색
+  일반용: "#60A5FA", // 파랑
+  교육용: "#F87171", // 빨강
+  산업용: "#fba524", // 노랑
+  농사용: "#93C5FD", // 연파랑
+  가로등: "#A78BFA", // 보라
+  심야: "#FCA5A5", // 연분홍
+};
+
 function Sales() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
@@ -108,27 +119,37 @@ function Sales() {
 
   const kpiData = currentYearData
     ? [
-        { title: "주택용", value: currentYearData.주택용, unit: "원" },
-        { title: "산업용", value: currentYearData.산업용, unit: "원" },
-        { title: "합계", value: currentYearData.합계, unit: "원" },
+        ...Object.keys(COLORS).map((key) => ({
+          title: key,
+          value: currentYearData[key as keyof DataRow] || 0,
+          unit: "원",
+          color: COLORS[key as keyof typeof COLORS],
+        })),
+        {
+          title: "총합",
+          value: currentYearData.합계 || 0,
+          unit: "원",
+          color: "#f03bf6", // 총합의 색상 (고정값)
+        },
       ]
     : [
-        { title: "주택용", value: 0, unit: "원" },
-        { title: "산업용", value: 0, unit: "원" },
-        { title: "합계", value: 0, unit: "원" },
+        ...Object.keys(COLORS).map((key) => ({
+          title: key,
+          value: 0,
+          unit: "원",
+          color: COLORS[key as keyof typeof COLORS],
+        })),
+        {
+          title: "총합",
+          value: 0,
+          unit: "원",
+          color: "#3B82F6", // 총합의 색상 (고정값)
+        },
       ];
 
   const pieChartData = currentYearData
     ? {
-        labels: [
-          "주택용",
-          "일반용",
-          "교육용",
-          "산업용",
-          "농사용",
-          "가로등",
-          "심야",
-        ],
+        labels: Object.keys(COLORS), // ["주택용", "일반용", "교육용", "산업용", "농사용", "가로등", "심야"]
         datasets: [
           {
             data: [
@@ -140,15 +161,7 @@ function Sales() {
               currentYearData.가로등,
               currentYearData.심야,
             ],
-            backgroundColor: [
-              "#34D399",
-              "#60A5FA",
-              "#F87171",
-              "#93C5FD",
-              "#FBBF24",
-              "#A78BFA",
-              "#FCA5A5",
-            ],
+            backgroundColor: Object.values(COLORS), // COLORS에서 색상 값 추출
           },
         ],
       }
@@ -200,7 +213,7 @@ function Sales() {
         </div>
         <Button
           onClick={handleDownload}
-          className="bg-subColor text-white dark:border-1"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -215,7 +228,7 @@ function Sales() {
             title={kpi.title}
             value={kpi.value.toLocaleString()}
             unit={kpi.unit}
-            backgroundColor={index % 2 === 0 ? "#3B82F6" : "#F59E0B"}
+            backgroundColor={kpi.color}
             iconColor={index % 2 === 0 ? "#1D4ED8" : "#D97706"}
           />
         ))}

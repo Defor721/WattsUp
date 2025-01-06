@@ -43,7 +43,7 @@ function DataReport() {
 
   const { toast } = useToast(); // Toast 사용
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -135,7 +135,7 @@ function DataReport() {
           <CardTitle>채팅</CardTitle>
         </CardHeader>
         <CardContent>
-          <Chatting messages={messages} />
+          <Chatting messages={messages} messagesEndRef={messagesEndRef} />
 
           {/* 텍스트와 업로드 미리 보기 섹션 */}
           <form
@@ -143,12 +143,12 @@ function DataReport() {
               e.preventDefault();
               handleSend();
             }}
-            className="flex flex-col bg-gray-100 dark:bg-gray-800"
+            className="flex flex-col rounded-lg bg-gray-100 dark:bg-gray-800"
           >
             {/* 업로드 미리 보기 */}
             <div
               className={cn(
-                "overflow-x-auto bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200",
+                "overflow-x-auto rounded-lg bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200",
                 uploadedItems.length > 0 ? "h-auto p-[6px]" : "h-0",
               )}
             >
@@ -220,7 +220,7 @@ function DataReport() {
               className="h-10 w-full resize-none overflow-y-auto rounded-lg bg-gray-100 pl-2 pt-2 text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-200"
             />
 
-            <div className="flex w-full items-center gap-3 bg-gray-100 px-4 py-2 dark:bg-gray-800">
+            <div className="flex w-full items-center gap-3 rounded-lg bg-gray-100 px-4 py-2 dark:bg-gray-800">
               {/* 파일 업로드 */}
               <Label
                 htmlFor="file-upload"
