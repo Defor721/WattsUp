@@ -20,7 +20,7 @@ import { Button } from "@/components/shadcn/button";
 interface TeamInfo {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: React.ReactElement; // ReactNode 대신 ReactElement 사용으로 타입 안정성 확보
 }
 
 interface ReasonInfo {
@@ -62,37 +62,37 @@ const reasons: ReasonInfo[] = [
   {
     title: "에너지 산업의 디지털 전환",
     content:
-      "전력거래소는 전력 시장의 중심으로, 디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용합니다.",
+      "전력거래소는 전력 시장의 중심으로, 디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용함.",
   },
   {
     title: "사용자 중심의 접근성 개선",
     content:
-      "복잡한 기존 전력거래소 웹을 개선하여 누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공합니다.",
+      "복잡한 기존 전력거래소 웹을 개선하여 누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공함.",
   },
   {
     title: "데이터 기반 혁신 가능성",
     content:
-      "실시간 데이터 분석과 예측 모델을 통해 더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발합니다.",
+      "실시간 데이터 분석과 예측 모델을 통해 더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
   },
   {
     title: "지속 가능한 에너지 관리",
     content:
-      "신재생 에너지 자원을 통합하고 효율적인 에너지 소비를 가능하게 하는 플랫폼을 제공합니다.",
+      "신재생 에너지 자원을 통합하고 효율적인 에너지 소비를 가능하게 하는 플랫폼을 제공함.",
   },
   {
     title: "사회적 및 경제적 영향력",
     content:
-      "에너지 비용 절감과 전력 공급 안정화는 물론, 환경 보호와 같은 사회적 책임도 실현합니다.",
+      "에너지 비용 절감과 전력 공급 안정화는 물론, 환경 보호와 같은 사회적 책임도 실현함.",
   },
   {
     title: "안전하고 투명한 전력 거래",
     content:
-      "블록체인 기술을 활용하여 전력 거래 과정의 투명성과 신뢰성을 높이고, 보안성을 강화합니다.",
+      "블록체인 기술을 활용하여 전력 거래 과정의 투명성과 신뢰성을 높이고, 보안성을 강화함.",
   },
 ];
 
 // 팀 정보 아이템 컴포넌트
-const TeamInfoItem = ({ title, description, icon }: TeamInfo) => {
+const TeamInfoItem: React.FC<TeamInfo> = ({ title, description, icon }) => {
   const router = useRouter();
 
   return (
@@ -102,9 +102,7 @@ const TeamInfoItem = ({ title, description, icon }: TeamInfo) => {
       onClick={() => router.push("/introduce")}
     >
       <div className="mb-2 p-3">
-        {React.cloneElement(icon as React.ReactElement, {
-          className: "h-6 w-6 text-gray-300",
-        })}
+        {/* {React.cloneElement(icon, { className: "h-6 w-6 text-gray-300" })} */}
       </div>
       <h3 className="mb-1 text-lg font-semibold transition-colors group-hover:text-gray-500">
         {title}
@@ -115,7 +113,7 @@ const TeamInfoItem = ({ title, description, icon }: TeamInfo) => {
 };
 
 // 선택 이유 아이템 컴포넌트
-const ReasonItem = ({ title, content }: ReasonInfo) => (
+const ReasonItem: React.FC<ReasonInfo> = ({ title, content }) => (
   <motion.div
     className="p-6 shadow-lg"
     initial={{ opacity: 0, y: 20 }}
@@ -129,7 +127,7 @@ const ReasonItem = ({ title, content }: ReasonInfo) => (
 );
 
 // 메인 컴포넌트
-export default function OurWeb() {
+const OurWeb: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
 
@@ -149,7 +147,8 @@ export default function OurWeb() {
               </span>{" "}
               팀 소개
             </h1>
-            {/* 더 알아보기 버튼 추가 */}
+
+            {/* 더 알아보기 버튼 */}
             <div className="mb-16 flex justify-center">
               <Button
                 onClick={() => router.push("/introduce")}
@@ -207,4 +206,6 @@ export default function OurWeb() {
       </motion.div>
     </AnimatePresence>
   );
-}
+};
+
+export default OurWeb;
