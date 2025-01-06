@@ -50,6 +50,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const { resetAccessToken } = useAccessToken();
 
   const handleLogout = async () => {
+    console.log("로그아웃 클릿");
     await logout();
     resetAccessToken();
     router.push("/");
@@ -123,7 +124,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
                   href="/editprofile"
@@ -133,13 +134,10 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                   Profile Settings
                 </Link>
               </DropdownMenuItem>
-            </DropdownMenuGroup>
+            </DropdownMenuGroup> */}
 
-            <DropdownMenuItem>
-              <Button
-                className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
-                onClick={handleLogout}
-              >
+            <DropdownMenuItem onClick={handleLogout}>
+              <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300 hover:bg-[rgb(20,35,80)]">
                 <LogOut />
                 Log out
               </Button>

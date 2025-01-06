@@ -71,10 +71,8 @@ function DashboardMain() {
     const fetchWeatherData = async () => {
       try {
         setLoading(true);
-        console.log("메인 렌더링");
         const requests = LOCATIONS.map((location) => {
           const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${API_KEY}&units=metric`;
-          console.log("url: ", url);
 
           return apiClient.get(url).then((response) => ({
             location: location.name,
@@ -83,7 +81,6 @@ function DashboardMain() {
         });
 
         const results = await Promise.all(requests);
-        console.log("results: ", results);
 
         const processedWeatherData: Record<string, any[]> = {};
 

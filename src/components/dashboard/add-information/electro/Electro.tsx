@@ -269,7 +269,7 @@ function Electro() {
                     원자력: currentYearData["원자력(GWh)"],
                     자가용: currentYearData["자가용(GWh)"],
                   }}
-                  colors={["#3B82F6", "#F59E0B", "#EF4444", "#22C55E"]}
+                  colors={["#60a5fa", "#facc15", "#f87171", "#4ade80"]}
                 />
               </div>
 

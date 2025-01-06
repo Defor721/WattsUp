@@ -12,7 +12,7 @@ const KPICard: React.FC<KPICardProps> = ({ title, value, backgroundColor }) => {
       className="flex items-center justify-between rounded-lg p-4 shadow-md"
       style={{ backgroundColor }}
     >
-      <div className="ml-4 flex-1 text-subColor">
+      <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <p className="text-2xl font-bold">{value}</p>
       </div>

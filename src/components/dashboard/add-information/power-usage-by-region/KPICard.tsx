@@ -21,7 +21,7 @@ const KPICard: React.FC<KPICardProps> = ({
       }}
     >
       {/* Title and Value Section */}
-      <div className="ml-4 flex-1 text-subColor">
+      <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <div className="flex items-center gap-1">
           <p className="text-2xl font-bold">{value}</p>
