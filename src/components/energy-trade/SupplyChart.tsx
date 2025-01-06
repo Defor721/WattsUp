@@ -1,7 +1,7 @@
-"use client";
+"use client"; // Next.js 클라이언트 컴포넌트로 설정
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react"; // React 훅 가져오기
+import { motion } from "framer-motion"; // 애니메이션 라이브러리
 import {
   BarChart,
   Bar,
@@ -9,7 +9,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from "recharts"; // Recharts 차트 컴포넌트
 import axios from "axios"; // HTTP 요청 라이브러리
 
 import {
@@ -17,9 +17,10 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/shadcn/card";
+} from "@/components/shadcn/card"; // UI 카드 컴포넌트
+import { Regions } from "@/utils/regions"; // Regions 배열 가져오기
 
-// 데이터 타입 정의 (TypeScript 사용)
+// 데이터 타입 정의
 interface SupplyData {
   region: string; // 지역 이름
   supply: number; // 전력 공급량
@@ -27,63 +28,42 @@ interface SupplyData {
 
 // SupplyChart 컴포넌트
 export default function SupplyChart() {
-  // 상태 관리
-  const [data, setData] = useState<SupplyData[]>([]); // 지역별 데이터
+  const [data, setData] = useState<SupplyData[]>([]); // 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState<string | null>(null); // 에러 메시지
+  const [error, setError] = useState<string | null>(null); // 에러 상태
 
-  // 데이터 가져오기 (API 호출)
   useEffect(() => {
+    // 데이터 가져오기 함수
     const fetchData = async () => {
       try {
-        const regions = [
-          "서울",
-          "경기",
-          "인천",
-          "강원",
-          "충북",
-          "충남",
-          "대전",
-          "경북",
-          "경남",
-          "대구",
-          "울산",
-          "부산",
-          "전북",
-          "전남",
-          "광주",
-          "제주",
-        ];
-
-        // 병렬 API 호출로 모든 지역의 데이터를 가져오기
         const responses = await Promise.all(
-          regions.map(
+          Regions.map(
             (region) =>
               axios
                 .get<number>(`/api/trade/supply/${region}`)
-                .then((res) => res.data), // 각 지역에 대한 데이터 가져오기
+                .then((res) => res.data), // 지역별 API 호출
           ),
         );
 
-        // 데이터 정리 및 상태 업데이트
+        // 데이터 설정
         setData(
-          regions.map((region, index) => ({
-            region, // 지역 이름
-            supply: responses[index], // 해당 지역의 공급량
+          Regions.map((region, index) => ({
+            region,
+            supply: responses[index],
           })),
         );
-      } catch (error) {
-        console.error("Failed to fetch supply data:", error); // 콘솔에 오류 출력
-        setError("데이터를 가져오는 중 문제가 발생했습니다."); // 사용자에게 에러 메시지 표시
+      } catch (err) {
+        console.error("데이터 로드 실패:", err); // 에러 출력
+        setError("데이터를 불러오는 중 문제가 발생했습니다."); // 에러 메시지 설정
       } finally {
-        setIsLoading(false); // 로딩 상태 종료
+        setIsLoading(false); // 로딩 상태 해제
       }
     };
 
-    fetchData(); // 컴포넌트 마운트 시 데이터 가져오기
-  }, []);
+    fetchData(); // 데이터 로드
+  }, []); // 컴포넌트 마운트 시 실행
 
-  // 로딩 상태 처리
+  // 로딩 상태일 때
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -92,7 +72,7 @@ export default function SupplyChart() {
     );
   }
 
-  // 에러 상태 처리
+  // 에러 상태일 때
   if (error) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -104,7 +84,7 @@ export default function SupplyChart() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} // 초기 애니메이션
-      animate={{ opacity: 1, y: 0 }} // 완료된 애니메이션
+      animate={{ opacity: 1, y: 0 }} // 완료 애니메이션
       transition={{ duration: 0.5 }} // 애니메이션 지속 시간
       className="w-full"
     >
@@ -115,20 +95,15 @@ export default function SupplyChart() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* ResponsiveContainer로 반응형 차트 생성 */}
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data}>
-              {/* X축: 지역 */}
-              <XAxis dataKey="region" />
-              {/* Y축: 공급량 */}
-              <YAxis />
-              {/* 차트 툴팁 */}
-              <Tooltip />
-              {/* 바 그래프 */}
+              <XAxis dataKey="region" /> {/* X축: 지역 */}
+              <YAxis /> {/* Y축: 공급량 */}
+              <Tooltip /> {/* 툴팁 */}
               <Bar
                 dataKey="supply"
-                fill="rgb(13,23,53)" // 차트 색상
-                radius={[4, 4, 0, 0]} // 둥근 모서리
+                fill="rgb(13,23,53)" // 바 색상
+                radius={[4, 4, 0, 0]} // 모서리 둥글게
               />
             </BarChart>
           </ResponsiveContainer>

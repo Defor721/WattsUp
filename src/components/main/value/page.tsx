@@ -167,7 +167,7 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
           title="오늘의 SMP"
           unit="(단위: 원/kWh)"
           value={apiData?.smpAverage || "0"}
-          max={100}
+          max={1000}
         />
         <InfoCard
           title="오늘의 REC"
