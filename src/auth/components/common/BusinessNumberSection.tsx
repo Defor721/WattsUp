@@ -304,13 +304,13 @@ export default function BusinessNumberSection({
         <Button
           type="button"
           onClick={resetBusinessInfo}
-          className="rounded bg-gray-600 p-2 text-white"
+          className="h-[44px] rounded bg-gray-600 p-2 text-white"
         >
           사업자번호 재인증
         </Button>
       ) : (
         <Button
-          className={`rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+          className={`h-[44px] rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
           type="button"
           onClick={handleCheckBusinessNumber}
           disabled={isBusinessButtonDisabled()}
