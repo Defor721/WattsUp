@@ -21,6 +21,7 @@ const validateEnv = () => {
   }
 };
 
+/** 구글 토큰 교환 */
 export async function POST(request: NextRequest) {
   try {
     validateEnv();
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
       // DB에 리프레시 토큰 저장
       await collection.updateOne(
         { email: user.email },
-        { $set: { refreshToken } },
+        { $set: { refreshToken, updatedAt: new Date() } },
       );
 
       const response = NextResponse.json(

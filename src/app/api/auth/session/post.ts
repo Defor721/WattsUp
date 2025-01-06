@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       });
       await collection.updateOne(
         { email },
-        { $set: { refreshToken: refreshToken } },
+        { $set: { refreshToken: refreshToken, updatedAt: new Date() } },
       );
       const response = NextResponse.json(
         { message: "로그인 성공", accessToken },

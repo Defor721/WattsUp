@@ -52,7 +52,7 @@ function FindPasswordPopup({ children }: Props) {
       setIsConfirmNewPasswordValid(false);
       resetUserState();
     }
-  }, [isDialogOpen, resetUserState]);
+  }, [isDialogOpen]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
