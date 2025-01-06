@@ -35,6 +35,17 @@ interface DataRow {
   [key: string]: string | number;
 }
 
+// COLORS 정의
+const COLORS = {
+  주택용: "#34D399", // 녹색
+  일반용: "#60A5FA", // 파랑
+  교육용: "#F87171", // 빨강
+  산업용: "#fba524", // 노랑
+  농사용: "#93C5FD", // 연파랑
+  가로등: "#A78BFA", // 보라
+  심야: "#FCA5A5", // 연분홍
+};
+
 function PowerPrice() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2023);
@@ -104,34 +115,13 @@ function PowerPrice() {
 
   const generatePieChartData = (): Array<{ name: string; value: number }> =>
     currentData
-      ? [
-          { name: "주택용", value: currentData.주택용 },
-          { name: "일반용", value: currentData.일반용 },
-          { name: "교육용", value: currentData.교육용 },
-          { name: "산업용", value: currentData.산업용 },
-          { name: "농사용", value: currentData.농사용 },
-          { name: "가로등", value: currentData.가로등 },
-          { name: "심야", value: currentData.심야 },
-        ]
+      ? Object.keys(COLORS).map((key) => ({
+          name: key,
+          value: currentData[key] as number,
+        }))
       : [];
 
-  const kpiConfig = {
-    주택용: { color: "#1E88E5", unit: "원" },
-    일반용: { color: "#F4511E", unit: "원" },
-    산업용: { color: "#E53935", unit: "원" },
-    합계: { color: "#1eec0bc7", unit: "원" },
-  };
-
-  // 색상 조합
-  const pieChartColors = [
-    "#1E88E5", // 블루
-    "#F4511E", // 오렌지
-    "#43A047", // 초록
-    "#E53935", // 레드
-    "#FB8C00", // 옐로우 오렌지
-    "#8E24AA", // 퍼플
-    "#3949AB", // 다크 블루
-  ];
+  const pieChartColors = Object.values(COLORS);
 
   return (
     <Container>
@@ -170,7 +160,7 @@ function PowerPrice() {
         {/* 데이터 다운로드 버튼 */}
         <Button
           onClick={handleDownload}
-          className="bg-subColor text-white dark:border-1"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -179,27 +169,20 @@ function PowerPrice() {
 
       {currentData && (
         <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {Object.entries(currentData)
-            .filter(([key]) => kpiConfig[key as keyof typeof kpiConfig])
-            .map(([key, value]) => {
-              const config = kpiConfig[key as keyof typeof kpiConfig];
-              return (
-                <KPICard
-                  key={key}
-                  title={key}
-                  value={`${value.toLocaleString()} ${config.unit}`}
-                  backgroundColor={config.color}
-                />
-              );
-            })}
+          {Object.keys(COLORS).map((key) => (
+            <KPICard
+              key={key}
+              title={key}
+              value={`${formatNumberWithDecimal(
+                currentData[key] as number,
+              )} 원`}
+              backgroundColor={COLORS[key as keyof typeof COLORS]}
+            />
+          ))}
         </div>
       )}
 
       <div className="flex gap-6">
-        <Card className="flex-1 p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-xl font-bold">판매 단가 총합</h2>
-          <BarChart data={generateBarChartData()} />
-        </Card>
         <Card className="flex-1 p-6 shadow-lg">
           <h2 className="mb-4 text-center text-xl font-bold">비중 차트</h2>
           <div className="flex items-center justify-center">
@@ -211,8 +194,12 @@ function PowerPrice() {
             {/* 데이터 항목 표시 */}
             <div className="flex flex-col gap-2">
               {generatePieChartData()
+                .map((item, index) => ({
+                  ...item,
+                  color: pieChartColors[index % pieChartColors.length], // 색상 추가
+                }))
                 .sort((a, b) => b.value - a.value) // 값을 기준으로 내림차순 정렬
-                .map((item, index) => (
+                .map((item) => (
                   <div
                     key={item.name}
                     className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
@@ -221,8 +208,7 @@ function PowerPrice() {
                     <div
                       className="h-4 w-4 rounded-full"
                       style={{
-                        backgroundColor:
-                          pieChartColors[index % pieChartColors.length],
+                        backgroundColor: item.color, // 색상 일치
                       }}
                     ></div>
                     {/* 데이터 이름과 값 */}
@@ -233,6 +219,10 @@ function PowerPrice() {
                 ))}
             </div>
           </div>
+        </Card>
+        <Card className="flex-1 p-6 shadow-lg">
+          <h2 className="mb-4 text-center text-xl font-bold">판매 단가 총합</h2>
+          <BarChart data={generateBarChartData()} />
         </Card>
       </div>
 
