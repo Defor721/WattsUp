@@ -8,9 +8,9 @@ import { get6Days } from "@/utils";
 import apiClient from "@/lib/axios";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 import Loading from "@/app/loading";
+import KakaoMap from "@/components/introduce/KakaoMap";
 
 import Container from "./Container";
-import TodayValue from "./TodayValue";
 import RegionButtons from "./RegionButtons";
 import PredictChart from "./Chart";
 import PredictTable from "./Table";
@@ -62,7 +62,7 @@ const denormalize = (data: number[], min: number, max: number) =>
   data.map((value) => value * (max - min) + min);
 
 function DashboardMain() {
-  const [selectedRegion, setSelectedRegion] = useState("서울시");
+  const [selectedRegion, setSelectedRegion] = useState("서울시"); // 선택된 지역 상태
   const [chartData, setChartData] = useState<Record<string, any[]>>({});
   const [weatherData, setWeatherData] = useState<Record<string, any[]>>();
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,6 @@ function DashboardMain() {
         });
 
         const results = await Promise.all(requests);
-        // console.log("results: ", results);
 
         const processedWeatherData: Record<string, any[]> = {};
 
@@ -149,7 +148,6 @@ function DashboardMain() {
           ]),
         );
 
-        // console.log("sampleInputs: ", sampleInputs);
         const inputTensor = tf.tensor2d(
           sampleInputs.map((input) =>
             input.map(
@@ -183,7 +181,6 @@ function DashboardMain() {
         );
 
         setChartData(formattedChartData);
-        // console.log("Predicted Chart Data:", formattedChartData);
       } catch (error) {
         console.error("Error during prediction:", error);
       }
@@ -221,21 +218,33 @@ function DashboardMain() {
 
   return (
     <Container>
-      <div className="mb-10 flex items-center justify-between">
-        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
-          대시보드
-        </h2>
-        <RegionButtons
-          regions={regions}
-          selectedRegion={selectedRegion}
-          setSelectedRegion={setSelectedRegion}
-        />
+      <div className="mb-10 flex flex-col justify-between">
+        <div>
+          <h2 className="flex scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+            대시보드
+          </h2>
+          <div className="flex justify-end">
+            <RegionButtons
+              regions={regions}
+              selectedRegion={selectedRegion}
+              setSelectedRegion={setSelectedRegion}
+            />
+          </div>
+        </div>
       </div>
-      <div className="mb-10 flex gap-6">
-        <TodayValue
-          selectedRegion={selectedRegion}
-          data={chartData[selectedRegion]}
-        />
+      <div className="mb-10 flex h-full w-full gap-6">
+        <div
+          id="map"
+          style={{
+            width: "35%",
+            height: "300px",
+          }}
+        >
+          <KakaoMap
+            onRegionClick={(region) => setSelectedRegion(region)} // 클릭된 지역 설정
+          />
+        </div>
+
         <PredictChart
           data={chartData[selectedRegion]}
           region={selectedRegion}

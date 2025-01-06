@@ -35,7 +35,7 @@ function FeaturesPart() {
       </div>
 
       {/* Cards Section */}
-      <div className="flex bg-gradient-to-b from-[#F5F5F5] to-gray-900">
+      <div className="bg-[#F5F5F5]0 flex">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             {[

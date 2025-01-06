@@ -96,6 +96,9 @@ export const ESGItems = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="mb-8 w-full md:mb-0 md:w-1/3">
+          <span className="text-md bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text font-bold text-transparent">
+            WattsUp
+          </span>
           <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
             ESG 경영 활동
           </h2>
@@ -123,7 +126,7 @@ export const ESGItems = () => {
             </div>
           </motion.div>
         </div>
-        <div className="relative h-[500px] w-full md:w-2/3">
+        <div className="relative h-[500px] w-full pl-24 md:w-2/3">
           <svg className="h-full w-full" viewBox="0 0 600 600">
             <g transform="translate(300, 300)">
               <circle r="60" fill="#f0f0f0" />

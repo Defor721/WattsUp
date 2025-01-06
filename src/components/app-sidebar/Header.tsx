@@ -41,14 +41,14 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
 
   // 테블릿 화면에서 사이드바 확장 and 평상시 화면
   return (
-    <Link href="/" className="relative flex items-center p-8">
+    <Link href="/" className="relative flex items-center p-4">
       {/* 이미지 */}
       <Image
         src="/assets/images/logo.webp"
         width={80}
         height={80}
         alt="WattsUp Logo"
-        className={`absolute z-0 rounded-md opacity-30`} // absolute와 z-0 추가
+        className={`absolute z-0 flex rounded-md opacity-30`} // absolute와 z-0 추가
       />
 
       {/* 글씨 */}

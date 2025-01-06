@@ -67,9 +67,9 @@ export default function Sidebar() {
                   width={80}
                   height={80}
                   alt="WattsUp Logo"
-                  className="rounded-md opacity-70"
+                  className="rounded-md pr-12 opacity-70"
                 />
-                <span className="absolute left-16 bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-3xl font-bold text-transparent">
+                <span className="lbg-gradient-to-r absolute from-teal-200 to-blue-300 bg-clip-text text-3xl font-bold text-transparent">
                   WattsUp
                 </span>
               </Link>
