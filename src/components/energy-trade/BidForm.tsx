@@ -68,7 +68,7 @@ export default function BidForm() {
   };
 
   return (
-    <div className="py-4">
+    <div className="">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -112,6 +112,7 @@ export default function BidForm() {
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   required
+                  className="bg-transparent"
                 />
               </div>
               {/* 단가 입력 */}
@@ -125,6 +126,7 @@ export default function BidForm() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   required
+                  className="bg-transparent"
                 />
               </div>
               {/* 총 가격 표시 */}
@@ -141,7 +143,7 @@ export default function BidForm() {
               <Button
                 type="submit" // 버튼 타입: 제출
                 disabled={isSubmitting} // 제출 중이면 비활성화
-                className="w-full bg-[rgb(13,23,53)] text-white hover:bg-[rgb(13,23,53)]/90" ///90은 90% 불투명도를 의미(10% 투명).
+                className="w-full bg-mainColor text-white dark:bg-white dark:text-mainColor" ///90은 90% 불투명도를 의미(10% 투명).
               >
                 {isSubmitting ? "제출 중..." : "입찰하기"}
                 {/* 상태에 따라 버튼 텍스트 변경 */}
