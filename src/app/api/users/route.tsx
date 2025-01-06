@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ message: "Token Missing" }, { status: 403 });
     }
-
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);

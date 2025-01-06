@@ -6,20 +6,31 @@ export async function GET(request: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("wattsup");
-    const collection = db.collection("supply");
-    try {
-      const today = new Date();
-      const supply = await collection
-        .find({ date: today }, { projection: { _id: 0, date: 0 } })
-        .toArray();
+
+    const today = new Date();
+    const year = today.getUTCFullYear();
+    const month = today.getUTCMonth() + 1;
+    const day = today.getUTCDate();
+    const supplyCollection = db.collection("supply");
+    const result = await supplyCollection.findOne({
+      $expr: {
+        $and: [
+          { $eq: [{ $year: "$Date" }, year] },
+          { $eq: [{ $month: "$Date" }, month] },
+          { $eq: [{ $dayOfMonth: "$Date" }, day] },
+        ],
+      },
+    });
+
+    if (!result) {
       return NextResponse.json(
-        { message: "success to find data", supply },
-        { status: 200 },
+        { message: "Failed to find data" },
+        { status: 404 },
       );
-    } catch (error) {
+    } else {
       return NextResponse.json(
-        { message: "Failed to find Data" },
-        { status: 500 },
+        { message: "Success to find data", result },
+        { status: 200 },
       );
     }
   } catch (error: unknown) {
