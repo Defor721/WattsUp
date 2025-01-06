@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 
@@ -44,11 +45,14 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const {
     actions: { logout },
   } = useAuthStore();
+  const router = useRouter();
+
   const { resetAccessToken } = useAccessToken();
 
   const handleLogout = async () => {
     await logout();
     resetAccessToken();
+    router.push("/");
   };
 
   return (

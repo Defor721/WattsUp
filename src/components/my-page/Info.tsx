@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import {
   Avatar,
@@ -22,6 +23,7 @@ function Info() {
   const {
     actions: { logout },
   } = useAuthStore();
+  const router = useRouter();
   const { resetAccessToken } = useAccessToken();
   const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +46,7 @@ function Info() {
   const handleLogout = async () => {
     await logout();
     resetAccessToken();
+    router.push("/");
   };
 
   return (
