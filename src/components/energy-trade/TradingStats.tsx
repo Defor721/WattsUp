@@ -1,101 +1,94 @@
-"use client";
+"use client"; // Next.js 클라이언트 컴포넌트로 설정
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import axios from "axios"; // Axios를 가져오기
+import { useEffect, useState } from "react"; // React의 상태 관리 및 사이드 이펙트 훅
+import { motion } from "framer-motion"; // 애니메이션 효과를 위한 라이브러리
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/shadcn/card"; // UI 카드 컴포넌트
+// 데이터 타입 정의 (TypeScript)
+type TradingStatsData = {
+  bidCount: number; // 총 입찰 수
+  smp: number; // SMP (System Marginal Price)
+  totalSupply: number; // 총 공급량
+};
 
-// 타입 정의
-interface TradingStatsData {
-  bidCount: number;
-  smp: number;
-  totalSupply: number;
-}
-
+// 거래 통계 컴포넌트
 export default function TradingStats() {
-  const [stats, setStats] = useState<TradingStatsData>({
-    bidCount: 0,
-    smp: 0,
-    totalSupply: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  const [stats, setStats] = useState<TradingStatsData | null>(null); // 거래 통계 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
   useEffect(() => {
+    // 데이터 가져오는 비동기 함수
     const fetchStats = async () => {
       try {
-        // API 병렬 호출
-        const [bidCountRes, smpRes, totalSupplyRes] = await Promise.all([
-          axios.get("/api/trade/countbid").then((res) => res.data), // 총 입찰 수
-          axios.get("/api/trade/smp").then((res) => res.data), // SMP
-          axios.get("/api/trade/supply").then((res) => res.data), // 총 공급량
+        const [bidCount, smp, totalSupply] = await Promise.all([
+          // API 호출 병렬 처리
+          fetch("/api/trade/countbid").then((res) => res.json()), // 총 입찰 수
+          fetch("/api/trade/smp").then((res) => res.json()), // SMP
+          fetch("/api/trade/supply").then((res) => res.json()), // 총 공급량
         ]);
 
-        // 상태 업데이트
-        setStats({
-          bidCount: bidCountRes,
-          smp: smpRes,
-          totalSupply: totalSupplyRes,
-        });
-      } catch (error) {
-        console.error("Failed to fetch trading stats:", error);
-        setError("데이터를 가져오는 중 문제가 발생했습니다.");
+        setStats({ bidCount, smp, totalSupply }); // 상태 업데이트
+      } catch (err) {
+        console.error("데이터 로드 실패:", err); // 에러 로그 출력
+        setError("데이터를 불러오는 중 문제가 발생했습니다."); // 에러 메시지 설정
       } finally {
         setIsLoading(false); // 로딩 상태 해제
       }
     };
 
-    fetchStats();
-  }, []);
+    fetchStats(); // 데이터 가져오기 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
-      </div>
-    );
-  }
+  // 로딩 상태일 때 보여줄 컴포넌트
+  if (isLoading) return <LoadingMessage />;
 
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
+  // 에러 상태일 때 보여줄 컴포넌트
+  if (error) return <ErrorMessage error={error} />;
 
+  // 데이터 로드 완료 후 UI 렌더링
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} // 초기 애니메이션 상태
-      animate={{ opacity: 1, y: 0 }} // 완료된 애니메이션 상태
+      animate={{ opacity: 1, y: 0 }} // 애니메이션 완료 상태
       transition={{ duration: 0.5 }} // 애니메이션 지속 시간
       className="w-full"
     >
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">거래 통계</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            <StatItem title="총 입찰 수" value={stats.bidCount} />
-            <StatItem
-              title="SMP"
-              value={`${stats.smp.toLocaleString()} 원/kWh`}
-            />
-            <StatItem
-              title="총 공급량"
-              value={`${stats.totalSupply.toLocaleString()} kWh`}
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          거래 통계
+        </h2>
+        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {/* 통계 항목들 */}
+          <StatItem title="총 입찰 수" value={stats?.bidCount || 0} />
+          <StatItem
+            title="SMP"
+            value={`${stats?.smp.toLocaleString()} 원/kWh`}
+          />
+          <StatItem
+            title="총 공급량"
+            value={`${stats?.totalSupply.toLocaleString()} kWh`}
+          />
+        </div>
+      </div>
     </motion.div>
+  );
+}
+
+// 로딩 메시지 컴포넌트
+function LoadingMessage() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
+    </div>
+  );
+}
+
+// 에러 메시지 컴포넌트
+function ErrorMessage({ error }: { error: string }) {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <p className="text-red-500">{error}</p>
+    </div>
   );
 }
 
@@ -103,8 +96,8 @@ export default function TradingStats() {
 function StatItem({ title, value }: { title: string; value: string | number }) {
   return (
     <div className="rounded-lg border p-4">
-      <p className="text-sm font-medium">{title}</p>
-      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-sm font-medium text-gray-600">{title}</p>
+      <p className="text-2xl font-bold text-gray-800">{value}</p>
     </div>
   );
 }

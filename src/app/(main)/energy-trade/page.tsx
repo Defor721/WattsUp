@@ -20,6 +20,7 @@ export default function TradePage() {
           <SupplyChart />
         </div>
         <div className="flex w-1/2 flex-col p-8">
+          {/* 입찰하기 */}
           <BidForm />
         </div>
       </div>
