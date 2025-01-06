@@ -13,10 +13,16 @@ import {
   CardTitle,
   Input,
 } from "@/components/shadcn";
+import { useAuthStore } from "@/auth/useAuthStore";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 import Modal from "./Modal";
 
 function Info() {
+  const {
+    actions: { logout },
+  } = useAuthStore();
+  const { resetAccessToken } = useAccessToken();
   const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,6 +39,11 @@ function Info() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    resetAccessToken();
   };
 
   return (
@@ -61,6 +72,7 @@ function Info() {
           <Button
             variant="outline"
             className="w-full bg-subColor text-white dark:bg-white dark:text-subColor"
+            onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />
             로그아웃

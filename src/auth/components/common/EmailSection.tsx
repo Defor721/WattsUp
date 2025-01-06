@@ -6,20 +6,19 @@ import {
   sendVerificationEmail,
   verifyEmailCode,
 } from "@/services/emailService";
-import { toast } from "@/hooks/useToast";
 import { isValidEmail } from "@/utils";
 
-import VerificationMessage from "./VerificationMessage";
-import EmailVerificationButton from "./EmailVerificationButton";
-import OTPInput from "../common/OTPInput";
-import EmailInput from "../common/EmailInput";
+import OTPInput from "./OTPInput";
+import EmailInput from "./EmailInput";
+import VerificationMessage from "../signup/VerificationMessage";
+import EmailVerificationButton from "../signup/EmailVerificationButton";
 
 interface SignupEmailInputProps {
   isEmailVerified: boolean;
   setIsEmailVerified: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SignupEmailSection({
+export default function EmailSection({
   isEmailVerified,
   setIsEmailVerified,
 }: SignupEmailInputProps) {
@@ -31,6 +30,7 @@ export default function SignupEmailSection({
   const [isEmailVerificationLoading, setIsEmailValificationLoading] =
     useState(false);
   const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isSendButtonDisabled = () =>
     isEmailVerificationLoading ||
@@ -51,18 +51,10 @@ export default function SignupEmailSection({
       setCooldown(60);
       setIsEmailCodeLoading(true);
       setIsError(false);
-      toast({
-        title: "기입된 이메일로 인증코드를 보냈습니다.",
-        description: "1분 내에 인증코드를 입력해주세요.",
-      });
       await sendVerificationEmail({ email });
     } catch (error: any) {
       setIsError(true);
-      toast({
-        variant: "destructive",
-        title: "인증 코드 전송에 실패했습니다.",
-        description: `${error.response.data.message}`,
-      });
+      setErrorMessage(error.response.data.message);
     } finally {
       setIsEmailCodeLoading(false);
     }
@@ -79,11 +71,7 @@ export default function SignupEmailSection({
     } catch (error: any) {
       setIsError(true);
       setIsEmailVerified(false);
-      toast({
-        variant: "destructive",
-        title: "이메일 확인에 실패했습니다.",
-        description: `${error.response.data.message}`,
-      });
+      setErrorMessage(error.response.data.message);
     } finally {
       setIsEmailValificationLoading(false);
     }
@@ -126,6 +114,7 @@ export default function SignupEmailSection({
             isError={isError}
             isEmailVerified={isEmailVerified}
             emailCode={emailCode}
+            errorMessage={errorMessage}
             isEmailCodeSended={isEmailCodeSended}
             isEmailCodeEntered={isEmailCodeEntered}
           />

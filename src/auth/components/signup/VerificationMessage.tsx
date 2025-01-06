@@ -2,6 +2,7 @@ interface VerificationMessageProps {
   isError: boolean;
   isEmailVerified: boolean;
   emailCode: string;
+  errorMessage: string;
   isEmailCodeSended: () => boolean;
   isEmailCodeEntered: () => boolean;
 }
@@ -10,21 +11,18 @@ export default function VerificationMessage({
   isError,
   isEmailVerified,
   emailCode,
+  errorMessage,
   isEmailCodeSended,
   isEmailCodeEntered,
 }: VerificationMessageProps) {
   if (isError) {
-    return (
-      <div className="text-red-600">
-        실패하였습니다. 아래의 실패 사유를 참고해주세요.
-      </div>
-    );
+    return <div className="text-red-600">실패하였습니다. {errorMessage}</div>;
   }
 
   if (!isEmailVerified && emailCode && !isError) {
     return (
       <div>
-        6자리를 모두 입력 후{" "}
+        6자리 인증코드를 1분 내에 입력 후{" "}
         <span className="font-semibold text-blue-600">이메일 인증</span> 버튼을
         눌러주세요.
       </div>
@@ -38,7 +36,7 @@ export default function VerificationMessage({
   if (isEmailCodeSended()) {
     return (
       <>
-        인증코드가 전송되었습니다.{" "}
+        기입된 이메일로 인증코드가 전송되었습니다.{" "}
         <span className="font-semibold text-blue-600">메일함</span>을
         확인해주세요.
       </>

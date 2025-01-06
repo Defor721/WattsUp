@@ -3,38 +3,10 @@ import jwt from "jsonwebtoken";
 
 import { verificationcodeKey } from "@/utils";
 import { checkRedisConnection, redisClient } from "@/lib/redis";
-import clientPromise from "@/lib/mongodb";
 
 export async function POST(request: NextRequest) {
   try {
     const { email, emailCode } = await request.json();
-
-    const client = await clientPromise;
-    const db = client.db("wattsup");
-    const collection = db.collection("userdata");
-    const user = await collection.findOne({ email });
-
-    if (user?.signupType === "native") {
-      return NextResponse.json(
-        {
-          accessToken: "",
-          message:
-            "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요.",
-        },
-        { status: 409 },
-      );
-    }
-
-    if (user?.signupType === "social") {
-      return NextResponse.json(
-        {
-          accessToken: "",
-          message:
-            "해당 이메일은 소셜 회원으로 등록되어 있습니다. 소셜 로그인을 이용해 주세요.",
-        },
-        { status: 409 },
-      );
-    }
 
     if (!email || !emailCode) {
       return NextResponse.json(
