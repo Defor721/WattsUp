@@ -81,7 +81,7 @@ const user = {
 function Sidebar() {
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
   const { accessToken } = useAccessToken();
-  const [userState, setUserState] = useState<"admin" | "normal">("admin");
+  const [userState] = useState<"admin" | "normal">("admin");
   const { isTablet } = useDeviceType();
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);

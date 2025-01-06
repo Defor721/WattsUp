@@ -64,17 +64,29 @@ function UserManageMentTable() {
   };
 
   // 검색어에 따른 필터링
-  const filteredUsers = users.filter((user) => {
-    const searchValue = searchTerm.toLowerCase();
-    return (
-      user.email.toLowerCase().includes(searchValue) || // 이메일 필터
-      user.name.toLowerCase().includes(searchValue) || // 이름 필터
-      user.companyName.toLowerCase().includes(searchValue) || // 상호명 필터
-      user.businessNumber.toString().includes(searchValue) || // 사업자등록번호 필터
-      user.corporateNumber.toString().includes(searchValue) || // 법인등록번호 필터
-      user.dateCreate.toString().includes(searchValue) // 가입날짜 필터
-    );
-  });
+  const filteredUsers = users
+    .sort((a, b) => {
+      const dateA =
+        typeof a.dateCreate === "string"
+          ? Date.parse(a.dateCreate)
+          : a.dateCreate;
+      const dateB =
+        typeof b.dateCreate === "string"
+          ? Date.parse(b.dateCreate)
+          : b.dateCreate;
+      return dateB - dateA;
+    })
+    .filter((user) => {
+      const searchValue = searchTerm.toLowerCase();
+      return (
+        user.email.toLowerCase().includes(searchValue) || // 이메일 필터
+        user.name.toLowerCase().includes(searchValue) || // 이름 필터
+        user.companyName.toLowerCase().includes(searchValue) || // 상호명 필터
+        user.businessNumber.toString().includes(searchValue) || // 사업자등록번호 필터
+        user.corporateNumber.toString().includes(searchValue) || // 법인등록번호 필터
+        user.dateCreate.toString().includes(searchValue) // 가입날짜 필터
+      );
+    });
 
   // 페이지네이션에 따라 표시할 데이터 계산
   const totalItems = filteredUsers.length;

@@ -186,7 +186,7 @@ function Electro() {
         </div>
         <Button
           onClick={handleDownload}
-          className="bg-subColor text-white dark:border-1"
+          className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
           <Download size={16} />
           데이터 다운로드
@@ -269,7 +269,7 @@ function Electro() {
                     원자력: currentYearData["원자력(GWh)"],
                     자가용: currentYearData["자가용(GWh)"],
                   }}
-                  colors={["#3B82F6", "#F59E0B", "#EF4444", "#22C55E"]}
+                  colors={["#60a5fa", "#facc15", "#f87171", "#4ade80"]}
                 />
               </div>
 
