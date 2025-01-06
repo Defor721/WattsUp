@@ -18,7 +18,7 @@ function Page() {
           `http://localhost:3000//api/admin/userinfo/${decodedEmail}`,
         );
         const data = response.data.userData;
-        console.log("data: ", data);
+        // console.log("data: ", data);
         setUser(data);
       } catch (error) {
         console.error("Error: ", error);

@@ -23,7 +23,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
     지난연도: item.value,
     현재연도: currentYearData[index]?.value || 0,
   }));
-  console.log("data: ", data);
+  // console.log("data: ", data);
 
   return (
     <ResponsiveContainer width="100%" height={400}>
