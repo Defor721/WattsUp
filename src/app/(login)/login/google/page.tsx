@@ -1,25 +1,24 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Triangle } from "react-loader-spinner";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import useAccessToken from "@/auth/useAccessToken";
-import { useDialog } from "@/hooks/useDialog";
+import useAccessToken from "@/auth/hooks/useAccessToken";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { showDialog, DialogComponent } = useDialog();
-  const { setAccessToken, resetAccessToken } = useAccessToken();
+
+  const { setAccessToken } = useAccessToken();
 
   const {
     accessToken,
     error,
     message,
     redirectTo,
-    actions: { socialLogin, resetLoginState },
+    actions: { socialLogin, resetAuthState },
   } = useAuthStore();
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     if (accessToken) {
       setAccessToken(accessToken);
-      resetLoginState();
+      resetAuthState();
       router.push(redirectTo);
     }
   }, [accessToken]);

@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
-
-const validateEnv = () => {
-  if (!process.env.TEMP_TOKEN_SECRET) {
-    throw new Error("환경 변수가 설정되지 않았습니다.");
-  }
-};
 
 async function insertUserToDB(collection: any, userData: any) {
   try {
@@ -21,32 +14,32 @@ async function insertUserToDB(collection: any, userData: any) {
   }
 }
 
-/** 소셜 회원가입 */
+/** 일반 회원가입 */
 export async function POST(request: NextRequest) {
   try {
-    validateEnv();
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
 
+    const { password } = await request.json();
+
     const emailVerificationToken = request.cookies.get(
       "emailVerificationToken",
     )?.value;
-    const businessVerificationToken = request.cookies.get(
-      "businessVerificationToken",
-    )?.value;
-
     if (!emailVerificationToken) {
       return NextResponse.json(
-        { message: "토큰을 찾을 수 없습니다." },
-        { status: 401 },
+        { message: "이메일 인증 토큰이 없습니다." },
+        { status: 400 },
       );
     }
 
+    const businessVerificationToken = request.cookies.get(
+      "businessVerificationToken",
+    )?.value;
     if (!businessVerificationToken) {
       return NextResponse.json(
-        { message: "토큰을 찾을 수 없습니다." },
-        { status: 401 },
+        { message: "사업자 인증 토큰이 없습니다." },
+        { status: 400 },
       );
     }
 
@@ -101,54 +94,54 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           message:
-            "사업자 번호 인증 세션이 만료되었습니다. 다시 인증을 진행해주세요.",
+            "사업자 인증 세션이 만료되었습니다. 다시 인증을 진행해주세요.",
         },
         { status: 401 },
       );
     }
-
-    const { businessNumber, principalName, companyName, corporateNumber } =
+    const { principalName, businessNumber, companyName, corporateNumber } =
       businessVerification;
 
-    const existingBusiness = await collection.findOne({ businessNumber });
-    if (existingBusiness) {
+    if (!password) {
       return NextResponse.json(
-        { message: "이미 등록된 사업자번호입니다." },
+        { message: "입력값을 모두 입력해야 합니다." },
+        { status: 400 },
+      );
+    }
+
+    const existingEmail = await collection.findOne({ email });
+    if (existingEmail) {
+      return NextResponse.json(
+        { status: "error", message: "이미 가입된 이메일입니다." },
         { status: 409 },
       );
     }
 
-    const payload = { email };
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-      expiresIn: "1h",
-    });
-    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
-      expiresIn: "7d",
-    });
+    const existingBusinessNumber = await collection.findOne({ businessNumber });
+    if (existingBusinessNumber) {
+      return NextResponse.json(
+        { status: "error", message: "이미 등록된 사업자등록번호입니다." },
+        { status: 409 },
+      );
+    }
 
+    // TODO: 비밀번호 암호화할것
     await insertUserToDB(collection, {
       email,
-      password: null,
+      password,
       name: principalName,
       signupType,
       provider,
       companyName,
       corporateNumber,
       businessNumber,
-      refreshToken,
     });
 
     const response = NextResponse.json(
-      { message: "로그인 성공", accessToken },
+      { message: "회원가입 성공" },
       { status: 201 },
     );
 
-    response.cookies.set("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      path: "/",
-      sameSite: "none",
-    });
     response.cookies.set("emailVerificationToken", "", {
       httpOnly: true,
       secure: true,
@@ -156,6 +149,7 @@ export async function POST(request: NextRequest) {
       sameSite: "strict",
       maxAge: 0,
     });
+
     response.cookies.set("businessVerificationToken", "", {
       httpOnly: true,
       secure: true,
@@ -163,12 +157,13 @@ export async function POST(request: NextRequest) {
       sameSite: "strict",
       maxAge: 0,
     });
+
     return response;
   } catch (error: any) {
     if (error.message.startsWith("TokenExpiredError")) {
       let response = NextResponse.json(
         {
-          message: "세션이 만료되었습니다. 인증을 다시 진행해주세요.",
+          message: "회원가입 세션이 만료되었습니다. 인증을 다시 진행해주세요.",
         },
         { status: 401 },
       );
@@ -177,18 +172,11 @@ export async function POST(request: NextRequest) {
         response = NextResponse.json(
           {
             message:
-              "세션이 만료되었습니다. 뒤로가기 버튼을 눌러 이메일 인증을 다시 진행해주세요.",
+              "회원가입 세션이 만료되었습니다. 이메일 인증을 다시 진행해주세요.",
           },
           { status: 401 },
         );
         response.cookies.set("emailVerificationToken", "", {
-          httpOnly: true,
-          secure: true,
-          path: "/",
-          sameSite: "strict",
-          maxAge: 0,
-        });
-        response.cookies.set("businessVerificationToken", "", {
           httpOnly: true,
           secure: true,
           path: "/",
@@ -217,9 +205,7 @@ export async function POST(request: NextRequest) {
       return response;
     }
     return NextResponse.json(
-      {
-        message: "내부 서버 오류가 발생했습니다.",
-      },
+      { message: "서버 오류가 발생했습니다." },
       { status: 500 },
     );
   }

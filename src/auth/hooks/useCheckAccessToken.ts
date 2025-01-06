@@ -2,14 +2,15 @@
 
 import { useEffect } from "react";
 
-import useAccessToken from "./useAccessToken";
-import { useAuthStore } from "./useAuthStore";
+import { useUserStore } from "@/stores/useUserStore";
+
+import useAccessToken from "./hooks/useAccessToken";
 
 export default function useCheckAccessToken(): void {
   const { accessToken, resetAccessToken } = useAccessToken();
   const {
     actions: { fetchCurrentUser },
-  } = useAuthStore();
+  } = useUserStore();
 
   useEffect(() => {
     // TODO: 만료된 리프레시 토큰도 받아야 하는지 확인

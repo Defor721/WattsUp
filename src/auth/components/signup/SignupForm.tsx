@@ -7,14 +7,14 @@ import { useAuthStore } from "@/auth/useAuthStore";
 import { toast } from "@/hooks/useToast";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 
-import SignupPasswordSection from "./SignupPasswordSection";
-import SignupEmailSection from "./SignupEmailSection";
-import BusinessNumberSection from "../BusinessNumberSection";
+import PasswordSection from "../common/PasswordSection";
+import EmailSection from "../common/EmailSection";
+import BusinessNumberSection from "../common/BusinessNumberSection";
 
 export default function SignupForm() {
   const router = useRouter();
   const {
-    actions: { nativeSignup, resetLoginState },
+    actions: { nativeSignup, resetAuthState },
   } = useAuthStore();
 
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -54,7 +54,7 @@ export default function SignupForm() {
     setIsPasswordValid(false);
     setIsConfirmPasswordValid(false);
     setIsBusinessVerified(false);
-    resetLoginState();
+    resetAuthState();
   };
 
   useEffect(() => {
@@ -65,12 +65,12 @@ export default function SignupForm() {
     <form onSubmit={handleSubmit}>
       <CardContent className="flex flex-col gap-5 p-0">
         {/* 이메일 섹션 */}
-        <SignupEmailSection
+        <EmailSection
           isEmailVerified={isEmailVerified}
           setIsEmailVerified={setIsEmailVerified}
         />
         {/* 비밀번호 섹션 */}
-        <SignupPasswordSection
+        <PasswordSection
           password={password}
           isPasswordValid={isPasswordValid}
           isConfirmPasswordValid={isConfirmPasswordValid}

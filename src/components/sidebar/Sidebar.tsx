@@ -16,7 +16,7 @@ import {
 
 import { useSidebarStore } from "@/stores/sidebarStore"; // Zustand 스토어
 import { Separator } from "@/components/shadcn/separator";
-import useCheckAccessToken from "@/auth/useCheckAccessToken";
+import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
 
 import { Input } from "../shadcn/input";
 import { UserDropdown } from "./UserDropdown";

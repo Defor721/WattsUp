@@ -2,6 +2,31 @@ import { AuthResponse } from "@/auth/type";
 import apiClient from "@/lib/axios";
 
 /**
+ * 일반 회원가입
+ */
+export async function nativeSignup({
+  password,
+}: {
+  password: string;
+}): Promise<any> {
+  try {
+    const { data } = await apiClient.post(
+      "/api/auth/users",
+      {
+        password,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * 일반 로그인
  */
 export const loginWithEmailAndPassword = async (
@@ -55,38 +80,29 @@ export async function socialSignup(): Promise<any> {
 }
 
 /**
- * 일반 회원가입
+ * 로그아웃
  */
-export async function nativeSignup({
-  password,
-}: {
-  password: string;
-}): Promise<any> {
+export const logout = async () => {
   try {
-    const { data } = await apiClient.post(
-      "/api/auth/users",
-      {
-        password,
-      },
-      {
-        withCredentials: true,
-      },
-    );
+    const { data } = await apiClient.delete("/api/auth/session", {
+      withCredentials: true,
+    });
 
     return data;
   } catch (error) {
     throw error;
   }
-}
+};
 
-/**
- * 로그아웃
- */
-export const logout = async () => {
+export const deleteUser = async () => {
   try {
-    await apiClient.delete("/api/logout");
+    const { data } = await apiClient.delete("/api/auth/users", {
+      withCredentials: true,
+    });
+
+    return data;
   } catch (error) {
-    console.error("로그아웃 실패:", error);
+    throw error;
   }
 };
 
