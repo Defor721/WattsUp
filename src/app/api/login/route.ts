@@ -5,23 +5,23 @@ import clientPromise from "@/lib/mongodb";
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, password }: { userId: string; password: string } =
+    const { email, password }: { email: string; password: string } =
       await request.json();
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
-    const user = await collection.findOne({ userId });
+    const user = await collection.findOne({ email });
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     if (user.password === password) {
-      const payload = { id: userId };
+      const payload = { businessNumber: user.businessNumber };
       const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
       const access = jwt.sign(payload, accessSecret, { expiresIn: "1h" });
       const refreshSecret = process.env.REFRESH_TOKEN_SECRET as string;
       const refresh = jwt.sign(payload, refreshSecret, { expiresIn: "7d" });
       await collection.updateOne(
-        { userId },
+        { email },
         { $set: { refreshToken: refresh } },
       );
       const response = NextResponse.json(
