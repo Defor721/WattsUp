@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 import {
@@ -16,15 +17,18 @@ import {
 } from "@/components/shadcn";
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/hooks/useAccessToken";
+import { useUserStore } from "@/stores/useUserStore";
 
-import Modal from "./Modal";
+import ChangePasswordModal from "./ChangePasswordModal";
+import WithdrawalAccountModal from "./WithdrawalAccountModal";
 
 function Info() {
+  const router = useRouter();
+  const { resetAccessToken } = useAccessToken();
   const {
     actions: { logout },
   } = useAuthStore();
-  const router = useRouter();
-  const { resetAccessToken } = useAccessToken();
+  const { user } = useUserStore();
   const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,7 +51,10 @@ function Info() {
     await logout();
     resetAccessToken();
     router.push("/");
+    router.push("/");
   };
+
+  useEffect(() => {}, [user]);
 
   return (
     <Card className="flex w-full max-w-[400px] flex-col items-center border-0 shadow-none">
@@ -66,12 +73,12 @@ function Info() {
           onChange={handleFileChange}
           accept="image/*"
         />
-        <CardTitle className="mt-4">김터빈</CardTitle>
-        <CardDescription>김터빈@gmail.com</CardDescription>
+        <CardTitle className="mt-4">{user.name}</CardTitle>
+        <CardDescription>{user.email}</CardDescription>
       </CardHeader>
       <CardContent className="flex w-full flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
-          <Modal />
+          <ChangePasswordModal />
           <Button
             variant="outline"
             className="w-full bg-subColor text-white dark:bg-white dark:text-subColor"
@@ -80,6 +87,7 @@ function Info() {
             <LogOut className="mr-2 h-4 w-4" />
             로그아웃
           </Button>
+          <WithdrawalAccountModal />
         </div>
       </CardContent>
     </Card>
