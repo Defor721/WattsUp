@@ -257,7 +257,7 @@ function Electro() {
                 }))}
             />
           </Card>
-          <Card className="mt-6 flex flex-col p-6 shadow-lg">
+          <Card className="flex flex-col p-6 shadow-lg">
             <h2 className="text-center text-lg font-semibold">총발전량 비율</h2>
             <div className="flex items-center justify-center">
               {/* 파이차트 */}

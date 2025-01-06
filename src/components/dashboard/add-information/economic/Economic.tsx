@@ -125,7 +125,6 @@ function Economic() {
 
   return (
     <Container>
-      {/* 연도 선택 및 다운로드 */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center justify-end gap-3">
           <Label
@@ -141,10 +140,10 @@ function Economic() {
             <SelectTrigger id="year" className="w-[180px]">
               <SelectValue placeholder="연도 선택" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-subColor">
+            <SelectContent className="bg-white dark:bg-gray-800">
               {data.map((item) => (
                 <SelectItem
-                  className="z-10 bg-white dark:bg-subColor"
+                  className="z-10 bg-white dark:bg-gray-800"
                   key={item.연도}
                   value={String(item.연도)}
                 >
@@ -163,45 +162,35 @@ function Economic() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
       <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <KPICard
           title="생산자물가지수"
           value={`${currentYearData.생산자물가지수}`}
-          icon={<Activity size={24} color="#FFFFFF" />}
-          backgroundColor="#6D28D9"
-          iconColor="#A855F7"
+          backgroundColor="#34D399"
         />
         <KPICard
           title="소비자물가지수"
           value={`${currentYearData.소비자물가지수}`}
-          icon={<TrendingUp size={24} color="#FFFFFF" />}
-          backgroundColor="#22C55E"
-          iconColor="#16A34A"
+          backgroundColor="#60A5FA"
         />
         <KPICard
           title="경상수지"
           value={`${currentYearData.경상수지.toLocaleString()} 백만US$`}
-          icon={<TrendingDown size={24} color="#FFFFFF" />}
-          backgroundColor="#F59E0B"
-          iconColor="#FACC15"
+          backgroundColor="#F87171"
         />
         <KPICard
           title="외환보유액"
           value={`${currentYearData.외환보유액.toLocaleString()} 백만US$`}
-          icon={<BatteryCharging size={24} color="#FFFFFF" />}
-          backgroundColor="#3B82F6"
-          iconColor="#2563EB"
+          backgroundColor="#FBBF24"
         />
       </div>
 
-      {/* 차트 섹션 */}
       <div className="flex gap-6">
         <Card className="flex flex-1 flex-col items-center p-6 shadow-lg">
           <h2 className="text-lg font-semibold">연도별 주요 경제지표</h2>
           <LineChart
             data={[...data]
-              .sort((a, b) => a.연도 - b.연도) // 연도를 기준으로 역순 정렬
+              .sort((a, b) => a.연도 - b.연도)
               .map((item) => ({
                 연도: item.연도,
                 수출액: item.수출액,
@@ -213,7 +202,6 @@ function Economic() {
         <Card className="flex flex-col items-center p-6 shadow-lg">
           <h2 className="text-center text-lg font-semibold">경제 구성 비율</h2>
           <div className="flex items-center justify-center">
-            {/* 파이차트 */}
             <div className="w-[450px]">
               <PieChart
                 data={{
@@ -223,24 +211,22 @@ function Economic() {
                 }}
               />
             </div>
-
-            {/* 데이터 항목 표시 */}
             <div className="flex flex-col gap-2">
               {[
                 {
                   name: "수출액",
                   value: currentYearData.수출액,
-                  color: "#4A90E2",
+                  color: "#3B82F6",
                 },
                 {
                   name: "수입액",
                   value: currentYearData.수입액,
-                  color: "#F5A623",
+                  color: "#F59E0B",
                 },
                 {
                   name: "경상수지",
                   value: currentYearData.경상수지,
-                  color: "#D0021B",
+                  color: "#EF4444",
                 },
               ]
                 .sort((a, b) => b.value - a.value)
@@ -249,12 +235,10 @@ function Economic() {
                     key={item.name}
                     className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
                   >
-                    {/* 색상 점 표시 */}
                     <div
                       className="h-4 w-4 rounded-full"
                       style={{ backgroundColor: item.color }}
                     ></div>
-                    {/* 데이터 이름과 값 표시 */}
                     <span>
                       {item.name}: {formatNumberWithoutDecimal(item.value)}
                     </span>
@@ -265,7 +249,6 @@ function Economic() {
         </Card>
       </div>
 
-      {/* Bar Chart */}
       <div className="mt-8">
         <h2 className="text-center text-lg font-semibold">
           연도별 데이터 비교
@@ -280,10 +263,11 @@ function Economic() {
         />
       </div>
 
-      {/* Table */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
-        <Table currentYearData={currentYearData} data={data} />
+        <h2 className="mb-4 text-lg font-semibold">
+          최근 10년간 경제지표 데이터
+        </h2>
+        <Table currentYearData={currentYearData} data={data.slice(0, 10)} />
       </div>
     </Container>
   );

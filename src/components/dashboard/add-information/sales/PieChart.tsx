@@ -42,6 +42,7 @@ const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
           innerRadius={80}
           outerRadius={120}
           label={({ name }) => `${name}`}
+          stroke="none"
         >
           {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
