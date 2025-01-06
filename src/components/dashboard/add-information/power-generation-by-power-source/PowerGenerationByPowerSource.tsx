@@ -15,14 +15,14 @@ const SERVICE_KEY =
   "clU8FdFV5AjUB0cF0LYErXsHT8KUPSq78yitDKHIZ8R4q6lb%2FL%2BUQVNzOKztZgJWNweqAWOVMSPWFAvOozgMgQ%3D%3D";
 
 const COLORS: Record<string, string> = {
-  수력: "#1F77B4",
-  유류: "#FF7F0E",
-  유연탄: "#2CA02C",
-  원자력: "#D62728",
-  가스: "#9467BD",
-  국내탄: "#8C564B",
-  신재생: "#E377C2",
-  태양광: "#17BECF",
+  수력: "#6BAED6", // 밝고 부드러운 블루
+  유류: "#FD8D3C", // 밝은 오렌지
+  유연탄: "#9ECAE1", // 연한 블루 그레이
+  원자력: "#FB6A4A", // 부드러운 빨간색
+  가스: "#BCBDDC", // 연한 라벤더
+  국내탄: "#D9D378", // 밝은 올리브
+  신재생: "#FDAE6B", // 밝은 주황색
+  태양광: "#74C476", // 연한 그린
 };
 
 interface HourlyData {

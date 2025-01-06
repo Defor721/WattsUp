@@ -43,6 +43,7 @@ const AverageCost: React.FC<AverageCostProps> = ({ value, maxValue = 200 }) => {
               startAngle={90}
               endAngle={450}
               paddingAngle={2}
+              stroke="none"
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index]} />

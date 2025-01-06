@@ -35,13 +35,57 @@ interface DataRow {
   국내총투자율: number;
 }
 
+const kpiConfig = {
+  경제성장률: {
+    icon: <TrendingUp size={24} />,
+    backgroundColor: "#34D399", // 부드러운 초록색
+    unit: "%",
+  },
+  국내총생산: {
+    icon: <BatteryCharging size={24} />,
+    backgroundColor: "#60A5FA", // 차분한 파랑색
+    unit: "억원",
+  },
+  국민총소득: {
+    icon: <Activity size={24} />,
+    backgroundColor: "#FBBF24", // 밝은 노란색
+    unit: "억원",
+  },
+  국민총소득_1인당: {
+    icon: <TrendingUp size={24} />,
+    backgroundColor: "#A3E635", // 라임 그린
+    unit: "US$",
+  },
+  총저축률: {
+    icon: <TrendingDown size={24} />,
+    backgroundColor: "#F87171", // 부드러운 빨강색
+    unit: "%",
+  },
+  국내총투자율: {
+    icon: <Activity size={24} />,
+    backgroundColor: "#93C5FD", // 밝은 하늘색
+    unit: "%",
+  },
+};
+
+export const formatKPIKeys = (key: string): string => {
+  const formattedKeys: Record<string, string> = {
+    경제성장률: "경제 성장률",
+    국내총생산: "국내 총 생산",
+    국민총소득: "국민 총 소득",
+    국민총소득_1인당: "국민 총 소득 1인당",
+    총저축률: "총 저축률",
+    국내총투자율: "국내 총 투자율",
+  };
+  return formattedKeys[key] || key;
+};
+
 function People() {
   const [data, setData] = useState<DataRow[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2023);
   const [currentKPI, setCurrentKPI] = useState<DataRow | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 데이터 불러오기
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -65,7 +109,7 @@ function People() {
             국내총투자율: Number(row["국내총투자율(%)"]),
           }));
         setData(jsonData);
-        setSelectedYear(jsonData[0]?.연도 || 2023); // 최신 연도로 초기화
+        setSelectedYear(jsonData[0]?.연도 || 2023);
         setCurrentKPI(jsonData[0]);
       } catch (error) {
         console.log("Error: ", error);
@@ -76,7 +120,6 @@ function People() {
     loadData();
   }, []);
 
-  // 선택한 연도의 KPI 데이터 업데이트
   useEffect(() => {
     const yearData = data.find((row) => row.연도 === selectedYear);
     setCurrentKPI(yearData || null);
@@ -89,46 +132,12 @@ function People() {
     XLSX.writeFile(workbook, "NationalAccountDashboardData.xlsx");
   };
 
-  const kpiConfig = {
-    경제성장률: {
-      icon: <TrendingUp size={24} />,
-      backgroundColor: "#34D399",
-      unit: "%",
-    },
-    국내총생산: {
-      icon: <BatteryCharging size={24} />,
-      backgroundColor: "#60A5FA",
-      unit: "억원",
-    },
-    국민총소득: {
-      icon: <Activity size={24} />,
-      backgroundColor: "#FBBF24",
-      unit: "억원",
-    },
-    국민총소득_1인당: {
-      icon: <TrendingUp size={24} />,
-      backgroundColor: "#4ADE80",
-      unit: "US$",
-    },
-    총저축률: {
-      icon: <TrendingDown size={24} />,
-      backgroundColor: "#F87171",
-      unit: "%",
-    },
-    국내총투자율: {
-      icon: <Activity size={24} />,
-      backgroundColor: "#93C5FD",
-      unit: "%",
-    },
-  };
-
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <Container>
-      {/* 연도 선택 및 다운로드 */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center justify-end gap-3">
           <Label
@@ -158,7 +167,6 @@ function People() {
           </Select>
         </div>
 
-        {/* 데이터 다운로드 버튼 */}
         <Button
           onClick={handleDownload}
           className="bg-subColor text-white dark:border-1"
@@ -168,7 +176,6 @@ function People() {
         </Button>
       </div>
 
-      {/* KPI 카드 */}
       {currentKPI && (
         <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {Object.entries(currentKPI).map(([key, value]) => {
@@ -177,18 +184,15 @@ function People() {
             return (
               <KPICard
                 key={key}
-                title={key}
+                title={formatKPIKeys(key)}
                 value={`${value.toLocaleString()} ${config.unit}`}
-                icon={config.icon}
                 backgroundColor={config.backgroundColor}
-                iconColor="#1E3A8A"
               />
             );
           })}
         </div>
       )}
 
-      {/* 차트 섹션 (세로로 나열) */}
       <div className="flex flex-col gap-8">
         <div>
           <h2 className="mb-3 text-center text-lg font-semibold">
@@ -216,15 +220,17 @@ function People() {
         </div>
       </div>
 
-      {/* 최근 데이터 및 국가별 사용자 */}
-      <Table
-        data={data.map((row) => ({
-          연도: row.연도,
-          국민총소득: row.국민총소득,
-          경제성장률: row.경제성장률,
-          상태: row.경제성장률 > 0 ? "긍정" : "부정",
-        }))}
-      />
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
+        <Table
+          data={data.map((row) => ({
+            연도: row.연도,
+            국민총소득: row.국민총소득,
+            경제성장률: row.경제성장률,
+            상태: row.경제성장률 > 0 ? "긍정" : "부정",
+          }))}
+        />
+      </div>
     </Container>
   );
 }
