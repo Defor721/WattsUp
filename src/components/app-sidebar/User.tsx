@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
-import Link from "next/link";
+import { ChevronsUpDown, LogOut, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -54,6 +53,10 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
     await logout();
     resetAccessToken();
     router.push("/");
+  };
+
+  const handleMyPageClick = () => {
+    router.push("/my-page");
   };
 
   return (
@@ -114,30 +117,22 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator className={"bg-slate-999"} />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  href="/my-page"
-                  className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
-                >
+              <DropdownMenuItem
+                onClick={handleMyPageClick}
+                className="w-full text-gray-300 hover:cursor-pointer hover:text-white"
+              >
+                <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300">
                   <User />
                   Mypage
-                </Link>
+                </Button>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  href="/editprofile"
-                  className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
-                >
-                  <Settings />
-                  Profile Settings
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup> */}
 
-            <DropdownMenuItem onClick={handleLogout}>
-              <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300 hover:bg-[rgb(20,35,80)]">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="hover:cursor-pointer hover:bg-[rgb(20,35,80)]"
+            >
+              <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300">
                 <LogOut />
                 Log out
               </Button>
