@@ -39,11 +39,11 @@ interface KPIConfig {
 }
 
 export const colorConfig = {
-  수력: "#60A5FA", // 파란색 (수력)
-  원자력: "#FF5733", // 오렌지색 (원자력)
-  신재생: "#F87171", // 빨간색 (신재생)
-  가스: "#34D399", // 초록색 (가스)
-  유연탄: "#6B7280", // 회색 (유연탄)
+  수력: "#6BAED6", // 파란색 (수력)
+  원자력: "#FB6A4A", // 오렌지색 (원자력)
+  신재생: "#FDAE6B", // 빨간색 (신재생)
+  가스: "#BCBDDC", // 초록색 (가스)
+  유연탄: "#9ECAE1", // 회색 (유연탄)
 };
 
 function PowerGeneration() {
@@ -256,9 +256,9 @@ function PowerGeneration() {
       {/* 최근 데이터 테이블 */}
       <div>
         <h2 className="mb-4 text-xl font-bold">
-          최근 5년간 발전량 데이터(단위: MWh)
+          최근 10년간 발전량 데이터(단위: MWh)
         </h2>
-        <Table data={tableData.slice(0, 5)} />
+        <Table data={tableData.slice(0, 10)} />
       </div>
     </Container>
   );

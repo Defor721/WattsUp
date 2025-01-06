@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 
-import { regions } from "@/utils/regions";
+import { Regions } from "@/utils/regions";
 import { get6Days } from "@/utils";
 import apiClient from "@/lib/axios";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
@@ -140,7 +140,7 @@ function DashboardMain() {
       try {
         const model = await loadModel();
 
-        const sampleInputs = regions.flatMap((region) =>
+        const sampleInputs = Regions.flatMap((region) =>
           weatherData[region]?.map((day) => [
             day.windSpeed,
             day.temperature,
@@ -166,13 +166,13 @@ function DashboardMain() {
         );
 
         const dates = get6Days();
-        const formattedChartData = regions.reduce(
+        const formattedChartData = Regions.reduce(
           (acc, region, regionIndex) => {
             acc[region] = dates.map((date, dateIndex) => ({
               date,
               amgo:
                 denormalizedPredictions[
-                  dateIndex * regions.length + regionIndex
+                  dateIndex * Regions.length + regionIndex
                 ] || 0,
             }));
             return acc;
@@ -225,7 +225,7 @@ function DashboardMain() {
           </h2>
           <div className="flex justify-end">
             <RegionButtons
-              regions={regions}
+              regions={Regions}
               selectedRegion={selectedRegion}
               setSelectedRegion={setSelectedRegion}
             />

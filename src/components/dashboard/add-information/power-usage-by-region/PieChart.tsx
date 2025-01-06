@@ -4,15 +4,14 @@ import {
   Pie,
   Cell,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 interface PieChartProps {
-  data: { name: string; value: number }[];
-  colors: string[];
+  data: { name: string; value: number }[]; // 데이터 타입
+  colors: Record<string, string>; // 색상 타입을 Record로 변경
 }
 
 const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
@@ -28,9 +27,13 @@ const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
           outerRadius={100}
           fill="#8884d8"
           label={({ name }) => `${name}`}
+          stroke="none"
         >
-          {data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+          {data.map((entry) => (
+            <Cell
+              key={`cell-${entry.name}`}
+              fill={colors[entry.name]} // 지역 이름 기반 색상 적용
+            />
           ))}
         </Pie>
         <Tooltip
@@ -38,7 +41,6 @@ const PieChart: React.FC<PieChartProps> = ({ data, colors }) => {
             `${formatNumberWithoutDecimal(value)} 명`
           }
         />
-        {/* <Legend /> */}
       </RechartsPieChart>
     </ResponsiveContainer>
   );

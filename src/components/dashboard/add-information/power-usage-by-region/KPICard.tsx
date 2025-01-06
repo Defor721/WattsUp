@@ -5,8 +5,6 @@ interface KPICardProps {
   value: string | number;
   unit: string;
   backgroundColor: string;
-  iconColor: string;
-  icon?: React.ReactNode;
 }
 
 const KPICard: React.FC<KPICardProps> = ({
@@ -14,33 +12,21 @@ const KPICard: React.FC<KPICardProps> = ({
   value,
   unit,
   backgroundColor,
-  iconColor,
-  icon,
 }) => {
   return (
     <div
       className="flex items-center justify-between rounded-lg p-4 shadow-md"
       style={{
         backgroundColor: backgroundColor,
-        color: "#FFFFFF",
       }}
     >
-      {/* Icon Section */}
-      <div
-        className="flex h-12 w-12 items-center justify-center rounded-full"
-        style={{
-          backgroundColor: iconColor,
-        }}
-      >
-        {icon || "📊"}
-      </div>
-
       {/* Title and Value Section */}
-      <div className="ml-4 flex-1">
-        <p className="text-sm font-semibold text-gray-300">{title}</p>
-        <p className="text-2xl font-bold">
-          {value} <span className="text-base">{unit}</span>
-        </p>
+      <div className="ml-4 flex-1 text-subColor">
+        <p className="text-sm font-semibold">{title}</p>
+        <div className="flex items-center gap-1">
+          <p className="text-2xl font-bold">{value}</p>
+          <span className="text-base font-bold">{unit}</span>
+        </div>
       </div>
     </div>
   );

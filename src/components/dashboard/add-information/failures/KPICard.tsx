@@ -9,11 +9,13 @@ interface KPICardProps {
 const KPICard: React.FC<KPICardProps> = ({ title, value, backgroundColor }) => {
   return (
     <div
-      className="flex flex-col items-center justify-center rounded-lg p-4 text-center shadow-lg"
+      className="flex items-center justify-between rounded-lg p-4 shadow-md"
       style={{ backgroundColor }}
     >
-      <h3 className="text-xl font-semibold text-white">{title}</h3>
-      <p className="text-2xl font-bold text-white">{value}</p>
+      <div className="ml-4 flex-1 text-subColor">
+        <p className="text-sm font-semibold">{title}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
     </div>
   );
 };
