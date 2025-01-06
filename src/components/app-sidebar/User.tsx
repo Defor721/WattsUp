@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  ChevronsUpDown,
-  LogOut,
-  Settings,
-  User as UserIcon,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -122,7 +117,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                   className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
                 >
                   <UserIcon />
-                  Mypage
+                  마이페이지
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -133,7 +128,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             >
               <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300">
                 <LogOut />
-                Log out
+                로그아웃
               </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>

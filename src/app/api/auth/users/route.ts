@@ -1,1 +1,1 @@
-export { POST } from "./index";
+export { POST, DELETE } from "./index";

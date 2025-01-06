@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -17,6 +18,7 @@ import PasswordInput from "@/auth/components/common/PasswordInput";
 import { useAuthStore } from "@/auth/useAuthStore";
 
 function WithdrawalAccountModal() {
+  const router = useRouter();
   const {
     message,
     actions: { withdrawalAccount, resetAuthState },
@@ -31,6 +33,7 @@ function WithdrawalAccountModal() {
     try {
       await withdrawalAccount(password);
       setIsDialogOpen(false);
+      router.push("/");
     } catch (error) {
       console.log(error);
     }

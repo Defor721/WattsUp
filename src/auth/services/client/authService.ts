@@ -100,6 +100,7 @@ export const logout = async () => {
 export const deleteUser = async (password: string) => {
   try {
     const { data } = await apiClient.delete("/api/auth/users", {
+      data: { password },
       withCredentials: true,
     });
 
