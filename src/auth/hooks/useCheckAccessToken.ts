@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { useUserStore } from "@/stores/useUserStore";
 
-import useAccessToken from "./hooks/useAccessToken";
+import useAccessToken from "./useAccessToken";
 
 export default function useCheckAccessToken(): void {
   const { accessToken, resetAccessToken } = useAccessToken();

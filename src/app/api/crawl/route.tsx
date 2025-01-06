@@ -44,6 +44,7 @@ export async function GET() {
   } catch (error: unknown) {
     // Error 타입 캐스팅
     const message = error instanceof Error ? error.message : "Unknown error";
+
     return NextResponse.json(
       { error: "Failed to fetch data", details: message },
       { status: 500 },

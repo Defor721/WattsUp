@@ -71,6 +71,7 @@ export const useUserStore = create<UserState>((set) => ({
         set({ error: false });
       } catch (error: any) {
         set({ error: true, message: error.response.data.message });
+        throw error;
       } finally {
         set({ loading: false });
       }
@@ -87,6 +88,7 @@ export const useUserStore = create<UserState>((set) => ({
         set({ error: false });
       } catch (error: any) {
         set({ error: true, message: error.response.data.message });
+        throw error;
       } finally {
         set({ loading: false });
       }
