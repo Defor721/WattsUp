@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db("wattsup");
 
-    const today = new Date();
-    const year = today.getUTCFullYear();
-    const month = today.getUTCMonth() + 1;
-    const day = today.getUTCDate();
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
+    const day = now.getUTCDate();
     const supplyCollection = db.collection("supply");
     const result = await supplyCollection.findOne({
       $expr: {
