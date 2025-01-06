@@ -30,7 +30,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
                 width={30}
                 height={30}
                 alt="WattsUp Logo"
-                className={`rounded-md opacity-70`}
+                className={`rounded-lg opacity-70`}
                 priority
               />
             </Link>
@@ -48,7 +48,7 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
         width={80}
         height={80}
         alt="WattsUp Logo"
-        className={`absolute z-0 flex rounded-md opacity-30`} // absolute와 z-0 추가
+        className={`absolute z-0 flex rounded-lg opacity-30`}
       />
 
       {/* 글씨 */}
