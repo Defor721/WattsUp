@@ -14,6 +14,7 @@ import BusinessNumberSection from "../common/BusinessNumberSection";
 export default function SignupForm() {
   const router = useRouter();
   const {
+    loading,
     actions: { nativeSignup, resetAuthState },
   } = useAuthStore();
 

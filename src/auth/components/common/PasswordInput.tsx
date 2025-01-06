@@ -1,9 +1,10 @@
-import { Dispatch, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 import { Input, Label } from "@/components/shadcn";
 import { isValidPassword } from "@/utils";
 
 import EyeButton from "./EyeButton";
+import XCircleButton from "./XCircleButton";
 
 interface PasswordInputProps {
   passwordLabel?: string;
@@ -11,9 +12,9 @@ interface PasswordInputProps {
   showPassword: boolean;
   showMessage?: boolean;
   isPasswordValid?: boolean;
-  setPassword: Dispatch<React.SetStateAction<string>>;
-  setShowPassword: Dispatch<React.SetStateAction<boolean>>;
-  setIsPasswordValid: Dispatch<React.SetStateAction<boolean>>;
+  setPassword: Dispatch<SetStateAction<string>>;
+  setShowPassword: Dispatch<SetStateAction<boolean>>;
+  setIsPasswordValid: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function PasswordInput({
@@ -35,6 +36,7 @@ export default function PasswordInput({
       <Label htmlFor="password">{passwordLabel || "비밀번호"}</Label>
       <div className="relative">
         <Input
+          className={`h-[44px] pr-20 ${!isPasswordValid && password.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
           type={showPassword ? "text" : "password"}
           id="password"
           name="password"
@@ -45,7 +47,12 @@ export default function PasswordInput({
           autoComplete="current-password"
           required
         />
-        <EyeButton show={showPassword} setShow={setShowPassword} />
+        {password && <XCircleButton reset={setPassword} right={1} />}
+        <EyeButton
+          show={showPassword}
+          setShow={setShowPassword}
+          right={password ? 10 : 1}
+        />
       </div>
       {showMessage && (
         <div className="text-sm text-red-500">

@@ -47,7 +47,7 @@ export const useUserStore = create<UserState>((set) => ({
         set({ loading: true });
         const user = await fetchCurrentUser();
         set((state) => {
-          if (state.user?.email !== user.userData.email) {
+          if (state.user !== user.userData) {
             return { ...state, user: user.userData };
           }
           return state;

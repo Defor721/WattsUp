@@ -52,7 +52,7 @@ function Info() {
     router.push("/");
   };
 
-  useEffect(() => {}, [user]);
+  // useEffect(() => {}, [user]);
 
   return (
     <Card className="flex w-full max-w-[400px] flex-col items-center border-0 shadow-none">
@@ -76,7 +76,7 @@ function Info() {
       </CardHeader>
       <CardContent className="flex w-full flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
-          <ChangePasswordModal />
+          {user.signupType === "native" && <ChangePasswordModal />}
           <Button
             variant="outline"
             className="w-full bg-subColor text-white dark:bg-white dark:text-subColor"
