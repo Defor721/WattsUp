@@ -103,8 +103,12 @@ function ErrorMessage({ error }: { error: string }) {
 function StatItem({ title, value }: { title: string; value: string | number }) {
   return (
     <div className="rounded-lg border p-4">
-      <p className="text-sm font-medium text-gray-600">{title}</p>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-200">
+        {title}
+      </p>
+      <p className="text-2xl font-bold text-gray-800 dark:text-white">
+        {value}
+      </p>
     </div>
   );
 }
