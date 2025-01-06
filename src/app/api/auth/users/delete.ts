@@ -17,7 +17,7 @@ export async function DELETE(request: NextRequest) {
         { status: 403 },
       );
     }
-
+    console.log(`accessToken: `, accessToken);
     const { email } = await verifyToken(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET!,
@@ -25,6 +25,7 @@ export async function DELETE(request: NextRequest) {
     );
 
     const { password } = await request.json();
+    console.log(`password: `, password);
     if (!password) {
       return NextResponse.json(
         { message: "비밀번호가 제공되지 않았습니다." },

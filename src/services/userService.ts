@@ -3,7 +3,7 @@ import { changePasswordProps } from "@/stores/useUserStore";
 
 export interface CheckUserResponse {
   businessNumber: any;
-  signupType: "native" | "social" | null;
+  signupType: "native" | "social";
   email: string;
 }
 

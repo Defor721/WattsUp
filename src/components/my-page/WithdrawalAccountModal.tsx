@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Settings } from "lucide-react";
 
 import {
   Button,
@@ -14,28 +13,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/shadcn";
-import PasswordSection from "@/auth/components/common/PasswordSection";
 import PasswordInput from "@/auth/components/common/PasswordInput";
-import { useUserStore } from "@/stores/useUserStore";
+import { useAuthStore } from "@/auth/useAuthStore";
 
-function Modal() {
+function WithdrawalAccountModal() {
   const {
     message,
-    actions: { changePassword, resetUserState },
-  } = useUserStore();
+    actions: { withdrawalAccount, resetAuthState },
+  } = useAuthStore();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [isCurrentPasswordValid, setIsCurrentPasswordValid] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [isNewPasswordValid, setIsNewPasswordValid] = useState(false);
-  const [isConfirmNewPasswordValid, setIsConfirmNewPasswordValid] =
-    useState(false);
 
-  const handleChangePassword = async () => {
+  const handlewithdrawalAccount = async () => {
     try {
-      await changePassword({ currentPassword, newPassword });
+      await withdrawalAccount(password);
       setIsDialogOpen(false);
     } catch (error) {
       console.log(error);
@@ -44,13 +38,10 @@ function Modal() {
 
   useEffect(() => {
     if (!isDialogOpen) {
-      setNewPassword("");
-      setCurrentPassword("");
-      setIsNewPasswordValid(false);
-      setIsConfirmNewPasswordValid(false);
-      resetUserState();
+      setPassword("");
+      resetAuthState();
     }
-  }, [isDialogOpen, resetUserState]);
+  }, [isDialogOpen, resetAuthState]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -59,41 +50,29 @@ function Modal() {
           variant="outline"
           className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
-          <Settings className="mr-2 h-4 w-4" />
-          비밀번호 변경
+          회원탈퇴
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[450px] gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
-          <DialogTitle>비밀번호 수정</DialogTitle>
+          <DialogTitle>회원탈퇴</DialogTitle>
           <DialogDescription>
-            비밀번호 변경을 위해 현재 비밀번호와 새 비밀번호를 입력해 주세요.
+            탈퇴 후에는 계정과 관련된 모든 데이터가 삭제되며 복구할 수 없습니다.
           </DialogDescription>
         </DialogHeader>
-        {/* 현재 비밀번호 */}
+        {/* 비밀번호 입력 */}
         <div className="flex flex-col gap-2">
           <PasswordInput
             passwordLabel="현재 비밀번호"
-            password={currentPassword}
+            password={password}
             showPassword={showCurrentPassword}
             isPasswordValid={isCurrentPasswordValid}
             showMessage={true}
-            setPassword={setCurrentPassword}
+            setPassword={setPassword}
             setShowPassword={setShowCurrentPassword}
             setIsPasswordValid={setIsCurrentPasswordValid}
           />
         </div>
-        {/* 새 비밀번호 */}
-        <PasswordSection
-          passwordLabel="새 비밀번호"
-          confirmPasswordLabel="새 비밀번호 확인"
-          password={newPassword}
-          isPasswordValid={isNewPasswordValid}
-          isConfirmPasswordValid={isConfirmNewPasswordValid}
-          setPassword={setNewPassword}
-          setIsPasswordValid={setIsNewPasswordValid}
-          setIsConfirmPasswordValid={setIsConfirmNewPasswordValid}
-        />
         {message && (
           <p className="text-center text-sm text-red-500">{message}</p>
         )}
@@ -104,15 +83,11 @@ function Modal() {
             </Button>
           </DialogClose>
           <Button
-            onClick={handleChangePassword}
+            onClick={handlewithdrawalAccount}
             className="bg-subColor text-white dark:bg-white dark:text-subColor"
-            disabled={
-              !isCurrentPasswordValid ||
-              !isNewPasswordValid ||
-              !isConfirmNewPasswordValid
-            }
+            disabled={!isCurrentPasswordValid}
           >
-            변경
+            탈퇴
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -120,4 +95,4 @@ function Modal() {
   );
 }
 
-export default Modal;
+export default WithdrawalAccountModal;

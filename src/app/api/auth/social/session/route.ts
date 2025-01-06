@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { Long } from "mongodb";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -12,7 +13,13 @@ const validateEnv = () => {
 
 async function insertUserToDB(collection: any, userData: any) {
   try {
-    await collection.insertOne(userData);
+    const timestamp = new Date();
+
+    await collection.insertOne({
+      ...userData,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
   } catch (error) {
     return NextResponse.json(
       { message: "데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다." },
@@ -21,7 +28,7 @@ async function insertUserToDB(collection: any, userData: any) {
   }
 }
 
-/** 소셜 회원가입 */
+/** 소셜 회원가입하며 로그인 */
 export async function POST(request: NextRequest) {
   try {
     validateEnv();
@@ -133,9 +140,10 @@ export async function POST(request: NextRequest) {
       signupType,
       provider,
       companyName,
-      corporateNumber,
-      businessNumber,
+      corporateNumber: Long.fromString(corporateNumber),
+      businessNumber: Long.fromString(businessNumber),
       refreshToken,
+      role: "member",
     });
 
     const response = NextResponse.json(

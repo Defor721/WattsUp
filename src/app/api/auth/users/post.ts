@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Long } from "mongodb";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
 
 async function insertUserToDB(collection: any, userData: any) {
   try {
-    await collection.insertOne(userData);
+    const timestamp = new Date();
+
+    await collection.insertOne({
+      ...userData,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
   } catch (error) {
     return NextResponse.json(
       { message: "데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다." },
@@ -133,8 +140,9 @@ export async function POST(request: NextRequest) {
       signupType,
       provider,
       companyName,
-      corporateNumber,
-      businessNumber,
+      corporateNumber: Long.fromString(corporateNumber),
+      businessNumber: Long.fromString(businessNumber),
+      role: "member",
     });
 
     const response = NextResponse.json(

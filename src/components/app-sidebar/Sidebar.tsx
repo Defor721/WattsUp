@@ -16,6 +16,8 @@ import { FaLaptopCode } from "react-icons/fa";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/hooks/useAccessToken";
+import { useUserStore } from "@/stores/useUserStore";
+import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
 
 import NavHeader from "./Header";
 import NavMain from "./Main";
@@ -72,16 +74,13 @@ const adminItems = [
   },
 ];
 
-const user = {
-  name: "김터빈",
-  email: "김터빈@gmail.com",
-  avatar: "/assets/images/logo.webp",
-};
-
 function Sidebar() {
-  const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
+  useCheckAccessToken();
   const { accessToken } = useAccessToken();
-  const [userState, setUserState] = useState<"admin" | "normal">("admin");
+  const { user } = useUserStore();
+
+  const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
+
   const { isTablet } = useDeviceType();
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
@@ -140,12 +139,12 @@ function Sidebar() {
             />
 
             {/* Separator */}
-            {userState === "admin" && (
+            {user.role === "admin" && (
               <div className="my-4 border-t border-gray-700"></div>
             )}
 
             {/* Admin Items */}
-            {userState === "admin" && (
+            {user.role === "admin" && (
               <NavMain
                 items={adminItems}
                 isTablet={isTablet}

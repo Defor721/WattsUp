@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { User } from "@/auth/type";
+import { NULL_USER, User } from "@/auth/type";
 import {
   fetchCurrentUser,
   updatePasswordByEmail,
@@ -13,7 +13,7 @@ export interface changePasswordProps {
 }
 
 export interface UserState {
-  user: User | null;
+  user: User;
   error: boolean;
   loading: boolean;
   message: string;
@@ -29,7 +29,7 @@ export interface UserState {
 }
 
 const NULL_USER_STATE: Omit<UserState, "actions"> = {
-  user: null,
+  user: NULL_USER,
   loading: false,
   error: false,
   message: "",
@@ -41,6 +41,7 @@ export const useUserStore = create<UserState>((set) => ({
     /** 현재 유저 데이터 조회 */
     async fetchCurrentUser() {
       const state = useUserStore.getState();
+
       if (state.loading) return;
       try {
         set({ loading: true });
@@ -53,7 +54,7 @@ export const useUserStore = create<UserState>((set) => ({
         });
       } catch (error: any) {
         set({
-          user: null,
+          user: NULL_USER,
           error: true,
           message: error.response.data.message,
         });

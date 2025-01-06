@@ -1,8 +1,14 @@
 "use client";
 
 import React from "react";
-import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import {
+  ChevronsUpDown,
+  LogOut,
+  Settings,
+  User as UserIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -25,14 +31,11 @@ import {
 } from "@/components/shadcn/sidebar";
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/hooks/useAccessToken";
+import { User } from "@/auth/type";
 
 import { Button } from "../shadcn";
 
-interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
+const avatar = "/assets/images/logo.webp";
 
 interface UserProps {
   user: User;
@@ -41,6 +44,7 @@ interface UserProps {
 }
 
 export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
+  const router = useRouter();
   const {
     actions: { logout },
   } = useAuthStore();
@@ -49,6 +53,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const handleLogout = async () => {
     await logout();
     resetAccessToken();
+    router.push("/");
   };
 
   return (
@@ -64,14 +69,14 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
               {/* 테블릿 화면이고, 사이드바 확장시키지 않은 경우 */}
               {isTablet && !isTabletExpanded ? (
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
               ) : (
                 // 확장 상태 또는 데스크탑에서 아이콘과 사용자 정보 표시
                 <>
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarImage src={avatar} alt={user.name} />
                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -94,7 +99,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             <DropdownMenuLabel className="font-normal">
               <div className="flex items-center gap-2 px-2 py-[6px] text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -114,19 +119,8 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                   href="/my-page"
                   className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
                 >
-                  <User />
+                  <UserIcon />
                   Mypage
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  href="/editprofile"
-                  className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
-                >
-                  <Settings />
-                  Profile Settings
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>

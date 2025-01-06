@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
 
     const result = await collection.updateOne(
       { email },
-      { $unset: { refreshToken: "" } },
+      { $unset: { refreshToken: "", updatedAt: new Date() } },
     );
 
     if (result.matchedCount === 0) {
