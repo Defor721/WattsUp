@@ -16,7 +16,6 @@ export default function useCheckAccessToken(): void {
   );
 
   useEffect(() => {
-    console.log(`useCheckAccessToken useEffect`);
     const checkAccessToken = async () => {
       try {
         if (!accessToken) return;

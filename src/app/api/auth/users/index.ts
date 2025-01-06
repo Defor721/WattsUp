@@ -1,2 +1,2 @@
 export { POST } from "./post";
-// export { DELETE } from "./delete";
+export { DELETE } from "./delete";
