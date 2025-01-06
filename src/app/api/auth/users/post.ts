@@ -143,6 +143,7 @@ export async function POST(request: NextRequest) {
       corporateNumber: Long.fromString(corporateNumber),
       businessNumber: Long.fromString(businessNumber),
       role: "member",
+      credit: 0,
     });
 
     const response = NextResponse.json(

@@ -48,7 +48,6 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const {
     actions: { logout },
   } = useAuthStore();
-  const router = useRouter();
 
   const { resetAccessToken } = useAccessToken();
 

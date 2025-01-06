@@ -144,6 +144,7 @@ export async function POST(request: NextRequest) {
       businessNumber: Long.fromString(businessNumber),
       refreshToken,
       role: "member",
+      credit: 0,
     });
 
     const response = NextResponse.json(

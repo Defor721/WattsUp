@@ -9,6 +9,7 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   role: "member" | "admin";
+  credit: number;
 }
 
 export const NULL_USER: User = {
@@ -22,6 +23,7 @@ export const NULL_USER: User = {
   createdAt: new Date(),
   updatedAt: new Date(),
   role: "member",
+  credit: 0,
 };
 
 export interface ResponsePayload {
