@@ -7,20 +7,11 @@ export async function GET(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db("wattsup");
 
-    const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = now.getUTCMonth() + 1;
-    const day = now.getUTCDate();
     const supplyCollection = db.collection("supply");
-    const result = await supplyCollection.findOne({
-      $expr: {
-        $and: [
-          { $eq: [{ $year: "$Date" }, year] },
-          { $eq: [{ $month: "$Date" }, month] },
-          { $eq: [{ $dayOfMonth: "$Date" }, day] },
-        ],
-      },
-    });
+    const result = await supplyCollection.findOne(
+      {},
+      { projection: { _id: 0, updatedAt: 0 } },
+    );
 
     if (!result) {
       return NextResponse.json(

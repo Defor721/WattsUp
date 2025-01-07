@@ -5,51 +5,41 @@ import clientPromise from "@/lib/mongodb";
 
 export async function POST(request: NextRequest) {
   try {
-    // const authorizationHeader = request.headers.get("Authorization");
-    // if (!authorizationHeader?.startsWith("Bearer ")) {
-    //   return NextResponse.json(
-    //     { message: "Token Invalid or Missing" },
-    //     { status: 403 },
-    //   );
-    // }
+    const authorizationHeader = request.headers.get("Authorization");
+    if (!authorizationHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { message: "Token Invalid or Missing" },
+        { status: 403 },
+      );
+    }
 
-    // const token = authorizationHeader.split(" ")[1]?.trim();
-    // if (!token) {
-    //   return NextResponse.json({ message: "Token Missing" }, { status: 403 });
-    // }
-    // let decoded;
-    // try {
-    //   decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-    // } catch (err) {
-    //   if (err instanceof jwt.TokenExpiredError) {
-    //     return NextResponse.json({ message: "Token Expired" }, { status: 401 });
-    //   }
-    //   return NextResponse.json(
-    //     { message: "Failed to Decode or Token Expired" },
-    //     { status: 403 },
-    //   );
-    // }
-    // const businessNumber = (decoded as { businessNumber: number })
-    //   .businessNumber;
-    const { businessNumber, region, amount, price } = await request.json();
+    const token = authorizationHeader.split(" ")[1]?.trim();
+    if (!token) {
+      return NextResponse.json({ message: "Token Missing" }, { status: 403 });
+    }
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
+    } catch (err) {
+      if (err instanceof jwt.TokenExpiredError) {
+        return NextResponse.json({ message: "Token Expired" }, { status: 401 });
+      }
+      return NextResponse.json(
+        { message: "Failed to Decode or Token Expired" },
+        { status: 403 },
+      );
+    }
+    const businessNumber = (decoded as { businessNumber: number })
+      .businessNumber;
+    const { region, amount, price } = await request.json();
     const client = await clientPromise;
     const db = client.db("wattsup");
     const bidCollection = db.collection("bid");
     const userCollection = db.collection("userdata");
     const supplyCollection = db.collection("supply");
     const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = now.getUTCMonth() + 1;
-    const day = now.getUTCDate();
-    const dailySupply = await supplyCollection.findOne({
-      $expr: {
-        $and: [
-          { $eq: [{ $year: "$Date" }, year] },
-          { $eq: [{ $month: "$Date" }, month] },
-          { $eq: [{ $dayOfMonth: "$Date" }, day] },
-        ],
-      },
-    });
+    const dailySupply = await supplyCollection.findOne({});
+
     if (!dailySupply) {
       return NextResponse.json(
         { message: "Failed to find data" },
