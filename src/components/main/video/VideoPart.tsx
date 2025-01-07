@@ -132,7 +132,7 @@ function VideoPart() {
         </AnimatePresence>
 
         {/* 슬라이드 동그라미 단추 표시 */}
-        <div className="absolute bottom-6 right-6 flex justify-end space-x-2">
+        <div className="absolute bottom-12 flex justify-center space-x-2">
           {slides.map((_, index) => (
             <button
               key={index} // 버튼의 고유 키 값 설정
