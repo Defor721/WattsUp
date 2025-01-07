@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         signupType: "native",
         provider: null,
       },
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.EMAIL_TOKEN_SECRET!,
       { expiresIn: "15m" },
     );
 

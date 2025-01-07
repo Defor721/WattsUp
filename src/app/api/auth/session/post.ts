@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 
@@ -23,7 +24,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (user.password === password) {
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (isPasswordMatch) {
       const payload = { email: email };
       const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
       const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "1h" });

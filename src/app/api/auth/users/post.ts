@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Long } from "mongodb";
+import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const emailVerification = await verifyToken(
       emailVerificationToken,
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.EMAIL_TOKEN_SECRET!,
       "email",
     );
 
@@ -93,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     const businessVerification = await verifyToken(
       businessVerificationToken,
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.BUSINESS_TOKEN_SECRET!,
       "business",
     );
 
@@ -132,10 +133,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: 비밀번호 암호화할것
+    const SALT_ROUND = parseInt(process.env.SALT_ROUND!);
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
+
     await insertUserToDB(collection, {
       email,
-      password,
+      password: hashedPassword,
       name: principalName,
       signupType,
       provider,
