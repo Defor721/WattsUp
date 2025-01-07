@@ -47,10 +47,10 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const { resetAccessToken } = useAccessToken();
 
   const handleLogout = async () => {
-    console.log("로그아웃 클릿");
     await logout();
     resetAccessToken();
     router.push("/");
+    router.refresh();
   };
 
   return (
@@ -124,11 +124,11 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
 
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="hover:cursor-pointer hover:bg-[rgb(20,35,80)]"
-            >
-              <Button className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300">
+            <DropdownMenuItem className="hover:cursor-pointer hover:bg-[rgb(20,35,80)]">
+              <Button
+                className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300"
+                onClick={handleLogout}
+              >
                 <LogOut />
                 로그아웃
               </Button>

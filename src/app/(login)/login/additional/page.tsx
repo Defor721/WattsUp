@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/shadcn";
 import BusinessNumberSection from "@/auth/components/common/BusinessNumberSection";
+import PasswordSection from "@/auth/components/common/PasswordSection";
 
 export default function AdditionalPage() {
   const router = useRouter();
@@ -26,6 +28,9 @@ export default function AdditionalPage() {
     actions: { socialSignup, resetAuthState },
   } = useAuthStore();
 
+  const [password, setPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
   const [principalName, setPrincipalName] = useState("");
   const [businessNumber, setBusinessNumber] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -37,14 +42,9 @@ export default function AdditionalPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await socialSignup({
-        businessNumber,
-        principalName,
-        startDate,
-        companyName,
-        corporateNumber,
-      });
+      await socialSignup(password);
     } catch (error: any) {
+      console.log(error);
       setErrorMessage(error.message || "로그인 중 오류가 발생했습니다.");
     }
   };
@@ -70,7 +70,17 @@ export default function AdditionalPage() {
           <CardTitle>추가 정보 입력</CardTitle>
           <CardDescription>로그인을 위한 정보를 입력해주세요.</CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-0">
+          {/* 비밀번호 섹션 */}
+          <PasswordSection
+            password={password}
+            isPasswordValid={isPasswordValid}
+            isConfirmPasswordValid={isConfirmPasswordValid}
+            setPassword={setPassword}
+            setIsPasswordValid={setIsPasswordValid}
+            setIsConfirmPasswordValid={setIsConfirmPasswordValid}
+          />
+          {/* 사업자등록번호 및 법인등록번호 검증 섹션 */}
           <BusinessNumberSection
             isBusinessVerified={isBusinessVerified}
             businessNumber={businessNumber}
@@ -95,7 +105,11 @@ export default function AdditionalPage() {
             {/* 제출 */}
             <Button
               type="submit"
-              disabled={!isBusinessVerified}
+              disabled={
+                !isBusinessVerified ||
+                !isConfirmPasswordValid ||
+                !isPasswordValid
+              }
               className={`h-[44px] w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
             >
               제출

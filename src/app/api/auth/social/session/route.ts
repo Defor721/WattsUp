@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { Long } from "mongodb";
+import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -125,6 +126,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const { password } = await request.json();
+
+    if (!password) {
+      return NextResponse.json(
+        { message: "입력값을 모두 입력해야 합니다." },
+        { status: 400 },
+      );
+    }
+
+    const SALT_ROUND = parseInt(process.env.SALT_ROUND!);
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
+
     const payload = { email };
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
       expiresIn: "1h",
@@ -135,7 +148,7 @@ export async function POST(request: NextRequest) {
 
     await insertUserToDB(collection, {
       email,
-      password: null,
+      password: hashedPassword,
       name: principalName,
       signupType,
       provider,

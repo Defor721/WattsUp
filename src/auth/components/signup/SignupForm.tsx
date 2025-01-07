@@ -78,7 +78,7 @@ export default function SignupForm() {
           setIsPasswordValid={setIsPasswordValid}
           setIsConfirmPasswordValid={setIsConfirmPasswordValid}
         />
-        {/* 법인등록번호 및 주민등록번호 검증 섹션 */}
+        {/* 사업자등록번호 및 법인등록번호 검증 섹션 */}
         <BusinessNumberSection
           isBusinessVerified={isBusinessVerified}
           businessNumber={businessNumber}

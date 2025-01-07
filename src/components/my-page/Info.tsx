@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -52,8 +52,6 @@ function Info() {
     router.push("/");
   };
 
-  // useEffect(() => {}, [user]);
-
   return (
     <Card className="flex w-full max-w-[400px] flex-col items-center border-0 shadow-none">
       <CardHeader className="flex flex-col items-center gap-3 text-center">
@@ -80,7 +78,7 @@ function Info() {
       </CardHeader>
       <CardContent className="flex w-full select-none flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
-          {user.signupType === "native" && <ChangePasswordModal />}
+          <ChangePasswordModal />
           <Button
             variant="outline"
             className="w-full bg-mainColor text-white dark:bg-white dark:text-subColor"
