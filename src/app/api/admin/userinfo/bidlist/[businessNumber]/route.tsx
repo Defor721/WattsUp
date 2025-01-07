@@ -4,10 +4,11 @@ import clientPromise from "@/lib/mongodb";
 
 export async function GET(
   request: Request,
-  { params }: { params: { businessNumber: string } },
+  context: { params: Promise<{ businessNumber: string }> }, // Promise 타입으로 명시
 ) {
   try {
-    const { businessNumber } = params; // params는 비동기 접근이 필요하지 않음
+    const params = await context.params; // 비동기적으로 처리
+    const businessNumber = params?.businessNumber;
 
     if (!businessNumber) {
       return NextResponse.json(
@@ -15,6 +16,7 @@ export async function GET(
         { status: 400 },
       );
     }
+
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("bid");

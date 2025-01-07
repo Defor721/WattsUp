@@ -15,17 +15,18 @@ interface TodayValueProps {
   data: Data[];
 }
 
-function TodayValue({ selectedRegion, data }: TodayValueProps) {
+// function TodayValue({ selectedRegion, data }: TodayValueProps) {
+function TodayValue() {
   const [smpData, setSmpData] = useState();
   const [recData, setRecData] = useState();
   const [amgo, setAmgo] = useState("");
 
-  useEffect(() => {
-    if (data) {
-      const formatData = formatNumberWithDecimal(data[0].amgo);
-      setAmgo(formatData);
-    }
-  }, [data, selectedRegion]);
+  // useEffect(() => {
+  //   if (data) {
+  //     const formatData = formatNumberWithDecimal(data[0].amgo);
+  //     setAmgo(formatData);
+  //   }
+  // }, [data, selectedRegion]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,9 +36,9 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
-        // console.log("크롤링 데이터:", result);
-        setSmpData(result.smpAverage);
-        setRecData(result.recValue);
+        console.log("크롤링 데이터:", result);
+        setSmpData(result.todaySmpData.평균가);
+        setRecData(result.todayRecData.평균가);
       } catch (error: any) {
         console.error("API 호출 실패:", error);
       }
@@ -70,9 +71,9 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
       <div>
         <Card className="min-w-[200px]">
           <CardHeader>
-            <div className="text-lg font-semibold">
+            {/* <div className="text-lg font-semibold">
               오늘의 {selectedRegion} 태양광 발전량 예측값
-            </div>
+            </div> */}
             <div className="text-sm text-gray-500">(단위: kWh)</div>
           </CardHeader>
           <CardContent>
