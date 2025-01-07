@@ -25,8 +25,16 @@ interface SupplyData {
   supply: number; // 전력 공급량
 }
 
+interface SupplyChartProps {
+  selectedRegion: string; // 선택된 지역
+  onBarClick: (region: string) => void; // 바 클릭 핸들러
+}
+
 // SupplyChart 컴포넌트
-export default function SupplyChart() {
+export default function SupplyChart({
+  selectedRegion,
+  onBarClick,
+}: SupplyChartProps) {
   const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
@@ -109,6 +117,22 @@ export default function SupplyChart() {
                 dataKey="supply"
                 fill="rgb(15,30,75)"
                 radius={[4, 4, 0, 0]}
+                onClick={(data) => onBarClick(data.region)} // 바 클릭 시 선택된 지역 업데이트
+                shape={(props: any) => {
+                  const { x, y, width, height, payload } = props;
+                  const isSelected = payload.region === selectedRegion;
+                  return (
+                    <rect
+                      x={x}
+                      y={y}
+                      width={width}
+                      height={height}
+                      fill={isSelected ? "#f59e0b" : "#0f1d4b"} // 선택된 바 색상 변경
+                      onClick={() => onBarClick(payload.region)} // 클릭 이벤트 추가
+                      style={{ cursor: "pointer" }}
+                    />
+                  );
+                }}
               />
             </BarChart>
           </ResponsiveContainer>
