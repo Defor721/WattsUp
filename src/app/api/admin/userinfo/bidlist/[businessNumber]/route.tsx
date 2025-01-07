@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
 
+// ContextParams 타입 수정
+type ContextParams = {
+  params: { businessNumber: string };
+};
+
+// 핸들러 정의
 export async function GET(
   request: Request,
   context: { params: Promise<{ businessNumber: string }> }, // Promise 타입으로 명시
@@ -10,6 +16,7 @@ export async function GET(
     const params = await context.params; // 비동기적으로 처리
     const businessNumber = params?.businessNumber;
 
+    // businessNumber가 없으면 400 응답 반환
     if (!businessNumber) {
       return NextResponse.json(
         { message: "Business number is missing" },
@@ -21,10 +28,12 @@ export async function GET(
     const db = client.db("wattsup");
     const collection = db.collection("bid");
 
+    // MongoDB에서 데이터 검색
     const bidList = await collection
       .find({ businessNumber: Number(businessNumber) })
       .toArray();
 
+    // 결과가 없으면 404 응답 반환
     if (bidList.length === 0) {
       return NextResponse.json(
         { message: `No data found for business number: ${businessNumber}` },
@@ -32,6 +41,7 @@ export async function GET(
       );
     }
 
+    // 성공적으로 데이터 검색 시 200 응답 반환
     return NextResponse.json(
       { message: "Data retrieved successfully", bidList },
       { status: 200 },
@@ -41,6 +51,7 @@ export async function GET(
       error instanceof Error ? error.message : "An unexpected error occurred";
     console.error("Error occurred during data fetch:", errorMessage);
 
+    // 서버 에러 발생 시 500 응답 반환
     return NextResponse.json(
       { message: "Failed to retrieve data", error: errorMessage },
       { status: 500 },
