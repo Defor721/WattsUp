@@ -1,7 +1,6 @@
-"use client"; // Next.js 클라이언트 컴포넌트로 설정
+"use client";
 
-import { useEffect, useState } from "react"; // React 훅 가져오기
-import { motion } from "framer-motion"; // 애니메이션 라이브러리
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -9,64 +8,54 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts"; // Recharts 차트 컴포넌트
+} from "recharts";
+import axios from "axios";
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/shadcn/card"; // UI 카드 컴포넌트
-import { Regions } from "@/utils/regions"; // 지역 리스트
+} from "@/components/shadcn/card";
+import { Regions } from "@/utils/regions";
 
-// 데이터 타입 정의
 interface SupplyData {
-  region: string; // 지역 이름
-  supply: number; // 전력 공급량
+  region: string;
+  supply: number;
 }
 
-// SupplyChart 컴포넌트
 export default function SupplyChart() {
-  const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState<string | null>(null); // 에러 상태
+  const [data, setData] = useState<SupplyData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // API 호출 주석 처리
-        /*
-        const responses = await Promise.all(
-          Regions.map((region) =>
-            axios
-              .get<number>(`/api/trade/supply/${region}`)
-              .then((res) => res.data),
-          ),
-        );
+        // API 요청
+        const response = await axios.get("/api/trade/supply");
+        const result = response.data?.result;
 
-        setData(
-          Regions.map((region, index) => ({
-            region,
-            supply: responses[index],
-          })),
-        );
-        */
+        if (!result) {
+          throw new Error("서버로부터 유효한 데이터를 받지 못했습니다.");
+        }
 
-        // 임시 데이터 설정
-        setData([
-          { region: "서울", supply: 1200 },
-          { region: "부산", supply: 900 },
-          { region: "대구", supply: 800 },
-          { region: "인천", supply: 750 },
-          { region: "광주", supply: 700 },
-          { region: "대전", supply: 650 },
-          { region: "울산", supply: 600 },
-        ]);
+        // `result` 객체에서 지역 데이터 추출
+        const mappedData = Regions.map((region) => ({
+          region,
+          supply: result[region] ?? 0, // 지역 데이터가 없을 경우 0으로 기본값 설정
+        }));
+
+        setData(mappedData);
       } catch (err) {
-        console.error("데이터 로드 실패:", err); // 에러 로그
-        setError("데이터를 불러오는 중 문제가 발생했습니다.");
+        console.error("데이터 로드 실패:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "알 수 없는 오류가 발생했습니다.",
+        );
       } finally {
-        setIsLoading(false); // 로딩 상태 해제
+        setIsLoading(false);
       }
     };
 
@@ -75,7 +64,11 @@ export default function SupplyChart() {
 
   if (isLoading) {
     return (
-      <p className="text-center text-gray-500">데이터를 불러오는 중입니다...</p>
+      <div className="flex h-64 items-center justify-center">
+        <p className="text-center text-gray-500">
+          데이터를 불러오는 중입니다...
+        </p>
+      </div>
     );
   }
 
@@ -84,12 +77,7 @@ export default function SupplyChart() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className="w-full"
-    >
+    <div className="w-full">
       <Card className="border-0">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
@@ -98,19 +86,30 @@ export default function SupplyChart() {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data}>
-              <XAxis dataKey="region" />
-              <YAxis />
-              <Tooltip />
+            <BarChart
+              data={data}
+              barSize={30}
+              margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
+            >
+              <XAxis dataKey="region" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1f2937",
+                  color: "#fff",
+                  border: "none",
+                }}
+                itemStyle={{ color: "#fff" }}
+              />
               <Bar
                 dataKey="supply"
-                fill="rgb(13,23,53)"
+                fill="rgb(59, 130, 246)"
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }
