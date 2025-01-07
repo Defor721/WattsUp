@@ -16,8 +16,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn";
-import BusinessNumberSection from "@/auth/components/common/BusinessNumberSection";
-import PasswordSection from "@/auth/components/common/PasswordSection";
+import BusinessNumberSection from "@/auth/components/common/business/BusinessInfoSection";
+import PasswordSection from "@/auth/components/common/password/PasswordSection";
 
 export default function AdditionalPage() {
   const router = useRouter();

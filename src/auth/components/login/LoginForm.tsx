@@ -5,36 +5,14 @@ import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
-import { FindPasswordPopup } from "@/auth/components/common/FindPassword";
+import FindPasswordPopup from "@/auth/components/login/FindPasswordPopup";
 import { useAuthStore } from "@/auth/useAuthStore";
 
 import GoogleLoginButton from "./GoogleLoginButton";
-import EmailInput from "../common/EmailInput";
-import PasswordInput from "../common/PasswordInput";
-
-interface DividerProps {
-  children?: React.ReactNode;
-}
-
-function Divider({ children }: DividerProps) {
-  return (
-    <div className="my-1 flex w-full items-center text-sm">
-      <div
-        className={`flex-grow border-t ${
-          children ? "mr-4" : ""
-        } border-gray-300`}
-      ></div>
-      {children && (
-        <span className="text-gray-500 dark:text-gray-300">{children}</span>
-      )}
-      <div
-        className={`flex-grow border-t ${
-          children ? "ml-4" : ""
-        } border-gray-300`}
-      ></div>
-    </div>
-  );
-}
+import EmailInput from "../common/email/EmailInput";
+import PasswordInput from "../common/password/PasswordInput";
+import FindEmailPopup from "./FindEmailPopup";
+import Divider from "../common/ui/Divider";
 
 export default function LoginForm() {
   const {
@@ -109,6 +87,12 @@ export default function LoginForm() {
         <GoogleLoginButton />
         {/* 비밀번호 및 회원가입 링크 */}
         <div className="mt-3 flex items-center text-center text-sm">
+          <FindEmailPopup>
+            <p className="inline-block cursor-pointer text-sm underline">
+              이메일 찾기
+            </p>
+          </FindEmailPopup>
+          <span className="mx-2 text-gray-500">|</span>
           {/* 왼쪽 텍스트 */}
           <div className="flex-grow text-right">
             <FindPasswordPopup>

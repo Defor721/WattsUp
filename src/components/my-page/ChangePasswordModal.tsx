@@ -14,9 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/shadcn";
-import PasswordSection from "@/auth/components/common/PasswordSection";
-import PasswordInput from "@/auth/components/common/PasswordInput";
 import { useUserStore } from "@/stores/useUserStore";
+import PasswordInput from "@/auth/components/common/password/PasswordInput";
+import PasswordSection from "@/auth/components/common/password/PasswordSection";
 
 function ChangePasswordModal() {
   const {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,14 +16,16 @@ import {
 } from "@/components/shadcn";
 import { useUserStore } from "@/stores/useUserStore";
 
-import PasswordSection from "./PasswordSection";
-import EmailSection from "./EmailSection";
+import PasswordSection from "../common/password/PasswordSection";
+import EmailSection from "../common/email/EmailSection";
 
 interface FindPasswordPopupProps {
   children: React.ReactNode;
 }
 
-function FindPasswordPopup({ children }: FindPasswordPopupProps) {
+export default function FindPasswordPopup({
+  children,
+}: FindPasswordPopupProps) {
   const {
     message,
     actions: { resetPassword, resetUserState },
@@ -104,5 +107,3 @@ function FindPasswordPopup({ children }: FindPasswordPopupProps) {
     </Dialog>
   );
 }
-
-export { FindPasswordPopup };

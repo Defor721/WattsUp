@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,9 +8,9 @@ import { useAuthStore } from "@/auth/useAuthStore";
 import { toast } from "@/hooks/useToast";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 
-import PasswordSection from "../common/PasswordSection";
-import EmailSection from "../common/EmailSection";
-import BusinessNumberSection from "../common/BusinessNumberSection";
+import PasswordSection from "../common/password/PasswordSection";
+import EmailSection from "../common/email/EmailSection";
+import BusinessNumberSection from "../common/business/BusinessInfoSection";
 
 export default function SignupForm() {
   const router = useRouter();
