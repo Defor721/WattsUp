@@ -32,20 +32,22 @@ export default function SupplyChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // API 요청
         const response = await axios.get("/api/trade/supply");
         const result = response.data?.result;
+
+        console.log("Response Data:", response.data); // API 응답 데이터 확인
 
         if (!result) {
           throw new Error("서버로부터 유효한 데이터를 받지 못했습니다.");
         }
 
-        // `result` 객체에서 지역 데이터 추출
+        // 데이터 매핑
         const mappedData = Regions.map((region) => ({
           region,
-          supply: result[region] ?? 0, // 지역 데이터가 없을 경우 0으로 기본값 설정
+          supply: typeof result[region] === "number" ? result[region] : 0,
         }));
 
+        console.log("Mapped Data:", mappedData); // 매핑된 데이터 확인
         setData(mappedData);
       } catch (err) {
         console.error("데이터 로드 실패:", err);
@@ -75,6 +77,8 @@ export default function SupplyChart() {
   if (error) {
     return <p className="text-center text-red-500">{error}</p>;
   }
+
+  console.log("Final Data for Chart:", data); // 차트에 사용될 최종 데이터 확인
 
   return (
     <div className="w-full">
