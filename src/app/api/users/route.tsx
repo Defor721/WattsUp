@@ -8,6 +8,7 @@ import clientPromise from "@/lib/mongodb";
 export async function GET(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");
+
     if (!authorizationHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { message: "Token Invalid or Missing" },
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     const token = authorizationHeader.split(" ")[1]?.trim();
+
     if (!token) {
       return NextResponse.json({ message: "Token Missing" }, { status: 403 });
     }
@@ -32,6 +34,7 @@ export async function GET(request: NextRequest) {
       );
     }
     const email = (decoded as { email: string }).email;
+
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
@@ -64,6 +67,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
+
     return NextResponse.json(
       { message: "Failed to process request", error: errorMessage },
       { status: 500 },

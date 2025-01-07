@@ -2,7 +2,6 @@
 
 import { useState, useEffect, FormEvent } from "react"; // React 훅과 타입 가져오기
 import { motion } from "framer-motion"; // 애니메이션 라이브러리
-import axios from "axios"; // HTTP 요청 라이브러리
 
 // ShadCN UI 컴포넌트 가져오기
 import {
@@ -22,20 +21,29 @@ import {
   SelectValue,
 } from "@/components/shadcn/select";
 import { Regions } from "@/utils/regions"; // 지역 리스트 가져오기
+import apiClient from "@/lib/axios";
 
 // Regions 배열을 Select 컴포넌트에서 사용할 수 있는 옵션 형식으로 변환
 const regionOptions = Regions.map((region) => ({
-  value: region.toLowerCase().replace(/시|도$/, ""), // '시', '도' 제거 후 소문자로 변환
+  value: region.toLowerCase(), // '시', '도' 제거 후 소문자로 변환
   label: region, // 원래 지역명을 label로 사용
 }));
 
 // API 호출 함수
-const submitBid = async (price: number, region: string) => {
+const submitBid = async (price: number, region: string, quantity: number) => {
   try {
-    const response = await axios.post("/api/trade/bid", { price, region });
+    const response = await apiClient.post("/api/trade/bid", {
+      price,
+      region,
+      quantity,
+    });
     return response.data;
-  } catch (error) {
-    console.error("API 호출 실패:", error);
+  } catch (error: any) {
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+    } else {
+      console.error("Unknown Error:", error.message);
+    }
     throw new Error("서버와의 통신 중 문제가 발생했습니다.");
   }
 };
@@ -43,8 +51,8 @@ const submitBid = async (price: number, region: string) => {
 // 입찰 폼 컴포넌트
 export default function BidForm() {
   const [region, setRegion] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 폼 제출 핸들러 함수
@@ -53,13 +61,12 @@ export default function BidForm() {
 
     const totalPrice = +quantity * +price; // 수량과 단가를 곱해 총 가격 계산
     setIsSubmitting(true);
-
     try {
-      await submitBid(totalPrice, region);
+      await submitBid(totalPrice, region, quantity);
       alert("입찰이 성공적으로 제출되었습니다.");
       setRegion("");
-      setQuantity("");
-      setPrice("");
+      setQuantity(0);
+      setPrice(0);
     } catch {
       alert("입찰 제출 중 문제가 발생했습니다.");
     } finally {
@@ -110,7 +117,7 @@ export default function BidForm() {
                   id="quantity"
                   type="number"
                   value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
                   required
                   className="bg-transparent"
                 />
@@ -124,7 +131,7 @@ export default function BidForm() {
                   id="price"
                   type="number"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => setPrice(Number(e.target.value))}
                   required
                   className="bg-transparent"
                 />
