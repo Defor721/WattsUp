@@ -2,67 +2,128 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-// 데이터 파싱 결과 타입 정의
-interface TableData {
-  [key: string]: string | number;
-}
-
 export async function GET() {
   try {
+    // 1. URL 설정
     const url = "https://www.kpx.or.kr/main/#section-2nd";
 
-    // HTML 가져오기
+    // 2. HTTP 요청 보내기
     const { data } = await axios.get(url);
 
-    // HTML 파싱
+    // 3. HTML 파싱
     const $ = cheerio.load(data);
 
-    // 데이터 파싱 공통 함수
-    const parseTableData = (headerText: string): TableData => {
-      const tableData: TableData = {};
-      const header = $("caption").filter((i, el) =>
-        $(el).text().includes(headerText),
-      );
+    // 4. "오늘의 SMP" 데이터 추출
+    const todaySmpData: { [key: string]: string | number } = {};
+    const todaySmpHeader = $("caption").filter((i, el) =>
+      $(el).text().includes("오늘의 SMP"),
+    );
 
-      if (header.length > 0) {
-        const table = header.closest("table");
+    if (todaySmpHeader.length > 0) {
+      const smpTable = todaySmpHeader.closest("table");
 
-        table.find("tbody tr").each((i, row) => {
-          const cells = $(row).find("th, td");
+      smpTable.find("tbody tr").each((i, row) => {
+        const cells = $(row).find("th, td");
+        const key = $(cells[0]).text().trim();
+        const value = $(cells[1]).text().trim().replace(",", "");
+        const key2 = $(cells[2]).text().trim();
+        const value2 = $(cells[3]).text().trim().replace(",", "");
 
-          // 첫 번째 셀 데이터 처리
-          const key = $(cells[0]).text().trim();
-          const value = $(cells[1]).text().trim().replace(",", "");
+        const parseValue = (val: string) => {
+          const num = parseFloat(val);
+          return isNaN(num) ? val : num;
+        };
 
-          // 두 번째 셀 데이터 처리 (있을 경우)
-          const key2 = $(cells[2])?.text().trim() || "";
-          const value2 = $(cells[3])?.text().trim().replace(",", "") || "";
+        if (key === "거래일") {
+          todaySmpData["거래일"] = value;
+        } else if (key === "거래량") {
+          todaySmpData["거래량"] = parseValue(value);
+        } else if (key === "평균가") {
+          todaySmpData["평균가"] = parseValue(value);
+        } else if (key === "최고가") {
+          todaySmpData["최고가"] = parseValue(value);
+        } else if (key === "최소가") {
+          todaySmpData["최소가"] = parseValue(value);
+        } else if (key === "종가") {
+          todaySmpData["종가"] = parseValue(value);
+        }
 
-          const parseValue = (val: string): string | number => {
-            const num = parseFloat(val);
-            return isNaN(num) ? val : num;
-          };
+        // 두 번째 항목도 처리
+        if (key2 === "거래일") {
+          todaySmpData["거래일"] = value2;
+        } else if (key2 === "거래량") {
+          todaySmpData["거래량"] = parseValue(value2);
+        } else if (key2 === "평균가") {
+          todaySmpData["평균가"] = parseValue(value2);
+        } else if (key2 === "최고가") {
+          todaySmpData["최고가"] = parseValue(value2);
+        } else if (key2 === "최소가") {
+          todaySmpData["최소가"] = parseValue(value2);
+        } else if (key2 === "종가") {
+          todaySmpData["종가"] = parseValue(value2);
+        }
+      });
+    }
 
-          if (key) tableData[key] = parseValue(value);
-          if (key2) tableData[key2] = parseValue(value2);
-        });
-      }
+    // 5. "오늘의 REC" 데이터 추출
+    const todayRecData: { [key: string]: string | number } = {};
+    const todayRecHeader = $("caption").filter((i, el) =>
+      $(el).text().includes("오늘의 REC"),
+    );
 
-      return tableData;
-    };
+    if (todayRecHeader.length > 0) {
+      const recTable = todayRecHeader.closest("table");
 
-    // "오늘의 SMP" 데이터
-    const todaySmpData = parseTableData("오늘의 SMP");
+      recTable.find("tbody tr").each((i, row) => {
+        const cells = $(row).find("th, td");
+        const key = $(cells[0]).text().trim();
+        const value = $(cells[1]).text().trim().replace(",", "");
+        const key2 = $(cells[2]).text().trim();
+        const value2 = $(cells[3]).text().trim().replace(",", "");
 
-    // "오늘의 REC" 데이터
-    const todayRecData = parseTableData("오늘의 REC");
+        const parseValue = (val: string) => {
+          const num = parseFloat(val);
+          return isNaN(num) ? val : num;
+        };
 
-    // JSON 응답 반환
+        // 두 번째 데이터 처리
+        if (key === "거래일") {
+          todayRecData["거래일"] = value;
+        } else if (key === "거래량") {
+          todayRecData["거래량"] = parseValue(value);
+        } else if (key === "평균가") {
+          todayRecData["평균가"] = parseValue(value);
+        } else if (key === "최고가") {
+          todayRecData["최고가"] = parseValue(value);
+        } else if (key === "최저가") {
+          todayRecData["최저가"] = parseValue(value);
+        } else if (key === "종가") {
+          todayRecData["종가"] = parseValue(value);
+        }
+
+        // 두 번째 항목도 처리
+        if (key2 === "거래일") {
+          todayRecData["거래일"] = value2;
+        } else if (key2 === "거래량") {
+          todayRecData["거래량"] = parseValue(value2);
+        } else if (key2 === "평균가") {
+          todayRecData["평균가"] = parseValue(value2);
+        } else if (key2 === "최고가") {
+          todayRecData["최고가"] = parseValue(value2);
+        } else if (key2 === "최저가") {
+          todayRecData["최저가"] = parseValue(value2);
+        } else if (key2 === "종가") {
+          todayRecData["종가"] = parseValue(value2);
+        }
+      });
+    }
+
+    // 6. 데이터 반환
     return NextResponse.json({ todaySmpData, todayRecData });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error occurred:", error.message);
     return NextResponse.json(
-      { error: "Failed to fetch data", details: error.message },
+      { error: "Failed to fetch data" },
       { status: 500 },
     );
   }

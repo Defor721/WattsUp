@@ -6,16 +6,14 @@ import React, { useEffect, useState } from "react";
 import apiClient from "@/lib/axios";
 
 function Page() {
-  const { email } = useParams<{ email: string }>();
+  const { businessNumber } = useParams();
   const [user, setUser] = useState();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const decodedEmail = decodeURIComponent(email);
-        console.log("decodedEmail: ", decodedEmail);
         const response = await apiClient.get(
-          `http://localhost:3000//api/admin/userinfo/${decodedEmail}`,
+          `http://localhost:3000//api/admin/userinfo/${businessNumber}`,
         );
         const data = response.data.userData;
         console.log("data: ", data);
@@ -27,7 +25,7 @@ function Page() {
     };
 
     fetchUserData();
-  }, [email]);
+  }, [businessNumber]);
 
   return <div>{user}</div>;
 }

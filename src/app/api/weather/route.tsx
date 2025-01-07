@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 
 export async function GET(request: Request) {
-  const API_KEY = process.env.OPEN_API_KEY; // 실제 API 키로 교체하세요
+  const API_KEY = process.env.OPEN_WEATHER_API_KEY; // 실제 API 키로 교체하세요
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");

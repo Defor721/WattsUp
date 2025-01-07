@@ -12,6 +12,7 @@ import {
   CategoryScale,
 } from "chart.js";
 import * as XLSX from "xlsx";
+import { Download } from "lucide-react";
 
 import {
   Select,
@@ -237,6 +238,18 @@ function PowerUsageByRegion() {
     }
   }, [selectedYear, data]);
 
+  // 데이터 다운로드
+  const handleDownload = () => {
+    if (!data.length) {
+      alert("다운로드할 데이터가 없습니다.");
+      return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Power Data");
+    XLSX.writeFile(workbook, "PowerDashboardData.xlsx");
+  };
+
   // Chart data preparation
   const doughnutData = Object.entries(kpi).map(([key, value]) => ({
     name: key,
@@ -308,10 +321,11 @@ function PowerUsageByRegion() {
 
         {/* 데이터 새로고침 버튼 */}
         <Button
-          onClick={() => fetchData()}
+          onClick={handleDownload}
           className="bg-subColor text-white dark:bg-white dark:text-subColor"
         >
-          데이터 새로고침
+          <Download size={16} />
+          데이터 다운로드
         </Button>
       </div>
 

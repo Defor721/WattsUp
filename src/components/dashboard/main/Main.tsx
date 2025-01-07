@@ -30,13 +30,15 @@ export default function DashboardMain() {
 
   return (
     <Container>
-      <h2>대시보드</h2>
+      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+        대시보드
+      </h2>
       <RegionButtons
         regions={Object.keys(weatherData)}
         selectedRegion={selectedRegion}
         setSelectedRegion={setSelectedRegion}
       />
-      <div className="flex h-full w-full gap-6">
+      <div className="flex h-full w-full items-center gap-6">
         <div
           id="map"
           style={{

@@ -104,8 +104,16 @@ function PowerGeneration() {
     loadData();
   }, []);
 
+  // 데이터 다운로드
   const handleDownload = () => {
-    console.log("다운로드 클릭");
+    if (!data.length) {
+      alert("다운로드할 데이터가 없습니다.");
+      return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Power Data");
+    XLSX.writeFile(workbook, "PowerDashboardData.xlsx");
   };
 
   const currentYearData = data.find((row) => row.연도 === selectedYear);
