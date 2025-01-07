@@ -6,13 +6,13 @@ import clientPromise from "@/lib/mongodb";
 export async function POST(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");
+    console.log(request.headers);
     if (!authorizationHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { message: "Token Invalid or Missing" },
         { status: 403 },
       );
     }
-
     const token = authorizationHeader.split(" ")[1]?.trim();
     if (!token) {
       return NextResponse.json({ message: "Token Missing" }, { status: 403 });
@@ -29,9 +29,8 @@ export async function POST(request: NextRequest) {
         { status: 403 },
       );
     }
-    const businessNumber = (decoded as { businessNumber: number })
-      .businessNumber;
-    const { region, amount, price } = await request.json();
+    const email = (decoded as { email: string }).email;
+    const { region, quantity, price } = await request.json();
     const client = await clientPromise;
     const db = client.db("wattsup");
     const bidCollection = db.collection("bid");
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
     if (dailySupply[region] !== undefined) {
       // 해당 region 필드가 존재하는지 확인 후 업데이트
-      if (dailySupply[region] < price) {
+      if (dailySupply[region] < quantity) {
         return NextResponse.json(
           { message: "Insufficient supply for the requested price" },
           { status: 400 },
@@ -56,7 +55,7 @@ export async function POST(request: NextRequest) {
       }
       const updatedSupply = await supplyCollection.updateOne(
         { _id: dailySupply._id }, // 해당 문서의 _id로 조건 설정
-        { $inc: { [`${region}`]: -amount } }, // region 값을 동적으로 설정하여 price 차감
+        { $inc: { [`${region}`]: -quantity } }, // region 값을 동적으로 설정하여 price 차감
       );
 
       if (updatedSupply.modifiedCount === 0) {
@@ -72,7 +71,7 @@ export async function POST(request: NextRequest) {
       );
     }
     const user = await userCollection.findOne({
-      businessNumber: businessNumber,
+      email: email,
     });
     if (!user) {
       return NextResponse.json(
@@ -99,9 +98,10 @@ export async function POST(request: NextRequest) {
       }
     }
     const result = await bidCollection.insertOne({
-      businessNumber,
+      email,
       region,
       price,
+      quantity,
       now,
     });
     return NextResponse.json(
