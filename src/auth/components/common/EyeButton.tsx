@@ -6,14 +6,16 @@ import { Button } from "@/components/shadcn";
 interface EyeButtonProps {
   show: boolean;
   setShow: Dispatch<React.SetStateAction<boolean>>;
+  right: number;
 }
 
-export default function EyeButton({ show, setShow }: EyeButtonProps) {
+export default function EyeButton({ show, setShow, right }: EyeButtonProps) {
   return (
     <>
       <Button
         type="button"
-        className="absolute right-1 top-[9px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent"
+        className={`absolute top-[12px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent`}
+        style={{ right: `${right}px` }}
         size={"icon"}
         onClick={() => setShow((prevState) => !prevState)}
       >

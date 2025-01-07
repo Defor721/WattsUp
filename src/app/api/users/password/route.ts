@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -41,7 +42,12 @@ export async function PATCH(request: NextRequest) {
 
     const { currentPassword, newPassword } = await request.json();
 
-    if (user.password !== currentPassword) {
+    const isPasswordMatch = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+
+    if (!isPasswordMatch) {
       return NextResponse.json(
         {
           message:
@@ -51,9 +57,12 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    const SALT_ROUND = parseInt(process.env.SALT_ROUND!);
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUND);
+
     const updateResult = await collection.updateOne(
       { email },
-      { $set: { password: newPassword } },
+      { $set: { password: hashedPassword } },
     );
 
     if (updateResult.modifiedCount === 0) {

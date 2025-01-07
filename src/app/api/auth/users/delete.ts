@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -25,7 +26,7 @@ export async function DELETE(request: NextRequest) {
     );
 
     const { password } = await request.json();
-    console.log(`password: `, password);
+
     if (!password) {
       return NextResponse.json(
         { message: "비밀번호가 제공되지 않았습니다." },
@@ -41,7 +42,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    if (password !== user.password) {
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatch) {
       return NextResponse.json(
         { message: "비밀번호가 일치하지 않습니다." },
         { status: 401 },

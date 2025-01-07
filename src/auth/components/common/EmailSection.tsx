@@ -7,11 +7,11 @@ import {
   verifyEmailCode,
 } from "@/services/emailService";
 import { isValidEmail } from "@/utils";
+import { Button } from "@/components/shadcn";
 
 import OTPInput from "./OTPInput";
 import EmailInput from "./EmailInput";
 import VerificationMessage from "../signup/VerificationMessage";
-import EmailVerificationButton from "../signup/EmailVerificationButton";
 
 interface SignupEmailInputProps {
   isEmailVerified: boolean;
@@ -60,6 +60,11 @@ export default function EmailSection({
     }
   };
 
+  const resetEmailInfo = () => {
+    setEmailCode("");
+    setIsEmailVerified(false);
+  };
+
   const handleVerifyEmail = async () => {
     if (isVerifyButtonDisabled()) return;
     try {
@@ -95,40 +100,56 @@ export default function EmailSection({
         isEmailVerified={isEmailVerified}
         isEmailValid={isEmailValid}
         showMessage={true}
+        loading={isEmailVerificationLoading}
         setEmail={setEmail}
-      />
+      >
+        <Button
+          className="flex h-[44px] min-w-[120px] items-center justify-center rounded bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400"
+          type="button"
+          onClick={handleSendEmailCode}
+          disabled={isSendButtonDisabled()}
+        >
+          {cooldown > 0 ? `${cooldown} 초 후 재인증` : "인증코드 전송"}
+        </Button>
+      </EmailInput>
       {/* 이메일 인증코드 입력 */}
-      <div className="flex flex-col gap-2">
-        <OTPInput
-          emailCode={emailCode}
-          isEmailVerified={isEmailVerified}
-          cooldown={cooldown}
-          setCooldown={setCooldown}
-          setEmailCode={setEmailCode}
-          isSendButtonDisabled={isSendButtonDisabled()}
-          handleSendEmailCode={handleSendEmailCode}
-        />
-        {/* 인증코드 안내 메시지 */}
-        <div className="text-sm text-gray-500">
-          <VerificationMessage
-            isError={isError}
-            isEmailVerified={isEmailVerified}
-            emailCode={emailCode}
-            errorMessage={errorMessage}
-            isEmailCodeSended={isEmailCodeSended}
-            isEmailCodeEntered={isEmailCodeEntered}
-          />
-        </div>
-      </div>
-      {/* 이메일 인증 버튼 */}
-      <EmailVerificationButton
+      <OTPInput
+        emailCode={emailCode}
         isEmailVerified={isEmailVerified}
-        isEmailVerificationLoading={isEmailVerificationLoading}
-        isVerifyButtonDisabled={isVerifyButtonDisabled()}
+        cooldown={cooldown}
+        setCooldown={setCooldown}
         setEmailCode={setEmailCode}
-        setIsEmailVerified={setIsEmailVerified}
-        handleVerifyEmail={handleVerifyEmail}
-      />
+      >
+        {isEmailVerified ? (
+          <Button
+            className="h-[44px] w-[120px] rounded bg-gray-600 p-2 text-white"
+            type="button"
+            onClick={resetEmailInfo}
+          >
+            이메일 재인증
+          </Button>
+        ) : (
+          <Button
+            className="flex h-[44px] w-[120px] items-center justify-center rounded bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400"
+            type="button"
+            onClick={handleVerifyEmail}
+            disabled={isVerifyButtonDisabled()}
+          >
+            {isEmailVerificationLoading ? "확인 중..." : "이메일 인증"}
+          </Button>
+        )}
+      </OTPInput>
+      {/* 인증코드 안내 메시지 */}
+      <div className="text-sm text-gray-500">
+        <VerificationMessage
+          isError={isError}
+          isEmailVerified={isEmailVerified}
+          emailCode={emailCode}
+          errorMessage={errorMessage}
+          isEmailCodeSended={isEmailCodeSended}
+          isEmailCodeEntered={isEmailCodeEntered}
+        />
+      </div>
     </div>
   );
 }
