@@ -48,9 +48,13 @@ const submitBid = async (price: number, region: string, quantity: number) => {
   }
 };
 
+interface BidFormProps {
+  region: string;
+  onRegionChange: (region: string) => void; // 셀렉터 변경 핸들러
+}
+
 // 입찰 폼 컴포넌트
-export default function BidForm() {
-  const [region, setRegion] = useState("");
+export default function BidForm({ region, onRegionChange }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +68,7 @@ export default function BidForm() {
     try {
       await submitBid(totalPrice, region, quantity);
       alert("입찰이 성공적으로 제출되었습니다.");
-      setRegion("");
+      onRegionChange("");
       setQuantity(0);
       setPrice(0);
     } catch {
@@ -95,7 +99,7 @@ export default function BidForm() {
                 <Label htmlFor="region" className="text-sm font-medium">
                   지역
                 </Label>
-                <Select value={region} onValueChange={setRegion}>
+                <Select value={region} onValueChange={onRegionChange}>
                   <SelectTrigger id="region">
                     <SelectValue placeholder="지역을 선택하세요" />
                   </SelectTrigger>
