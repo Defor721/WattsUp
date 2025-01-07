@@ -99,7 +99,7 @@ export default function SignupForm() {
         <Button
           type="submit"
           disabled={isSubmitButtonDisabled()}
-          className={`w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+          className={`h-[44px] w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
         >
           가입하기
         </Button>

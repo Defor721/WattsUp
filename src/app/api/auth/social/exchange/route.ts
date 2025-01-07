@@ -12,7 +12,7 @@ const validateEnv = () => {
   if (
     !process.env.ACCESS_TOKEN_SECRET ||
     !process.env.REFRESH_TOKEN_SECRET ||
-    !process.env.TEMP_TOKEN_SECRET ||
+    !process.env.BUSINESS_TOKEN_SECRET ||
     !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
     !process.env.GOOGLE_CLIENT_SECRET ||
     !process.env.NEXT_PUBLIC_REDIRECT_URI
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         signupType: "social",
         provider: "google",
       },
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.EMAIL_TOKEN_SECRET!,
 
       { expiresIn: "15m" },
     );

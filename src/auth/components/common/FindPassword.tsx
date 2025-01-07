@@ -18,11 +18,11 @@ import { useUserStore } from "@/stores/useUserStore";
 import PasswordSection from "./PasswordSection";
 import EmailSection from "./EmailSection";
 
-interface Props {
+interface FindPasswordPopupProps {
   children: React.ReactNode;
 }
 
-function FindPasswordPopup({ children }: Props) {
+function FindPasswordPopup({ children }: FindPasswordPopupProps) {
   const {
     message,
     actions: { resetPassword, resetUserState },
@@ -57,7 +57,7 @@ function FindPasswordPopup({ children }: Props) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="flex w-[200] flex-col gap-8">
+      <DialogContent className="flex max-w-[480px] select-none flex-col gap-8">
         <DialogHeader>
           <DialogTitle>비밀번호를 잊으셨나요?</DialogTitle>
           <DialogDescription>
@@ -89,7 +89,7 @@ function FindPasswordPopup({ children }: Props) {
           </DialogClose>
           <Button
             type="button"
-            className="bg-subColor text-white dark:bg-white dark:text-subColor"
+            className="bg-mainColor text-white dark:bg-white dark:text-subColor"
             onClick={handleSendConfirmEmail}
             disabled={
               !isEmailVerified ||

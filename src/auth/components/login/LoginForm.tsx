@@ -78,12 +78,10 @@ export default function LoginForm() {
   };
 
   return (
-    <form>
-      <CardContent className="grid gap-6">
+    <form className="flex flex-col gap-6">
+      <CardContent className="flex flex-col gap-5 p-0">
         {/* 이메일 섹션 */}
-        <div className="flex flex-col gap-2">
-          <EmailInput email={email} setEmail={setEmail} />
-        </div>
+        <EmailInput email={email} setEmail={setEmail} />
         {/* 비밀번호 섹션 */}
         <div className="flex flex-col gap-2">
           <PasswordInput
@@ -99,10 +97,9 @@ export default function LoginForm() {
       {errorMessage && (
         <p className="text-center text-sm text-red-500">{errorMessage}</p>
       )}
-      {/* 로그인 푸터 */}
-      <CardFooter className="flex flex-col gap-4">
+      <CardFooter className="flex flex-col gap-4 px-0">
         <Button
-          className={`w-full bg-[#070f26] text-white dark:border-1`}
+          className={`h-[44px] w-full bg-mainColor text-white dark:border-1`}
           onClick={handleLogin}
         >
           로그인
@@ -111,15 +108,23 @@ export default function LoginForm() {
         {/* 구글 로그인 버튼 */}
         <GoogleLoginButton />
         {/* 비밀번호 및 회원가입 링크 */}
-        <div className="mt-3 flex text-center text-sm">
-          <FindPasswordPopup>
-            <p className="inline-block cursor-pointer text-sm underline">
-              비밀번호 찾기
-            </p>
-          </FindPasswordPopup>
-          <Link href={"/signup"} className="ml-2 text-sm underline">
-            회원가입
-          </Link>
+        <div className="mt-3 flex items-center text-center text-sm">
+          {/* 왼쪽 텍스트 */}
+          <div className="flex-grow text-right">
+            <FindPasswordPopup>
+              <p className="inline-block cursor-pointer text-sm underline">
+                비밀번호 찾기
+              </p>
+            </FindPasswordPopup>
+          </div>
+          {/* 구분선 */}
+          <span className="mx-2 text-gray-500">|</span>
+          {/* 오른쪽 텍스트 */}
+          <div className="flex-grow text-left">
+            <Link href={"/signup"} className="text-sm underline">
+              회원가입
+            </Link>
+          </div>
         </div>
       </CardFooter>
     </form>

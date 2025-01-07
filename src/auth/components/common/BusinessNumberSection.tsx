@@ -13,6 +13,8 @@ import {
 import { toast } from "@/hooks/useToast";
 import { businessInfoVerification } from "@/auth/services/client/authService";
 
+import XCircleButton from "./XCircleButton";
+
 interface BusinessNumberSectionProps {
   isBusinessVerified: boolean;
   businessNumber: string;
@@ -102,19 +104,26 @@ export default function BusinessNumberSection({
               </TooltipContent>
             </div>
           </Tooltip>
-          <Input
-            type={"text"}
-            id="businessNumber"
-            name="businessNumber"
-            placeholder="0000000000"
-            maxLength={10}
-            value={businessNumber}
-            onChange={(e) => {
-              setBusinessNumber(e.target.value.replace(/[^0-9]/g, ""));
-            }}
-            required
-            disabled={isBusinessVerified}
-          />
+          <div className="relative">
+            <Input
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${businessNumber.length !== 10 && businessNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
+              type={"text"}
+              id="businessNumber"
+              name="businessNumber"
+              placeholder="0000000000"
+              maxLength={10}
+              value={businessNumber}
+              onChange={(e) => {
+                setBusinessNumber(e.target.value.replace(/[^0-9]/g, ""));
+              }}
+              required
+              disabled={isBusinessVerified || isBusinessLoading}
+            />
+            {businessNumber && !isBusinessLoading && !isBusinessVerified && (
+              <XCircleButton reset={setBusinessNumber} right={1} />
+            )}
+          </div>
+
           <div className="text-sm text-gray-500">
             {businessNumber.length !== 10 && businessNumber.trim() !== "" && (
               <div className="text-red-600">
@@ -136,19 +145,25 @@ export default function BusinessNumberSection({
               </TooltipContent>
             </div>
           </Tooltip>
-          <Input
-            type={"text"}
-            id="startDate"
-            name="startDate"
-            placeholder="YYYYMMDD"
-            maxLength={8}
-            value={startDate}
-            onChange={(e) =>
-              setStartDate(e.target.value.replace(/[^0-9]/g, ""))
-            }
-            required
-            disabled={isBusinessVerified}
-          />
+          <div className="relative">
+            <Input
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${startDate.length !== 8 && startDate.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
+              type={"text"}
+              id="startDate"
+              name="startDate"
+              placeholder="YYYYMMDD"
+              maxLength={8}
+              value={startDate}
+              onChange={(e) =>
+                setStartDate(e.target.value.replace(/[^0-9]/g, ""))
+              }
+              required
+              disabled={isBusinessVerified || isBusinessLoading}
+            />
+            {startDate && !isBusinessLoading && !isBusinessVerified && (
+              <XCircleButton reset={setStartDate} right={1} />
+            )}
+          </div>
           <div className="text-sm text-gray-500">
             {startDate.length !== 8 && startDate.trim() !== "" && (
               <div className="text-red-600">
@@ -172,17 +187,23 @@ export default function BusinessNumberSection({
               </TooltipContent>
             </div>
           </Tooltip>
-          <Input
-            type={"text"}
-            id="companyName"
-            name="companyName"
-            placeholder="(주)테스트"
-            maxLength={30}
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            required
-            disabled={isBusinessVerified}
-          />
+          <div className="relative">
+            <Input
+              className="h-[44px] pr-10 focus:border-blue-500 focus:ring-transparent dark:ring-offset-0"
+              type={"text"}
+              id="companyName"
+              name="companyName"
+              placeholder="(주)테스트"
+              maxLength={30}
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+              disabled={isBusinessVerified || isBusinessLoading}
+            />
+            {companyName && !isBusinessLoading && !isBusinessVerified && (
+              <XCircleButton reset={setCompanyName} right={1} />
+            )}
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <Tooltip>
@@ -196,18 +217,24 @@ export default function BusinessNumberSection({
               </TooltipContent>
             </div>
           </Tooltip>
-          <Input
-            id="corporateNumber"
-            name="corporateNumber"
-            placeholder="0000000000000"
-            maxLength={13}
-            value={corporateNumber}
-            onChange={(e) =>
-              setCorporateNumber(e.target.value.replace(/[^0-9]/g, ""))
-            }
-            required
-            disabled={isBusinessVerified}
-          />
+          <div className="relative">
+            <Input
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${corporateNumber.length !== 13 && corporateNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
+              id="corporateNumber"
+              name="corporateNumber"
+              placeholder="0000000000000"
+              maxLength={13}
+              value={corporateNumber}
+              onChange={(e) =>
+                setCorporateNumber(e.target.value.replace(/[^0-9]/g, ""))
+              }
+              required
+              disabled={isBusinessVerified || isBusinessLoading}
+            />
+            {corporateNumber && !isBusinessLoading && !isBusinessVerified && (
+              <XCircleButton reset={setCorporateNumber} right={1} />
+            )}
+          </div>
           <div className="text-sm text-gray-500">
             {corporateNumber.length !== 13 && corporateNumber.trim() !== "" && (
               <div className="text-red-600">
@@ -229,16 +256,22 @@ export default function BusinessNumberSection({
               </TooltipContent>
             </div>
           </Tooltip>
-          <Input
-            id="principalName"
-            name="principalName"
-            placeholder="홍길동"
-            maxLength={50}
-            value={principalName}
-            onChange={(e) => setPrincipalName(e.target.value)}
-            required
-            disabled={isBusinessVerified}
-          />
+          <div className="relative">
+            <Input
+              className="h-[44px] pr-10 focus:border-blue-500 focus:ring-transparent dark:ring-offset-0"
+              id="principalName"
+              name="principalName"
+              placeholder="홍길동"
+              maxLength={50}
+              value={principalName}
+              onChange={(e) => setPrincipalName(e.target.value)}
+              required
+              disabled={isBusinessVerified || isBusinessLoading}
+            />
+            {principalName && !isBusinessLoading && !isBusinessVerified && (
+              <XCircleButton reset={setPrincipalName} right={1} />
+            )}
+          </div>
         </div>
       </TooltipProvider>
       <div className="text-sm text-gray-500">
@@ -271,13 +304,13 @@ export default function BusinessNumberSection({
         <Button
           type="button"
           onClick={resetBusinessInfo}
-          className="rounded bg-gray-600 p-2 text-white"
+          className="h-[44px] rounded bg-gray-600 p-2 text-white"
         >
           사업자번호 재인증
         </Button>
       ) : (
         <Button
-          className={`rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+          className={`h-[44px] rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1 dark:ring-offset-0`}
           type="button"
           onClick={handleCheckBusinessNumber}
           disabled={isBusinessButtonDisabled()}

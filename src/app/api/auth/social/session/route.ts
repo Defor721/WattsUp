@@ -6,7 +6,7 @@ import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
 
 const validateEnv = () => {
-  if (!process.env.TEMP_TOKEN_SECRET) {
+  if (!process.env.BUSINESS_TOKEN_SECRET) {
     throw new Error("환경 변수가 설정되지 않았습니다.");
   }
 };
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     const emailVerification = await verifyToken(
       emailVerificationToken,
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.EMAIL_TOKEN_SECRET!,
       "email",
     );
 
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     const businessVerification = await verifyToken(
       businessVerificationToken,
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.BUSINESS_TOKEN_SECRET!,
       "business",
     );
 

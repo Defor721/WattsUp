@@ -51,14 +51,10 @@ export default function PasswordSection({
         confirmPasswordLabel={confirmPasswordLabel}
         showConfirmPassword={showConfirmPassword}
         confirmPassword={confirmPassword}
+        isConfirmPasswordValid={isConfirmPasswordValid}
         setConfirmPassword={setConfirmPassword}
         setShowConfirmPassword={setShowConfirmPassword}
       />
-      <div className="text-sm text-red-500">
-        {!isConfirmPasswordValid && confirmPassword.trim() !== "" && (
-          <>비밀번호가 일치하지 않습니다.</>
-        )}
-      </div>
     </div>
   );
 }

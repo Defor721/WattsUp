@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
         companyName: businessInfo.request_param.b_nm,
         corporateNumber: businessInfo.request_param.corp_no,
       },
-      process.env.TEMP_TOKEN_SECRET!,
+      process.env.BUSINESS_TOKEN_SECRET!,
       { expiresIn: "15m" },
     );
 
