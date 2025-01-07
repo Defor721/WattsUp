@@ -1,13 +1,14 @@
-"use client"; // Next.js 클라이언트 컴포넌트로 설정
+"use client"; // 클라이언트 컴포넌트로 설정
 
-import { useEffect, useState } from "react"; // React 훅 가져오기
+import { useEffect, useState } from "react"; // React 훅
 import { motion } from "framer-motion"; // 애니메이션 라이브러리
+import axios from "axios"; // HTTP 요청 라이브러리
 
-// 데이터 타입 정의 (TypeScript)
+// 데이터 타입 정의
 type TradingStatsData = {
-  bidCount: number; // 총 입찰 수
-  smp: number; // SMP
-  rec: number; // REC
+  bidCount: number; // 누적 입찰 수
+  smp: number; // SMP 평균가
+  rec: number; // REC 평균가
   totalSupply: number; // 총 공급량
 };
 
@@ -20,23 +21,36 @@ export default function TradingStats() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // API 호출 주석 처리
-        /*
-        const [bidCount, smp, totalSupply] = await Promise.all([
-          axios.get<number>("/api/trade/countbid").then((res) => res.data),
-          axios.get<number>("/api/trade/smp").then((res) => res.data),
-          axios.get<number>("/api/trade/supply").then((res) => res.data),
-        ]);
+        // API 요청 경로 확인 및 데이터 가져오기
+        const [bidCountResponse, totalSupplyResponse, crawlResponse] =
+          await Promise.all([
+            axios.get("/api/trade/countbid"), // 누적 입찰 수
+            axios.get("/api/trade/supply"), // 총 공급량
+            axios.get("/api/crawl"), // SMP, REC 데이터
+          ]);
 
-        setStats({ bidCount, smp, totalSupply }); // 상태 업데이트
-        */
+        // API 응답 데이터 구조 확인
+        const bidCount = bidCountResponse.data;
+        console.log("bidCount: ", bidCount);
+        const totalSupply = totalSupplyResponse.data;
+        console.log("totalSupply: ", totalSupply);
+        const { todaySmpData, todayRecData } = crawlResponse.data;
+        console.log("todayRecData: ", todayRecData);
+        console.log("todaySmpData: ", todaySmpData);
 
-        // 임시 데이터 설정
+        // 데이터 상태 설정
         setStats({
-          bidCount: 150, // 총 입찰 수
-          smp: 130, // SMP
-          rec: 65.0, // REc
-          totalSupply: 5000, // 총 공급량
+          bidCount,
+          smp: todaySmpData.평균가, // SMP 평균가
+          rec: todayRecData.평균가, // REC 평균가
+          totalSupply,
+        });
+
+        console.log("API 데이터 확인:", {
+          bidCount,
+          totalSupply,
+          todaySmpData,
+          todayRecData,
         });
       } catch (err) {
         console.error("데이터 로드 실패:", err);
@@ -49,6 +63,7 @@ export default function TradingStats() {
     fetchStats();
   }, []);
 
+  // 로딩 상태 처리
   if (isLoading) return <LoadingMessage />;
   if (error) return <ErrorMessage error={error} />;
 
@@ -60,7 +75,6 @@ export default function TradingStats() {
       className="w-full"
     >
       <div className="p-6">
-        {/* <h2 className="text-2xl font-bold">거래 통계</h2> */}
         <div className="mt-4 grid grid-cols-2 gap-6 sm:grid-cols-4">
           <StatItem title="누적 입찰 수" value={stats?.bidCount || 0} />
           <StatItem

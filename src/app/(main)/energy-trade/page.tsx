@@ -21,7 +21,7 @@ export default function TradePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+        <h2 className="mb-4 scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
           태양광 전력 거래소
         </h2>
 
@@ -32,17 +32,18 @@ export default function TradePage() {
           </CardContent>
         </Card>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          {/* 왼쪽 섹션: 차트 */}
-          <Card className="flex flex-col border-none bg-white/10 shadow-md backdrop-blur-md">
+        {/* 하단 섹션: 차트와 입찰 폼 */}
+        <div className="flex w-full gap-4">
+          {/* 왼쪽 섹션: 차트 (2/3 너비) */}
+          <Card className="flex w-2/3 flex-col border-none bg-white/10 shadow-md backdrop-blur-md">
             <CardContent className="flex-1 py-2">
               <SupplyChart />
             </CardContent>
           </Card>
 
-          {/* 오른쪽 섹션: 입찰 폼 */}
+          {/* 오른쪽 섹션: 입찰 폼 (1/3 너비) */}
           <motion.div
-            className="flex flex-col"
+            className="flex w-1/3 flex-col"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
