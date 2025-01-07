@@ -61,7 +61,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
             {/* 조건에 따라 UI 변경 */}
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground select-none"
             >
               {/* 테블릿 화면이고, 사이드바 확장시키지 않은 경우 */}
               {isTablet && !isTabletExpanded ? (
@@ -77,7 +77,9 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate font-semibold">
+                      {user.companyName}
+                    </span>
                     <span className="truncate text-xs">{user.email}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
@@ -88,7 +90,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
 
           {/* 드롭다운 메뉴 */}
           <DropdownMenuContent
-            className="position:fixed w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-y-auto rounded-lg bg-[rgb(7,15,38)] text-white"
+            className="position:fixed w-[--radix-dropdown-menu-trigger-width] min-w-56 select-none overflow-y-auto rounded-lg bg-[rgb(7,15,38)] text-white"
             side={isTablet && !isTabletExpanded ? "right" : "top"}
             align="end"
             sideOffset={4}
@@ -101,7 +103,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-sm font-medium text-gray-200">
-                    {user.name}
+                    {user.companyName}
                   </span>
                   <span className="truncate text-xs text-gray-300">
                     {user.email}

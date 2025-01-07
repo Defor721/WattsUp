@@ -38,7 +38,7 @@ export default function LoginPage() {
   }, [accessToken]);
 
   return (
-    <Card className="relative flex flex-col p-6">
+    <Card className="relative flex select-none flex-col p-6">
       <ArrowBack path={"/"} />
       {/* 로그인 헤더 */}
       <CardHeader className="px-0">

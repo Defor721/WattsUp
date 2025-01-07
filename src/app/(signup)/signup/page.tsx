@@ -9,7 +9,7 @@ import ArrowBack from "@/components/common/ArrowBack";
 
 function Signup() {
   return (
-    <Card className="relative flex flex-col p-6">
+    <Card className="relative flex select-none flex-col p-6">
       <ArrowBack />
       <CardHeader className="px-0">
         <CardTitle className="text-2xl">회원가입</CardTitle>

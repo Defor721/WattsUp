@@ -17,7 +17,11 @@ import {
 import PasswordInput from "@/auth/components/common/PasswordInput";
 import { useAuthStore } from "@/auth/useAuthStore";
 
-function WithdrawalAccountModal() {
+interface WithdrawalAccountModalProps {
+  children: React.ReactNode;
+}
+
+function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   const router = useRouter();
   const {
     message,
@@ -48,15 +52,8 @@ function WithdrawalAccountModal() {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-subColor text-white dark:bg-white dark:text-subColor"
-        >
-          회원탈퇴
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[480px] gap-8 bg-white dark:bg-subColor">
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-[480px] select-none gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
           <DialogTitle>회원탈퇴</DialogTitle>
           <DialogDescription>

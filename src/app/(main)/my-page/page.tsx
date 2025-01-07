@@ -31,8 +31,8 @@ const monthlyTradeData = [
 
 export default function Mypage() {
   return (
-    <div className="mx-auto flex max-w-[767px] flex-col items-center gap-3 p-5">
-      <h2 className="scroll-m-20 pt-5 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+    <div className="flex flex-col items-center gap-3 p-5">
+      <h2 className="pointer-events-none select-none scroll-m-20 pt-5 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
         마이 페이지
       </h2>
 

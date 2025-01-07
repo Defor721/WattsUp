@@ -86,7 +86,7 @@ function Sidebar() {
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
 
   return (
-    <div className="relative flex">
+    <div className="relative flex select-none">
       {/* 테블릿 화면에서 사이드바 확장시켰을 때 */}
       {isTabletExpanded && (
         <div

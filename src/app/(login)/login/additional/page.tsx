@@ -58,7 +58,7 @@ export default function AdditionalPage() {
   }, [accessToken]);
 
   return (
-    <div className="mx-auto my-20">
+    <div className="mx-auto my-20 select-none">
       <Card className="relative flex flex-col p-6">
         <Link href={"/login"}>
           <IoIosArrowBack
@@ -96,7 +96,7 @@ export default function AdditionalPage() {
             <Button
               type="submit"
               disabled={!isBusinessVerified}
-              className={`w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+              className={`h-[44px] w-full rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
             >
               제출
             </Button>

@@ -57,13 +57,13 @@ function ChangePasswordModal() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="bg-subColor text-white dark:bg-white dark:text-subColor"
+          className="bg-mainColor text-white dark:bg-white dark:text-subColor"
         >
           <Settings className="mr-2 h-4 w-4" />
           비밀번호 변경
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[480px] gap-8 bg-white dark:bg-subColor">
+      <DialogContent className="max-w-[480px] select-none gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
           <DialogTitle>비밀번호 수정</DialogTitle>
           <DialogDescription>
@@ -105,7 +105,7 @@ function ChangePasswordModal() {
           </DialogClose>
           <Button
             onClick={handleChangePassword}
-            className="bg-subColor text-white dark:bg-white dark:text-subColor"
+            className="bg-mainColor text-white dark:bg-white dark:text-subColor"
             disabled={
               !isCurrentPasswordValid ||
               !isNewPasswordValid ||

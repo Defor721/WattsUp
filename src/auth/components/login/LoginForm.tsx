@@ -97,10 +97,9 @@ export default function LoginForm() {
       {errorMessage && (
         <p className="text-center text-sm text-red-500">{errorMessage}</p>
       )}
-      {/* 로그인 푸터 */}
       <CardFooter className="flex flex-col gap-4 px-0">
         <Button
-          className={`h-[44px] w-full bg-[#070f26] text-white dark:border-1`}
+          className={`h-[44px] w-full bg-mainColor text-white dark:border-1`}
           onClick={handleLogin}
         >
           로그인
