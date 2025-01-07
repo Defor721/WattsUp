@@ -106,7 +106,7 @@ export default function BusinessNumberSection({
           </Tooltip>
           <div className="relative">
             <Input
-              className={`h-[44px] pr-10 ${businessNumber.length !== 10 && businessNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${businessNumber.length !== 10 && businessNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
               type={"text"}
               id="businessNumber"
               name="businessNumber"
@@ -147,7 +147,7 @@ export default function BusinessNumberSection({
           </Tooltip>
           <div className="relative">
             <Input
-              className={`h-[44px] pr-10 ${startDate.length !== 8 && startDate.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${startDate.length !== 8 && startDate.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
               type={"text"}
               id="startDate"
               name="startDate"
@@ -189,7 +189,7 @@ export default function BusinessNumberSection({
           </Tooltip>
           <div className="relative">
             <Input
-              className="h-[44px] pr-10 focus:border-blue-300 focus:ring-transparent"
+              className="h-[44px] pr-10 focus:border-blue-500 focus:ring-transparent dark:ring-offset-0"
               type={"text"}
               id="companyName"
               name="companyName"
@@ -219,7 +219,7 @@ export default function BusinessNumberSection({
           </Tooltip>
           <div className="relative">
             <Input
-              className={`h-[44px] pr-10 ${corporateNumber.length !== 13 && corporateNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
+              className={`h-[44px] pr-10 dark:ring-offset-0 ${corporateNumber.length !== 13 && corporateNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
               id="corporateNumber"
               name="corporateNumber"
               placeholder="0000000000000"
@@ -258,7 +258,7 @@ export default function BusinessNumberSection({
           </Tooltip>
           <div className="relative">
             <Input
-              className="h-[44px] pr-10 focus:border-blue-300 focus:ring-transparent"
+              className="h-[44px] pr-10 focus:border-blue-500 focus:ring-transparent dark:ring-offset-0"
               id="principalName"
               name="principalName"
               placeholder="홍길동"
@@ -310,7 +310,7 @@ export default function BusinessNumberSection({
         </Button>
       ) : (
         <Button
-          className={`h-[44px] rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1`}
+          className={`h-[44px] rounded bg-mainColor p-2 text-white disabled:border-none disabled:bg-gray-400 dark:border-1 dark:ring-offset-0`}
           type="button"
           onClick={handleCheckBusinessNumber}
           disabled={isBusinessButtonDisabled()}

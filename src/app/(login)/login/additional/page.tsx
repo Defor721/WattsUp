@@ -58,8 +58,8 @@ export default function AdditionalPage() {
   }, [accessToken]);
 
   return (
-    <div className="mx-auto my-20 w-[400px]">
-      <Card className="relative flex flex-col p-5">
+    <div className="mx-auto my-20">
+      <Card className="relative flex flex-col p-6">
         <Link href={"/login"}>
           <IoIosArrowBack
             size={"20px"}

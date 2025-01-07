@@ -18,11 +18,11 @@ interface PasswordInputProps {
 }
 
 export default function PasswordInput({
-  passwordLabel,
+  passwordLabel = "비밀번호",
   password,
-  showPassword,
+  showPassword = false,
   showMessage,
-  isPasswordValid,
+  isPasswordValid = true,
   setPassword,
   setShowPassword,
   setIsPasswordValid,
@@ -33,10 +33,10 @@ export default function PasswordInput({
 
   return (
     <>
-      <Label htmlFor="password">{passwordLabel || "비밀번호"}</Label>
+      <Label htmlFor="password">{passwordLabel}</Label>
       <div className="relative">
         <Input
-          className={`h-[44px] pr-20 ${!isPasswordValid && password.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
+          className={`h-[44px] pr-20 dark:ring-offset-0 ${!isPasswordValid && password.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
           type={showPassword ? "text" : "password"}
           id="password"
           name="password"
@@ -47,12 +47,12 @@ export default function PasswordInput({
           autoComplete="current-password"
           required
         />
-        {password && <XCircleButton reset={setPassword} right={1} />}
         <EyeButton
           show={showPassword}
           setShow={setShowPassword}
-          right={password ? 10 : 1}
+          right={password ? 40 : 4}
         />
+        {password && <XCircleButton reset={setPassword} right={1} />}
       </div>
       {showMessage && (
         <div className="text-sm text-red-500">

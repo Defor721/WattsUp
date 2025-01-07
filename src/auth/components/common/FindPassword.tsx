@@ -57,7 +57,7 @@ function FindPasswordPopup({ children }: Props) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="flex w-[200] flex-col gap-8">
+      <DialogContent className="flex max-w-[480px] flex-col gap-8">
         <DialogHeader>
           <DialogTitle>비밀번호를 잊으셨나요?</DialogTitle>
           <DialogDescription>

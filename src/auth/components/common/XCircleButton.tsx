@@ -13,7 +13,8 @@ export default function XCircleButton({ right, reset }: XCircleButtonProps) {
     <Button
       onClick={() => reset("")}
       type="button"
-      className={`absolute right-${right} top-[12px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent`}
+      className={`absolute top-[12px] z-10 -translate-y-1/4 bg-transparent hover:bg-transparent`}
+      style={{ right: `${right}px` }}
       size={"icon"}
     >
       <XCircle className="text-muted-foreground h-5 w-5 opacity-70" />

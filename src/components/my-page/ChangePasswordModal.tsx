@@ -63,7 +63,7 @@ function ChangePasswordModal() {
           비밀번호 변경
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[450px] gap-8 bg-white dark:bg-subColor">
+      <DialogContent className="max-w-[480px] gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
           <DialogTitle>비밀번호 수정</DialogTitle>
           <DialogDescription>

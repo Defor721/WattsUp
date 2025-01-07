@@ -29,7 +29,7 @@ export default function ConfirmPasswordInput({
       </Label>
       <div className="relative">
         <Input
-          className={`h-[44px] pr-20 ${!isConfirmPasswordValid && confirmPassword.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-300 focus:ring-transparent"}`}
+          className={`h-[44px] pr-20 dark:ring-offset-0 ${!isConfirmPasswordValid && confirmPassword.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
           type={showConfirmPassword ? "text" : "password"}
           id="confirmPassword"
           name="confirmPassword"
@@ -45,7 +45,7 @@ export default function ConfirmPasswordInput({
         <EyeButton
           show={showConfirmPassword}
           setShow={setShowConfirmPassword}
-          right={confirmPassword ? 10 : 1}
+          right={confirmPassword ? 40 : 1}
         />
       </div>
       {!isConfirmPasswordValid && confirmPassword.trim() !== "" && (

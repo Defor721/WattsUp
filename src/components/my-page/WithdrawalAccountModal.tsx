@@ -56,7 +56,7 @@ function WithdrawalAccountModal() {
           회원탈퇴
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[450px] gap-8 bg-white dark:bg-subColor">
+      <DialogContent className="max-w-[480px] gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
           <DialogTitle>회원탈퇴</DialogTitle>
           <DialogDescription>

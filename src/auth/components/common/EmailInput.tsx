@@ -10,17 +10,17 @@ interface EmailInputProps {
   isEmailValid?: boolean;
   isEmailVerified?: boolean;
   showMessage?: boolean;
-  loading: boolean;
+  loading?: boolean;
   setEmail: Dispatch<React.SetStateAction<string>>;
 }
 
 export default function EmailInput({
   children,
   email,
-  isEmailValid,
-  isEmailVerified,
-  showMessage,
-  loading,
+  isEmailValid = true,
+  isEmailVerified = false,
+  showMessage = false,
+  loading = false,
   setEmail,
 }: EmailInputProps) {
   const shouldShowXCircleButton =
@@ -44,10 +44,10 @@ export default function EmailInput({
             disabled={isEmailVerified || loading}
             autoComplete="email"
             required
-            className={`h-[44px] flex-grow rounded border pr-10 ${
+            className={`h-[44px] flex-grow rounded border pr-10 dark:ring-offset-0 ${
               isEmailValid === false && email.trim() !== ""
-                ? "border-red-600 focus:ring-transparent"
-                : "focus:border-blue-300 focus:ring-transparent"
+                ? "focus:border-red-600 focus:ring-transparent"
+                : "focus:border-blue-500 focus:ring-transparent"
             }`}
           />
           {shouldShowXCircleButton && (
