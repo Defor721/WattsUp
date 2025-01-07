@@ -25,6 +25,7 @@ export async function DELETE(request: NextRequest) {
     );
 
     const { password } = await request.json();
+    console.log(`password: `, password);
     if (!password) {
       return NextResponse.json(
         { message: "비밀번호가 제공되지 않았습니다." },
@@ -37,6 +38,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { message: `해당 이메일(${email})을 가진 사용자를 찾을 수 없습니다.` },
         { status: 404 },
+      );
+    }
+
+    if (password !== user.password) {
+      return NextResponse.json(
+        { message: "비밀번호가 일치하지 않습니다." },
+        { status: 401 },
       );
     }
 
@@ -67,6 +75,7 @@ export async function DELETE(request: NextRequest) {
 
     return response;
   } catch (error: any) {
+    console.log(error);
     if (error.message.startsWith("TokenExpiredError")) {
       return NextResponse.json({ message: "Token Expired" }, { status: 401 });
     }

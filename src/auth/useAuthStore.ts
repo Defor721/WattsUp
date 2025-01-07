@@ -158,12 +158,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
-    async withdrawalAccount() {
+    /** 회원 탈퇴 */
+    async withdrawalAccount(password: string) {
       const state = useAuthStore.getState();
       if (state.loading) return;
       try {
         set({ loading: true });
-        const { message } = await deleteUser();
+        const { message } = await deleteUser(password);
 
         set({
           redirectTo: "/",

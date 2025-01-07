@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
 
+/** 유저 조회 */
 export async function GET(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");
@@ -40,13 +41,15 @@ export async function GET(request: NextRequest) {
       {
         projection: {
           email: 1,
+          name: 1,
           signupType: 1,
           provider: 1,
-          businessType: 1,
-          personalId: 1,
+          companyName: 1,
           corporateNumber: 1,
           businessNumber: 1,
-          companyName: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          role: 1,
         },
       },
     );

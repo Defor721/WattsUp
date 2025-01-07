@@ -1,26 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import { useUserStore } from "@/stores/useUserStore";
-import useAccessToken from "@/auth/hooks/useAccessToken";
+
+import useAccessToken from "./useAccessToken";
 
 export default function useCheckAccessToken(): void {
+  const pathname = usePathname();
   const { accessToken, resetAccessToken } = useAccessToken();
-  const {
-    actions: { fetchCurrentUser },
-  } = useUserStore();
+  const fetchCurrentUser = useUserStore(
+    (state) => state.actions.fetchCurrentUser,
+  );
 
   useEffect(() => {
-    // TODO: 만료된 리프레시 토큰도 받아야 하는지 확인
     const checkAccessToken = async () => {
       try {
         if (!accessToken) return;
+
         await fetchCurrentUser();
       } catch (error) {
         resetAccessToken();
       }
     };
     checkAccessToken();
-  }, [accessToken, fetchCurrentUser, resetAccessToken]);
+  }, [accessToken, pathname]);
 }

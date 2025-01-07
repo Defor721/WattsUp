@@ -1,13 +1,30 @@
 export interface User {
-  businessNumber: number;
-  businessType: "individual" | "corporate";
-  companyName: string;
-  corporateNumber: number | null;
   email: string;
-  personalId: number | null;
-  provider: null | string;
+  name: string;
   signupType: "native" | "social";
+  provider: null | string;
+  companyName: string;
+  businessNumber: number;
+  corporateNumber: number;
+  createdAt: Date;
+  updatedAt: Date;
+  role: "member" | "admin";
+  credit: number;
 }
+
+export const NULL_USER: User = {
+  email: "",
+  name: "",
+  signupType: "native",
+  provider: null,
+  companyName: "",
+  businessNumber: 0,
+  corporateNumber: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  role: "member",
+  credit: 0,
+};
 
 export interface ResponsePayload {
   access_token: string | null;
@@ -36,6 +53,7 @@ export interface AuthState {
     socialSignup: (params: SocialSignupParams) => Promise<void>;
     nativeSignup: (password: string) => Promise<void>;
     logout: () => Promise<void>;
+    withdrawalAccount: (password: string) => Promise<void>;
     resetAuthState: () => void;
   };
 }

@@ -18,7 +18,7 @@ import PasswordSection from "@/auth/components/common/PasswordSection";
 import PasswordInput from "@/auth/components/common/PasswordInput";
 import { useUserStore } from "@/stores/useUserStore";
 
-function Modal() {
+function ChangePasswordModal() {
   const {
     message,
     actions: { changePassword, resetUserState },
@@ -50,7 +50,7 @@ function Modal() {
       setIsConfirmNewPasswordValid(false);
       resetUserState();
     }
-  }, [isDialogOpen, resetUserState]);
+  }, [isDialogOpen]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -120,4 +120,4 @@ function Modal() {
   );
 }
 
-export default Modal;
+export default ChangePasswordModal;

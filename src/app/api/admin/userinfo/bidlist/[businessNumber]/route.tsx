@@ -10,10 +10,11 @@ type ContextParams = {
 // 핸들러 정의
 export async function GET(
   request: Request,
-  context: { params: { businessNumber: string } }, // Next.js에서 예상하는 동기 타입으로 명시
-): Promise<Response> {
+  context: { params: Promise<{ businessNumber: string }> }, // Promise 타입으로 명시
+) {
   try {
-    const { businessNumber } = context.params;
+    const params = await context.params; // 비동기적으로 처리
+    const businessNumber = params?.businessNumber;
 
     // businessNumber가 없으면 400 응답 반환
     if (!businessNumber) {
@@ -23,7 +24,6 @@ export async function GET(
       );
     }
 
-    // MongoDB 연결
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("bid");

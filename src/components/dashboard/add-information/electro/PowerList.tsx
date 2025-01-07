@@ -36,7 +36,7 @@ const PowerList: React.FC<PowerListProps> = ({ data }) => {
               <div key={item.name} className="space-y-1">
                 <div className="flex justify-between">
                   <span className="font-medium">{item.name}</span>
-                  <span className="text-sm text-gray-300">
+                  <span className="text-sm text-gray-400">
                     {percentage.toFixed(1)}% ({item.value.toLocaleString()} GWh)
                   </span>
                 </div>
