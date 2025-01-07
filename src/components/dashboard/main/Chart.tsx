@@ -58,7 +58,7 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
         {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
 
-      <ResponsiveContainer width={"100%"} aspect={16 / 4}>
+      <ResponsiveContainer width={"100%"} aspect={16 / 5}>
         <LineChart
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

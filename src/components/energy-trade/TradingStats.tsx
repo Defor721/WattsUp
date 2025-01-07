@@ -101,9 +101,9 @@ function StatItem({ title, value }: { title: string; value: string | number }) {
       <p className="text-sm font-medium text-gray-600 dark:text-gray-200">
         {title}
       </p>
-      <p className="text-2xl font-bold text-gray-800 dark:text-white">
+      {/* <p className="text-2xl font-bold text-gray-800 dark:text-white">
         {value}
-      </p>
+      </p> */}
     </div>
   );
 }

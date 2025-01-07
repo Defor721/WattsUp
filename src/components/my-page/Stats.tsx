@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   PieChart,
   Pie,
@@ -11,21 +11,20 @@ import {
 } from "recharts";
 
 import {
-  Button,
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-  Input,
-  Label,
   Progress,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn";
+import Loading from "@/app/loading";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+
+import useFetchUserTradeData from "./useFetchUserData";
 
 const tradeData = [
   { name: "입찰 성공", value: 35 },
@@ -35,7 +34,14 @@ const tradeData = [
 const COLORS = ["#0f1d4b", "#4c6ef5", "#82c91e", "#fcc419"];
 
 function Stats() {
-  const [successTrade, setSuccessTrade] = useState(80);
+  const { data, loading } = useFetchUserTradeData();
+
+  if (!data || loading) return <Loading />;
+
+  const stats = data.stats;
+  const formattedCount = formatNumberWithoutDecimal(stats.documentCount);
+  const formattedPrice = formatNumberWithoutDecimal(stats.totalPrice);
+  const formattedQuantity = formatNumberWithoutDecimal(stats.totalQuantity);
 
   return (
     <Card className="flex flex-col border-0 shadow-none">
@@ -60,25 +66,31 @@ function Stats() {
                   <div>
                     <div className="">총 거래 횟수</div>
                     <div className="flex items-center gap-1">
-                      <div className="text-lg font-semibold">{1346}</div>
+                      <div className="text-lg font-semibold">
+                        {formattedCount}
+                      </div>
                       <small className="text-sm font-medium leading-none">
                         회
                       </small>
                     </div>
                   </div>
                   <div>
-                    <div className="">총 입찰 건수</div>
+                    <div className="">총 거래 금액</div>
                     <div className="flex items-center gap-1">
-                      <div className="text-lg font-semibold">{123}</div>
+                      <div className="text-lg font-semibold">
+                        {formattedPrice}
+                      </div>
                       <small className="text-sm font-medium leading-none">
-                        건
+                        원
                       </small>
                     </div>
                   </div>
                   <div>
                     <div className="">총 전력 거래량</div>
                     <div className="flex items-center gap-1">
-                      <div className="text-lg font-semibold">{4000}</div>
+                      <div className="text-lg font-semibold">
+                        {formattedQuantity}
+                      </div>
                       <small className="text-sm font-medium leading-none">
                         mWh
                       </small>
@@ -136,7 +148,7 @@ function Stats() {
               <div className="flex items-center justify-between">
                 <div className="">거래 성사율</div>
                 <div className="flex items-center gap-1">
-                  <div className="text-lg font-semibold">{successTrade}</div>
+                  <div className="text-lg font-semibold">{80}</div>
                   <small className="text-sm font-medium leading-none">%</small>
                 </div>
               </div>
@@ -148,9 +160,9 @@ function Stats() {
           <div>
             <div className="mb-1 flex justify-between text-sm">
               <span>거래 성사율</span>
-              <span>{successTrade}%</span>
+              <span>{80}%</span>
             </div>
-            <Progress value={successTrade} className="h-full bg-rose-400" />
+            <Progress value={80} className="h-full bg-rose-400" />
           </div>
         </div>
       </CardContent>

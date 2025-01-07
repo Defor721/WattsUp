@@ -1,126 +1,31 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
 
-import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
-import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 import Loading from "@/app/loading";
+import { Card } from "@/components/shadcn";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
-// 데이터 타입 정의
-interface Data {
-  date: string;
-  amgo: number;
-}
-
-interface TodayValueProps {
-  selectedRegion: string; // 선택된 지역 이름
-  data: Data[]; // 데이터 배열
-}
-
-// 파이 차트 컴포넌트
-const PieChartComponent = ({ value, max }: { value: number; max: number }) => {
-  // 데이터 계산 및 유효성 검사
-  const numericValue = Number(value.toString().replace(/,/g, "")); // 콤마 제거
-
-  // 값을 0-100 사이의 퍼센트로 변환
-  const percentage = (numericValue / max) * 100;
-  const normalizedValue = Math.min(Math.max(0, percentage), 100);
-
-  const data = [
-    { name: "현재 값", value: normalizedValue },
-    { name: "남은 값", value: 100 - normalizedValue },
-  ];
-
-  // 차트 색상 설정
-  const COLORS = ["#3b82f6", "#e5e7eb"];
-
-  return (
-    <div className="h-[150px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={35}
-            outerRadius={50}
-            fill="#8884d8"
-            paddingAngle={2}
-            dataKey="value"
-            startAngle={90}
-            endAngle={-270}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-                strokeWidth={0}
-              />
-            ))}
-          </Pie>
-          <Tooltip
-            formatter={(value: number) => `${Math.round(value)}%`}
-            contentStyle={{ background: "#1f2937", border: "none" }}
-            itemStyle={{ color: "#fff" }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-// 정보 카드 컴포넌트
-const InfoCard = ({
-  title,
-  unit,
-  value,
-  max,
-}: {
-  title: string;
-  unit: string;
-  value: string | number;
-  max: number;
-}) => {
-  const router = useRouter();
-
-  return (
-    <Card
-      className="group relative flex h-[300px] w-1/3 flex-1 cursor-pointer flex-col items-center justify-between overflow-hidden bg-white shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl dark:bg-gray-800"
-      onClick={() => router.push("/energy-trade")}
-    >
-      <CardHeader className="w-full text-center">
-        <div className="text-lg font-semibold">{title}</div>
-        <div className="text-sm text-gray-500">{unit}</div>
-      </CardHeader>
-      <CardContent className="flex w-full flex-col items-center justify-center gap-4">
-        <div className="text-2xl font-bold">{value}</div>
-        <PieChartComponent value={Number(value)} max={max} />
-      </CardContent>
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:bg-opacity-30 group-hover:opacity-100">
-        <span className="font-medium text-white">거래하러 가기</span>
-        <ArrowRight
-          className="scale-0 transform text-white transition-all duration-300 group-hover:scale-100"
-          size={32}
-        />
-      </div>
-    </Card>
-  );
-};
-
-function TodayValue({ selectedRegion, data }: TodayValueProps) {
+function TodayValue() {
   const [apiData, setApiData] = useState<{
-    smpAverage: string;
-    recValue: string;
+    todaySmpData: {
+      거래일: string;
+      최고가: number;
+      최소가: number;
+      평균가: number;
+    };
+    todayRecData: {
+      거래량: number;
+      거래일: string;
+      종가: number;
+      최고가: number;
+      최저가: number;
+      평균가: number;
+    };
   } | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // AMGO 데이터 설정 (에러 처리 추가)
-  const amgo =
-    data && data.length > 0 ? formatNumberWithDecimal(data[0].amgo) : "0";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,8 +35,10 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
+        console.log("result: ", result);
         setApiData(result);
-      } catch (err) {
+      } catch (error) {
+        console.log("error: ", error);
         setError("데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.");
       } finally {
         setIsLoading(false);
@@ -141,12 +48,8 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+  if (isLoading || !apiData) {
+    return <Loading />;
   }
 
   if (error) {
@@ -158,29 +61,123 @@ function TodayValue({ selectedRegion, data }: TodayValueProps) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-8">
-      <div className="flex w-full flex-col items-center justify-center">
-        <h1 className="mb-12 text-3xl font-bold">오늘의 발전정보</h1>
-      </div>
-      <div className="flex w-full flex-col gap-6 md:flex-row">
-        <InfoCard
-          title="오늘의 SMP"
-          unit="(단위: 원/kWh)"
-          value={apiData?.smpAverage || "0"}
-          max={1000}
-        />
-        <InfoCard
-          title="오늘의 REC"
-          unit="(단위: REC, 원/REC)"
-          value={apiData?.recValue || "0"}
-          max={100000}
-        />
-        <InfoCard
-          title={`오늘의 ${selectedRegion || "전체"} 태양광 발전량 예측값`}
-          unit="(단위: kWh)"
-          value={amgo}
-          max={10000}
-        />
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <h1 className="mb-8 text-center text-3xl font-bold">오늘의 전력정보</h1>
+      <div className="flex justify-center gap-7">
+        {/* 오늘의 SMP */}
+        <Card className="h-[300px] w-[488px] p-4 shadow-md">
+          <div className="py-3 text-center text-lg font-semibold">
+            오늘의 SMP
+          </div>
+          <div className="mb-2 mt-3 flex justify-end text-xs text-gray-500">
+            (단위: 원/kWh)
+          </div>
+
+          <table className="w-full border-collapse">
+            <tbody>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  거래일
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todaySmpData.거래일 || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  최고가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todaySmpData.최고가 || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  최소가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todaySmpData.최소가 || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  평균가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todaySmpData.평균가 || "-"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Card>
+
+        {/* 오늘의 REC */}
+        <Card className="h-[300px] w-[488px] p-4 shadow-md">
+          <div className="py-3 text-center text-lg font-semibold">
+            오늘의 REC
+          </div>
+          <div className="bg-blue-100 py-2 text-center text-sm font-medium text-blue-800">
+            1REC = 1MWh (가중치에 따라 변동)
+          </div>
+          <div className="mt-3 flex items-center justify-between">
+            <div className="py-2 text-xs text-gray-600">
+              ※ 매주 화, 목요일 10:00 ~ 16:00 개장
+            </div>
+            <div className="py-2 text-xs text-gray-600">
+              (단위: REC, 원/REC)
+            </div>
+          </div>
+
+          <table className="w-full border-collapse">
+            <tbody>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  거래일
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todayRecData.거래일 || "-"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  거래량
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {apiData?.todayRecData.거래량.toLocaleString() || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  평균가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.평균가) ||
+                    "-"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  최고가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.최고가) ||
+                    "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  최저가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.최저가) ||
+                    "-"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 font-medium">
+                  종가
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.종가) || "-"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Card>
       </div>
     </div>
   );
