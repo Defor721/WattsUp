@@ -33,27 +33,28 @@ export async function GET(request: NextRequest) {
         { status: 403 },
       );
     }
-    const email = (decoded as { email: string }).email;
+    const businessNumber = (decoded as { businessNumber: number })
+      .businessNumber;
     const client = await clientPromise;
     const db = client.db("wattsup");
-    const collection = db.collection("userdata");
+    const collection = db.collection("bid");
 
-    const userData = await collection.findOne(
-      { email },
-      {
-        projection: {
-          NumberOfTransaction: 1,
-          AveragePrice: 1,
-          SuccessRate: 1,
+    const bidData = await collection
+      .find(
+        { businessNumber },
+        {
+          projection: {
+            _id: 0,
+          },
         },
-      },
-    );
-    if (!userData) {
+      )
+      .toArray();
+    if (!bidData) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json(
-      { message: "Success to find user", userData },
+      { message: "Success to find user", bidData },
       { status: 200 },
     );
   } catch (error) {

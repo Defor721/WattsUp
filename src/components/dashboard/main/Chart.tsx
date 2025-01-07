@@ -49,7 +49,6 @@ const regionColors: Record<string, string> = {
 
 function PredictChart({ data, region, selectedRegion }: Ichart) {
   const strokeColor = regionColors[region]; // 지역에 따른 색상 가져오기
-  // console.log("Chart Data:", data);
 
   if (!data) return;
 
