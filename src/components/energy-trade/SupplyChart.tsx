@@ -1,6 +1,6 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트 설정
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; // React 훅
 import {
   BarChart,
   Bar,
@@ -8,45 +8,46 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import axios from "axios";
+} from "recharts"; // Recharts 컴포넌트
+import axios from "axios"; // HTTP 요청 라이브러리
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/shadcn/card";
-import { Regions } from "@/utils/regions";
+} from "@/components/shadcn/card"; // UI 카드 컴포넌트
+import { Regions } from "@/utils/regions"; // 지역 리스트 가져오기
 
+// 데이터 타입 정의
 interface SupplyData {
-  region: string;
-  supply: number;
+  region: string; // 지역 이름
+  supply: number; // 전력 공급량
 }
 
+// SupplyChart 컴포넌트
 export default function SupplyChart() {
-  const [data, setData] = useState<SupplyData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState<string | null>(null); // 에러 상태
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // API 요청
-        const response = await axios.get("/api/trade/supply");
+        const response = await axios.get("/api/trade/supply"); // API 호출
         const result = response.data?.result;
 
         if (!result) {
-          throw new Error("서버로부터 유효한 데이터를 받지 못했습니다.");
+          throw new Error("유효한 데이터를 받지 못했습니다."); // 데이터 유효성 검사
         }
 
-        // `result` 객체에서 지역 데이터 추출
+        // 데이터 매핑
         const mappedData = Regions.map((region) => ({
           region,
-          supply: result[region] ?? 0, // 지역 데이터가 없을 경우 0으로 기본값 설정
+          supply: result[region] ?? 0, // 값이 없으면 0으로 설정
         }));
 
-        setData(mappedData);
+        setData(mappedData); // 상태 업데이트
       } catch (err) {
         console.error("데이터 로드 실패:", err);
         setError(
@@ -55,23 +56,23 @@ export default function SupplyChart() {
             : "알 수 없는 오류가 발생했습니다.",
         );
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // 로딩 상태 해제
       }
     };
 
-    fetchData();
+    fetchData(); // 데이터 가져오기 함수 호출
   }, []);
 
+  // 로딩 상태 처리
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <p className="text-center text-gray-500">
-          데이터를 불러오는 중입니다...
-        </p>
+        <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
       </div>
     );
   }
 
+  // 에러 상태 처리
   if (error) {
     return <p className="text-center text-red-500">{error}</p>;
   }
@@ -95,15 +96,18 @@ export default function SupplyChart() {
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1f2937",
-                  color: "#fff",
-                  border: "none",
+                  backgroundColor: "rgba(31, 41, 55, 0.8)", // 짙은 회색에 80% 투명도
+                  color: "#fff", // 텍스트는 흰색
+                  border: "none", // 테두리 제거
                 }}
-                itemStyle={{ color: "#fff" }}
+                itemStyle={{
+                  color: "#fff", // 각 데이터 항목 텍스트는 흰색
+                }}
               />
+
               <Bar
                 dataKey="supply"
-                fill="rgb(59, 130, 246)"
+                fill="rgb(15,30,75)"
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>

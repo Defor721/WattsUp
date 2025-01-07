@@ -22,6 +22,7 @@ export default function useCheckAccessToken(): void {
 
         await fetchCurrentUser();
       } catch (error) {
+        console.log("에러임");
         resetAccessToken();
       }
     };
