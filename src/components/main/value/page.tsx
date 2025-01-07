@@ -4,14 +4,6 @@ import React, { useState, useEffect } from "react";
 
 import Loading from "@/app/loading";
 import { Card } from "@/components/shadcn";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/shadcn/table";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 function TodayValue() {
@@ -45,7 +37,8 @@ function TodayValue() {
         const result = await response.json();
         console.log("result: ", result);
         setApiData(result);
-      } catch (err) {
+      } catch (error) {
+        console.log("error: ", error);
         setError("데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.");
       } finally {
         setIsLoading(false);
