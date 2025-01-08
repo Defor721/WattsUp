@@ -27,7 +27,7 @@ const useFetchUserTradeData = () => {
     const fetchUserData = async () => {
       try {
         const response = await apiClient.get<UserTradeData>(
-          "http://localhost:3000/api/users/traderecord",
+          "/api/users/traderecord",
         );
         setData(response.data);
       } catch (error) {

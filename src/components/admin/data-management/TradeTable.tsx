@@ -25,7 +25,7 @@ import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 interface BidData {
   _id: string;
-  businessNumber: number;
+  email: string;
   region: string;
   price: number;
   quantity: number;
@@ -69,9 +69,7 @@ function TradeTable() {
     const fetchTradeData = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.get(
-          "http://localhost:3000/api/admin/userinfo/bidlist",
-        );
+        const response = await apiClient.get("/api/admin/userinfo/bidlist");
         const bidsData = response.data.bids;
         setBidData(bidsData);
       } catch (error) {
@@ -89,7 +87,7 @@ function TradeTable() {
     const searchValue = searchTerm.toLowerCase();
     return (
       trade._id.toLowerCase().includes(searchValue) || // ID 필터
-      String(trade.businessNumber).includes(searchValue) || // 사업자 번호 필터
+      trade.email.includes(searchValue) || // 사업자 번호 필터
       trade.region.toLowerCase().includes(searchValue) || // 지역 필터
       String(trade.price).includes(searchValue) || // 가격 필터
       String(trade.quantity).includes(searchValue) || // 수량 필터
@@ -127,10 +125,7 @@ function TradeTable() {
           <TableHeader>
             <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
-                ID
-              </TableHead>
-              <TableHead className="border border-gray-700 px-3 py-2">
-                사업자 번호
+                이메일
               </TableHead>
               <TableHead className="border border-gray-700 px-3 py-2">
                 지역
@@ -151,8 +146,6 @@ function TradeTable() {
               const formattedDate = new Date(trade.now)
                 .toISOString()
                 .split("T")[0];
-              const business = String(trade.businessNumber);
-              const formattedBusiness = `${business.slice(0, 3)}-${business.slice(3, 5)}-${business.slice(5)}`;
               const formattedPrice = formatNumberWithoutDecimal(trade.price);
               const formattedQuantity = formatNumberWithoutDecimal(
                 trade.quantity,
@@ -163,10 +156,7 @@ function TradeTable() {
                   className="odd:bg-[#FFF] even:bg-[#F8F9FA] hover:cursor-pointer dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
                 >
                   <TableCell className="border border-gray-700 p-3">
-                    {trade._id}
-                  </TableCell>
-                  <TableCell className="border border-gray-700 p-3">
-                    {formattedBusiness}
+                    {trade.email}
                   </TableCell>
                   <TableCell className="border border-gray-700 p-3">
                     {trade.region}

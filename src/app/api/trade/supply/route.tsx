@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       {
         message: "Success to find data",
         result,
-        total, // 총합 추가
+        total,
       },
       { status: 200 },
     );

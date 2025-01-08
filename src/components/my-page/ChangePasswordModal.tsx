@@ -21,7 +21,7 @@ import PasswordSection from "@/auth/components/common/password/PasswordSection";
 function ChangePasswordModal() {
   const {
     message,
-    actions: { changePassword, resetUserState },
+    actions: { changePassword, resetUserState, fetchCurrentUser },
   } = useUserStore();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,6 +43,7 @@ function ChangePasswordModal() {
   };
 
   useEffect(() => {
+    fetchCurrentUser();
     if (!isDialogOpen) {
       setNewPassword("");
       setCurrentPassword("");

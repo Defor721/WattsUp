@@ -9,8 +9,8 @@ import { Card } from "../shadcn";
 
 type TradingStatsData = {
   bidCount: number; // 누적 입찰 수
-  smp: number; // SMP 평균가
-  rec: number; // REC 평균가
+  smpAverage: number; // SMP 평균가
+  recAverage: number; // REC 평균가
   totalSupply: number; // 총 공급량
 };
 
@@ -36,9 +36,9 @@ export default function TradingStats() {
         // 데이터 매핑
         setStats({
           bidCount,
-          smp: todaySmpData?.평균가 || 0, // SMP 평균가
-          rec: todayRecData?.평균가 || 0, // REC 평균가
-          totalSupply, // 총 공급량 (total 값)
+          smpAverage: todaySmpData?.["평균가"] || 0, // SMP 평균가
+          recAverage: todayRecData?.["평균가"] || 0, // REC 평균가
+          totalSupply, // 총 공급량
         });
       } catch (err) {
         console.error("데이터 로드 실패:", err);
@@ -63,8 +63,14 @@ export default function TradingStats() {
     >
       <div className="grid grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
         <StatItem title="누적 입찰 수" value={stats?.bidCount || 0} />
-        <StatItem title="SMP" value={`${stats?.smp.toLocaleString()} 원/kWh`} />
-        <StatItem title="REC" value={`${stats?.rec.toLocaleString()} 원/REC`} />
+        <StatItem
+          title="SMP 평균가"
+          value={`${stats?.smpAverage.toLocaleString()} 원/kWh`}
+        />
+        <StatItem
+          title="REC 평균가"
+          value={`${stats?.recAverage.toLocaleString()} 원/REC`}
+        />
         <StatItem
           title="총 공급량"
           value={`${stats?.totalSupply.toLocaleString()} kWh`}

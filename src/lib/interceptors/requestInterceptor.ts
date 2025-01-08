@@ -5,7 +5,7 @@ import { getCookie } from "@/utils";
 // 요청 인터셉터 핸들러
 export const handleRequest = (config: InternalAxiosRequestConfig) => {
   const accessToken = getCookie("accessToken");
-  console.log(accessToken);
+
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
