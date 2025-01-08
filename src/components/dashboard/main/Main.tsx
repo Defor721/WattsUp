@@ -40,8 +40,8 @@ export default function DashboardMain() {
         setSelectedRegion={setSelectedRegion}
       />
       <div className="flex flex-col gap-4">
-        <div className="flex h-full w-full items-center gap-4">
-          <Card className="flex h-[418px] w-[500px] flex-col items-center justify-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+        <div className="grid h-full w-full items-center gap-4 md:grid-cols-1 xl:grid-cols-2">
+          <Card className="flex h-[418px] flex-col items-center justify-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark md:w-full xl:w-full">
             <h4 className="my-2 scroll-m-20 pb-5 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
               태양광 발전소 지도
             </h4>

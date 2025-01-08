@@ -37,7 +37,7 @@ function UserTable() {
 
   // 페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
-  const itemsPerPage = 5; // 한 페이지에 보여줄 항목 수
+  const itemsPerPage = 15; // 한 페이지에 보여줄 항목 수
 
   useEffect(() => {
     const fetchUserData = async () => {

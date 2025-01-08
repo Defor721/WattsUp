@@ -86,13 +86,13 @@ const teamInfo = [
 
 const TeamIntroduction = () => {
   return (
-    <section className="bg-white px-4 py-12 sm:py-20 md:py-28 lg:py-40">
+    <section className="px-4 py-12 sm:py-20 md:py-28 lg:py-40">
       <div className="container mx-auto px-1">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-12 text-center text-3xl font-bold text-[rgb(7,15,38)] sm:mb-16 sm:text-4xl md:mb-20 md:text-5xl lg:mb-24"
+          className="mb-12 text-center text-3xl font-bold text-mainColor dark:text-white sm:mb-16 sm:text-4xl md:mb-20 md:text-5xl lg:mb-24"
         >
           <span className="bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[100px] font-bold text-transparent sm:text-[50px]">
             WattsUp
@@ -111,24 +111,39 @@ const TeamIntroduction = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className={`mb-12 grid grid-cols-1 items-center gap-4 rounded-lg bg-white p-6 sm:mb-16 sm:gap-6 sm:p-8 md:mb-20 md:grid-cols-1 md:gap-8 md:p-10 lg:mb-24 lg:grid-cols-2 lg:gap-12 lg:p-12 ${
-                index % 2 === 0 ? "md:text-left" : "md:text-right"
+              className={`mb-12 grid grid-cols-1 items-center gap-4 rounded-lg p-6 sm:mb-16 sm:gap-6 sm:p-8 md:mb-20 lg:mb-24 ${
+                index % 2 === 0
+                  ? "lg:grid-cols-2"
+                  : "lg:grid-cols-2 lg:text-right"
               }`}
             >
-              <div className={index % 2 === 0 ? "md:order-1" : "md:order-2"}>
-                <div className="mx-auto flex items-center justify-center text-[rgb(7,15,38)]">
-                  {React.cloneElement(info.icon, {
-                    size: 60,
-                    className:
-                      "w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32",
-                  })}
-                </div>
+              {/* 아이콘 영역 */}
+              <div
+                className={`mx-auto flex items-center justify-center text-mainColor dark:text-white ${
+                  index % 2 === 0
+                    ? "lg:order-1" // 짝수: 아이콘이 왼쪽
+                    : "lg:order-2" // 홀수: 아이콘이 오른쪽
+                }`}
+              >
+                {React.cloneElement(info.icon, {
+                  size: 60,
+                  className:
+                    "w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32",
+                })}
               </div>
-              <div className={index % 2 === 0 ? "md:order-2" : "md:order-1"}>
-                <h2 className="mb-2 text-2xl font-semibold text-[rgb(7,15,38)] sm:mb-3 sm:text-3xl md:mb-4">
+
+              {/* 텍스트 영역 */}
+              <div
+                className={`${
+                  index % 2 === 0
+                    ? "lg:order-2" // 짝수: 텍스트가 오른쪽
+                    : "lg:order-1" // 홀수: 텍스트가 왼쪽
+                }`}
+              >
+                <h2 className="mb-2 text-center text-2xl font-semibold text-mainColor dark:text-white sm:mb-3 sm:text-3xl md:mb-4">
                   {info.title}
                 </h2>
-                <p className="px-12 pt-5 text-base leading-relaxed text-neutral-600 sm:text-lg md:text-xl">
+                <p className="pt-5 text-base leading-relaxed text-neutral-600 dark:text-neutral-400 sm:text-lg md:text-xl">
                   {info.description}
                 </p>
               </div>

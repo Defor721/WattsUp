@@ -63,7 +63,7 @@ function TradeTable() {
 
   // 페이지네이션
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
 
   useEffect(() => {
     const fetchTradeData = async () => {
