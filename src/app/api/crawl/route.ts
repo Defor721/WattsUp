@@ -4,30 +4,16 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
+// 리스너 제한 증가
 EventEmitter.defaultMaxListeners = 30;
 
 // axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: "https://www.kpx.or.kr",
-  timeout: 10000, // 요청 타임아웃: 10초
 });
-
-// 캐싱 변수
-let cachedData: { todaySmpData: any; todayRecData: any } | null = null;
-let cacheTimestamp: number | null = null;
-const CACHE_DURATION = 5 * 60 * 1000; // 캐싱 시간: 5분
 
 export async function GET() {
   try {
-    // 캐싱된 데이터가 유효한 경우 반환
-    if (
-      cachedData &&
-      cacheTimestamp &&
-      Date.now() - cacheTimestamp < CACHE_DURATION
-    ) {
-      return NextResponse.json(cachedData);
-    }
-
     // 1. URL 요청 및 HTML 데이터 가져오기
     const { data } = await axiosInstance.get("/main/#section-2nd");
 
@@ -47,10 +33,43 @@ export async function GET() {
         const cells = $(row).find("th, td");
         const key = $(cells[0]).text().trim();
         const value = $(cells[1]).text().trim().replace(",", "");
-        const parseValue = (val: string) =>
-          isNaN(Number(val)) ? val : Number(val);
+        const key2 = $(cells[2]).text().trim();
+        const value2 = $(cells[3]).text().trim().replace(",", "");
 
-        todaySmpData[key] = parseValue(value);
+        const parseValue = (val: string) => {
+          const num = parseFloat(val);
+          return isNaN(num) ? val : num;
+        };
+
+        // 첫 번째 데이터 처리
+        if (key === "거래일") {
+          todaySmpData["거래일"] = value;
+        } else if (key === "거래량") {
+          todaySmpData["거래량"] = parseValue(value);
+        } else if (key === "평균가") {
+          todaySmpData["평균가"] = parseValue(value);
+        } else if (key === "최고가") {
+          todaySmpData["최고가"] = parseValue(value);
+        } else if (key === "최소가") {
+          todaySmpData["최소가"] = parseValue(value);
+        } else if (key === "종가") {
+          todaySmpData["종가"] = parseValue(value);
+        }
+
+        // 두 번째 데이터 처리
+        if (key2 === "거래일") {
+          todaySmpData["거래일"] = value2;
+        } else if (key2 === "거래량") {
+          todaySmpData["거래량"] = parseValue(value2);
+        } else if (key2 === "평균가") {
+          todaySmpData["평균가"] = parseValue(value2);
+        } else if (key2 === "최고가") {
+          todaySmpData["최고가"] = parseValue(value2);
+        } else if (key2 === "최소가") {
+          todaySmpData["최소가"] = parseValue(value2);
+        } else if (key2 === "종가") {
+          todaySmpData["종가"] = parseValue(value2);
+        }
       });
     }
 
@@ -67,27 +86,53 @@ export async function GET() {
         const cells = $(row).find("th, td");
         const key = $(cells[0]).text().trim();
         const value = $(cells[1]).text().trim().replace(",", "");
-        const parseValue = (val: string) =>
-          isNaN(Number(val)) ? val : Number(val);
+        const key2 = $(cells[2]).text().trim();
+        const value2 = $(cells[3]).text().trim().replace(",", "");
 
-        todayRecData[key] = parseValue(value);
+        const parseValue = (val: string) => {
+          const num = parseFloat(val);
+          return isNaN(num) ? val : num;
+        };
+
+        // 첫 번째 데이터 처리
+        if (key === "거래일") {
+          todayRecData["거래일"] = value;
+        } else if (key === "거래량") {
+          todayRecData["거래량"] = parseValue(value);
+        } else if (key === "평균가") {
+          todayRecData["평균가"] = parseValue(value);
+        } else if (key === "최고가") {
+          todayRecData["최고가"] = parseValue(value);
+        } else if (key === "최저가") {
+          todayRecData["최저가"] = parseValue(value);
+        } else if (key === "종가") {
+          todayRecData["종가"] = parseValue(value);
+        }
+
+        // 두 번째 데이터 처리
+        if (key2 === "거래일") {
+          todayRecData["거래일"] = value2;
+        } else if (key2 === "거래량") {
+          todayRecData["거래량"] = parseValue(value2);
+        } else if (key2 === "평균가") {
+          todayRecData["평균가"] = parseValue(value2);
+        } else if (key2 === "최고가") {
+          todayRecData["최고가"] = parseValue(value2);
+        } else if (key2 === "최저가") {
+          todayRecData["최저가"] = parseValue(value2);
+        } else if (key2 === "종가") {
+          todayRecData["종가"] = parseValue(value2);
+        }
       });
     }
 
-    // 5. 데이터 캐싱
-    cachedData = { todaySmpData, todayRecData };
-    cacheTimestamp = Date.now();
-
-    // 6. 결과 반환
+    // 5. 결과 반환
     return NextResponse.json({ todaySmpData, todayRecData });
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
-    console.error("API Crawling Error:", errorMessage);
-
-    // 적절한 에러 메시지 반환
     return NextResponse.json(
-      { message: "Failed to fetch data", error: errorMessage },
+      { message: "Failed to find data", error: errorMessage },
       { status: 500 },
     );
   }

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
@@ -27,34 +26,38 @@ function TodayValue() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  useEffect(() => {
+    let isMounted = true; // 컴포넌트가 언마운트 되었는지 확인
 
-      const response = await axios.get("/api/crawl", {
-        timeout: 10000, // 10초 타임아웃 설정
-      });
-      setApiData(response.data);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.code === "ECONNABORTED") {
-          setError("요청 시간이 초과되었습니다. 다시 시도해주세요.");
-        } else {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/crawl");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const result = await response.json();
+        if (isMounted) {
+          setApiData(result);
+        }
+      } catch (error) {
+        if (isMounted) {
           setError(
             "데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.",
           );
         }
-      } else {
-        setError("알 수 없는 오류가 발생했습니다.");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  useEffect(() => {
     fetchData();
+
+    // 컴포넌트 언마운트 시 상태 업데이트 방지
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (isLoading) {
@@ -69,12 +72,6 @@ function TodayValue() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-lg text-red-500">{error}</div>
-        <button
-          onClick={fetchData}
-          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          다시 시도
-        </button>
       </div>
     );
   }
@@ -115,6 +112,7 @@ function TodayValue() {
             </tbody>
           </table>
         </Card>
+        {/* 오늘의 REC */}
         <Card className="h-[300px] w-[488px] bg-white p-4 text-subColor shadow-md">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 REC
