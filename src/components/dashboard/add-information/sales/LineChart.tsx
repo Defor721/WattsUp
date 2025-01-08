@@ -23,14 +23,13 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         data={data} // 직접 데이터를 전달
         margin={{ top: 5, right: 20, left: 80, bottom: 5 }}
       >
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="rgba(255, 255, 255, 0.2)"
-        />
         <XAxis dataKey="year" />
         <YAxis className="text-sm" tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
           formatter={(value: number) => `${value.toLocaleString()} 원`}
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
         />
         <Legend wrapperStyle={{ color: "#fff" }} />
         <Line
