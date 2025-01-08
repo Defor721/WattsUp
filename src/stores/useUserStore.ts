@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { NULL_USER, User } from "@/auth/type";
 import {
   fetchCurrentUser,
+  getEmailByCorporateNumber,
   updatePasswordByEmail,
   updatePasswordByPassword,
 } from "@/services/userService";
@@ -10,6 +11,11 @@ import {
 export interface changePasswordProps {
   currentPassword: string;
   newPassword: string;
+}
+
+export interface findEmailProps {
+  businessNumber: string;
+  corporateNumber: string;
 }
 
 export interface UserState {
@@ -24,6 +30,10 @@ export interface UserState {
       currentPassword,
       newPassword,
     }: changePasswordProps) => Promise<void>;
+    findEmail: ({
+      businessNumber,
+      corporateNumber,
+    }: findEmailProps) => Promise<void>;
     resetUserState: () => void;
   };
 }
@@ -87,6 +97,26 @@ export const useUserStore = create<UserState>((set) => ({
         set({ loading: true });
         await updatePasswordByPassword({ currentPassword, newPassword });
         set({ error: false });
+      } catch (error: any) {
+        set({ error: true, message: error.response.data.message });
+        throw error;
+      } finally {
+        set({ loading: false });
+      }
+    },
+
+    /** 이메일 찾기 */
+    async findEmail({ businessNumber, corporateNumber }: findEmailProps) {
+      try {
+        set({ loading: true });
+        const data = await getEmailByCorporateNumber({
+          businessNumber,
+          corporateNumber,
+        });
+        set({
+          message: `${data.message} ${data.data}`,
+          error: false,
+        });
       } catch (error: any) {
         set({ error: true, message: error.response.data.message });
         throw error;

@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Input, Label } from "@/components/shadcn";
 import { isValidPassword } from "@/utils";
 
-import EyeButton from "./EyeButton";
-import XCircleButton from "./XCircleButton";
+import EyeButton from "../ui/EyeButton";
+import XCircleButton from "../ui/XCircleButton";
 
 interface PasswordInputProps {
   passwordLabel?: string;

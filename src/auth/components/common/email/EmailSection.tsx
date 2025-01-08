@@ -11,7 +11,7 @@ import { Button } from "@/components/shadcn";
 
 import OTPInput from "./OTPInput";
 import EmailInput from "./EmailInput";
-import VerificationMessage from "../signup/VerificationMessage";
+import VerificationMessage from "../../signup/VerificationMessage";
 
 interface SignupEmailInputProps {
   isEmailVerified: boolean;

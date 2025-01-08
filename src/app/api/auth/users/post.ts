@@ -29,8 +29,6 @@ export async function POST(request: NextRequest) {
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
 
-    const { password } = await request.json();
-
     const emailVerificationToken = request.cookies.get(
       "emailVerificationToken",
     )?.value;
@@ -110,13 +108,6 @@ export async function POST(request: NextRequest) {
     const { principalName, businessNumber, companyName, corporateNumber } =
       businessVerification;
 
-    if (!password) {
-      return NextResponse.json(
-        { message: "입력값을 모두 입력해야 합니다." },
-        { status: 400 },
-      );
-    }
-
     const existingEmail = await collection.findOne({ email });
     if (existingEmail) {
       return NextResponse.json(
@@ -130,6 +121,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { status: "error", message: "이미 등록된 사업자등록번호입니다." },
         { status: 409 },
+      );
+    }
+
+    const { password } = await request.json();
+
+    if (!password) {
+      return NextResponse.json(
+        { message: "입력값을 모두 입력해야 합니다." },
+        { status: 400 },
       );
     }
 

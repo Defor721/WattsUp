@@ -67,10 +67,10 @@ export async function exchangeSocialToken(code: string): Promise<AuthResponse> {
 /**
  * 소셜 로그인(회원가입)
  */
-export async function socialSignup(): Promise<any> {
+export async function socialSignup(password: string): Promise<any> {
   const { data } = await apiClient.post(
     "/api/auth/social/session",
-
+    { password },
     {
       withCredentials: true,
     },
