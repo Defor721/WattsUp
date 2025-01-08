@@ -1,7 +1,6 @@
-"use client"; // Next.js 클라이언트 컴포넌트로 설정
+"use client"; // 클라이언트 컴포넌트 설정
 
-import { useEffect, useState } from "react"; // React 훅 가져오기
-import { motion } from "framer-motion"; // 애니메이션 라이브러리
+import { useEffect, useState } from "react"; // React 훅
 import {
   BarChart,
   Bar,
@@ -9,7 +8,8 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts"; // Recharts 차트 컴포넌트
+} from "recharts"; // Recharts 컴포넌트
+import axios from "axios"; // HTTP 요청 라이브러리
 
 import {
   Card,
@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card"; // UI 카드 컴포넌트
-import { Regions } from "@/utils/regions"; // 지역 리스트
+import { Regions } from "@/utils/regions"; // 지역 리스트 가져오기
 
 // 데이터 타입 정의
 interface SupplyData {
@@ -25,8 +25,16 @@ interface SupplyData {
   supply: number; // 전력 공급량
 }
 
+interface SupplyChartProps {
+  selectedRegion: string; // 선택된 지역
+  onBarClick: (region: string) => void; // 바 클릭 핸들러
+}
+
 // SupplyChart 컴포넌트
-export default function SupplyChart() {
+export default function SupplyChart({
+  selectedRegion,
+  onBarClick,
+}: SupplyChartProps) {
   const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
@@ -34,62 +42,51 @@ export default function SupplyChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // API 호출 주석 처리
-        /*
-        const responses = await Promise.all(
-          Regions.map((region) =>
-            axios
-              .get<number>(`/api/trade/supply/${region}`)
-              .then((res) => res.data),
-          ),
-        );
+        const response = await axios.get("/api/trade/supply"); // API 호출
+        const result = response.data?.result;
 
-        setData(
-          Regions.map((region, index) => ({
-            region,
-            supply: responses[index],
-          })),
-        );
-        */
+        if (!result) {
+          throw new Error("유효한 데이터를 받지 못했습니다."); // 데이터 유효성 검사
+        }
 
-        // 임시 데이터 설정
-        setData([
-          { region: "서울", supply: 1200 },
-          { region: "부산", supply: 900 },
-          { region: "대구", supply: 800 },
-          { region: "인천", supply: 750 },
-          { region: "광주", supply: 700 },
-          { region: "대전", supply: 650 },
-          { region: "울산", supply: 600 },
-        ]);
+        // 데이터 매핑
+        const mappedData = Regions.map((region) => ({
+          region,
+          supply: result[region] ?? 0, // 값이 없으면 0으로 설정
+        }));
+
+        setData(mappedData); // 상태 업데이트
       } catch (err) {
-        console.error("데이터 로드 실패:", err); // 에러 로그
-        setError("데이터를 불러오는 중 문제가 발생했습니다.");
+        console.error("데이터 로드 실패:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "알 수 없는 오류가 발생했습니다.",
+        );
       } finally {
         setIsLoading(false); // 로딩 상태 해제
       }
     };
 
-    fetchData();
+    fetchData(); // 데이터 가져오기 함수 호출
   }, []);
 
+  // 로딩 상태 처리
   if (isLoading) {
     return (
-      <p className="text-center text-gray-500">데이터를 불러오는 중입니다...</p>
+      <div className="flex h-64 items-center justify-center">
+        <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
+      </div>
     );
   }
 
+  // 에러 상태 처리
   if (error) {
     return <p className="text-center text-red-500">{error}</p>;
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className="w-full"
-    >
+    <div className="w-full">
       <Card className="border-0">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
@@ -98,19 +95,49 @@ export default function SupplyChart() {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data}>
-              <XAxis dataKey="region" />
-              <YAxis />
-              <Tooltip />
+            <BarChart
+              data={data}
+              barSize={30}
+              margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
+            >
+              <XAxis dataKey="region" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "rgba(31, 41, 55, 0.8)", // 짙은 회색에 80% 투명도
+                  color: "#fff", // 텍스트는 흰색
+                  border: "none", // 테두리 제거
+                }}
+                itemStyle={{
+                  color: "#fff", // 각 데이터 항목 텍스트는 흰색
+                }}
+              />
+
               <Bar
                 dataKey="supply"
-                fill="rgb(13,23,53)"
+                fill="rgb(15,30,75)"
                 radius={[4, 4, 0, 0]}
+                onClick={(data) => onBarClick(data.region)} // 바 클릭 시 선택된 지역 업데이트
+                shape={(props: any) => {
+                  const { x, y, width, height, payload } = props;
+                  const isSelected = payload.region === selectedRegion;
+                  return (
+                    <rect
+                      x={x}
+                      y={y}
+                      width={width}
+                      height={height}
+                      fill={isSelected ? "#f59e0b" : "#0f1d4b"} // 선택된 바 색상 변경
+                      onClick={() => onBarClick(payload.region)} // 클릭 이벤트 추가
+                      style={{ cursor: "pointer" }}
+                    />
+                  );
+                }}
               />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }

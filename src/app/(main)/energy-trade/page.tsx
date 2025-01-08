@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -13,6 +14,8 @@ import BidForm from "@/components/energy-trade/BidForm";
 import SupplyChart from "@/components/energy-trade/SupplyChart";
 
 export default function TradePage() {
+  const [selectedRegion, setSelectedRegion] = useState<string>("서울시"); // 선택된 지역 상태
+
   return (
     <div className="flex h-screen flex-col p-5">
       <motion.div
@@ -21,7 +24,7 @@ export default function TradePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+        <h2 className="mb-4 scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
           태양광 전력 거래소
         </h2>
 
@@ -32,24 +35,31 @@ export default function TradePage() {
           </CardContent>
         </Card>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        {/* 하단 섹션: 차트와 입찰 폼 */}
+        <div className="flex w-full gap-4">
           {/* 왼쪽 섹션: 차트 */}
-          <Card className="flex flex-col border-none bg-white/10 shadow-md backdrop-blur-md">
+          <Card className="flex w-3/4 flex-col border-none bg-white/10 shadow-md backdrop-blur-md">
             <CardContent className="flex-1 py-2">
-              <SupplyChart />
+              <SupplyChart
+                selectedRegion={selectedRegion}
+                onBarClick={setSelectedRegion} // 바 클릭 핸들러
+              />
             </CardContent>
           </Card>
 
           {/* 오른쪽 섹션: 입찰 폼 */}
           <motion.div
-            className="flex flex-col"
+            className="flex w-1/4 flex-col"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card className="flex-1 border-none bg-white/10 shadow-md backdrop-blur-md">
               <CardContent className="flex-1 py-2">
-                <BidForm />
+                <BidForm
+                  region={selectedRegion}
+                  onRegionChange={setSelectedRegion} // 셀렉터 변경 핸들러
+                />
               </CardContent>
             </Card>
           </motion.div>

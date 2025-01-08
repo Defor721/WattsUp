@@ -40,7 +40,7 @@ const FullPageWrapper: React.FC = () => {
           </div>
           {/* 섹션 3: MainIntroPage 컴포넌트 */}
           <div className="section">
-            <TodayValue selectedRegion={""} data={[]} />
+            <TodayValue />
           </div>
           {/* 섹션 4: EnergyInfoPage 컴포넌트 */}
           <div className="section">

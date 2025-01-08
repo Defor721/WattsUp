@@ -47,9 +47,9 @@ export default function Mypage() {
 
         <RecentLog />
 
-        <Separator className="bg-gray-200" />
+        {/* <Separator className="bg-gray-200" /> */}
 
-        <Card className="flex flex-col border-0 shadow-none">
+        {/* <Card className="flex flex-col border-0 shadow-none">
           <CardHeader>
             <CardTitle>월간 거래량 추이</CardTitle>
           </CardHeader>
@@ -70,7 +70,7 @@ export default function Mypage() {
               </ResponsiveContainer>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );
