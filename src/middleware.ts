@@ -9,10 +9,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/energy-trade",
-    "/my-page",
-    "/admin/user-management",
-    "/admin/data-management",
-  ],
+  matcher: ["/energy-trade", "/my-page", "/admin/:path*"],
 };
