@@ -26,35 +26,35 @@ const teamInfo: Info[] = [
     title: "WattsUp 팀",
     description: "혁신적인 전력 거래 플랫폼 개발",
     icon: (
-      <Zap className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)]" />
+      <Zap className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
     ),
   },
   {
     title: "프론트엔드 전문가",
     description: "최신 웹 기술로 효율적인 UI 구현",
     icon: (
-      <Code className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)]" />
+      <Code className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
     ),
   },
   {
     title: "혁신적인 아이디어",
     description: "빅데이터와 AI로 미래 솔루션 제시",
     icon: (
-      <Lightbulb className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)]" />
+      <Lightbulb className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
     ),
   },
   {
     title: "협업의 힘",
     description: "다양한 기술로 시너지 창출",
     icon: (
-      <Users className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)]" />
+      <Users className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
     ),
   },
   {
     title: "미래를 향한 도전",
     description: "지속 가능한 에너지 거래 선도",
     icon: (
-      <Rocket className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)]" />
+      <Rocket className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
     ),
   },
 ];
@@ -107,7 +107,9 @@ const InfoItem = ({ title, description, icon }: Info) => {
         <div className="text-gray-300">{icon}</div>
         <h3 className="text-lg font-semibold">{title}</h3>
       </div>
-      <p className="mt-2 text-sm text-gray-600">{description}</p>
+      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        {description}
+      </p>
     </motion.div>
   );
 };
@@ -119,7 +121,7 @@ const ReasonItem = ({ title, description }: Info) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.div className="cursor-pointer rounded-lg p-2 transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-400 transition-colors duration-300 hover:text-gray-800">
+            <h3 className="text-lg font-semibold text-gray-400 transition-colors duration-300 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300">
               {title}
             </h3>
           </motion.div>
@@ -201,17 +203,7 @@ const OurWeb = () => {
           transition={{ delay: 0.2 }}
         >
           <Button
-            onClick={() => {
-              toggleExpanded();
-              if (!isExpanded) {
-                setTimeout(() => {
-                  window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                  });
-                }, 100);
-              }
-            }}
+            onClick={() => router.push("/introduce")}
             variant="outline"
             className="group flex items-center gap-2 rounded-full px-6 py-4 text-base hover:bg-gray-100 dark:hover:bg-gray-800"
           >
@@ -257,8 +249,8 @@ const OurWeb = () => {
             <span
               className={`font-semibold transition-colors ${
                 isTextHighlighted
-                  ? "text-gray-400"
-                  : "text-gray-800 hover:text-gray-600 focus:text-gray-600 active:text-gray-600"
+                  ? "text-gray-800 hover:text-gray-800 focus:text-gray-800 active:text-gray-800 dark:text-gray-300 dark:hover:text-gray-800 dark:focus:text-gray-800 dark:active:text-gray-800"
+                  : "text-gray-500 hover:text-gray-500 focus:text-gray-500 active:text-gray-500 dark:text-gray-500 dark:hover:text-gray-500 dark:focus:text-gray-500 dark:active:text-gray-500"
               }`}
             >
               우리는 왜 전력거래소 웹을 선택했을까?

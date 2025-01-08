@@ -25,9 +25,7 @@ export default function TradePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="mb-4 scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
-          태양광 전력 거래소
-        </h2>
+        <h2 className="mb-10 text-3xl font-semibold">태양광 전력 거래소</h2>
 
         <div className="flex flex-col gap-cardGap">
           {/* 상단 거래 현황 */}
@@ -37,7 +35,7 @@ export default function TradePage() {
           {/* 하단 섹션: 차트와 입찰 폼 */}
           <div className="grid w-full grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
             {/* 왼쪽 섹션: 차트 */}
-            <Card className="flex w-full flex-col border-none bg-cardBackground-light shadow-md backdrop-blur-md dark:bg-cardBackground-dark md:col-span-2 xl:col-span-3">
+            <Card className="flex w-full flex-col border-none bg-cardBackground-light backdrop-blur-md dark:bg-cardBackground-dark md:col-span-2 xl:col-span-3">
               <CardContent className="flex-1 py-2">
                 <SupplyChart
                   selectedRegion={selectedRegion}
@@ -53,7 +51,7 @@ export default function TradePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Card className="flex-1 border-none bg-cardBackground-light shadow-md backdrop-blur-md dark:bg-cardBackground-dark">
+              <Card className="flex-1 border-none bg-cardBackground-light backdrop-blur-md dark:bg-cardBackground-dark">
                 <CardContent className="flex-1 py-2">
                   <BidForm
                     region={selectedRegion}

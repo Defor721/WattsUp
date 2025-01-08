@@ -38,7 +38,6 @@ function SMP() {
 
   const [data, setData] = useState<SMPData[]>([]);
   const [filteredData, setFilteredData] = useState<SMPData[]>([]);
-  const [selectedYear, setSelectedYear] = useState<string>("전체");
   const [selectedFuel, setSelectedFuel] = useState<string>("전체");
   const [kpi, setKpi] = useState<{
     [key in keyof Omit<SMPData, "기간">]: number;
@@ -216,8 +215,8 @@ function SMP() {
       </div>
 
       <div className="flex flex-col gap-cardGap">
-        <div className="flex gap-cardGap">
-          <Card className="flex flex-1 flex-col items-center p-cardPadding shadow-lg">
+        <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
             <h2 className="text-lg font-semibold">
               {selectedFuel} 기간별 SMP 결정 횟수
             </h2>
@@ -229,12 +228,12 @@ function SMP() {
             />
           </Card>
 
-          <Card className="flex flex-1 flex-col p-cardPadding shadow-lg">
-            <h2 className="text-center text-lg font-semibold">
+          <Card className="flex flex-1 flex-col border-none bg-cardBackground-light py-cardPadding pr-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="px-cardPadding text-center text-lg font-semibold">
               연료원별 전체 비율
             </h2>
-            <div className="flex items-center justify-center">
-              <div className="w-[450px]">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-[325px]">
                 <PieChart data={doughnutData} colors={colors} />
               </div>
               <div className="flex flex-col gap-2">
@@ -262,7 +261,7 @@ function SMP() {
         </div>
 
         {/* Table */}
-        <Card className="p-cardPadding">
+        <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
           <h2 className="mb-4 text-lg font-semibold">최근 10년간 SMP 데이터</h2>
           <Table
             data={[...filteredData]

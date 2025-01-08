@@ -22,6 +22,10 @@ const config: Config = {
           light: "#f5f6f7",
           dark: "#1e2330",
         },
+        tableHeader: {
+          light: "#ddd",
+          dark: "rgb(15,25,50)",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           100: "var(--primary-100)",

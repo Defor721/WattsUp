@@ -43,13 +43,13 @@ function RecentLog() {
   console.log("bidDatas: ", bidDatas);
 
   return (
-    <Card className="flex flex-col border-0 shadow-none">
+    <Card className="flex flex-col border-none shadow-none">
       <CardHeader>
         <CardTitle>최근 활동</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea className="max-h-[250px]">
-          <Card className="p-5">
+          <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
             <ul className="flex flex-col gap-3">
               {bidDatas
                 .sort(

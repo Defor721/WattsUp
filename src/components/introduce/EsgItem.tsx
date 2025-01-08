@@ -86,7 +86,7 @@ export const ESGItems = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center overflow-hidden bg-white px-4 py-24">
+    <section className="flex flex-col items-center justify-center overflow-hidden px-4 py-24">
       {/* ESG 경영 활동 */}
       <motion.div
         ref={esgRef}
@@ -99,10 +99,10 @@ export const ESGItems = () => {
           <span className="text-md bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text font-bold text-transparent">
             WattsUp
           </span>
-          <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
+          <h2 className="mb-6 text-center text-4xl font-bold md:text-left">
             ESG 경영 활동
           </h2>
-          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 md:text-left">
+          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 dark:text-neutral-400 md:text-left">
             우리는 환경(Environmental), 사회(Social), 지배구조(Governance)를
             중심으로 한 ESG 경영을 통해 지속 가능한 미래를 만들어갑니다.
             WattsUp은 이러한 ESG 가치를 실현하는 혁신적인 솔루션을 제공합니다.
@@ -111,7 +111,7 @@ export const ESGItems = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-gray-600"
+            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-neutral-600 dark:text-neutral-400"
           >
             <div className="flex flex-col">
               <div className="mb-2 font-bold">
@@ -126,16 +126,21 @@ export const ESGItems = () => {
             </div>
           </motion.div>
         </div>
-        <div className="relative h-[500px] w-full pl-24 md:w-2/3">
+        <div className="relative h-[500px] w-1/3 w-full pl-0 lg:w-2/3 lg:pl-24">
           <svg className="h-full w-full" viewBox="0 0 600 600">
             <g transform="translate(300, 300)">
-              <circle r="60" fill="#f0f0f0" />
+              <circle
+                r="60"
+                fill="currentColor"
+                className="text-transparent dark:text-transparent"
+              />
               <text
                 textAnchor="middle"
                 dy=".3em"
                 fontSize="20"
                 fontWeight="bold"
-                fill="#333"
+                fill="currentColor"
+                className="text-black dark:text-white"
               >
                 ESG
               </text>
@@ -159,7 +164,11 @@ export const ESGItems = () => {
 
                 return (
                   <g key={index} transform={`translate(${x}, ${y})`}>
-                    <circle r="80" fill="white" />
+                    <circle
+                      r="80"
+                      fill="currentColor"
+                      className="text-transparent dark:text-transparent"
+                    />
                     <motion.g
                       animate={{
                         rotate: -360,
@@ -182,11 +191,11 @@ export const ESGItems = () => {
                         textAnchor="middle"
                         fontSize="20"
                         fontWeight="bold"
-                        fill="#333"
+                        fill="currentColor"
+                        className="cursor-pointer text-black dark:text-white"
                         x="0"
                         y="10"
                         style={item.style}
-                        className="cursor-pointer"
                         onClick={() => handleESGItemClick(item.title)}
                       >
                         {item.title}

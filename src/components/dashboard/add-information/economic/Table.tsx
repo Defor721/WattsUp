@@ -35,7 +35,7 @@ function Table({
   currentYearData: EconomicData;
 }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="scrollbar-hide relative overflow-x-auto overflow-y-hidden whitespace-nowrap">
       <ShadcnTable className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
         <TableHeader>
           <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">

@@ -86,7 +86,7 @@ export const PowerMarket = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center overflow-hidden bg-white px-4 py-24">
+    <section className="flex flex-col items-center justify-center overflow-hidden px-4 py-24">
       {/* 전력시장 구조 */}
       <motion.div
         ref={marketRef}
@@ -99,10 +99,10 @@ export const PowerMarket = () => {
           <span className="text-md bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text font-bold text-transparent">
             WattsUp
           </span>
-          <h2 className="mb-6 text-center text-4xl font-bold text-gray-800 md:text-left">
+          <h2 className="mb-6 text-center text-4xl font-bold md:text-left">
             전력시장 구조
           </h2>
-          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 md:text-left">
+          <p className="mb-4 pb-8 text-center text-lg text-neutral-600 dark:text-neutral-400 md:text-left">
             한국의 전력시장은 다양한 주체들의 상호작용으로 운영됩니다. 발전회사,
             한국전력거래소, 한국전력공사, 그리고 소비자가 핵심 구성원으로
             참여하고 있습니다.
@@ -111,14 +111,13 @@ export const PowerMarket = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }} // Transition 효과 추가
-            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-gray-600"
+            className="mt-4 rounded-md border-1 p-4 pt-4 text-sm text-neutral-600 dark:text-neutral-400"
           >
             <div className="flex flex-col">
               {/* Title Hover 효과 추가 */}
               <motion.div
                 className="mb-2 font-bold"
                 initial={{ scale: 1 }} // 초기 상태
-                whileHover={{ scale: 1.1 }} // Hover 시 크기 증가
                 transition={{ type: "spring", stiffness: 300, damping: 15 }} // 자연스러운 애니메이션
               >
                 {
@@ -143,16 +142,21 @@ export const PowerMarket = () => {
             </div>
           </motion.div>
         </div>
-        <div className="relative h-[500px] w-full pl-24 md:w-2/3">
+        <div className="relative h-[500px] w-1/3 w-full pl-0 lg:w-2/3 lg:pl-24">
           <svg className="h-full w-full" viewBox="0 0 500 500">
             <g transform="translate(250, 250)">
-              <circle r="60" fill="#f0f0f0" />
+              <circle
+                r="60"
+                fill="currentColor"
+                className="text-transparent dark:text-transparent"
+              />
               <text
                 textAnchor="middle"
                 dy=".3em"
                 fontSize="20"
                 fontWeight="bold"
-                fill="#333"
+                fill="currentColor"
+                className="text-black dark:text-white"
               >
                 전력시장
               </text>
@@ -176,7 +180,11 @@ export const PowerMarket = () => {
 
                 return (
                   <g key={index} transform={`translate(${x}, ${y})`}>
-                    <circle r="50" fill="#fff" />
+                    <circle
+                      r="50"
+                      fill="currentColor"
+                      className="text-transparent dark:text-transparent"
+                    />
                     <motion.g
                       animate={{
                         rotate: -360,
@@ -200,8 +208,8 @@ export const PowerMarket = () => {
                         dy="2em"
                         fontSize="20"
                         fontWeight="bold"
-                        fill="#333"
-                        className="cursor-pointer"
+                        fill="currentColor"
+                        className="cursor-pointer text-black dark:text-white"
                         onClick={() => handleMarketItemClick(entity.title)}
                       >
                         {entity.title}

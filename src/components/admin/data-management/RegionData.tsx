@@ -137,9 +137,9 @@ function RegionData() {
             {firstData.regions
               .sort((a, b) => a.region.localeCompare(b.region))
               .map((regionData) => (
-                <Card key={regionData.region} className="p-5">
-                  <p className="text-sm font-semibold">{regionData.region}</p>
-                  <p className="text-2xl font-bold">
+                <Card key={regionData.region} className="p-3">
+                  <p className="text-xs font-semibold">{regionData.region}</p>
+                  <p className="text-base font-bold">
                     {regionData.amgo.toLocaleString()} kWh
                   </p>
                 </Card>

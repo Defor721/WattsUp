@@ -1,23 +1,36 @@
 import React from "react";
 
+import { Card } from "@/components/shadcn";
+
 interface KPICardProps {
   title: string;
   value: string | number;
   backgroundColor: string; // 카드 배경색
+  unit?: string;
 }
 
-const KPICard: React.FC<KPICardProps> = ({ title, value, backgroundColor }) => {
+const KPICard: React.FC<KPICardProps> = ({
+  title,
+  value,
+  backgroundColor,
+  unit,
+}) => {
   return (
-    <div
-      className={`flex items-center justify-between rounded-lg p-4 shadow-md`}
-      style={{ backgroundColor }}
+    <Card
+      className={`flex items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark`}
     >
-      {/* 제목 및 값 */}
-      <div className="flex-1">
-        <p className="text-sm font-semibold">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
+      <div
+        className="h-full w-2"
+        style={{ backgroundColor: backgroundColor }}
+      />
+      <div>
+        <div className="flex items-center gap-1">
+          <p className="text-sm font-semibold">{title}</p>
+          {unit && <p className="text-sm">({unit})</p>}
+        </div>
+        <p className="text-xl font-bold">{value}</p>
       </div>
-    </div>
+    </Card>
   );
 };
 
