@@ -83,8 +83,8 @@ function TodayValue() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="mb-8 text-center text-3xl font-bold">오늘의 전력정보</h1>
-      <div className="flex justify-center gap-7">
-        <Card className="h-[300px] w-[488px] bg-white p-4 text-mainColor shadow-md">
+      <div className="grid grid-cols-1 justify-center gap-cardGap xl:grid-cols-2">
+        <Card className="h-[300px] w-[488px] border-none bg-cardBackground-light p-4 shadow-md dark:bg-cardBackground-dark">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 SMP
           </div>
@@ -93,19 +93,19 @@ function TodayValue() {
           </div>
           <table className="w-full border-collapse">
             <tbody>
-              <tr className="border-t">
-                <td className="border border-gray-300 px-4 py-2 font-medium">
+              <tr className="border-t [&>*]:text-center">
+                <td className="border border-gray-300 p-3 font-medium">
                   거래일
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 p-3">
                   {apiData.todaySmpData.거래일 || "-"}
                 </td>
               </tr>
-              <tr className="border-t">
-                <td className="border border-gray-300 px-4 py-2 font-medium">
+              <tr className="border-t [&>*]:text-center">
+                <td className="border border-gray-300 p-3 font-medium">
                   최고가
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 p-3">
                   {apiData.todaySmpData.최고가 || "-"}
                 </td>
               </tr>
@@ -113,7 +113,7 @@ function TodayValue() {
           </table>
         </Card>
         {/* 오늘의 REC */}
-        <Card className="h-[300px] w-[488px] bg-white p-4 text-subColor shadow-md">
+        <Card className="h-[300px] w-[488px] border-none bg-cardBackground-light p-4 shadow-md dark:bg-cardBackground-dark">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 REC
           </div>
@@ -122,19 +122,19 @@ function TodayValue() {
           </div>
           <table className="w-full border-collapse">
             <tbody>
-              <tr className="border-t">
-                <td className="border border-gray-300 px-4 py-2 font-medium">
+              <tr className="border-t [&>*]:text-center">
+                <td className="border border-gray-300 p-3 font-medium">
                   거래일
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 p-3">
                   {apiData.todayRecData.거래일 || "-"}
                 </td>
               </tr>
-              <tr className="border-t">
-                <td className="border border-gray-300 px-4 py-2 font-medium">
+              <tr className="border-t [&>*]:text-center">
+                <td className="border border-gray-300 p-3 font-medium">
                   평균가
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 p-3">
                   {formatNumberWithoutDecimal(apiData.todayRecData.평균가) ||
                     "-"}
                 </td>
