@@ -19,15 +19,15 @@ export default function TradingStats() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [bidCountResponse, totalSupplyResponse, crawlResponse] =
+        const [bidCountResponse, supplyResponse, crawlResponse] =
           await Promise.all([
             axios.get("/api/trade/countbid"), // 누적 입찰 수
-            axios.get("/api/trade/supply"), // 총 공급량
+            axios.get("/api/trade/supply"), // 총 공급량 (total 값 사용)
             axios.get("/api/crawl"), // SMP, REC 데이터
           ]);
 
         const bidCount = bidCountResponse.data.count || 0; // `count`로 접근
-        const totalSupply = totalSupplyResponse.data.totalSupply || 0; // `totalSupply`로 접근
+        const totalSupply = supplyResponse.data.total || 0; // `total`로 접근
         const { todaySmpData, todayRecData } = crawlResponse.data;
 
         // 데이터 매핑
@@ -35,7 +35,7 @@ export default function TradingStats() {
           bidCount,
           smp: todaySmpData?.평균가 || 0, // SMP 평균가
           rec: todayRecData?.평균가 || 0, // REC 평균가
-          totalSupply,
+          totalSupply, // 총 공급량 (total 값)
         });
       } catch (err) {
         console.error("데이터 로드 실패:", err);
