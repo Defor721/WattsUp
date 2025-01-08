@@ -28,24 +28,24 @@ function TodayValue() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/crawl");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const result = await response.json();
-        console.log("result: ", result);
-        setApiData(result);
-      } catch (error) {
-        console.log("error: ", error);
-        setError("데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    console.log("하이");
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch("/api/crawl");
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch data");
+    //     }
+    //     const result = await response.json();
+    //     console.log("result: ", result);
+    //     setApiData(result);
+    //   } catch (error) {
+    //     console.log("error: ", error);
+    //     setError("데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.");
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
+    // fetchData();
   }, []);
 
   if (isLoading || !apiData) {
