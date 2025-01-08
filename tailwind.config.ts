@@ -18,6 +18,10 @@ const config: Config = {
         subColor: {
           DEFAULT: "#050a18",
         },
+        cardBackground: {
+          light: "#f5f6f7",
+          dark: "#1e2330",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           100: "var(--primary-100)",

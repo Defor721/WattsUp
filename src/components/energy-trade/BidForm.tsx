@@ -132,13 +132,16 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   지역
                 </Label>
                 <Select value={region} onValueChange={onRegionChange}>
-                  <SelectTrigger id="region">
+                  <SelectTrigger
+                    id="region"
+                    className="mt-2 bg-white dark:bg-transparent"
+                  >
                     <SelectValue placeholder="지역을 선택하세요" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-subColor">
+                  <SelectContent className="bg-white dark:bg-cardBackground-dark">
                     {regionOptions.map((region) => (
                       <SelectItem
-                        className="bg-white dark:bg-subColor"
+                        className="bg-white dark:bg-cardBackground-dark"
                         key={region.value}
                         value={region.value}
                       >
@@ -158,7 +161,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
                   required
-                  className="bg-transparent"
+                  className="bg-white dark:bg-transparent"
                 />
               </div>
               <div className="space-y-2">
@@ -171,7 +174,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
                   required
-                  className="bg-transparent"
+                  className="bg-white dark:bg-transparent"
                 />
               </div>
               <div className="space-y-2">
