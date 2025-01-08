@@ -76,21 +76,6 @@ const reasons: Info[] = [
     description:
       "실시간 데이터 분석과 예측 모델을 통해 더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
   },
-  {
-    title: "지속 가능한 에너지 관리",
-    description:
-      "신재생 에너지 자원을 통합하고 효율적인 에너지 소비를 가능하게 하는 플랫폼을 제공함.",
-  },
-  {
-    title: "사회적 및 경제적 영향력",
-    description:
-      "에너지 비용 절감과 전력 공급 안정화는 물론, 환경 보호와 같은 사회적 책임도 실현함.",
-  },
-  {
-    title: "안전하고 투명한 전력 거래",
-    description:
-      "블록체인 기술을 활용하여 전력 거래 과정의 투명성과 신뢰성을 높이고, 보안성을 강화함.",
-  },
 ];
 
 // InfoItem 컴포넌트
@@ -249,7 +234,7 @@ const OurWeb = () => {
             <span
               className={`font-semibold transition-colors ${
                 isTextHighlighted
-                  ? "text-gray-800 hover:text-gray-800 focus:text-gray-800 active:text-gray-800 dark:text-gray-300 dark:hover:text-gray-800 dark:focus:text-gray-800 dark:active:text-gray-800"
+                  ? "text-gray-800 hover:text-gray-800 focus:text-gray-800 active:text-gray-800 dark:text-gray-300 dark:hover:text-gray-300 dark:focus:text-gray-800 dark:active:text-gray-800"
                   : "text-gray-500 hover:text-gray-500 focus:text-gray-500 active:text-gray-500 dark:text-gray-500 dark:hover:text-gray-500 dark:focus:text-gray-500 dark:active:text-gray-500"
               }`}
             >
