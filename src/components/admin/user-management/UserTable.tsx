@@ -11,7 +11,6 @@ import {
   TableHead,
   TableCell,
   Input,
-  Pagination,
   Button,
 } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
@@ -21,14 +20,14 @@ interface Users {
   businessNumber: number;
   companyName: string;
   corporateNumber: number;
-  dateCreate: string;
+  createdAt: string;
   email: string;
   name: string;
   provider: null | "google";
   signupType: string;
 }
 
-function UserManageMentTable() {
+function UserTable() {
   const router = useRouter();
   const [users, setUsers] = useState<Users[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,13 +66,9 @@ function UserManageMentTable() {
   const filteredUsers = users
     .sort((a, b) => {
       const dateA =
-        typeof a.dateCreate === "string"
-          ? Date.parse(a.dateCreate)
-          : a.dateCreate;
+        typeof a.createdAt === "string" ? Date.parse(a.createdAt) : a.createdAt;
       const dateB =
-        typeof b.dateCreate === "string"
-          ? Date.parse(b.dateCreate)
-          : b.dateCreate;
+        typeof b.createdAt === "string" ? Date.parse(b.createdAt) : b.createdAt;
       return dateB - dateA;
     })
     .filter((user) => {
@@ -84,7 +79,7 @@ function UserManageMentTable() {
         user.companyName.toLowerCase().includes(searchValue) || // 상호명 필터
         user.businessNumber.toString().includes(searchValue) || // 사업자등록번호 필터
         user.corporateNumber.toString().includes(searchValue) || // 법인등록번호 필터
-        user.dateCreate.toString().includes(searchValue) // 가입날짜 필터
+        user.createdAt.toString().includes(searchValue) // 가입날짜 필터
       );
     });
 
@@ -145,7 +140,7 @@ function UserManageMentTable() {
               const corporate = String(user.corporateNumber);
               const formattedCorporate = `${corporate.slice(0, 6)}-${corporate.slice(6)}`;
 
-              const date = new Date(user.dateCreate);
+              const date = new Date(user.createdAt);
               const formattedDate = date.toISOString().split("T")[0];
               return (
                 <TableRow
@@ -208,4 +203,4 @@ function UserManageMentTable() {
   );
 }
 
-export default UserManageMentTable;
+export default UserTable;

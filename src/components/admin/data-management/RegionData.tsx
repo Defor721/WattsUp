@@ -22,7 +22,39 @@ function RegionData() {
       return;
     }
 
-    // 첫 번째 지역 데이터의 날짜 추출
+    // 오늘 날짜를 ISO 형식으로 저장
+    const today = new Date().toISOString().split("T")[0];
+
+    // 기존 랜덤 값 로드
+    const storedData = localStorage.getItem("regionRandomFactors");
+    let randomFactors: Record<string, number> = {};
+
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      if (parsedData.date === today) {
+        // 오늘 날짜의 랜덤 값이 이미 있으면 로드
+        randomFactors = parsedData.factors;
+      }
+    }
+
+    // 랜덤 값이 없는 경우 새로 생성
+    if (Object.keys(randomFactors).length === 0) {
+      randomFactors = Object.keys(chartData).reduce(
+        (acc, region) => {
+          acc[region] = Math.random() * (1.2 - 0.8) + 0.8; // 0.8 ~ 1.2 랜덤 값 생성
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      // 로컬 스토리지에 저장
+      localStorage.setItem(
+        "regionRandomFactors",
+        JSON.stringify({ date: today, factors: randomFactors }),
+      );
+    }
+
+    // 지역별 발전량 데이터 가공
     const firstRegion = Object.values(chartData)[0];
     const date = firstRegion ? firstRegion[0].date : null;
 
@@ -31,13 +63,17 @@ function RegionData() {
       return;
     }
 
-    // 지역별 발전량 데이터 가공
     const processedFirstData = {
       date,
-      regions: Object.entries(chartData).map(([region, data]) => ({
-        region,
-        amgo: data[0]?.amgo || 0, // 첫 번째 데이터의 amgo 값 추출
-      })),
+      regions: Object.entries(chartData).map(([region, data]) => {
+        const randomFactor = randomFactors[region] || 1; // 저장된 랜덤 값 사용
+        const adjustedAmgo = (data[0]?.amgo || 0) * randomFactor;
+
+        return {
+          region,
+          amgo: parseFloat(adjustedAmgo.toFixed(2)), // 소수점 둘째 자리 고정
+        };
+      }),
     };
 
     setFirstData(processedFirstData);

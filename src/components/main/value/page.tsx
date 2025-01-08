@@ -35,7 +35,7 @@ function TodayValue() {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
-        console.log("result: ", result);
+        // console.log("result: ", result);
         setApiData(result);
       } catch (error) {
         console.log("error: ", error);

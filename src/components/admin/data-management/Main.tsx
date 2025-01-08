@@ -3,13 +3,13 @@
 import React from "react";
 
 import RegionData from "./RegionData";
-import TradeTable from "./TradeTable";
+import RecentLog from "./RecentLog";
 
 function Main() {
   return (
     <div className="mt-3">
       <RegionData />
-      <TradeTable />
+      <RecentLog />
     </div>
   );
 }

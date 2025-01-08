@@ -10,9 +10,9 @@ import {
   FileText,
   Users,
   Database,
+  Laptop,
 } from "lucide-react";
 import { useState } from "react";
-import { FaLaptopCode } from "react-icons/fa";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/hooks/useAccessToken";
@@ -53,7 +53,7 @@ const defaultItems = [
   },
   {
     id: "introduce",
-    icon: FaLaptopCode,
+    icon: Laptop,
     label: "소개",
     href: "/introduce",
   },
