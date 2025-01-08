@@ -120,10 +120,11 @@ export async function GET() {
 
     // 6. 데이터 반환
     return NextResponse.json({ todaySmpData, todayRecData });
-  } catch (error) {
-    console.error("Error occurred:", error.message);
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch data" },
+      { message: "Failed to find data", error: errorMessage },
       { status: 500 },
     );
   }

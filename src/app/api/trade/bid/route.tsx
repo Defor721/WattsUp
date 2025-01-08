@@ -6,7 +6,6 @@ import clientPromise from "@/lib/mongodb";
 export async function POST(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");
-    console.log(request.headers);
     if (!authorizationHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { message: "Token Invalid or Missing" },
@@ -38,7 +37,6 @@ export async function POST(request: NextRequest) {
     const supplyCollection = db.collection("supply");
     const now = new Date();
     const dailySupply = await supplyCollection.findOne({});
-
     if (!dailySupply) {
       return NextResponse.json(
         { message: "Failed to find data" },
