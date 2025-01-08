@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("wattsup");
-
     const supplyCollection = db.collection("supply");
+
     const result = await supplyCollection.findOne(
       {},
       { projection: { _id: 0, updatedAt: 0 } },
@@ -15,20 +15,32 @@ export async function GET(request: NextRequest) {
 
     if (!result) {
       return NextResponse.json(
-        { message: "Failed to find data" },
+        { message: "No data found in the supply collection" },
         { status: 404 },
       );
-    } else {
-      return NextResponse.json(
-        { message: "Success to find data", result },
-        { status: 200 },
-      );
     }
+
+    // 지역 값들의 총합 계산
+    const total = Object.values(result).reduce(
+      (sum, value) => sum + (typeof value === "number" ? value : 0),
+      0,
+    );
+
+    return NextResponse.json(
+      {
+        message: "Success to find data",
+        result,
+        total, // 총합 추가
+      },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("Error fetching supply data:", errorMessage);
+
     return NextResponse.json(
-      { message: "Failed to find data", error: errorMessage },
+      { message: "Error fetching data", error: errorMessage },
       { status: 500 },
     );
   }
