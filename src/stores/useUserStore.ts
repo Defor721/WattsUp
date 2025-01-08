@@ -7,6 +7,7 @@ import {
   updatePasswordByEmail,
   updatePasswordByPassword,
 } from "@/services/userService";
+import { updateCredit } from "@/services/tradeService";
 
 export interface changePasswordProps {
   currentPassword: string;
@@ -34,6 +35,7 @@ export interface UserState {
       businessNumber,
       corporateNumber,
     }: findEmailProps) => Promise<void>;
+    chargeCredit: (charge: number) => Promise<void>;
     resetUserState: () => void;
   };
 }
@@ -51,7 +53,6 @@ export const useUserStore = create<UserState>((set) => ({
     /** 현재 유저 데이터 조회 */
     async fetchCurrentUser() {
       const state = useUserStore.getState();
-
       if (state.loading) return;
       try {
         set({ loading: true });
@@ -113,6 +114,23 @@ export const useUserStore = create<UserState>((set) => ({
           businessNumber,
           corporateNumber,
         });
+        set({
+          message: `${data.message} ${data.data}`,
+          error: false,
+        });
+      } catch (error: any) {
+        set({ error: true, message: error.response.data.message });
+        throw error;
+      } finally {
+        set({ loading: false });
+      }
+    },
+
+    /** 예치금 충전 */
+    async chargeCredit(charge: number) {
+      try {
+        set({ loading: true });
+        const data = await updateCredit(charge);
         set({
           message: `${data.message} ${data.data}`,
           error: false,
