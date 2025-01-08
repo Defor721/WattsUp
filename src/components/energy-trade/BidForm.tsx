@@ -19,6 +19,7 @@ import {
 } from "@/components/shadcn/select";
 import { Regions } from "@/utils/regions";
 import apiClient from "@/lib/axios";
+import Loading from "@/app/loading";
 
 const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
@@ -31,6 +32,16 @@ const fetchUserCredits = async () => {
     return response.data.credits || 0; // 크레딧 데이터 반환
   } catch (error: any) {
     console.error("크레딧 데이터 로드 실패:", error.message);
+    return 0; // 실패 시 0으로 설정
+  }
+};
+
+const fetchSmpPrice = async () => {
+  try {
+    const response = await apiClient.get("/api/crawl");
+    return response.data.todaySmpData["평균가"] || 0; // SMP 평균가 반환
+  } catch (error: any) {
+    console.error("SMP 데이터 로드 실패:", error.message);
     return 0; // 실패 시 0으로 설정
   }
 };
@@ -60,28 +71,35 @@ interface BidFormProps {
 
 export default function BidForm({ region, onRegionChange }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
+  const [smpPrice, setSmpPrice] = useState<number>(0); // SMP 값 상태
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [credits, setCredits] = useState<number>(0); // 크레딧 상태 추가
+  const [isLoading, setIsLoading] = useState(true); // SMP 로딩 상태
 
   useEffect(() => {
-    // 컴포넌트 마운트 시 크레딧 데이터 가져오기
-    const loadCredits = async () => {
-      const userCredits = await fetchUserCredits();
+    // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
+    const loadData = async () => {
+      setIsLoading(true);
+      const [userCredits, smpValue] = await Promise.all([
+        fetchUserCredits(),
+        fetchSmpPrice(),
+      ]);
       setCredits(userCredits);
+      setSmpPrice(smpValue);
+      setIsLoading(false);
     };
-    loadCredits();
+    loadData();
   }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (quantity <= 0 || price <= 0) {
-      alert("수량과 단가는 0보다 커야 합니다.");
+    if (quantity <= 0) {
+      alert("수량은 0보다 커야 합니다.");
       return;
     }
 
-    const totalPrice = quantity * price;
+    const totalPrice = quantity * smpPrice;
     if (totalPrice > credits) {
       alert("보유 크레딧이 부족합니다.");
       return;
@@ -89,11 +107,10 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
 
     setIsSubmitting(true);
     try {
-      await submitBid(totalPrice, region, quantity);
+      await submitBid(smpPrice, region, quantity);
       alert("입찰이 성공적으로 제출되었습니다.");
       onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
-      setPrice(0);
 
       // 크레딧 업데이트
       const updatedCredits = await fetchUserCredits();
@@ -106,6 +123,10 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="w-full">
@@ -157,31 +178,38 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                 </Label>
                 <Input
                   id="quantity"
-                  type="number"
+                  type="text" // 숫자 필터링을 직접 처리
                   value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // 빈 문자열 허용
+                    if (value === "") {
+                      setQuantity(0);
+                      return;
+                    }
+
+                    // 숫자만 허용
+                    const numericValue = Number(value);
+                    if (!isNaN(numericValue) && numericValue >= 0) {
+                      setQuantity(numericValue);
+                    }
+                  }}
                   required
                   className="bg-white dark:bg-transparent"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="price" className="text-sm font-medium">
-                  단가 (원/kWh)
-                </Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
-                  required
-                  className="bg-white dark:bg-transparent"
-                />
+                <Label className="text-sm font-medium">단가 (원/kWh)</Label>
+                <div className="text-lg font-bold">
+                  {smpPrice.toLocaleString()} 원
+                </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">총 가격 (원)</Label>
                 <div className="text-lg font-bold">
-                  {quantity && price
-                    ? (quantity * price).toLocaleString()
+                  {quantity && smpPrice
+                    ? (quantity * smpPrice).toLocaleString()
                     : "0"}
                   원
                 </div>

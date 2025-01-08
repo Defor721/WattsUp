@@ -23,7 +23,7 @@ import Sales from "@/components/dashboard/add-information/sales/Sales";
 
 function DashboardPage() {
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("판매 금액");
+    useState<string>("SMP 결정 횟수");
 
   const dashboards = [
     {
