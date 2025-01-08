@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"; // React 훅
 import { motion } from "framer-motion"; // 애니메이션 라이브러리
 import axios from "axios"; // HTTP 요청 라이브러리
 
+import { Card } from "../shadcn";
+
 type TradingStatsData = {
   bidCount: number; // 누적 입찰 수
   smp: number; // SMP 평균가
@@ -58,22 +60,14 @@ export default function TradingStats() {
       transition={{ duration: 1 }}
       className="w-full"
     >
-      <div className="p-6">
-        <div className="mt-4 grid grid-cols-2 gap-6 sm:grid-cols-4">
-          <StatItem title="누적 입찰 수" value={stats?.bidCount || 0} />
-          <StatItem
-            title="SMP"
-            value={`${stats?.smp.toLocaleString()} 원/kWh`}
-          />
-          <StatItem
-            title="REC"
-            value={`${stats?.rec.toLocaleString()} 원/REC`}
-          />
-          <StatItem
-            title="총 공급량"
-            value={`${stats?.totalSupply.toLocaleString()} kWh`}
-          />
-        </div>
+      <div className="grid grid-cols-2 gap-cardGap sm:grid-cols-4">
+        <StatItem title="누적 입찰 수" value={stats?.bidCount || 0} />
+        <StatItem title="SMP" value={`${stats?.smp.toLocaleString()} 원/kWh`} />
+        <StatItem title="REC" value={`${stats?.rec.toLocaleString()} 원/REC`} />
+        <StatItem
+          title="총 공급량"
+          value={`${stats?.totalSupply.toLocaleString()} kWh`}
+        />
       </div>
     </motion.div>
   );
@@ -97,13 +91,13 @@ function ErrorMessage({ error }: { error: string }) {
 
 function StatItem({ title, value }: { title: string; value: string | number }) {
   return (
-    <div className="rounded-lg border p-4">
+    <Card className="rounded-lg bg-[rgb(255_255_255_/_0.1)] p-cardPadding dark:border-none">
       <p className="text-sm font-medium text-gray-600 dark:text-gray-200">
         {title}
       </p>
       <p className="text-2xl font-bold text-gray-800 dark:text-white">
         {value}
       </p>
-    </div>
+    </Card>
   );
 }

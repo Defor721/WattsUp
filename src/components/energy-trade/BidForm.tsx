@@ -122,7 +122,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
           <CardContent>
             <div className="mb-4">
               <Label className="text-sm font-medium">보유 크레딧</Label>
-              <div className="text-lg font-bold text-mainColor">
+              <div className="text-lg font-bold">
                 {credits.toLocaleString()} 원
               </div>
             </div>
@@ -135,9 +135,13 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   <SelectTrigger id="region">
                     <SelectValue placeholder="지역을 선택하세요" />
                   </SelectTrigger>
-                  <SelectContent className="z-50 bg-white">
+                  <SelectContent className="bg-white dark:bg-subColor">
                     {regionOptions.map((region) => (
-                      <SelectItem key={region.value} value={region.value}>
+                      <SelectItem
+                        className="bg-white dark:bg-subColor"
+                        key={region.value}
+                        value={region.value}
+                      >
                         {region.label}
                       </SelectItem>
                     ))}

@@ -107,6 +107,8 @@ const config: Config = {
         cardGap: "16px",
         cardPadding: "20px",
         cardMargin: "16px",
+
+        sidebarGap: "16px",
       },
       fontSize: {
         sm: "0.875rem",

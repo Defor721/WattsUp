@@ -114,7 +114,7 @@ function Sidebar() {
           </div>
 
           {/* Content Section */}
-          <div className="mt-5 flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             {/* Default Items */}
             <NavMain
               items={defaultItems}

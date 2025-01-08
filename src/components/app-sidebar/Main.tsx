@@ -18,7 +18,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
   // 테블릿 화면일 경우
   if (isTablet && !isTabletExpanded)
     return (
-      <div className="flex flex-col items-center gap-4 p-2">
+      <div className="flex flex-col items-center gap-sidebarGap p-2">
         {items.map((item) => (
           <Link
             key={item.id}
@@ -33,7 +33,7 @@ function NavMain({ items, isTablet, isTabletExpanded }: Props) {
 
   // 테블릿 화면에서 사이드바 확장 and 평상시 화면
   return (
-    <div className="flex flex-col gap-4 p-2">
+    <div className="flex flex-col gap-sidebarGap p-2">
       {items.map((item) => (
         <Link
           key={item.id}
