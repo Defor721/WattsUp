@@ -1,12 +1,20 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import React, { useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion"; // 애니메이션 효과를 위한 라이브러리
+import React, { useState, useEffect } from "react"; // React 훅
+import { ArrowRight } from "lucide-react"; // 아이콘 라이브러리
+import Link from "next/link"; // Next.js 라우팅
 
-// 슬라이드 데이터 정의
-const slides = [
+// 슬라이드 데이터 타입 정의
+interface Slide {
+  title: string; // 슬라이드 제목
+  subtitle: string; // 부제목
+  description: string; // 설명
+  cta: { text: string; href: string }; // Call-to-Action 데이터
+}
+
+// 슬라이드 데이터
+const slides: Slide[] = [
   {
     title: "스마트 에너지 거래",
     subtitle: "전력 교환의 혁신",
@@ -27,37 +35,36 @@ const slides = [
   },
 ];
 
-// 메인 컴포넌트 정의
-function VideoPart() {
-  const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 상태 관리
+// 메인 컴포넌트
+const VideoPart: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 상태
 
-  // 자동 슬라이드 전환을 위한 타이머 설정
+  // 자동 슬라이드 전환 설정
   useEffect(() => {
-    // 5초마다 실행되는 타이머 생성
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length); // 마지막 슬라이드에서 처음으로 돌아감
-    }, 5000); // 5000ms (5초)마다 실행
+      setCurrentSlide((prev) => (prev + 1) % slides.length); // 슬라이드 순환
+    }, 5000); // 5초마다 실행
 
     return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 제거
   }, []);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* 배경 비디오 설정 */}
+      {/* 배경 비디오 */}
       <video
         src="/assets/videos/istockphoto-1569244272-640_adpp_is.mp4"
-        autoPlay // 비디오 자동 재생
-        loop // 비디오 반복 재생
-        muted // 비디오 음소거
-        playsInline // 모바일에서 인라인 재생 허용
-        className="absolute inset-0 h-full w-full object-cover" // 전체 화면에 비디오 배경 설정
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* 로고 애니메이션 설정 (내려오는 효과) */}
+      {/* 로고 애니메이션 */}
       <motion.div
-        initial={{ y: -200, opacity: 0 }} // 초기 위치와 투명도
-        animate={{ y: 0, opacity: 0.7 }} // 애니메이션 후 위치와 투명도
-        transition={{ duration: 1.5, ease: "easeOut" }} // 부드러운 애니메이션
+        initial={{ y: -200, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.7 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute inset-0 z-0 flex items-center justify-center"
       >
         <h1 className="text-center">
@@ -70,40 +77,36 @@ function VideoPart() {
       {/* 어두운 오버레이 */}
       <div className="absolute inset-0 bg-black bg-opacity-60" />
 
-      {/* 슬라이드 콘텐츠 애니메이션 */}
+      {/* 슬라이드 콘텐츠 */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          {/* 슬라이드 전환 애니메이션 */}
           <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, y: 20 }} // 슬라이드 초기 상태 (투명도 0, 아래 위치)
-            animate={{ opacity: 1, y: 0 }} // 슬라이드 애니메이션 완료 상태
-            exit={{ opacity: 0, y: -20 }} // 슬라이드 사라질 때 상태
-            transition={{ duration: 0.8, ease: "easeOut" }} // 부드러운 애니메이션 효과
+            key={`slide-${currentSlide}`} // 고유 key로 오류 방지
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="container mx-auto px-4"
           >
             <div className="text-center">
-              {/* 슬라이드 부제목 */}
               <motion.p
-                initial={{ opacity: 0 }} // 투명한 상태에서 시작
-                animate={{ opacity: 1 }} // 투명도가 점차 증가
-                transition={{ delay: 0.3 }} // 약간의 지연 효과
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
                 className="mb-2 text-sm font-light tracking-wider text-gray-300 sm:mb-4 sm:text-base md:text-lg lg:text-xl"
               >
                 {slides[currentSlide].subtitle}
               </motion.p>
 
-              {/* 슬라이드 제목 */}
               <motion.h2
-                initial={{ opacity: 0, y: 20 }} // 아래에서 위로 이동하며 나타남
-                animate={{ opacity: 1, y: 0 }} // 제자리에서 보이게 함
-                transition={{ delay: 0.5 }} // 0.5초 지연 후 애니메이션
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
                 className="mb-3 text-3xl font-bold text-white sm:mb-4 sm:text-4xl md:text-5xl lg:mb-6 lg:text-7xl"
               >
                 {slides[currentSlide].title}
               </motion.h2>
 
-              {/* 슬라이드 설명 */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -113,7 +116,6 @@ function VideoPart() {
                 {slides[currentSlide].description}
               </motion.p>
 
-              {/* Call-to-Action 버튼 */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -131,23 +133,23 @@ function VideoPart() {
           </motion.div>
         </AnimatePresence>
 
-        {/* 슬라이드 동그라미 단추 표시 */}
+        {/* 슬라이드 네비게이션 */}
         <div className="absolute bottom-12 flex justify-center space-x-2">
           {slides.map((_, index) => (
             <button
-              key={index} // 버튼의 고유 키 값 설정
-              onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드를 변경
+              key={index}
+              onClick={() => setCurrentSlide(index)}
               className={`h-4 w-4 rounded-full border-2 ${
                 currentSlide === index
                   ? "bg-white"
                   : "border-white bg-transparent"
-              }`} // 현재 슬라이드면 흰색 배경, 아니면 투명 배경
+              }`}
             />
           ))}
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default VideoPart;
+export default VideoPart; // 컴포넌트 내보내기

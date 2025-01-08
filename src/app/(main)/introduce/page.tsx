@@ -21,7 +21,7 @@ function IntroducePage() {
         <TabsList className="grid h-[50px] w-full grid-cols-3">
           <TabsTrigger
             value="wattsup"
-            className={`h-full border-1 hover:bg-slate-100 ${
+            className={`h-full border-1 hover:bg-slate-100 dark:hover:bg-slate-600 ${
               activeTab === "wattsup" ? "bg-slate-200" : ""
             }`}
           >
@@ -29,7 +29,7 @@ function IntroducePage() {
           </TabsTrigger>
           <TabsTrigger
             value="market"
-            className={`h-full border-1 hover:bg-slate-100 ${
+            className={`h-full border-1 hover:bg-slate-100 dark:hover:bg-slate-600 ${
               activeTab === "market" ? "bg-slate-200" : ""
             }`}
           >
@@ -37,7 +37,7 @@ function IntroducePage() {
           </TabsTrigger>
           <TabsTrigger
             value="esg"
-            className={`h-full border-1 hover:bg-slate-100 ${
+            className={`h-full border-1 hover:bg-slate-100 dark:hover:bg-slate-600 ${
               activeTab === "esg" ? "bg-slate-200" : ""
             }`}
           >

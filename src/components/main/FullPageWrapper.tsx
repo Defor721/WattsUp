@@ -16,8 +16,6 @@ const FullPageWrapper: React.FC = () => {
       licenseKey=""
       // 스크롤 전환 속도 (밀리초 단위, 700ms)
       scrollingSpeed={700}
-      // 페이지 오른쪽에 섹션 네비게이션 표시 여부
-      navigation
       // 각 섹션의 앵커 (URL 해시와 연결됨)
       anchors={["video", "ourweb", "value", "energy", "features"]}
       // 섹션 스냅 기능 활성화
