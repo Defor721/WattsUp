@@ -22,20 +22,20 @@ function RegionButtons({
 }: RegionButtonsProps) {
   return (
     <div className="mb-4 flex items-center justify-end gap-4">
-      <Label
-        htmlFor="region"
-        className="text-mainColor dark:text-white md:text-base"
-      >
+      <Label htmlFor="region" className="md:text-base">
         지역 선택
       </Label>
       <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-        <SelectTrigger id="region" className="w-[180px]">
+        <SelectTrigger
+          id="region"
+          className="w-[180px] bg-white dark:bg-cardBackground-dark"
+        >
           <SelectValue placeholder="지역 선택 " />
         </SelectTrigger>
-        <SelectContent className="bg-white dark:bg-subColor">
+        <SelectContent className="bg-white dark:bg-cardBackground-dark">
           {regions.map((region) => (
             <SelectItem
-              className="z-10 bg-white dark:bg-subColor"
+              className="z-10 bg-white dark:bg-cardBackground-dark"
               key={region}
               value={region}
             >

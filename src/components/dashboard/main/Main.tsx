@@ -41,7 +41,7 @@ export default function DashboardMain() {
       />
       <div className="flex flex-col gap-4">
         <div className="flex h-full w-full items-center gap-4">
-          <Card className="flex h-[418px] w-[500px] flex-col items-center justify-center p-cardPadding">
+          <Card className="flex h-[418px] w-[500px] flex-col items-center justify-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
             <h4 className="my-2 scroll-m-20 pb-5 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
               태양광 발전소 지도
             </h4>

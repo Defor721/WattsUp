@@ -60,7 +60,7 @@ export default function TradingStats() {
       transition={{ duration: 1 }}
       className="w-full"
     >
-      <div className="grid grid-cols-2 gap-cardGap sm:grid-cols-4">
+      <div className="grid grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
         <StatItem title="누적 입찰 수" value={stats?.bidCount || 0} />
         <StatItem title="SMP" value={`${stats?.smp.toLocaleString()} 원/kWh`} />
         <StatItem title="REC" value={`${stats?.rec.toLocaleString()} 원/REC`} />
@@ -91,7 +91,7 @@ function ErrorMessage({ error }: { error: string }) {
 
 function StatItem({ title, value }: { title: string; value: string | number }) {
   return (
-    <Card className="rounded-lg bg-[rgb(255_255_255_/_0.1)] p-cardPadding dark:border-none">
+    <Card className="rounded-lg border-none bg-cardBackground-light p-cardPadding dark:border-none dark:bg-cardBackground-dark">
       <p className="text-sm font-medium text-gray-600 dark:text-gray-200">
         {title}
       </p>
