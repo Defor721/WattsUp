@@ -37,9 +37,6 @@ const LineChart: React.FC<LineChartProps> = ({
           formatter={(value: number) =>
             `${formatNumberWithoutDecimal(value)} 회`
           }
-          itemStyle={{
-            color: "#000000", // 텍스트를 항상 검은색으로 설정
-          }}
           labelStyle={{
             color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
           }}

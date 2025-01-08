@@ -23,7 +23,7 @@ import Sales from "@/components/dashboard/add-information/sales/Sales";
 
 function DashboardPage() {
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("발전원별 연도별 발전량");
+    useState<string>("유형별 전기 고장 추이");
 
   const dashboards = [
     {
