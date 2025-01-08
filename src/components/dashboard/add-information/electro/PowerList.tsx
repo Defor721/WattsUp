@@ -22,32 +22,27 @@ const PowerList: React.FC<PowerListProps> = ({ data }) => {
   const total = powerDataArray.reduce((acc, curr) => acc + curr.value, 0);
 
   return (
-    <div className="flex flex-col">
-      <h2 className="mb-4 text-lg font-semibold">
-        가장 많이 생산하는 전력 종류
-      </h2>
-      <div className="space-y-3">
-        {powerDataArray
-          .sort((a, b) => b.value - a.value)
-          .map((item) => {
-            const percentage = (item.value / total) * 100; // 퍼센트 계산
+    <div className="flex w-full flex-col gap-2">
+      {powerDataArray
+        .sort((a, b) => b.value - a.value)
+        .map((item) => {
+          const percentage = (item.value / total) * 100; // 퍼센트 계산
 
-            return (
-              <div key={item.name} className="space-y-1">
-                <div className="flex justify-between">
-                  <span className="font-medium">{item.name}</span>
-                  <span className="text-sm text-gray-400">
-                    {percentage.toFixed(1)}% ({item.value.toLocaleString()} GWh)
-                  </span>
-                </div>
-                <Progress
-                  value={percentage} // 퍼센트 값 전달
-                  className={`h-full ${item.color}`} // 높이와 색상 추가
-                />
+          return (
+            <div key={item.name} className="">
+              <div className="flex justify-between">
+                <span className="font-medium">{item.name}</span>
+                <span className="text-sm text-gray-400">
+                  {percentage.toFixed(1)}% ({item.value.toLocaleString()} GWh)
+                </span>
               </div>
-            );
-          })}
-      </div>
+              <Progress
+                value={percentage} // 퍼센트 값 전달
+                className={`h-full ${item.color}`} // 높이와 색상 추가
+              />
+            </div>
+          );
+        })}
     </div>
   );
 };

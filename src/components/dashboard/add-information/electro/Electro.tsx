@@ -193,56 +193,62 @@ function Electro() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <KPICard
-          title="발전설비총계"
-          value={`${currentYearData["발전설비총계(MW)"].toLocaleString()} MW`}
-          icon={<BatteryCharging size={24} color="#FFFFFF" />}
-          backgroundColor="#6D28D9"
-          iconColor="#A855F7"
-        />
-        <KPICard
-          title="총발전량"
-          value={`${currentYearData["총발전량총계(GWh)"].toLocaleString()} GWh`}
-          icon={<Activity size={24} color="#FFFFFF" />}
-          backgroundColor="#22C55E"
-          iconColor="#16A34A"
-        />
-        <KPICard
-          title="부하율"
-          value={`${currentYearData["부하율(%)"]}%`}
-          icon={<TrendingUp size={24} color="#FFFFFF" />}
-          backgroundColor="#F59E0B"
-          iconColor="#FACC15"
-        />
-        <KPICard
-          title="이용율"
-          value={`${currentYearData["이용율(%)"]}%`}
-          icon={<TrendingDown size={24} color="#FFFFFF" />}
-          backgroundColor="#3B82F6"
-          iconColor="#2563EB"
-        />
-      </div>
-
-      {/* Average Cost and PowerList */}
-      <div className="flex gap-6">
-        <Card className="flex-1 rounded-lg p-6 shadow-lg">
-          <AverageCost
-            value={currentYearData["평균판매단가(원/kWh)"]}
-            maxValue={200}
+      <div className="flex flex-col gap-cardGap">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
+          <KPICard
+            title="발전설비총계"
+            value={`${currentYearData["발전설비총계(MW)"].toLocaleString()} MW`}
+            icon={<BatteryCharging size={24} color="#FFFFFF" />}
+            backgroundColor="#6D28D9"
+            iconColor="#A855F7"
           />
-        </Card>
-        <Card className="flex-1 rounded-lg p-6 shadow-lg">
-          <PowerList data={currentYearData} />
-        </Card>
-      </div>
+          <KPICard
+            title="총발전량"
+            value={`${currentYearData["총발전량총계(GWh)"].toLocaleString()} GWh`}
+            icon={<Activity size={24} color="#FFFFFF" />}
+            backgroundColor="#22C55E"
+            iconColor="#16A34A"
+          />
+          <KPICard
+            title="부하율"
+            value={`${currentYearData["부하율(%)"]}%`}
+            icon={<TrendingUp size={24} color="#FFFFFF" />}
+            backgroundColor="#F59E0B"
+            iconColor="#FACC15"
+          />
+          <KPICard
+            title="이용율"
+            value={`${currentYearData["이용율(%)"]}%`}
+            icon={<TrendingDown size={24} color="#FFFFFF" />}
+            backgroundColor="#3B82F6"
+            iconColor="#2563EB"
+          />
+        </div>
 
-      {/* 차트 섹션 */}
-      <div className="mt-8">
-        <div className="flex gap-6">
-          <Card className="flex-1 p-6 shadow-lg">
-            <h2 className="mb-4 text-center text-lg font-semibold">
+        {/* Average Cost and PowerList */}
+        <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-lg font-semibold">평균 판매단가</h2>
+
+            <AverageCost
+              value={currentYearData["평균판매단가(원/kWh)"]}
+              maxValue={200}
+            />
+          </Card>
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-lg font-semibold">
+              가장 많이 생산하는 전력 종류
+            </h2>
+
+            <PowerList data={currentYearData} />
+          </Card>
+        </div>
+
+        {/* 차트 섹션 */}
+        <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">
               연도별 발전량 추이
             </h2>
             <LineChart
@@ -257,7 +263,7 @@ function Electro() {
                 }))}
             />
           </Card>
-          <Card className="flex flex-col p-6 shadow-lg">
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
             <h2 className="text-center text-lg font-semibold">총발전량 비율</h2>
             <div className="flex items-center justify-center">
               {/* 파이차트 */}
@@ -319,8 +325,8 @@ function Electro() {
             </div>
           </Card>
         </div>
-        <Card className="mt-8 w-full p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-lg font-semibold">
+        <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+          <h2 className="text-center text-lg font-semibold">
             연도별 전력 발전량 비교
           </h2>
           <AreaChart

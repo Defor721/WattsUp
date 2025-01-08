@@ -271,7 +271,7 @@ function PowerUsageByRegion() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
         <div className="rounded-lg bg-red-600 p-4 text-white">
-          <h2 className="text-xl font-bold">오류 발생</h2>
+          <h2 className="text-base font-bold">오류 발생</h2>
           <p>{error}</p>
           <button
             onClick={() => fetchData()}

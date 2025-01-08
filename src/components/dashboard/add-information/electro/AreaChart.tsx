@@ -9,6 +9,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import {
+  formatNumberWithDecimal,
+  formatNumberWithoutDecimal,
+} from "@/hooks/useNumberFormatter";
+
 interface AreaChartProps {
   previousYearData: { name: string; value: number }[];
   currentYearData: { name: string; value: number }[];
@@ -31,10 +36,14 @@ const AreaChart: React.FC<AreaChartProps> = ({
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip formatter={(value) => `${value} GWh`} />
+        <YAxis tickFormatter={formatNumberWithoutDecimal} />
+        <Tooltip
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} GWh`}
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
+        />
         <Area
           type="monotone"
           dataKey="지난연도"

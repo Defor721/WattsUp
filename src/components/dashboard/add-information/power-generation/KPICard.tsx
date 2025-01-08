@@ -15,7 +15,7 @@ const KPICard = ({
     <div className="h-full w-2" style={{ backgroundColor: backgroundColor }} />
     <div>
       <h3 className="text-sm font-semibold">{title}</h3>
-      <p className="text-xl font-bold">{value}</p>
+      <p className="text-base font-bold">{value}</p>
     </div>
   </Card>
 );

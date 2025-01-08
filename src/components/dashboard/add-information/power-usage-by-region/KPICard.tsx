@@ -25,7 +25,7 @@ const KPICard: React.FC<KPICardProps> = ({
       <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <div className="flex items-center gap-1">
-          <p className="text-xl font-bold">{value}</p>
+          <p className="text-base font-bold">{value}</p>
           <span className="text-lg font-bold">{unit}</span>
         </div>
       </div>
