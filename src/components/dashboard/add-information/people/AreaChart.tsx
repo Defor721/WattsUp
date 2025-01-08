@@ -56,7 +56,6 @@ const AreaChartFillByValue: React.FC<AreaChartProps> = ({
             <stop offset={offset} stopColor="#EF4444" stopOpacity={1} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xKey as string} />
         <YAxis />
         <Tooltip formatter={(value: number) => `${value}%`} />
@@ -64,7 +63,7 @@ const AreaChartFillByValue: React.FC<AreaChartProps> = ({
         <Area
           type="monotone"
           dataKey={yKey as string}
-          stroke="#000"
+          // stroke="#000"
           fill="url(#splitColor)"
           name="성장률"
         />

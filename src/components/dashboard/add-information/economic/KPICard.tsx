@@ -17,11 +17,13 @@ const KPICard: React.FC<KPICardProps> = ({
 }) => {
   return (
     <Card
-      className={`flex items-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark`}
-      // style={{ backgroundColor }}
+      className={`flex items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark`}
     >
-      {/* 제목 및 값 */}
-      <div className="flex-1">
+      <div
+        className="h-full w-2"
+        style={{ backgroundColor: backgroundColor }}
+      />
+      <div>
         <div className="flex items-center gap-1">
           <p className="text-sm font-semibold">{title}</p>
           {unit && <p className="text-sm">({unit})</p>}
