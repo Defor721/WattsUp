@@ -167,69 +167,74 @@ function PowerPrice() {
         </Button>
       </div>
 
-      {currentData && (
-        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {Object.keys(COLORS).map((key) => (
-            <KPICard
-              key={key}
-              title={key}
-              value={`${formatNumberWithDecimal(
-                currentData[key] as number,
-              )} 원`}
-              backgroundColor={COLORS[key as keyof typeof COLORS]}
-            />
-          ))}
-        </div>
-      )}
-
-      <div className="flex gap-6">
-        <Card className="flex-1 p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-xl font-bold">비중 차트</h2>
-          <div className="flex items-center justify-center">
-            {/* 파이차트 */}
-            <div className="w-[450px]">
-              <PieChart data={generatePieChartData()} colors={pieChartColors} />
-            </div>
-
-            {/* 데이터 항목 표시 */}
-            <div className="flex flex-col gap-2">
-              {generatePieChartData()
-                .map((item, index) => ({
-                  ...item,
-                  color: pieChartColors[index % pieChartColors.length], // 색상 추가
-                }))
-                .sort((a, b) => b.value - a.value) // 값을 기준으로 내림차순 정렬
-                .map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-                  >
-                    {/* 색상 점 */}
-                    <div
-                      className="h-4 w-4 rounded-full"
-                      style={{
-                        backgroundColor: item.color, // 색상 일치
-                      }}
-                    ></div>
-                    {/* 데이터 이름과 값 */}
-                    <span>
-                      {item.name}: {formatNumberWithDecimal(item.value)} 원
-                    </span>
-                  </div>
-                ))}
-            </div>
+      <div className="flex flex-col gap-cardGap">
+        {currentData && (
+          <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+            {Object.keys(COLORS).map((key) => (
+              <KPICard
+                key={key}
+                title={key}
+                value={`${formatNumberWithDecimal(
+                  currentData[key] as number,
+                )} 원`}
+                backgroundColor={COLORS[key as keyof typeof COLORS]}
+              />
+            ))}
           </div>
-        </Card>
-        <Card className="flex-1 p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-xl font-bold">판매 단가 총합</h2>
-          <BarChart data={generateBarChartData()} />
-        </Card>
+        )}
+
+        <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-xl font-bold">비중 차트</h2>
+            <div className="flex items-center justify-center">
+              {/* 파이차트 */}
+              <div className="w-[450px]">
+                <PieChart
+                  data={generatePieChartData()}
+                  colors={pieChartColors}
+                />
+              </div>
+
+              {/* 데이터 항목 표시 */}
+              <div className="flex flex-col gap-2">
+                {generatePieChartData()
+                  .map((item, index) => ({
+                    ...item,
+                    color: pieChartColors[index % pieChartColors.length], // 색상 추가
+                  }))
+                  .sort((a, b) => b.value - a.value) // 값을 기준으로 내림차순 정렬
+                  .map((item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      {/* 색상 점 */}
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{
+                          backgroundColor: item.color, // 색상 일치
+                        }}
+                      ></div>
+                      {/* 데이터 이름과 값 */}
+                      <span>
+                        {item.name}: {formatNumberWithDecimal(item.value)} 원
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </Card>
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-xl font-bold">판매 단가 총합</h2>
+            <BarChart data={generateBarChartData()} />
+          </Card>
+        </div>
       </div>
 
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <h2 className="mb-4 text-xl font-bold">최근 10년 데이터(단위: 원)</h2>
         <Table data={[...data].sort((a, b) => b.연도 - a.연도).slice(0, 10)} />
-      </div>
+      </div> */}
     </Container>
   );
 }

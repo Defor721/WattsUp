@@ -23,7 +23,7 @@ import Sales from "@/components/dashboard/add-information/sales/Sales";
 
 function DashboardPage() {
   const [selectedDashboard, setSelectedDashboard] =
-    useState<string>("전력 지표");
+    useState<string>("판매 단가");
 
   const dashboards = [
     {
