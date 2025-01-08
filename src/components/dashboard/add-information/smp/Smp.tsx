@@ -216,7 +216,7 @@ function SMP() {
 
       <div className="flex flex-col gap-cardGap">
         <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
-          <Card className="flex flex-1 flex-col items-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
             <h2 className="text-lg font-semibold">
               {selectedFuel} 기간별 SMP 결정 횟수
             </h2>

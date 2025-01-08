@@ -26,7 +26,6 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="category" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
