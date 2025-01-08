@@ -43,9 +43,7 @@ function UserTable() {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.get(
-          `http://localhost:3000//api/admin/userinfo`,
-        );
+        const response = await apiClient.get(`/api/admin/userinfo`);
         const data = response.data.users;
         setUsers(data);
       } catch (error) {
@@ -59,7 +57,7 @@ function UserTable() {
   }, []);
 
   const handleUserClick = (email: string) => {
-    router.push(`http://localhost:3000/admin/user-management/${email}`);
+    router.push(`/admin/user-management/${email}`);
   };
 
   // 검색어에 따른 필터링

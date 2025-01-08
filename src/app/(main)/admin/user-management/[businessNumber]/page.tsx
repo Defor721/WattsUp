@@ -13,7 +13,7 @@ function Page() {
     const fetchUserData = async () => {
       try {
         const response = await apiClient.get(
-          `http://localhost:3000//api/admin/userinfo/${businessNumber}`,
+          `/api/admin/userinfo/${businessNumber}`,
         );
         const data = response.data.userData;
         console.log("data: ", data);
