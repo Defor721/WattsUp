@@ -127,7 +127,7 @@ export default function SupplyChart({
                       y={y}
                       width={width}
                       height={height}
-                      fill={isSelected ? "#f59e0b" : "#0f1d4b"} // 선택된 바 색상 변경
+                      fill={isSelected ? "#f59e0b" : "#1e3b97"} // 선택된 바 색상 변경
                       onClick={() => onBarClick(payload.region)} // 클릭 이벤트 추가
                       style={{ cursor: "pointer" }}
                     />

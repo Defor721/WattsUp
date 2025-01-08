@@ -19,7 +19,7 @@ const EnergyInfoPage = () => {
       {/* 한전거래소 전력시장 운영 섹션 */}
       <section className="relative flex min-h-screen flex-col lg:flex-row">
         {/* 왼쪽 섹션: 텍스트 콘텐츠 */}
-        <div className="flex items-center bg-white p-6 lg:w-1/2 lg:p-12">
+        <div className="flex items-center bg-white p-6 dark:bg-subColor lg:w-1/2 lg:p-12">
           <div className="mx-auto max-w-xl lg:mx-0">
             {/* 메인 제목 애니메이션 */}
             <motion.h1
@@ -35,7 +35,7 @@ const EnergyInfoPage = () => {
 
             {/* 설명 텍스트 애니메이션 */}
             <motion.p
-              className="mb-8 text-lg text-gray-600 lg:text-xl"
+              className="mb-8 text-lg text-gray-600 dark:text-gray-300 lg:text-xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -16,6 +16,8 @@ import {
   formatNumberWithDecimal,
   formatNumberWithoutDecimal,
 } from "@/hooks/useNumberFormatter";
+import { Card } from "@/components/shadcn";
+import { useDeviceType } from "@/hooks/useDeviceType";
 
 interface dataProps {
   amgo: number;
@@ -53,12 +55,13 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
   if (!data) return;
 
   return (
-    <div className="flex-1 p-4">
+    <Card className="flex-1 p-5">
       <h4 className="my-2 scroll-m-20 pb-8 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
 
-      <ResponsiveContainer width={"100%"} aspect={16 / 5}>
+      {/* <ResponsiveContainer width={"100%"} aspect={isTablet ? 4 / 3 : 16 / 7}> */}
+      <ResponsiveContainer width={"100%"} height={300}>
         <LineChart
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
@@ -79,7 +82,7 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
           />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </Card>
   );
 }
 

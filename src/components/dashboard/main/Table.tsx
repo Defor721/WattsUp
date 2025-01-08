@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  Card,
 } from "@/components/shadcn"; // shadcn/ui 컴포넌트 import
 
 interface IData {
@@ -26,7 +27,7 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
   if (!tableData) return null;
 
   return (
-    <div className="mt-3">
+    <Card className="p-5">
       <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 테이블
       </h4>
@@ -79,7 +80,7 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </Card>
   );
 }
 

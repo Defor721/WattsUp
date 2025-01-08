@@ -48,11 +48,11 @@ function NavHeader({ isTablet, isTabletExpanded }: NavHeaderProps) {
         width={80}
         height={80}
         alt="WattsUp Logo"
-        className={`absolute z-0 flex rounded-lg opacity-30`}
+        className={`relative z-0 flex rounded-lg opacity-70`}
       />
 
       {/* 글씨 */}
-      <SidebarGroupLabel className="relative z-10 bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text pl-12 text-[26px] font-bold text-transparent">
+      <SidebarGroupLabel className="relative z-10 bg-gradient-to-r from-teal-200 to-blue-300 bg-clip-text text-[26px] font-bold text-transparent">
         {"WattsUp"}
       </SidebarGroupLabel>
     </Link>
