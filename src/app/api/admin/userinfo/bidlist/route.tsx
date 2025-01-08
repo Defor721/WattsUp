@@ -30,13 +30,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
     const totalCount = bids.length; // 문서 총 개수
 
+    const stats = { totalPrice, totalQuantity, totalCount };
     return NextResponse.json(
       {
         message: "success",
         bids,
-        totalPrice,
-        totalQuantity,
-        totalCount, // 총 개수 포함
+        stats, // 총 개수 포함
       },
       { status: 200 },
     );
