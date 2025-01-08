@@ -117,20 +117,20 @@ function RegionData() {
   if (!firstData || loading) return <Loading />;
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-5">
-        <Button
-          onClick={sendRegionsDataToDB}
-          disabled={isButtonDisabled} // 버튼 비활성화 상태 반영
-          className={`bg-mainColor text-white dark:bg-white dark:text-mainColor ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
-        >
-          오늘의 지역별 발전량
-        </Button>
-      </div>
+    <Card className="flex gap-3 border-none">
+      <Card className="flex flex-col gap-3 p-5">
+        <div className="flex items-center gap-5">
+          <Button
+            onClick={sendRegionsDataToDB}
+            disabled={isButtonDisabled} // 버튼 비활성화 상태 반영
+            className={`bg-mainColor text-white dark:bg-white dark:text-mainColor ${
+              isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
+          >
+            오늘의 지역별 발전량
+          </Button>
+        </div>
 
-      <div className="flex gap-5">
         {/* 지역별 발전량 텍스트로 표시 */}
         {firstData && (
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -140,14 +140,14 @@ function RegionData() {
                 <Card key={regionData.region} className="p-5">
                   <p className="text-sm font-semibold">{regionData.region}</p>
                   <p className="text-2xl font-bold">
-                    {regionData.amgo.toLocaleString()} MWh
+                    {regionData.amgo.toLocaleString()} kWh
                   </p>
                 </Card>
               ))}
           </div>
         )}
-      </div>
-    </div>
+      </Card>
+    </Card>
   );
 }
 

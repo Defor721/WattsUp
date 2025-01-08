@@ -21,7 +21,7 @@ function RegionButtons({
   setSelectedRegion,
 }: RegionButtonsProps) {
   return (
-    <div className="flex items-center justify-end gap-3">
+    <div className="mb-4 flex items-center justify-end gap-4">
       <Label
         htmlFor="region"
         className="text-mainColor dark:text-white md:text-base"

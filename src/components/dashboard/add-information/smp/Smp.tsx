@@ -176,7 +176,7 @@ function SMP() {
   return (
     <Container>
       {/* 필터와 다운로드 */}
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-cardMargin flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center justify-end gap-3">
           <Label
             htmlFor="fuel"
@@ -215,59 +215,63 @@ function SMP() {
         </Button>
       </div>
 
-      <div className="flex gap-6">
-        <Card className="flex flex-1 flex-col items-center p-6 shadow-lg">
-          <h2 className="text-lg font-semibold">
-            {selectedFuel} 기간별 SMP 결정 횟수
-          </h2>
-          <LineChart
-            data={lineChartData}
-            xKey="name"
-            yKey="value"
-            lineColor="#34D399"
+      <div className="flex flex-col gap-cardGap">
+        <div className="flex gap-cardGap">
+          <Card className="flex flex-1 flex-col items-center p-cardPadding shadow-lg">
+            <h2 className="text-lg font-semibold">
+              {selectedFuel} 기간별 SMP 결정 횟수
+            </h2>
+            <LineChart
+              data={lineChartData}
+              xKey="name"
+              yKey="value"
+              lineColor="#34D399"
+            />
+          </Card>
+
+          <Card className="flex flex-1 flex-col p-cardPadding shadow-lg">
+            <h2 className="text-center text-lg font-semibold">
+              연료원별 전체 비율
+            </h2>
+            <div className="flex items-center justify-center">
+              <div className="w-[450px]">
+                <PieChart data={doughnutData} colors={colors} />
+              </div>
+              <div className="flex flex-col gap-2">
+                {doughnutData
+                  .sort((a, b) => b.value - a.value)
+                  .map((item, index) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{
+                          backgroundColor: colors[index % colors.length],
+                        }}
+                      ></div>
+                      <span>
+                        {item.name}: {formatNumberWithoutDecimal(item.value)}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Table */}
+        <Card className="p-cardPadding">
+          <h2 className="mb-4 text-lg font-semibold">최근 10년간 SMP 데이터</h2>
+          <Table
+            data={[...filteredData]
+              .sort(
+                (a, b) => Number(b.기간) - Number(a.기간), // '기간'을 숫자로 변환하여 정렬
+              )
+              .slice(0, 10)}
           />
         </Card>
-
-        <Card className="flex flex-1 flex-col p-6 shadow-lg">
-          <h2 className="text-center text-lg font-semibold">
-            연료원별 전체 비율
-          </h2>
-          <div className="flex items-center justify-center">
-            <div className="w-[450px]">
-              <PieChart data={doughnutData} colors={colors} />
-            </div>
-            <div className="flex flex-col gap-2">
-              {doughnutData
-                .sort((a, b) => b.value - a.value)
-                .map((item, index) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-                  >
-                    <div
-                      className="h-4 w-4 rounded-full"
-                      style={{ backgroundColor: colors[index % colors.length] }}
-                    ></div>
-                    <span>
-                      {item.name}: {formatNumberWithoutDecimal(item.value)}
-                    </span>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Table */}
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">최근 10년간 SMP 데이터</h2>
-        <Table
-          data={[...filteredData]
-            .sort(
-              (a, b) => Number(b.기간) - Number(a.기간), // '기간'을 숫자로 변환하여 정렬
-            )
-            .slice(0, 10)}
-        />
       </div>
     </Container>
   );

@@ -103,6 +103,18 @@ const config: Config = {
           mutedDark: "hsl(240, 3.7%, 15.9%)",
         },
       },
+      spacing: {
+        cardGap: "16px",
+        cardPadding: "20px",
+        cardMargin: "16px",
+      },
+      fontSize: {
+        sm: "0.875rem",
+        base: "1rem",
+        lg: "1.125rem",
+        "custom-small": "0.75rem",
+        "custom-large": "2rem",
+      },
       keyframes: {
         insideout: {
           "0%": { opacity: "0%" },

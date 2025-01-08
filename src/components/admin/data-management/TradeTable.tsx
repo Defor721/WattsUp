@@ -56,7 +56,6 @@ function formatTimeDifference(now: string): string {
 
 function TradeTable() {
   const [bidData, setBidData] = useState<BidData[]>([]);
-  const [statsData, setStatsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // 검색어 상태
@@ -74,7 +73,6 @@ function TradeTable() {
           "http://localhost:3000/api/admin/userinfo/bidlist",
         );
         const bidsData = response.data.bids;
-        console.log("data: ", bidsData);
         setBidData(bidsData);
       } catch (error) {
         console.error("Error fetching trade data:", error);
