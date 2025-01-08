@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { CircleCheck } from "lucide-react";
 
 import {
   Table,
@@ -12,12 +13,17 @@ import {
   Input,
   Pagination,
   Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  ScrollArea,
 } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
-interface TradeData {
+interface BidData {
   _id: string;
   businessNumber: number;
   region: string;
@@ -26,8 +32,31 @@ interface TradeData {
   now: string;
 }
 
+function formatTimeDifference(now: string): string {
+  const currentTime = new Date(); // 현재 시간
+  const eventTime = new Date(now); // 거래 시간
+  const timeDiff = currentTime.getTime() - eventTime.getTime(); // 밀리초 차이
+
+  const diffInMinutes = Math.floor(timeDiff / (1000 * 60)); // 분 단위로 변환
+  const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
+  const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
+
+  if (diffInDays >= 2) {
+    return `${diffInDays}일 전`;
+  } else if (diffInDays === 1) {
+    return `하루 전`;
+  } else if (diffInHours >= 1) {
+    return `${diffInHours}시간 전`;
+  } else if (diffInMinutes >= 1) {
+    return `${diffInMinutes}분 전`;
+  } else {
+    return `방금 전`;
+  }
+}
+
 function TradeTable() {
-  const [tradeData, setTradeData] = useState<TradeData[]>([]);
+  const [bidData, setBidData] = useState<BidData[]>([]);
+  const [statsData, setStatsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // 검색어 상태
@@ -44,8 +73,9 @@ function TradeTable() {
         const response = await apiClient.get(
           "http://localhost:3000/api/admin/userinfo/bidlist",
         );
-        const data = response.data.bids;
-        setTradeData(data);
+        const bidsData = response.data.bids;
+        console.log("data: ", bidsData);
+        setBidData(bidsData);
       } catch (error) {
         console.error("Error fetching trade data:", error);
       } finally {
@@ -57,7 +87,7 @@ function TradeTable() {
   }, []);
 
   // 검색어에 따른 필터링
-  const filteredTradeData = tradeData.filter((trade) => {
+  const filteredTradeData = bidData.filter((trade) => {
     const searchValue = searchTerm.toLowerCase();
     return (
       trade._id.toLowerCase().includes(searchValue) || // ID 필터
@@ -82,7 +112,7 @@ function TradeTable() {
     <div className="mt-3">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          거래 내역 테이블
+          모든 거래 내역
         </h4>
         <Input
           placeholder="검색창"
