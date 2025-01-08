@@ -13,7 +13,7 @@ export function useDeviceType() {
     const updateDeviceType = () => {
       const width = window.innerWidth;
       setDeviceType({
-        isTablet: width <= TABLET_BREAKPOINT,
+        isTablet: width < TABLET_BREAKPOINT,
       });
     };
 

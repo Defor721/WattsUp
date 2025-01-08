@@ -95,7 +95,7 @@ function Sidebar() {
       {/* 사이드바 */}
       <div className={`h-full w-16 lg:w-64`}></div>
       <aside
-        className={`fixed z-50 flex h-full w-16 flex-col bg-[#070f26] p-2 text-white transition-all duration-300 lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
+        className={`fixed z-50 flex h-full w-16 flex-col bg-mainColor p-2 text-white transition-all duration-300 lg:w-64 ${isTabletExpanded && "w-64 shadow-lg"}`}
       >
         <button
           className={`absolute bg-[#070f26] ${isTabletExpanded ? "right-[0px]" : "right-[12px]"} top-0 z-10 block p-2 lg:hidden`}
