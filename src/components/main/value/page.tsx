@@ -5,6 +5,9 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
+import RegionValue2 from "./RegionValue2";
+import RegionValue1 from "./RegionValue1";
+
 function TodayValue() {
   const [apiData, setApiData] = useState<{
     todaySmpData: {
@@ -31,13 +34,14 @@ function TodayValue() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/crawl");
-        if (!response.ok) {
+        const smpRecResponse = await fetch("/api/crawl");
+
+        if (!smpRecResponse.ok) {
           throw new Error("Failed to fetch data");
         }
-        const result = await response.json();
+        const smpRecData = await smpRecResponse.json();
         if (isMounted) {
-          setApiData(result);
+          setApiData(smpRecData);
         }
       } catch (error) {
         if (isMounted) {
@@ -83,65 +87,113 @@ function TodayValue() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="mb-8 text-center text-3xl font-bold">오늘의 전력정보</h1>
-      <div className="grid grid-cols-1 justify-center gap-cardGap xl:grid-cols-2">
-        <Card className="h-[300px] w-[488px] border-none bg-cardBackground-light p-4 shadow-md dark:bg-cardBackground-dark">
+      <div className="grid grid-cols-1 justify-center gap-cardGap xl:grid-cols-3">
+        <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 SMP
           </div>
-          <div className="mb-2 mt-3 flex justify-end text-xs text-gray-500">
+          <div className="mb-3 mt-6 flex justify-end text-xs text-gray-500 dark:text-gray-300">
             (단위: 원/kWh)
           </div>
-          <table className="w-full border-collapse">
+          <table className="h-[148px] w-full border-collapse">
             <tbody>
-              <tr className="border-t [&>*]:text-center">
-                <td className="border border-gray-300 p-3 font-medium">
+              <tr className="border-t">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
                   거래일
                 </td>
-                <td className="border border-gray-300 p-3">
+                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
                   {apiData.todaySmpData.거래일 || "-"}
                 </td>
               </tr>
-              <tr className="border-t [&>*]:text-center">
-                <td className="border border-gray-300 p-3 font-medium">
+              <tr className="border-t">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
                   최고가
                 </td>
-                <td className="border border-gray-300 p-3">
+                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
                   {apiData.todaySmpData.최고가 || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                  최소가
+                </td>
+                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
+                  {apiData.todaySmpData.최소가 || "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="w-[133px] border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                  평균가
+                </td>
+                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
+                  {apiData.todaySmpData.평균가 || "-"}
                 </td>
               </tr>
             </tbody>
           </table>
         </Card>
         {/* 오늘의 REC */}
-        <Card className="h-[300px] w-[488px] border-none bg-cardBackground-light p-4 shadow-md dark:bg-cardBackground-dark">
+        <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 REC
           </div>
-          <div className="bg-blue-100 py-2 text-center text-sm font-medium text-blue-800">
+          <div className="mb-3 bg-blue-100 py-2 text-center text-sm font-medium text-blue-800">
             1REC = 1MWh (가중치에 따라 변동)
           </div>
-          <table className="w-full border-collapse">
+          <table className="h-[148px] w-full border-collapse">
             <tbody>
-              <tr className="border-t [&>*]:text-center">
-                <td className="border border-gray-300 p-3 font-medium">
+              <tr className="border-t">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
                   거래일
                 </td>
-                <td className="border border-gray-300 p-3">
+                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
                   {apiData.todayRecData.거래일 || "-"}
                 </td>
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                  거래량
+                </td>
+                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.거래량) ||
+                    "-"}
+                </td>
               </tr>
-              <tr className="border-t [&>*]:text-center">
-                <td className="border border-gray-300 p-3 font-medium">
+              <tr className="border-t">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
                   평균가
                 </td>
-                <td className="border border-gray-300 p-3">
+                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
                   {formatNumberWithoutDecimal(apiData.todayRecData.평균가) ||
                     "-"}
+                </td>
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                  최고가
+                </td>
+                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.최고가) ||
+                    "-"}
+                </td>
+              </tr>
+              <tr className="border-t">
+                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                  최저가
+                </td>
+                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.최저가) ||
+                    "-"}
+                </td>
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                  종가
+                </td>
+                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
+                  {formatNumberWithoutDecimal(apiData.todayRecData.종가) || "-"}
                 </td>
               </tr>
             </tbody>
           </table>
         </Card>
+
+        {/* 총 공급량 */}
+        <RegionValue1 />
       </div>
     </div>
   );
