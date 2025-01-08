@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,9 +8,9 @@ import { useAuthStore } from "@/auth/useAuthStore";
 import { toast } from "@/hooks/useToast";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 
-import PasswordSection from "../common/PasswordSection";
-import EmailSection from "../common/EmailSection";
-import BusinessNumberSection from "../common/BusinessNumberSection";
+import PasswordSection from "../common/password/PasswordSection";
+import EmailSection from "../common/email/EmailSection";
+import BusinessNumberSection from "../common/business/BusinessInfoSection";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -78,7 +79,7 @@ export default function SignupForm() {
           setIsPasswordValid={setIsPasswordValid}
           setIsConfirmPasswordValid={setIsConfirmPasswordValid}
         />
-        {/* 법인등록번호 및 주민등록번호 검증 섹션 */}
+        {/* 사업자등록번호 및 법인등록번호 검증 섹션 */}
         <BusinessNumberSection
           isBusinessVerified={isBusinessVerified}
           businessNumber={businessNumber}

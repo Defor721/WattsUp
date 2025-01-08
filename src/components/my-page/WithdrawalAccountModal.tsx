@@ -14,8 +14,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/shadcn";
-import PasswordInput from "@/auth/components/common/PasswordInput";
 import { useAuthStore } from "@/auth/useAuthStore";
+import PasswordInput from "@/auth/components/common/password/PasswordInput";
 
 interface WithdrawalAccountModalProps {
   children: React.ReactNode;

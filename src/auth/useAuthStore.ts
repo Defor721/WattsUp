@@ -25,12 +25,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   ...NULL_AUTH_STATE,
   actions: {
     /** 소셜 회원가입 */
-    async socialSignup() {
+    async socialSignup(password) {
       const state = useAuthStore.getState();
       if (state.loading) return;
       try {
         set({ loading: true });
-        const { accessToken, message } = await socialSignup();
+        const { accessToken, message } = await socialSignup(password);
         set({
           accessToken,
           redirectTo: "/",

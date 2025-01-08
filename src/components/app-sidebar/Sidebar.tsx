@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   BarChart2,
   TrendingUp,
-  Search,
   PanelLeft,
   X,
   FileText,
@@ -22,7 +21,6 @@ import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
 import NavHeader from "./Header";
 import NavMain from "./Main";
 import { NavUser } from "./User";
-import { Input } from "../shadcn";
 import NotLogin from "./NotLogin";
 
 // Menu defaultItems
@@ -94,7 +92,6 @@ function Sidebar() {
           onClick={toggleTabletSidebar}
         />
       )}
-
       {/* 사이드바 */}
       <div className={`h-full w-16 lg:w-64`}></div>
       <aside
@@ -106,7 +103,6 @@ function Sidebar() {
         >
           {isTabletExpanded ? <X /> : <PanelLeft />}
         </button>
-
         {/* Sidebar Sections */}
         <div className="flex h-full flex-col">
           {/* Header Section */}
@@ -117,20 +113,8 @@ function Sidebar() {
             />
           </div>
 
-          {/* Search Section */}
-          {(!isTablet || isTabletExpanded) && (
-            <div className="relative my-2 w-full">
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full border-[rgb(20,35,80)] bg-[rgb(13,23,53)] pl-10 text-white placeholder-gray-400"
-              />
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-            </div>
-          )}
-
           {/* Content Section */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="mt-5 flex-1 overflow-y-auto">
             {/* Default Items */}
             <NavMain
               items={defaultItems}

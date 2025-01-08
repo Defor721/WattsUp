@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import { changePasswordProps } from "@/stores/useUserStore";
+import { changePasswordProps, findEmailProps } from "@/stores/useUserStore";
 
 export interface CheckUserResponse {
   businessNumber: any;
@@ -46,6 +46,18 @@ export async function updatePasswordByEmail(newPassword: string) {
       withCredentials: true,
     },
   );
+
+  return data;
+}
+
+export async function getEmailByCorporateNumber({
+  businessNumber,
+  corporateNumber,
+}: findEmailProps) {
+  const { data } = await apiClient.post("/api/users/email", {
+    businessNumber,
+    corporateNumber,
+  });
 
   return data;
 }

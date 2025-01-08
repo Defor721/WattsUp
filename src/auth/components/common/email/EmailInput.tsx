@@ -2,7 +2,7 @@ import React, { Dispatch } from "react";
 
 import { Input, Label } from "@/components/shadcn";
 
-import XCircleButton from "./XCircleButton";
+import XCircleButton from "../ui/XCircleButton";
 
 interface EmailInputProps {
   children?: React.ReactNode;

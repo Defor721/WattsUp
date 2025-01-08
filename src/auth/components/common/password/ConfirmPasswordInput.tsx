@@ -2,8 +2,8 @@ import { Dispatch } from "react";
 
 import { Input, Label } from "@/components/shadcn";
 
-import EyeButton from "./EyeButton";
-import XCircleButton from "./XCircleButton";
+import EyeButton from "../ui/EyeButton";
+import XCircleButton from "../ui/XCircleButton";
 
 interface ConfirmPasswordInputProps {
   confirmPasswordLabel?: string;

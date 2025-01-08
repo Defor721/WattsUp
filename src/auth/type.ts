@@ -33,14 +33,6 @@ export interface ResponsePayload {
   message: string | null;
 }
 
-export interface SocialSignupParams {
-  businessNumber: string;
-  startDate: string;
-  principalName: string;
-  companyName: string;
-  corporateNumber: string | null;
-}
-
 export interface AuthState {
   accessToken: string | null;
   redirectTo: string;
@@ -50,7 +42,7 @@ export interface AuthState {
   actions: {
     nativeLogin: (email: string, password: string) => Promise<void>;
     socialLogin: (code: string) => Promise<void>;
-    socialSignup: (params: SocialSignupParams) => Promise<void>;
+    socialSignup: (password: string) => Promise<void>;
     nativeSignup: (password: string) => Promise<void>;
     logout: () => Promise<void>;
     withdrawalAccount: (password: string) => Promise<void>;
