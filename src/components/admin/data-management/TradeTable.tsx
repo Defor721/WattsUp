@@ -69,9 +69,7 @@ function TradeTable() {
     const fetchTradeData = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.get(
-          "http://localhost:3000/api/admin/userinfo/bidlist",
-        );
+        const response = await apiClient.get("/api/admin/userinfo/bidlist");
         const bidsData = response.data.bids;
         setBidData(bidsData);
       } catch (error) {
