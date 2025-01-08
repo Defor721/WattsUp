@@ -1,19 +1,26 @@
+import { EventEmitter } from "events";
+
 import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
+// 리스너 제한 증가
+EventEmitter.defaultMaxListeners = 30;
+
+// axios 인스턴스 생성
+const axiosInstance = axios.create({
+  baseURL: "https://www.kpx.or.kr",
+});
+
 export async function GET() {
   try {
-    // 1. URL 설정
-    const url = "https://www.kpx.or.kr/main/#section-2nd";
+    // 1. URL 요청 및 HTML 데이터 가져오기
+    const { data } = await axiosInstance.get("/main/#section-2nd");
 
-    // 2. HTTP 요청 보내기
-    const { data } = await axios.get(url);
-
-    // 3. HTML 파싱
+    // 2. HTML 파싱
     const $ = cheerio.load(data);
 
-    // 4. "오늘의 SMP" 데이터 추출
+    // 3. "오늘의 SMP" 데이터 추출
     const todaySmpData: { [key: string]: string | number } = {};
     const todaySmpHeader = $("caption").filter((i, el) =>
       $(el).text().includes("오늘의 SMP"),
@@ -34,6 +41,7 @@ export async function GET() {
           return isNaN(num) ? val : num;
         };
 
+        // 첫 번째 데이터 처리
         if (key === "거래일") {
           todaySmpData["거래일"] = value;
         } else if (key === "거래량") {
@@ -48,7 +56,7 @@ export async function GET() {
           todaySmpData["종가"] = parseValue(value);
         }
 
-        // 두 번째 항목도 처리
+        // 두 번째 데이터 처리
         if (key2 === "거래일") {
           todaySmpData["거래일"] = value2;
         } else if (key2 === "거래량") {
@@ -65,7 +73,7 @@ export async function GET() {
       });
     }
 
-    // 5. "오늘의 REC" 데이터 추출
+    // 4. "오늘의 REC" 데이터 추출
     const todayRecData: { [key: string]: string | number } = {};
     const todayRecHeader = $("caption").filter((i, el) =>
       $(el).text().includes("오늘의 REC"),
@@ -86,7 +94,7 @@ export async function GET() {
           return isNaN(num) ? val : num;
         };
 
-        // 두 번째 데이터 처리
+        // 첫 번째 데이터 처리
         if (key === "거래일") {
           todayRecData["거래일"] = value;
         } else if (key === "거래량") {
@@ -101,7 +109,7 @@ export async function GET() {
           todayRecData["종가"] = parseValue(value);
         }
 
-        // 두 번째 항목도 처리
+        // 두 번째 데이터 처리
         if (key2 === "거래일") {
           todayRecData["거래일"] = value2;
         } else if (key2 === "거래량") {
@@ -118,7 +126,7 @@ export async function GET() {
       });
     }
 
-    // 6. 데이터 반환
+    // 5. 결과 반환
     return NextResponse.json({ todaySmpData, todayRecData });
   } catch (error: unknown) {
     const errorMessage =
