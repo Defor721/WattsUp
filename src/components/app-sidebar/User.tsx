@@ -116,7 +116,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
               <DropdownMenuItem>
                 <Link
                   href="/my-page"
-                  className="flex items-center gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
+                  className="flex w-full justify-start gap-2 py-1 text-gray-300 hover:bg-[rgb(20,35,80)] hover:text-white"
                 >
                   <UserIcon />
                   마이페이지
@@ -126,7 +126,7 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
 
             <DropdownMenuItem className="hover:cursor-pointer hover:bg-[rgb(20,35,80)]">
               <Button
-                className="flex h-7 items-center gap-2 p-0 py-1 text-gray-300"
+                className="flex h-7 w-full justify-start gap-2 p-0 py-1 text-gray-300"
                 onClick={handleLogout}
               >
                 <LogOut />
