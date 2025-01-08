@@ -197,28 +197,32 @@ function People() {
 
         <div className="flex flex-col gap-cardGap">
           <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
-            <h2 className="mb-3 text-center text-lg font-semibold">
-              경제 성장률 데이터
-            </h2>
-            <AreaChart
-              data={[...data]
-                .sort((a, b) => a.연도 - b.연도)
-                .map((row) => ({ 연도: row.연도, 값: row.경제성장률 }))}
-              xKey="연도"
-              yKey="값"
-            />
+            <div className="flex flex-col gap-2">
+              <h2 className="mb-3 text-center text-lg font-semibold">
+                경제 성장률 데이터
+              </h2>
+              <AreaChart
+                data={[...data]
+                  .sort((a, b) => a.연도 - b.연도)
+                  .map((row) => ({ 연도: row.연도, 값: row.경제성장률 }))}
+                xKey="연도"
+                yKey="값"
+              />
+            </div>
           </Card>
           <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
-            <h2 className="mb-3 text-center text-lg font-semibold">
-              국내 총 생산 추이
-            </h2>
-            <LineChart
-              data={[...data]
-                .sort((a, b) => a.연도 - b.연도)
-                .map((row) => ({ 연도: row.연도, 값: row.국내총생산 }))}
-              xKey="연도"
-              yKey="값"
-            />
+            <div className="flex flex-col gap-2">
+              <h2 className="mb-3 text-center text-lg font-semibold">
+                국내 총 생산 추이
+              </h2>
+              <LineChart
+                data={[...data]
+                  .sort((a, b) => a.연도 - b.연도)
+                  .map((row) => ({ 연도: row.연도, 값: row.국내총생산 }))}
+                xKey="연도"
+                yKey="값"
+              />
+            </div>
           </Card>
         </div>
       </div>

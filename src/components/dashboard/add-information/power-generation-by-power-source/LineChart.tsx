@@ -27,14 +27,13 @@ function LineChart({
         data={chartData}
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="hour" />
         <YAxis
           tickFormatter={formatNumberWithoutDecimal}
           domain={[0, "auto"]}
         />
         <Tooltip
-          formatter={(value: number) => `${formatNumberWithDecimal(value)} MWh`}
+          formatter={(value: number) => `${formatNumberWithDecimal(value)} kWh`}
         />
         {Object.keys(chartData[0] || {}).map(
           (key, index) =>

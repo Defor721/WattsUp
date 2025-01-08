@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getTodayDate, getYesterdayDate } from "@/utils";
 import Loading from "@/app/loading";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import { Card } from "@/components/shadcn";
 
 import Container from "../Container";
 import LineChart from "./LineChart";
@@ -180,38 +181,49 @@ function PowerGenerationByPowerSource() {
   return (
     <Container>
       {/* 라인 그래프 */}
-      <h2 className="mb-4 mt-8 text-center text-lg font-semibold">
-        발전원별 시간당 발전량
-      </h2>
-      <LineChart chartData={chartData} colors={COLORS} />
+      <div className="flex flex-col gap-cardGap">
+        <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-center text-lg font-semibold">
+              발전원별 시간당 발전량
+            </h2>
+            <LineChart chartData={chartData} colors={COLORS} />
+          </div>
+        </Card>
 
-      {/* 파이 그래프 */}
-      <h2 className="mb-4 mt-8 text-center text-lg font-semibold">
-        발전원별 누적 비율
-      </h2>
-      <div className="flex items-center justify-center gap-5">
-        <div className="w-[450px]">
-          <PieChart totalData={totalData} colors={COLORS} />
-        </div>
-        {/* 파이 그래프 리스트 */}
-        <div className="flex flex-col gap-2">
-          {totalData
-            .sort((a, b) => b.value - a.value)
-            .map((item, index) => (
-              <div
-                key={item.name}
-                className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-              >
-                <div
-                  className="h-4 w-4 rounded-full"
-                  style={{ backgroundColor: COLORS[item.name] }}
-                ></div>
-                <span>
-                  {item.name}: {formatNumberWithoutDecimal(item.value)} MWh
-                </span>
+        {/* 파이 그래프 */}
+        <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-center text-lg font-semibold">
+              발전원별 누적 비율
+            </h2>
+            <div className="flex items-center justify-center gap-5">
+              <div className="w-[450px]">
+                <PieChart totalData={totalData} colors={COLORS} />
               </div>
-            ))}
-        </div>
+              {/* 파이 그래프 리스트 */}
+              <div className="flex flex-col gap-2">
+                {totalData
+                  .sort((a, b) => b.value - a.value)
+                  .map((item, index) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{ backgroundColor: COLORS[item.name] }}
+                      ></div>
+                      <span>
+                        {item.name}: {formatNumberWithoutDecimal(item.value)}{" "}
+                        MWh
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </Container>
   );
