@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
 
+/** 크레딧 충전 */
 export async function POST(request: NextRequest) {
   try {
     const { charge, businessNumber } = await request.json();
