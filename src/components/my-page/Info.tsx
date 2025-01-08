@@ -20,6 +20,7 @@ import { useUserStore } from "@/stores/useUserStore";
 
 import ChangePasswordModal from "./ChangePasswordModal";
 import WithdrawalAccountModal from "./WithdrawalAccountModal";
+import ChargeCreditModal from "./ChargeCreditModal";
 
 function Info() {
   const router = useRouter();
@@ -78,7 +79,11 @@ function Info() {
       </CardHeader>
       <CardContent className="flex w-full select-none flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
+          {/* 예치금 충전 */}
+          <ChargeCreditModal />
+          {/* 비밀번호 변경 */}
           <ChangePasswordModal />
+          {/* 로그아웃 */}
           <Button
             variant="outline"
             className="w-full bg-mainColor text-white dark:bg-white dark:text-subColor"
@@ -87,6 +92,7 @@ function Info() {
             <LogOut className="mr-2 h-4 w-4" />
             로그아웃
           </Button>
+          {/* 회원탈최 */}
           <div className="flex justify-center">
             <WithdrawalAccountModal>
               <p className="inline-flex cursor-pointer text-sm underline">

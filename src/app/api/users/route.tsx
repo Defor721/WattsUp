@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
           createdAt: 1,
           updatedAt: 1,
           role: 1,
+          credit: 1,
         },
       },
     );
