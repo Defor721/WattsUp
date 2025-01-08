@@ -5,8 +5,9 @@ import ReactFullpage from "@fullpage/react-fullpage";
 import VideoPart from "./video/VideoPart";
 import EnergyInfoPage from "./renewable/Renewable";
 import FeaturesPart from "./features/Features";
-import TodayValue from "./value/page";
 import OurWeb from "./web/OurWeb";
+import TodayValue from "./value/page";
+// import TodayValue from "../dashboard/main/TodayValue";
 
 const FullPageWrapper: React.FC = () => {
   return (

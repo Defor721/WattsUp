@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
 
-// 유저 거래기록 불러오는 api
 export async function GET(request: NextRequest) {
   try {
     const authorizationHeader = request.headers.get("Authorization");

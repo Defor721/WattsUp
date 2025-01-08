@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 function FeaturesPart() {
   return (
-    <div className="flex h-screen min-h-screen flex-col bg-[#F5F5F5]">
+    <div className="flex h-screen flex-col bg-[#F5F5F5] dark:bg-subColor">
       {/* Hero Section */}
       <div className="relative flex h-[50vh] flex-col items-center justify-center text-center">
         <motion.div
@@ -25,12 +25,8 @@ function FeaturesPart() {
             height={120}
             className="mx-auto mb-8"
           />
-          <h1 className="mb-4 text-4xl font-bold text-gray-900">
-            UNLEASH YOUR ENERGY
-          </h1>
-          <p className="text-xl text-gray-700">
-            터빈크루와 함께 에너지의 미래를 열어가세요
-          </p>
+          <h1 className="mb-4 text-4xl font-bold">UNLEASH YOUR ENERGY</h1>
+          <p className="text-xl">터빈크루와 함께 에너지의 미래를 열어가세요</p>
         </motion.div>
       </div>
 

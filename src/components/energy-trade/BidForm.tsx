@@ -122,7 +122,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
           <CardContent>
             <div className="mb-4">
               <Label className="text-sm font-medium">보유 크레딧</Label>
-              <div className="text-lg font-bold text-mainColor">
+              <div className="text-lg font-bold">
                 {credits.toLocaleString()} 원
               </div>
             </div>
@@ -132,12 +132,19 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   지역
                 </Label>
                 <Select value={region} onValueChange={onRegionChange}>
-                  <SelectTrigger id="region">
+                  <SelectTrigger
+                    id="region"
+                    className="mt-2 bg-white dark:bg-transparent"
+                  >
                     <SelectValue placeholder="지역을 선택하세요" />
                   </SelectTrigger>
-                  <SelectContent className="z-50 bg-white">
+                  <SelectContent className="bg-white dark:bg-cardBackground-dark">
                     {regionOptions.map((region) => (
-                      <SelectItem key={region.value} value={region.value}>
+                      <SelectItem
+                        className="bg-white dark:bg-cardBackground-dark"
+                        key={region.value}
+                        value={region.value}
+                      >
                         {region.label}
                       </SelectItem>
                     ))}
@@ -154,7 +161,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
                   required
-                  className="bg-transparent"
+                  className="bg-white dark:bg-transparent"
                 />
               </div>
               <div className="space-y-2">
@@ -167,7 +174,7 @@ export default function BidForm({ region, onRegionChange }: BidFormProps) {
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
                   required
-                  className="bg-transparent"
+                  className="bg-white dark:bg-transparent"
                 />
               </div>
               <div className="space-y-2">

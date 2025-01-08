@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  Card,
 } from "@/components/shadcn"; // shadcn/ui 컴포넌트 import
 
 interface IData {
@@ -26,15 +27,15 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
   if (!tableData) return null;
 
   return (
-    <div className="mt-3">
-      <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+    <Card className="border-none bg-cardBackground-light p-5 dark:bg-cardBackground-dark">
+      <h4 className="my-3 scroll-m-20 text-center text-xl font-semibold tracking-tight">
         {selectedRegion} 테이블
       </h4>
       <div className="overflow-x-auto">
-        <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
+        <Table className="min-w-full border border-gray-700 text-center">
           {/* 테이블 헤더 */}
           <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+            <TableRow className="bg-transparent [&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 날짜
               </TableHead>
@@ -55,10 +56,7 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
           {/* 테이블 본문 */}
           <TableBody>
             {tableData.map((row) => (
-              <TableRow
-                key={row.date}
-                className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-              >
+              <TableRow key={row.date} className="bg-transparent">
                 <TableCell className="border border-gray-700 p-3">
                   {row.date}
                 </TableCell>
@@ -79,7 +77,7 @@ function PredictTable({ tableData, selectedRegion }: PredictTableProps) {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </Card>
   );
 }
 

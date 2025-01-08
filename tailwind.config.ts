@@ -18,6 +18,10 @@ const config: Config = {
         subColor: {
           DEFAULT: "#050a18",
         },
+        cardBackground: {
+          light: "#f5f6f7",
+          dark: "#1e2330",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           100: "var(--primary-100)",
@@ -102,6 +106,20 @@ const config: Config = {
           mutedLight: "hsl(240 4.8% 95.9%)",
           mutedDark: "hsl(240, 3.7%, 15.9%)",
         },
+      },
+      spacing: {
+        cardGap: "16px",
+        cardPadding: "20px",
+        cardMargin: "16px",
+
+        sidebarGap: "16px",
+      },
+      fontSize: {
+        sm: "0.875rem",
+        base: "1rem",
+        lg: "1.125rem",
+        "custom-small": "0.75rem",
+        "custom-large": "2rem",
       },
       keyframes: {
         insideout: {
