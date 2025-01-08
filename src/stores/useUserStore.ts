@@ -35,7 +35,7 @@ export interface UserState {
       businessNumber,
       corporateNumber,
     }: findEmailProps) => Promise<void>;
-    chargeCredit: (charge: string) => Promise<void>;
+    chargeCredit: (charge: number) => Promise<void>;
     resetUserState: () => void;
   };
 }
@@ -53,7 +53,6 @@ export const useUserStore = create<UserState>((set) => ({
     /** 현재 유저 데이터 조회 */
     async fetchCurrentUser() {
       const state = useUserStore.getState();
-
       if (state.loading) return;
       try {
         set({ loading: true });
@@ -128,7 +127,7 @@ export const useUserStore = create<UserState>((set) => ({
     },
 
     /** 예치금 충전 */
-    async chargeCredit(charge: string) {
+    async chargeCredit(charge: number) {
       try {
         set({ loading: true });
         const data = await updateCredit(charge);

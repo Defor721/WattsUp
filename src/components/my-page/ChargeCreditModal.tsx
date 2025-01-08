@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { WalletCards } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -19,24 +20,50 @@ import { useUserStore } from "@/stores/useUserStore";
 export default function ChargeCreditModal() {
   const {
     user,
-    message,
     loading,
-    actions: { chargeCredit, resetUserState },
+    actions: { chargeCredit, fetchCurrentUser },
   } = useUserStore();
 
+  console.log(user);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [charge, setCharge] = useState("");
+  const [error, setError] = useState("");
 
-  const fixedAmounts = [1000, 10000, 100000, 1000000]; // 고정 금액 옵션
+  const fixedAmounts = [1000, 10000, 100000, 1000000];
+  const MAX_AMOUNT = 10000000;
+  const MIN_AMOUNT = 1000;
 
-  // 고정 금액 버튼 클릭 시 기존 금액에 추가
   const handleFixedCharge = (amount: number) => {
-    setCharge((prevCharge) => String(Number(prevCharge) + amount));
+    const newCharge = Math.min(Number(charge) + amount, MAX_AMOUNT);
+    setCharge(String(newCharge));
+
+    if (newCharge >= MAX_AMOUNT) {
+      setError(`최대 충전 금액은 ${MAX_AMOUNT.toLocaleString()}원입니다.`);
+    } else {
+      setError("");
+    }
+  };
+
+  const handleInputChange = (value: string) => {
+    const numericValue = Number(value.replace(/[^0-9]/g, ""));
+    if (numericValue > MAX_AMOUNT) {
+      setError(`최대 충전 금액은 ${MAX_AMOUNT.toLocaleString()}원입니다.`);
+      return;
+    } else {
+      setError("");
+      setCharge(value.replace(/[^0-9]/g, ""));
+    }
   };
 
   const handleChargeSubmit = async () => {
+    if (Number(charge) < MIN_AMOUNT || Number(charge) > MAX_AMOUNT) {
+      setError(
+        `충전 금액은 ${MIN_AMOUNT.toLocaleString()}원 이상, ${MAX_AMOUNT.toLocaleString()}원 이하여야 합니다.`,
+      );
+      return;
+    }
     try {
-      await chargeCredit(charge);
+      await chargeCredit(Number(charge));
       setIsDialogOpen(false);
     } catch (error) {
       console.log(error);
@@ -44,8 +71,8 @@ export default function ChargeCreditModal() {
   };
 
   useEffect(() => {
+    fetchCurrentUser();
     if (!isDialogOpen) {
-      resetUserState();
       setCharge("");
     }
   }, [isDialogOpen]);
@@ -67,7 +94,7 @@ export default function ChargeCreditModal() {
           <DialogDescription>
             충전할 금액을 선택하거나 입력 후 충전 버튼을 눌러주세요.
             <br />
-            최소충전 금액은 1000원입니다.
+            1회 최소충전금액은 1,000원이며 최대충전금액은 10,000,000 원입니다.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
@@ -96,17 +123,13 @@ export default function ChargeCreditModal() {
             <input
               id="direct-input"
               value={charge}
-              onChange={(e) => {
-                setCharge(e.target.value.replace(/[^0-9]/g, ""));
-              }}
+              onChange={(e) => handleInputChange(e.target.value)}
               placeholder="금액 입력"
               className="w-full rounded border border-gray-300 px-3 py-2"
             />
           </div>
           {/* 에러 메시지 */}
-          {message && (
-            <p className="text-center text-sm text-red-500">{message}</p>
-          )}
+          {error && <p className="text-center text-sm text-red-500">{error}</p>}
         </div>
         <DialogFooter>
           <DialogClose asChild>
@@ -117,7 +140,11 @@ export default function ChargeCreditModal() {
           <Button
             onClick={handleChargeSubmit}
             className="bg-mainColor text-white dark:bg-white dark:text-subColor"
-            disabled={loading || Number(charge) < 1000}
+            disabled={
+              loading ||
+              Number(charge) < MIN_AMOUNT ||
+              Number(charge) > MAX_AMOUNT
+            }
           >
             충전
           </Button>

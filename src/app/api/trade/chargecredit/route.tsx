@@ -32,7 +32,9 @@ export async function POST(request: NextRequest) {
       );
     }
     const email = (decoded as { email: string }).email;
+
     const { charge } = await request.json();
+
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
@@ -40,6 +42,7 @@ export async function POST(request: NextRequest) {
       { email },
       { $inc: { credit: charge } },
     );
+
     if (result.modifiedCount > 0) {
       return NextResponse.json({ message: "success" }, { status: 200 });
     } else {
