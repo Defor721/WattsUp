@@ -26,7 +26,6 @@ function Total({ data }: TotalProps) {
         data={data}
         margin={{ top: 5, right: 20, left: 45, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip

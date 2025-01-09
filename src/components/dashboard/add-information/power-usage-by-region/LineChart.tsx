@@ -28,13 +28,15 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         data={data}
         margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
           formatter={(value: number) =>
             `${formatNumberWithoutDecimal(value)} 명`
           }
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
         />
         <Legend />
         <Line type="monotone" dataKey="total" stroke="#34D399" name="총합" />

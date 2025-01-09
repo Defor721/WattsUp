@@ -12,6 +12,7 @@ import {
   SelectItem,
   Label,
   Button,
+  Card,
 } from "@/components/shadcn";
 
 import Container from "../Container";
@@ -82,9 +83,6 @@ function Failures() {
 
   return (
     <Container>
-      <h1 className="mb-6 text-center text-4xl font-bold">
-        전기 설비 고장 대시보드
-      </h1>
       {/* 연도 선택 */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center justify-end gap-3">
@@ -123,61 +121,63 @@ function Failures() {
         </Button>
       </div>
 
-      {/* KPI 카드 */}
-      {currentKPI && (
-        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <KPICard
-            title="발전설비"
-            value={`${currentKPI.발전설비_건} 건`}
-            backgroundColor="#34D399"
-          />
-          <KPICard
-            title="송전설비"
-            value={`${currentKPI.송전설비_건} 건`}
-            backgroundColor="#60A5FA"
-          />
-          <KPICard
-            title="변전설비"
-            value={`${currentKPI.변전설비_건} 건`}
-            backgroundColor="#FBBF24"
-          />
-          <KPICard
-            title="총계"
-            value={`${currentKPI.총계_건} 건`}
-            backgroundColor="#EF4444"
-          />
-        </div>
-      )}
-      {/* 차트 */}
-      <div className="flex flex-col gap-8">
-        <div>
-          <h2 className="mb-3 text-center text-lg font-semibold">
-            연도별 설비 고장 건수 비교
-          </h2>
-          <BarChart
-            data={data
-              .sort((a, b) => a.연도 - b.연도)
-              .map((row) => ({
+      <div className="flex flex-col gap-cardGap">
+        {/* KPI 카드 */}
+        {currentKPI && (
+          <div className="mb-8 grid grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
+            <KPICard
+              title="발전설비"
+              value={`${currentKPI.발전설비_건} 건`}
+              backgroundColor="#34D399"
+            />
+            <KPICard
+              title="송전설비"
+              value={`${currentKPI.송전설비_건} 건`}
+              backgroundColor="#60A5FA"
+            />
+            <KPICard
+              title="변전설비"
+              value={`${currentKPI.변전설비_건} 건`}
+              backgroundColor="#FBBF24"
+            />
+            <KPICard
+              title="총계"
+              value={`${currentKPI.총계_건} 건`}
+              backgroundColor="#EF4444"
+            />
+          </div>
+        )}
+        {/* 차트 */}
+        <div className="flex flex-col gap-cardGap">
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">
+              연도별 설비 고장 건수 비교
+            </h2>
+            <BarChart
+              data={data
+                .sort((a, b) => a.연도 - b.연도)
+                .map((row) => ({
+                  연도: row.연도,
+                  발전설비: row.발전설비_건,
+                  송전설비: row.송전설비_건,
+                  변전설비: row.변전설비_건,
+                  배전설비: row.배전설비_건,
+                }))}
+              keys={["발전설비", "송전설비", "변전설비", "배전설비"]}
+            />
+          </Card>
+          <Card className="flex flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">
+              연도별 설비 고장 총계 추이
+            </h2>
+            <LineChart
+              data={data.map((row) => ({
                 연도: row.연도,
-                발전설비: row.발전설비_건,
-                송전설비: row.송전설비_건,
-                변전설비: row.변전설비_건,
-                배전설비: row.배전설비_건,
+                총계: row.총계_건,
               }))}
-            keys={["발전설비", "송전설비", "변전설비", "배전설비"]}
-          />
-        </div>
-        <div>
-          <h2 className="mb-3 text-center text-lg font-semibold">
-            연도별 설비 고장 총계 추이
-          </h2>
-          <LineChart
-            data={data.map((row) => ({
-              연도: row.연도,
-              총계: row.총계_건,
-            }))}
-            dataKey="총계"
-          />
+              dataKey="총계"
+            />
+          </Card>
         </div>
       </div>
     </Container>

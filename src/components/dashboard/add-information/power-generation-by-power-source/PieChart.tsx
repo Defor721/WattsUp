@@ -41,7 +41,7 @@ function PieChart({
         </Pie>
         <Tooltip
           formatter={(value: number) =>
-            `${formatNumberWithoutDecimal(value)} MWh`
+            `${formatNumberWithoutDecimal(value)} kWh`
           }
         />
         {/* <Legend /> */}

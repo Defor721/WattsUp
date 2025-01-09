@@ -197,43 +197,48 @@ function People() {
 
         <div className="flex flex-col gap-cardGap">
           <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
-            <h2 className="mb-3 text-center text-lg font-semibold">
-              경제 성장률 데이터
-            </h2>
-            <AreaChart
-              data={[...data]
-                .sort((a, b) => a.연도 - b.연도)
-                .map((row) => ({ 연도: row.연도, 값: row.경제성장률 }))}
-              xKey="연도"
-              yKey="값"
-            />
+            <div className="flex flex-col gap-2">
+              <h2 className="mb-3 text-center text-lg font-semibold">
+                경제 성장률 데이터
+              </h2>
+              <AreaChart
+                data={[...data]
+                  .sort((a, b) => a.연도 - b.연도)
+                  .map((row) => ({ 연도: row.연도, 값: row.경제성장률 }))}
+                xKey="연도"
+                yKey="값"
+              />
+            </div>
           </Card>
-          <div>
-            <h2 className="mb-3 text-center text-lg font-semibold">
-              국내 총 생산 추이
-            </h2>
-            <LineChart
-              data={[...data]
-                .sort((a, b) => a.연도 - b.연도)
-                .map((row) => ({ 연도: row.연도, 값: row.국내총생산 }))}
-              xKey="연도"
-              yKey="값"
-            />
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold">세부 데이터</h2>
-          <Table
-            data={data.map((row) => ({
-              연도: row.연도,
-              국민총소득: row.국민총소득,
-              경제성장률: row.경제성장률,
-              상태: row.경제성장률 > 0 ? "긍정" : "부정",
-            }))}
-          />
+          <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <div className="flex flex-col gap-2">
+              <h2 className="mb-3 text-center text-lg font-semibold">
+                국내 총 생산 추이
+              </h2>
+              <LineChart
+                data={[...data]
+                  .sort((a, b) => a.연도 - b.연도)
+                  .map((row) => ({ 연도: row.연도, 값: row.국내총생산 }))}
+                xKey="연도"
+                yKey="값"
+              />
+            </div>
+          </Card>
         </div>
       </div>
+      <Card className="mt-4 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+        <h2 className="mb-4 text-lg font-semibold">
+          최근 10년간 국민 계정 데이터
+        </h2>
+        <Table
+          data={data.slice(0, 10).map((row) => ({
+            연도: row.연도,
+            국민총소득: row.국민총소득,
+            경제성장률: row.경제성장률,
+            상태: row.경제성장률 > 0 ? "긍정" : "부정",
+          }))}
+        />
+      </Card>
     </Container>
   );
 }

@@ -10,6 +10,7 @@ import {
   SelectItem,
   Label,
   Button,
+  Card,
 } from "@/components/shadcn";
 import Loading from "@/app/loading";
 
@@ -226,38 +227,42 @@ function PowerGeneration() {
         </Button>
       </div>
 
-      {/* KPI 카드 그리드 */}
-      {currentYearData && (
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Object.entries(kpiConfig).map(([key, config]) => (
-            <KPICard
-              key={key}
-              title={key}
-              value={`${
-                key === "총발전량"
-                  ? config.value?.toLocaleString()
-                  : currentYearData[key as keyof DataRow]?.toLocaleString()
-              } ${config.unit}`}
-              backgroundColor={config.color}
-            />
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-cardGap">
+        {/* KPI 카드 그리드 */}
+        {currentYearData && (
+          <div className="grid grid-cols-1 gap-cardGap lg:grid-cols-2 xl:grid-cols-3">
+            {Object.entries(kpiConfig).map(([key, config]) => (
+              <KPICard
+                key={key}
+                title={key}
+                value={`${
+                  key === "총발전량"
+                    ? config.value?.toLocaleString()
+                    : currentYearData[key as keyof DataRow]?.toLocaleString()
+                } ${config.unit}`}
+                backgroundColor={config.color}
+              />
+            ))}
+          </div>
+        )}
 
-      {/* 차트 섹션 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div>
-          <h2 className="mb-4 text-center text-xl font-bold">
-            발전원별 발전량
-          </h2>
-          <LineChart
-            data={[...data].sort((a, b) => a.연도 - b.연도)}
-            colors={colorConfig}
-          />
-        </div>
-        <div>
-          <h2 className="mb-4 text-center text-xl font-bold">총발전량 추이</h2>
-          <Total data={[...totalData].sort((a, b) => a.연도 - b.연도)} />
+        {/* 차트 섹션 */}
+        <div className="grid grid-cols-1 gap-cardGap xl:grid-cols-2">
+          <Card className="flex flex-col gap-2 border-none bg-cardBackground-light p-cardGap dark:bg-cardBackground-dark">
+            <h2 className="mb-4 text-center text-xl font-bold">
+              발전원별 발전량
+            </h2>
+            <LineChart
+              data={[...data].sort((a, b) => a.연도 - b.연도)}
+              colors={colorConfig}
+            />
+          </Card>
+          <Card className="flex flex-col gap-2 border-none bg-cardBackground-light p-cardGap dark:bg-cardBackground-dark">
+            <h2 className="mb-4 text-center text-xl font-bold">
+              총발전량 추이
+            </h2>
+            <Total data={[...totalData].sort((a, b) => a.연도 - b.연도)} />
+          </Card>
         </div>
       </div>
 

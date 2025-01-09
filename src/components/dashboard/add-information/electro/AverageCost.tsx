@@ -22,7 +22,6 @@ const AverageCost: React.FC<AverageCostProps> = ({ value, maxValue = 200 }) => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h2 className="mb-2 text-lg font-semibold">평균 판매단가</h2>
       <p className="mb-4 text-4xl font-bold text-teal-300">
         {value.toLocaleString()} 원/kWh
       </p>

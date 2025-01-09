@@ -32,11 +32,13 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
           formatter={(value: number) => `${formatNumberWithDecimal(value)} GWh`}
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
         />
         <Legend />
         <Line type="monotone" dataKey="수력" stroke="#60a5fa" />

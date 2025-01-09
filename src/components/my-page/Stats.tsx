@@ -92,7 +92,7 @@ function Stats() {
                     </small>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="">평균 거래 단가</div>
                   <div className="flex items-center gap-1">
                     <div className="text-lg font-semibold">{75.2}</div>
@@ -109,7 +109,7 @@ function Stats() {
                       MW
                     </small>
                   </div>
-                </div>
+                </div> */}
               </div>
             </Card>
           </TabsContent>

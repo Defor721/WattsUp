@@ -8,6 +8,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts"; // Recharts 컴포넌트
 import axios from "axios"; // HTTP 요청 라이브러리
 
@@ -18,6 +19,10 @@ import {
   CardTitle,
 } from "@/components/shadcn/card"; // UI 카드 컴포넌트
 import { Regions } from "@/utils/regions"; // 지역 리스트 가져오기
+import {
+  formatNumberWithDecimal,
+  formatNumberWithoutDecimal,
+} from "@/hooks/useNumberFormatter";
 
 // 데이터 타입 정의
 interface SupplyData {
@@ -28,12 +33,14 @@ interface SupplyData {
 interface SupplyChartProps {
   selectedRegion: string; // 선택된 지역
   onBarClick: (region: string) => void; // 바 클릭 핸들러
+  isSubmitting: boolean;
 }
 
 // SupplyChart 컴포넌트
 export default function SupplyChart({
   selectedRegion,
   onBarClick,
+  isSubmitting,
 }: SupplyChartProps) {
   const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
@@ -69,7 +76,7 @@ export default function SupplyChart({
     };
 
     fetchData(); // 데이터 가져오기 함수 호출
-  }, []);
+  }, [isSubmitting]);
 
   // 로딩 상태 처리
   if (isLoading) {
@@ -101,20 +108,23 @@ export default function SupplyChart({
               margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
             >
               <XAxis dataKey="region" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <YAxis
+                tick={{ fontSize: 12 }}
+                tickFormatter={formatNumberWithoutDecimal}
+              />
               <Tooltip
-                contentStyle={{
-                  backgroundColor: "rgba(31, 41, 55, 0.8)", // 짙은 회색에 80% 투명도
-                  color: "#fff", // 텍스트는 흰색
-                  border: "none", // 테두리 제거
-                }}
-                itemStyle={{
-                  color: "#fff", // 각 데이터 항목 텍스트는 흰색
+                formatter={(value: number) =>
+                  `${formatNumberWithDecimal(value)} kWh`
+                }
+                labelStyle={{
+                  color: "#111", // 각 데이터 항목 텍스트는 흰색
                 }}
               />
+              <Legend />
 
               <Bar
                 dataKey="supply"
+                name="공급량"
                 fill="rgb(15,30,75)"
                 radius={[4, 4, 0, 0]}
                 onClick={(data) => onBarClick(data.region)} // 바 클릭 시 선택된 지역 업데이트

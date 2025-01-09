@@ -153,7 +153,7 @@ function TradeTable() {
               return (
                 <TableRow
                   key={trade._id}
-                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] hover:cursor-pointer dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
                 >
                   <TableCell className="border border-gray-700 p-3">
                     {trade.email}
@@ -162,7 +162,7 @@ function TradeTable() {
                     {trade.region}
                   </TableCell>
                   <TableCell className="border border-gray-700 p-3">
-                    {formattedPrice}
+                    {formattedPrice} 원
                   </TableCell>
                   <TableCell className="border border-gray-700 p-3">
                     {formattedQuantity}

@@ -13,7 +13,7 @@ function Page() {
     const fetchUserData = async () => {
       try {
         const response = await apiClient.get(
-          `/api/admin/userinfo/${businessNumber}`,
+          `/api/admin/userinfo/bidlist/${businessNumber}`,
         );
         const data = response.data.userData;
         console.log("data: ", data);

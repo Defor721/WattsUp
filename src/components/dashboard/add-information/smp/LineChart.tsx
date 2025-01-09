@@ -37,9 +37,12 @@ const LineChart: React.FC<LineChartProps> = ({
           formatter={(value: number) =>
             `${formatNumberWithoutDecimal(value)} 회`
           }
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
         />
         <Legend />
-        <Line type="monotone" dataKey={yKey} stroke={lineColor} />
+        <Line type="monotone" dataKey={yKey} stroke={lineColor} name="횟수" />
       </RechartsLineChart>
     </ResponsiveContainer>
   );

@@ -31,7 +31,7 @@ const slides: Slide[] = [
     title: "지속 가능한 미래",
     subtitle: "친환경 에너지 솔루션",
     description: "재생 가능 에너지 혁명에 동참하세요",
-    cta: { text: "더 알아보기", href: "/about" },
+    cta: { text: "더 알아보기", href: "/introduce" },
   },
 ];
 

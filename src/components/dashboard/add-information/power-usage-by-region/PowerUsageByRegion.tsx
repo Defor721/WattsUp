@@ -271,7 +271,7 @@ function PowerUsageByRegion() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
         <div className="rounded-lg bg-red-600 p-4 text-white">
-          <h2 className="text-xl font-bold">오류 발생</h2>
+          <h2 className="text-base font-bold">오류 발생</h2>
           <p>{error}</p>
           <button
             onClick={() => fetchData()}
@@ -329,64 +329,64 @@ function PowerUsageByRegion() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
-        {Object.entries(kpi).map(([key, value]) => (
-          <KPICard
-            key={key}
-            title={key}
-            value={value.toLocaleString()}
-            unit="명"
-            backgroundColor={COLORS[key]}
-          />
-        ))}
-      </div>
+      <div className="flex flex-col gap-cardGap">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 gap-cardGap xl:grid-cols-4">
+          {Object.entries(kpi).map(([key, value]) => (
+            <KPICard
+              key={key}
+              title={key}
+              value={value.toLocaleString()}
+              unit="명"
+              backgroundColor={COLORS[key]}
+            />
+          ))}
+        </div>
 
-      {/* Charts */}
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="flex-1 p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-lg font-semibold">
-            지역별 비율
-          </h2>
-          <div className="flex items-center justify-center">
-            <div className="w-[450px]">
-              <PieChart data={doughnutData} colors={COLORS} />
-            </div>
-            <div className="flex flex-col gap-2">
-              {doughnutData
-                .sort((a, b) => b.value - a.value)
-                .map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-                  >
+        {/* Charts */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card className="flex flex-1 flex-col gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">지역별 비율</h2>
+            <div className="flex items-center justify-center">
+              <div className="w-[450px]">
+                <PieChart data={doughnutData} colors={COLORS} />
+              </div>
+              <div className="flex flex-col gap-2">
+                {doughnutData
+                  .sort((a, b) => b.value - a.value)
+                  .map((item) => (
                     <div
-                      className="h-4 w-4 rounded-full"
-                      style={{ backgroundColor: COLORS[item.name] }} // 지역 이름에 따라 색상 적용
-                    ></div>
-                    <span>
-                      {item.name}: {formatNumberWithoutDecimal(item.value)} 명
-                    </span>
-                  </div>
-                ))}
+                      key={item.name}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                    >
+                      <div
+                        className="h-4 w-4 rounded-full"
+                        style={{ backgroundColor: COLORS[item.name] }} // 지역 이름에 따라 색상 적용
+                      ></div>
+                      <span>
+                        {item.name}: {formatNumberWithoutDecimal(item.value)} 명
+                      </span>
+                    </div>
+                  ))}
+              </div>
             </div>
-          </div>
-        </Card>
-        <Card className="flex-1 p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-lg font-semibold">
-            연도별 지역 합계 추이
-          </h2>
-          <LineChart data={lineChartData} />
-        </Card>
+          </Card>
+          <Card className="flex flex-1 flex-col gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">
+              연도별 지역 합계 추이
+            </h2>
+            <LineChart data={lineChartData} />
+          </Card>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="mt-8">
+      {/* <div className="mt-4">
         <h2 className="mb-4 text-lg font-semibold">
           최근 10년간 전력 사용량 시도별 대시보드 데이터(단위: 명)
         </h2>
         <Table data={data.map((item) => ({ ...item })).slice(0, 10)} />
-      </div>
+      </div> */}
     </Container>
   );
 }
