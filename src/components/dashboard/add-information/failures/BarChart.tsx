@@ -24,10 +24,12 @@ const BarChart: React.FC<BarChartProps> = ({ data, keys }) => {
         data={data}
         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="연도" />
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
+          labelStyle={{
+            color: "#000000", // 레이블(년도)을 항상 검은색으로 설정
+          }}
           formatter={(value: number) =>
             `${formatNumberWithoutDecimal(value)} 건`
           }

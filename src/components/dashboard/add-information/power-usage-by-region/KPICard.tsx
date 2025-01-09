@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Card } from "@/components/shadcn";
+
 interface KPICardProps {
   title: string;
   value: string | number;
@@ -14,21 +16,20 @@ const KPICard: React.FC<KPICardProps> = ({
   backgroundColor,
 }) => {
   return (
-    <div
-      className="flex items-center justify-between rounded-lg p-4 shadow-md"
-      style={{
-        backgroundColor: backgroundColor,
-      }}
-    >
+    <Card className="flex items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+      <div
+        className="h-full w-2"
+        style={{ backgroundColor: backgroundColor }}
+      />
       {/* Title and Value Section */}
       <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <div className="flex items-center gap-1">
-          <p className="text-2xl font-bold">{value}</p>
-          <span className="text-base font-bold">{unit}</span>
+          <p className="text-base font-bold">{value}</p>
+          <span className="text-lg font-bold">{unit}</span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

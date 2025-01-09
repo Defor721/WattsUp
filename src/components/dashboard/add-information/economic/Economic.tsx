@@ -269,12 +269,12 @@ function Economic() {
         </Card>
       </div>
 
-      <Card className="mt-4 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+      {/* <Card className="mt-4 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
         <h2 className="mb-4 text-lg font-semibold">
           최근 10년간 경제지표 데이터
         </h2>
         <Table currentYearData={currentYearData} data={data.slice(0, 10)} />
-      </Card>
+      </Card> */}
     </Container>
   );
 }

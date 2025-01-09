@@ -18,7 +18,7 @@ const KPICard: React.FC<KPICardProps> = ({ title, value, backgroundColor }) => {
 
       <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="text-xl font-bold">{value}</p>
+        <p className="text-base font-bold">{value}</p>
       </div>
     </Card>
   );

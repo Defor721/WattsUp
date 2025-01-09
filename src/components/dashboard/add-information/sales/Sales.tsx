@@ -220,89 +220,91 @@ function Sales() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {kpiData.map((kpi, index) => (
-          <KPICard
-            key={index}
-            title={kpi.title}
-            value={kpi.value.toLocaleString()}
-            unit={kpi.unit}
-            backgroundColor={kpi.color}
-            iconColor={index % 2 === 0 ? "#1D4ED8" : "#D97706"}
-          />
-        ))}
-      </div>
+      <div className="flex flex-col gap-cardGap">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 2xl:grid-cols-4">
+          {kpiData.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value.toLocaleString()}
+              unit={kpi.unit}
+              backgroundColor={kpi.color}
+              iconColor={index % 2 === 0 ? "#1D4ED8" : "#D97706"}
+            />
+          ))}
+        </div>
 
-      {/* Charts */}
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="mt-6 flex flex-col p-6 shadow-lg">
-          <h2 className="text-center text-lg font-semibold">항목별 비율</h2>
-          <div className="flex items-center justify-center">
-            {/* 파이 차트 */}
-            <div className="w-[450px]">
-              <PieChart
-                data={pieChartData}
-                colors={[
-                  "#34D399",
-                  "#60A5FA",
-                  "#F87171",
-                  "#93C5FD",
-                  "#FBBF24",
-                  "#A78BFA",
-                  "#FCA5A5",
-                ]}
-              />
-            </div>
+        {/* Charts */}
+        <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">항목별 비율</h2>
+            <div className="flex items-center justify-center">
+              {/* 파이 차트 */}
+              <div className="w-[450px]">
+                <PieChart
+                  data={pieChartData}
+                  colors={[
+                    "#34D399",
+                    "#60A5FA",
+                    "#F87171",
+                    "#93C5FD",
+                    "#FBBF24",
+                    "#A78BFA",
+                    "#FCA5A5",
+                  ]}
+                />
+              </div>
 
-            {/* 데이터 항목 표시 */}
-            <div className="flex flex-col gap-2">
-              {pieChartData &&
-                // 데이터를 정렬
-                pieChartData.labels
-                  .map((label, index) => ({
-                    label,
-                    value: pieChartData.datasets[0].data[index],
-                    color: pieChartData.datasets[0].backgroundColor[index],
-                  }))
-                  .sort((a, b) => b.value - a.value) // 높은 값부터 낮은 값으로 정렬
-                  .map((item, index) => (
-                    <div
-                      key={item.label}
-                      className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
-                    >
-                      {/* 색상 점 */}
+              {/* 데이터 항목 표시 */}
+              <div className="flex flex-col gap-2">
+                {pieChartData &&
+                  // 데이터를 정렬
+                  pieChartData.labels
+                    .map((label, index) => ({
+                      label,
+                      value: pieChartData.datasets[0].data[index],
+                      color: pieChartData.datasets[0].backgroundColor[index],
+                    }))
+                    .sort((a, b) => b.value - a.value) // 높은 값부터 낮은 값으로 정렬
+                    .map((item, index) => (
                       <div
-                        className="h-4 w-4 rounded-full"
-                        style={{
-                          backgroundColor: item.color || "#000",
-                        }}
-                      ></div>
-                      {/* 항목 이름과 값 */}
-                      <span>
-                        {item.label}: {formatNumberWithDecimal(item.value)} 원
-                      </span>
-                    </div>
-                  ))}
+                        key={item.label}
+                        className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200"
+                      >
+                        {/* 색상 점 */}
+                        <div
+                          className="h-4 w-4 rounded-full"
+                          style={{
+                            backgroundColor: item.color || "#000",
+                          }}
+                        ></div>
+                        {/* 항목 이름과 값 */}
+                        <span>
+                          {item.label}: {formatNumberWithDecimal(item.value)} 원
+                        </span>
+                      </div>
+                    ))}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6 shadow-lg">
-          <h2 className="text-center text-lg font-semibold">
-            연도별 합계 변화
-          </h2>
-          <LineChart data={lineChartData} />
-        </Card>
+          <Card className="flex flex-1 flex-col items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+            <h2 className="text-center text-lg font-semibold">
+              연도별 합계 변화
+            </h2>
+            <LineChart data={lineChartData} />
+          </Card>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">
           최근 10년 데이터(단위: 원)
         </h2>
         <Table data={data.slice(0, 10).map((row) => ({ ...row }))} />
-      </div>
+      </div> */}
     </Container>
   );
 }

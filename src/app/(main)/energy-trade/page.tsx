@@ -16,6 +16,7 @@ import SupplyChart from "@/components/energy-trade/SupplyChart";
 
 export default function TradePage() {
   const [selectedRegion, setSelectedRegion] = useState<string>("서울시"); // 선택된 지역 상태
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <div className="mx-auto flex max-w-[1920px] flex-col p-5">
@@ -30,7 +31,7 @@ export default function TradePage() {
         <div className="flex flex-col gap-cardGap">
           {/* 상단 거래 현황 */}
 
-          <TradingStats />
+          <TradingStats isSubmitting={isSubmitting} />
 
           {/* 하단 섹션: 차트와 입찰 폼 */}
           <div className="grid w-full grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
@@ -40,6 +41,7 @@ export default function TradePage() {
                 <SupplyChart
                   selectedRegion={selectedRegion}
                   onBarClick={setSelectedRegion} // 바 클릭 핸들러
+                  isSubmitting={isSubmitting}
                 />
               </CardContent>
             </Card>
@@ -56,6 +58,8 @@ export default function TradePage() {
                   <BidForm
                     region={selectedRegion}
                     onRegionChange={setSelectedRegion} // 셀렉터 변경 핸들러
+                    isSubmitting={isSubmitting}
+                    setIsSubmitting={setIsSubmitting}
                   />
                 </CardContent>
               </Card>

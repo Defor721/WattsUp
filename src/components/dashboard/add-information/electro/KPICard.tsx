@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Card } from "@/components/shadcn";
+
 interface KPICardProps {
   title: string;
   value: string | number;
@@ -16,18 +18,18 @@ const KPICard: React.FC<KPICardProps> = ({
   iconColor,
 }) => {
   return (
-    <div
-      className="flex items-center justify-between rounded-lg p-4 shadow-md"
-      style={{
-        backgroundColor: backgroundColor || "#1E293B", // 카드 배경색
-      }}
-    >
+    <Card className="flex items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+      <div
+        className="h-full w-2"
+        style={{ backgroundColor: backgroundColor }}
+      />
+
       {/* 제목 및 값 */}
-      <div className="flex-1">
+      <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-base font-bold">{value}</p>
       </div>
-    </div>
+    </Card>
   );
 };
 

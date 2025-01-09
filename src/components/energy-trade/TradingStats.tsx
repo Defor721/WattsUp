@@ -14,7 +14,11 @@ type TradingStatsData = {
   totalSupply: number; // 총 공급량
 };
 
-export default function TradingStats() {
+export default function TradingStats({
+  isSubmitting,
+}: {
+  isSubmitting: boolean;
+}) {
   const [stats, setStats] = useState<TradingStatsData | null>(null); // 거래 통계 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
@@ -49,7 +53,7 @@ export default function TradingStats() {
     };
 
     fetchStats();
-  }, []);
+  }, [isSubmitting]);
 
   if (isLoading) return <LoadingMessage />;
   if (error) return <ErrorMessage error={error} />;

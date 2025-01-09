@@ -67,12 +67,18 @@ const submitBid = async (price: number, region: string, quantity: number) => {
 interface BidFormProps {
   region: string;
   onRegionChange: (region: string) => void;
+  isSubmitting: boolean;
+  setIsSubmitting: any;
 }
 
-export default function BidForm({ region, onRegionChange }: BidFormProps) {
+export default function BidForm({
+  region,
+  onRegionChange,
+  isSubmitting,
+  setIsSubmitting,
+}: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
   const [smpPrice, setSmpPrice] = useState<number>(0); // SMP 값 상태
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [credits, setCredits] = useState<number>(0); // 크레딧 상태 추가
   const [isLoading, setIsLoading] = useState(true); // SMP 로딩 상태
 

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Card } from "@/components/shadcn";
+
 const KPICard = ({
   title,
   value,
@@ -9,10 +11,13 @@ const KPICard = ({
   value: string;
   backgroundColor: string;
 }) => (
-  <div className="rounded-lg p-4 shadow-lg" style={{ backgroundColor }}>
-    <h3 className="text-sm font-semibold">{title}</h3>
-    <p className="text-2xl font-bold">{value}</p>
-  </div>
+  <Card className="flex items-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+    <div className="h-full w-2" style={{ backgroundColor: backgroundColor }} />
+    <div>
+      <h3 className="text-sm font-semibold">{title}</h3>
+      <p className="text-base font-bold">{value}</p>
+    </div>
+  </Card>
 );
 
 export { KPICard };

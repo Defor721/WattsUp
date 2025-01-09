@@ -1,33 +1,9 @@
 "use client";
 
-import {
-  ResponsiveContainer,
-  Tooltip,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Separator,
-} from "@/components/shadcn";
+import { Separator } from "@/components/shadcn";
 import Info from "@/components/my-page/Info";
 import Stats from "@/components/my-page/Stats";
 import RecentLog from "@/components/my-page/RecentLog";
-
-const monthlyTradeData = [
-  { month: "1월", amount: 3200 },
-  { month: "2월", amount: 4500 },
-  { month: "3월", amount: 3800 },
-  { month: "4월", amount: 5100 },
-  { month: "5월", amount: 4700 },
-  { month: "6월", amount: 5600 },
-];
 
 export default function Mypage() {
   return (
