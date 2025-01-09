@@ -98,7 +98,7 @@ function TodayValue() {
           <table className="h-[148px] w-full border-collapse">
             <tbody>
               <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
                   거래일
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
@@ -106,7 +106,7 @@ function TodayValue() {
                 </td>
               </tr>
               <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
                   최고가
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
@@ -114,7 +114,7 @@ function TodayValue() {
                 </td>
               </tr>
               <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
                   최소가
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
@@ -122,7 +122,7 @@ function TodayValue() {
                 </td>
               </tr>
               <tr className="border-t">
-                <td className="w-[133px] border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium">
+                <td className="w-[133px] border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
                   평균가
                 </td>
                 <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
@@ -143,13 +143,13 @@ function TodayValue() {
           <table className="h-[148px] w-full border-collapse">
             <tbody>
               <tr className="border-t">
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   거래일
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
                   {apiData.todayRecData.거래일 || "-"}
                 </td>
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   거래량
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
@@ -158,14 +158,14 @@ function TodayValue() {
                 </td>
               </tr>
               <tr className="border-t">
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   평균가
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
                   {formatNumberWithoutDecimal(apiData.todayRecData.평균가) ||
                     "-"}
                 </td>
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   최고가
                 </td>
                 <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
@@ -174,14 +174,14 @@ function TodayValue() {
                 </td>
               </tr>
               <tr className="border-t">
-                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   최저가
                 </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
+                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
                   {formatNumberWithoutDecimal(apiData.todayRecData.최저가) ||
                     "-"}
                 </td>
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-gray-200 pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium">
+                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
                   종가
                 </td>
                 <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">

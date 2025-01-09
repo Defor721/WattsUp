@@ -95,6 +95,9 @@ const config: Config = {
           },
           destructive: "#ff4d4f",
           "destructive-foreground": "#ffffff",
+          success: {
+            background: "#4ade80",
+          },
         },
         dialog: {
           background: "#ffffff",

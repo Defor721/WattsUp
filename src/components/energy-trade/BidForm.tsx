@@ -20,6 +20,7 @@ import {
 import { Regions } from "@/utils/regions";
 import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
+import { toast } from "@/hooks/useToast";
 
 const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
@@ -101,20 +102,32 @@ export default function BidForm({
     e.preventDefault();
 
     if (quantity <= 0) {
-      alert("수량은 0보다 커야 합니다.");
+      toast({
+        title: "입찰 실패",
+        description: "수량은 0보다 커야 합니다.",
+        variant: "destructive",
+      });
       return;
     }
 
     const totalPrice = quantity * smpPrice;
     if (totalPrice > credits) {
-      alert("보유 크레딧이 부족합니다.");
+      toast({
+        title: "입찰 실패",
+        description: "보유 크레딧이 부족합니다.",
+        variant: "destructive",
+      });
       return;
     }
 
     setIsSubmitting(true);
     try {
       await submitBid(smpPrice, region, quantity);
-      alert("입찰이 성공적으로 제출되었습니다.");
+      toast({
+        title: "입찰 성공",
+        description: "입찰이 성공적으로 제출되었습니다.",
+        variant: "success",
+      });
       onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
 
@@ -122,9 +135,12 @@ export default function BidForm({
       const updatedCredits = await fetchUserCredits();
       setCredits(updatedCredits);
     } catch (error: any) {
-      alert(
-        error.response?.data?.message || "입찰 제출 중 문제가 발생했습니다.",
-      );
+      toast({
+        title: "입찰 실패",
+        description:
+          error.response?.data?.message || "입찰 제출 중 문제가 발생했습니다.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
