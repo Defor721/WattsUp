@@ -8,10 +8,13 @@ export async function GET(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
+
+    // role이 admin이 아닌 유저만 조회
     const users = await collection
-      .find({})
+      .find({ role: { $ne: "admin" } }) // $ne: "admin" 필터 추가
       .project({ _id: 0, password: 0, refreshToken: 0 })
       .toArray();
+
     return NextResponse.json({ message: "success", users }, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
