@@ -122,8 +122,6 @@ export default function BidForm({
 
     setIsSubmitting(true);
     try {
-      
-
       await submitBid(smpPrice, region, quantity);
       toast({
         title: "입찰 성공",
@@ -131,7 +129,6 @@ export default function BidForm({
         variant: "success",
       });
 
-        
       onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
 
