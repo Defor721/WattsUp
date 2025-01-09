@@ -33,12 +33,14 @@ interface SupplyData {
 interface SupplyChartProps {
   selectedRegion: string; // 선택된 지역
   onBarClick: (region: string) => void; // 바 클릭 핸들러
+  isSubmitting: boolean;
 }
 
 // SupplyChart 컴포넌트
 export default function SupplyChart({
   selectedRegion,
   onBarClick,
+  isSubmitting,
 }: SupplyChartProps) {
   const [data, setData] = useState<SupplyData[]>([]); // 공급량 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
@@ -74,7 +76,7 @@ export default function SupplyChart({
     };
 
     fetchData(); // 데이터 가져오기 함수 호출
-  }, []);
+  }, [isSubmitting]);
 
   // 로딩 상태 처리
   if (isLoading) {

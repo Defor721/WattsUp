@@ -56,8 +56,8 @@ function UserTable() {
     fetchUserData();
   }, []);
 
-  const handleUserClick = (email: string) => {
-    router.push(`/admin/user-management/${email}`);
+  const handleUserClick = (businessNumber: number) => {
+    router.push(`/admin/user-management/${businessNumber}`);
   };
 
   // 검색어에 따른 필터링
@@ -143,8 +143,8 @@ function UserTable() {
               return (
                 <TableRow
                   key={user.corporateNumber}
-                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] hover:cursor-pointer dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-                  onClick={() => handleUserClick(user.email)}
+                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+                  // onClick={() => handleUserClick(user.businessNumber)}
                 >
                   <TableCell className="border border-gray-700 p-3">
                     {user.email}

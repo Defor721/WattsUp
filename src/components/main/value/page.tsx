@@ -87,7 +87,7 @@ function TodayValue() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="mb-8 text-center text-3xl font-bold">오늘의 전력정보</h1>
-      <div className="grid grid-cols-1 justify-center gap-cardGap xl:grid-cols-3">
+      <div className="grid justify-center gap-cardGap xl:grid-cols-2 2xl:grid-cols-3">
         <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
           <div className="py-3 text-center text-lg font-semibold">
             오늘의 SMP
