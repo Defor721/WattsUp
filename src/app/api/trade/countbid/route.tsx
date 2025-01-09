@@ -10,7 +10,7 @@ export async function GET() {
     const collection = db.collection("bid");
     const count = await collection.countDocuments();
     return NextResponse.json(
-      { message: "success to count data", count },
+      { message: "success to counts data", count },
       { status: 200 },
     );
   } catch (error) {
