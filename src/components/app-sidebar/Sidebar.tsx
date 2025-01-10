@@ -16,7 +16,6 @@ import { useState } from "react";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/hooks/useAccessToken";
 import { useUserStore } from "@/stores/useUserStore";
-import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
 
 import NavHeader from "./Header";
 import NavMain from "./Main";
@@ -73,7 +72,6 @@ const adminItems = [
 ];
 
 function Sidebar() {
-  useCheckAccessToken();
   const { accessToken } = useAccessToken();
   const { user } = useUserStore();
 

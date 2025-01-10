@@ -24,7 +24,6 @@ export default function ChargeCreditModal() {
     actions: { chargeCredit, fetchCurrentUser },
   } = useUserStore();
 
-  console.log(user);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [charge, setCharge] = useState("");
   const [error, setError] = useState("");
