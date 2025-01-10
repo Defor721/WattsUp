@@ -128,6 +128,7 @@ export default function BidForm({
         description: "입찰이 성공적으로 제출되었습니다.",
         variant: "success",
       });
+
       onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
 

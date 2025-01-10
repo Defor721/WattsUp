@@ -52,6 +52,10 @@ export async function GET() {
         table.find("tbody tr").each((i, row) => {
           const cells = $(row).find("th, td");
           const parseValue = (val: string) => {
+            // 날짜 형식은 숫자 변환하지 않음
+            if (/\d{4}\.\d{2}\.\d{2}/.test(val)) {
+              return val.trim(); // "2025.01.09" 그대로 반환
+            }
             const num = parseFloat(val.replace(",", ""));
             return isNaN(num) ? val.trim() : num;
           };

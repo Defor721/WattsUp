@@ -4,12 +4,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/shadcn/card";
+import { Card, CardContent } from "@/components/shadcn/card";
 import TradingStats from "@/components/energy-trade/TradingStats";
 import BidForm from "@/components/energy-trade/BidForm";
 import SupplyChart from "@/components/energy-trade/SupplyChart";
