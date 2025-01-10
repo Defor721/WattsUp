@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import apiClient from "@/lib/axios";
 
 import RegionValue2 from "./RegionValue2";
 import RegionValue1 from "./RegionValue1";
@@ -34,14 +35,9 @@ function TodayValue() {
 
     const fetchData = async () => {
       try {
-        const smpRecResponse = await fetch("/api/crawl");
-
-        if (!smpRecResponse.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const smpRecData = await smpRecResponse.json();
+        const { data } = await apiClient.get("/api/crawl");
         if (isMounted) {
-          setApiData(smpRecData);
+          setApiData(data);
         }
       } catch (error) {
         if (isMounted) {

@@ -6,6 +6,7 @@ import axios from "axios";
 import { usePrediction } from "@/hooks/usePrediction";
 import { Button, Card } from "@/components/shadcn";
 import Loading from "@/app/loading";
+import apiClient from "@/lib/axios";
 
 function RegionData() {
   const { chartData, loading } = usePrediction();
@@ -99,11 +100,11 @@ function RegionData() {
     }
 
     try {
-      const response = await axios.post(
+      const { data } = await apiClient.post(
         "/api/admin/userinfo/updatesupply",
         firstData,
       ); // API 엔드포인트 수정 필요
-      console.log("First data sent successfully:", response.data);
+      console.log("First data sent successfully:", data);
 
       // 버튼 비활성화 및 클릭 날짜 저장
       const today = new Date().toISOString().split("T")[0];

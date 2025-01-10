@@ -7,10 +7,12 @@ import { SidebarProvider } from "@/components/shadcn";
 
 function MainLayout({ children }: { children: ReactNode }) {
   return (
-    <SidebarProvider>
-      <Sidebar />
-      <div className="flex-1 select-none dark:bg-subColor">{children}</div>
-    </SidebarProvider>
+    <>
+      <SidebarProvider>
+        <Sidebar />
+        <div className="flex-1 select-none dark:bg-subColor">{children}</div>
+      </SidebarProvider>
+    </>
   );
 }
 

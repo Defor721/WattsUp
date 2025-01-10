@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts"; // Recharts 컴포넌트
-import axios from "axios"; // HTTP 요청 라이브러리
 
 import {
   Card,
@@ -23,6 +22,7 @@ import {
   formatNumberWithDecimal,
   formatNumberWithoutDecimal,
 } from "@/hooks/useNumberFormatter";
+import apiClient from "@/lib/axios";
 
 // 데이터 타입 정의
 interface SupplyData {
@@ -49,7 +49,7 @@ export default function SupplyChart({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/trade/supply"); // API 호출
+        const response = await apiClient.get("/api/trade/supply"); // API 호출
         const result = response.data?.result;
 
         if (!result) {
