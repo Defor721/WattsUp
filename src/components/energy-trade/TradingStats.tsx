@@ -3,7 +3,8 @@
 
 import { useEffect, useState } from "react"; // React 훅
 import { motion } from "framer-motion"; // 애니메이션 라이브러리
-import axios from "axios"; // HTTP 요청 라이브러리
+
+import apiClient from "@/lib/axios";
 
 import { Card } from "../shadcn";
 
@@ -28,9 +29,9 @@ export default function TradingStats({
       try {
         const [bidCountResponse, supplyResponse, crawlResponse] =
           await Promise.all([
-            axios.get("/api/trade/countbid"), // 누적 입찰 수
-            axios.get("/api/trade/supply"), // 총 공급량 (total 값 사용)
-            axios.get("/api/crawl"), // SMP, REC 데이터
+            apiClient.get("/api/trade/countbid"), // 누적 입찰 수
+            apiClient.get("/api/trade/supply"), // 총 공급량 (total 값 사용)
+            apiClient.get("/api/crawl"), // SMP, REC 데이터
           ]);
 
         const bidCount = bidCountResponse.data.count || 0; // `count`로 접근
