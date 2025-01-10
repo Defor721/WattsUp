@@ -351,7 +351,7 @@ function PowerUsageByRegion() {
               <div className="w-[450px]">
                 <PieChart data={doughnutData} colors={COLORS} />
               </div>
-              <div className="flex flex-col gap-2">
+              {/* <div className="flex flex-col gap-2">
                 {doughnutData
                   .sort((a, b) => b.value - a.value)
                   .map((item) => (
@@ -368,7 +368,7 @@ function PowerUsageByRegion() {
                       </span>
                     </div>
                   ))}
-              </div>
+              </div> */}
             </div>
           </Card>
           <Card className="flex flex-1 flex-col gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
