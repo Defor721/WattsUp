@@ -39,19 +39,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} font-pretendard`}>
         <MSWProvider>
-          {/* <QueryProvider> */}
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <CheckAccessTokenClient />
-            {children}
-            <FloatingButton />
-            <Toaster />
-          </ThemeProvider>
-          {/* </QueryProvider> */}
+          <QueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <CheckAccessTokenClient />
+              {children}
+              <FloatingButton />
+              <Toaster />
+            </ThemeProvider>
+          </QueryProvider>
         </MSWProvider>
       </body>
     </html>

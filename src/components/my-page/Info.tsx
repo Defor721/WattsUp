@@ -51,6 +51,7 @@ function Info() {
     await logout();
     resetAccessToken();
     router.push("/");
+    router.refresh();
   };
 
   return (
