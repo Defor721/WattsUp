@@ -1,3 +1,5 @@
+"use client"; // 클라이언트 컴포넌트 설정
+
 import {
   BarChart,
   Bar,
@@ -7,6 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts"; // Recharts 컴포넌트
+import { motion } from "framer-motion"; // Framer Motion
 
 import {
   Card,
@@ -76,13 +79,33 @@ export default function SupplyChart({
                 shape={(props: any) => {
                   const { x, y, width, height, payload } = props;
                   const isSelected = payload.region === selectedRegion;
-                  return (
+
+                  return isSelected ? (
+                    // 선택된 경우 깜빡이는 애니메이션 추가
+                    <motion.rect
+                      x={x}
+                      y={y}
+                      width={width}
+                      height={height}
+                      fill="#f59e0b" // 선택된 바의 색상
+                      onClick={() => onBarClick(payload.region)}
+                      style={{ cursor: "pointer" }}
+                      animate={{
+                        opacity: [0.6, 1, 0.6], // 깜빡거리는 효과
+                      }}
+                      transition={{
+                        duration: 1, // 1초 동안 깜빡임
+                        repeat: Infinity, // 무한 반복
+                      }}
+                    />
+                  ) : (
+                    // 기본 막대
                     <rect
                       x={x}
                       y={y}
                       width={width}
                       height={height}
-                      fill={isSelected ? "#f59e0b" : "#1e3b97"} // 선택된 바 색상 변경
+                      fill="#1e3b97" // 기본 바의 색상
                       onClick={() => onBarClick(payload.region)} // 클릭 이벤트 추가
                       style={{ cursor: "pointer" }}
                     />
