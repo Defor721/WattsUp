@@ -182,6 +182,7 @@ export default function TradePage() {
                     credits={credits}
                     setCredits={setCredits}
                     fetchUserCredits={fetchUserCredits}
+                    supply={supply}
                   />
                 </CardContent>
               </Card>

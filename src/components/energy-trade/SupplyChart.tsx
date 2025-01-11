@@ -23,7 +23,7 @@ import {
 } from "@/hooks/useNumberFormatter";
 
 // 데이터 타입 정의
-interface SupplyData {
+export interface SupplyData {
   region: string; // 지역 이름
   supply: number; // 전력 공급량
 }
@@ -62,7 +62,7 @@ export default function SupplyChart({
               />
               <Tooltip
                 formatter={(value: number) =>
-                  `${formatNumberWithDecimal(value)} kWh`
+                  `${formatNumberWithoutDecimal(value)} kWh`
                 }
                 labelStyle={{
                   color: "#111", // 각 데이터 항목 텍스트는 흰색

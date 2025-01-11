@@ -20,6 +20,9 @@ import {
 import { Regions } from "@/utils/regions";
 import apiClient from "@/lib/axios";
 import { toast } from "@/hooks/useToast";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+
+import { SupplyData } from "./SupplyChart";
 
 const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
@@ -53,6 +56,7 @@ interface BidFormProps {
   credits: number;
   setCredits: any;
   fetchUserCredits: any;
+  supply: SupplyData[];
 }
 
 export default function BidForm({
@@ -64,8 +68,12 @@ export default function BidForm({
   credits,
   setCredits,
   fetchUserCredits,
+  supply,
 }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
+  const selectedSupply =
+    supply.find((item) => item.region === region)?.supply || 0;
+  const roundedSupply = Math.round(selectedSupply);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -162,14 +170,14 @@ export default function BidForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="quantity" className="text-sm font-medium">
-                  수량 (kWh)
+                  전력량 (kWh)
                 </Label>
                 <Input
                   id="quantity"
                   type="text" // 숫자 필터링을 직접 처리
-                  value={quantity}
+                  value={quantity.toLocaleString()}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.replace(/,/g, "");
 
                     // 빈 문자열 허용
                     if (value === "") {
@@ -180,7 +188,17 @@ export default function BidForm({
                     // 숫자만 허용
                     const numericValue = Number(value);
                     if (!isNaN(numericValue) && numericValue >= 0) {
-                      setQuantity(numericValue);
+                      // 입력 값이 roundedSupply를 초과하지 않도록 제한
+                      if (numericValue > roundedSupply) {
+                        toast({
+                          title: "입력 제한",
+                          description: `최대 ${roundedSupply.toLocaleString()} kWh까지만 입력할 수 있습니다.`,
+                          variant: "destructive",
+                        });
+                        setQuantity(roundedSupply); // 최대값으로 제한
+                      } else {
+                        setQuantity(numericValue);
+                      }
                     }
                   }}
                   required
