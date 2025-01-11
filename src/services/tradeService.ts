@@ -13,12 +13,12 @@ export const fetchCrawlData = async () => {
   return response.data;
 };
 
-export const fetchBidCount = async () => {
+export const fetchBid = async () => {
   const response = await apiClient.get("/api/trade/countbid");
-  return response.data.count;
+  return response.data;
 };
 
 export const fetchSupplyData = async () => {
   const response = await apiClient.get("/api/trade/supply");
-  return response.data.total;
+  return response.data;
 };

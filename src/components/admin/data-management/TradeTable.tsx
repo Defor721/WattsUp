@@ -105,7 +105,7 @@ function TradeTable() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="mt-3">
+    <div className="m-w-[700px]">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
           모든 거래 내역

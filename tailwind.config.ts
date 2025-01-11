@@ -19,11 +19,11 @@ const config: Config = {
           DEFAULT: "#050a18",
         },
         cardBackground: {
-          light: "#f5f6f7",
+          light: "#f5faff",
           dark: "#1e2330",
         },
         tableHeader: {
-          light: "#ddd",
+          light: "#f5f7f8",
           dark: "rgb(15,25,50)",
         },
         primary: {
@@ -127,6 +127,10 @@ const config: Config = {
         lg: "1.125rem",
         "custom-small": "0.75rem",
         "custom-large": "2rem",
+      },
+      boxShadow: {
+        "dark-md":
+          "0 4px 6px -1px rgba(255, 255, 255, 0.3), 0 2px 4px -2px rgba(255, 255, 255, 0.3)",
       },
       keyframes: {
         insideout: {
