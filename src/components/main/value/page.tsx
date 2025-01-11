@@ -2,30 +2,31 @@
 
 import React, { useState, useEffect } from "react";
 
-import { Card } from "@/components/shadcn";
-import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 import apiClient from "@/lib/axios";
 
-import RegionValue2 from "./RegionValue2";
-import RegionValue1 from "./RegionValue1";
+import RegionValue from "./RegionValue";
+import SMP from "./SMP";
+import REC from "./REC";
+
+export interface ApiData {
+  todaySmpData: {
+    거래일: string;
+    최고가: number;
+    최소가: number;
+    평균가: number;
+  };
+  todayRecData: {
+    거래량: number;
+    거래일: string;
+    종가: number;
+    최고가: number;
+    최저가: number;
+    평균가: number;
+  };
+}
 
 function TodayValue() {
-  const [apiData, setApiData] = useState<{
-    todaySmpData: {
-      거래일: string;
-      최고가: number;
-      최소가: number;
-      평균가: number;
-    };
-    todayRecData: {
-      거래량: number;
-      거래일: string;
-      종가: number;
-      최고가: number;
-      최저가: number;
-      평균가: number;
-    };
-  } | null>(null);
+  const [apiData, setApiData] = useState<ApiData | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,114 +83,15 @@ function TodayValue() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="mb-8 text-center text-3xl font-bold">오늘의 전력정보</h1>
-      <div className="grid justify-center gap-cardGap xl:grid-cols-2 2xl:grid-cols-3">
-        <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
-          <div className="py-3 text-center text-lg font-semibold">
-            오늘의 SMP
-          </div>
-          <div className="mb-3 mt-6 flex justify-end text-xs text-gray-500 dark:text-gray-300">
-            (단위: 원/kWh)
-          </div>
-          <table className="h-[148px] w-full border-collapse">
-            <tbody>
-              <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
-                  거래일
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-                  {apiData.todaySmpData.거래일 || "-"}
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
-                  최고가
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-                  {apiData.todaySmpData.최고가 || "-"}
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="w-[133px] border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
-                  최소가
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-                  {apiData.todaySmpData.최소가 || "-"}
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="w-[133px] border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[6px] pl-[17px] pr-[15px] pt-[8px] font-medium dark:bg-tableHeader-dark">
-                  평균가
-                </td>
-                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-                  {apiData.todaySmpData.평균가 || "-"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </Card>
-        {/* 오늘의 REC */}
-        <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
-          <div className="py-3 text-center text-lg font-semibold">
-            오늘의 REC
-          </div>
-          <div className="mb-3 bg-blue-100 py-2 text-center text-sm font-medium text-blue-800">
-            1REC = 1MWh (가중치에 따라 변동)
-          </div>
-          <table className="h-[148px] w-full border-collapse">
-            <tbody>
-              <tr className="border-t">
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  거래일
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {apiData.todayRecData.거래일 || "-"}
-                </td>
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  거래량
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {formatNumberWithoutDecimal(apiData.todayRecData.거래량) ||
-                    "-"}
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  평균가
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {formatNumberWithoutDecimal(apiData.todayRecData.평균가) ||
-                    "-"}
-                </td>
-                <td className="border-0 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  최고가
-                </td>
-                <td className="border-0 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {formatNumberWithoutDecimal(apiData.todayRecData.최고가) ||
-                    "-"}
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  최저가
-                </td>
-                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {formatNumberWithoutDecimal(apiData.todayRecData.최저가) ||
-                    "-"}
-                </td>
-                <td className="border-0 border-b-1 border-r-1 border-t-1 border-gray-300 bg-tableHeader-light pb-[13px] pl-[17px] pr-[15px] pt-[14px] font-medium dark:bg-tableHeader-dark">
-                  종가
-                </td>
-                <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[13px] pl-[17px] pr-[15px] pt-[14px]">
-                  {formatNumberWithoutDecimal(apiData.todayRecData.종가) || "-"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </Card>
+      <h1 className="mb-8 mt-3 text-center text-3xl font-bold xl:mt-0">
+        오늘의 전력정보
+      </h1>
+      <div className="grid gap-cardGap 2xl:grid-cols-3">
+        <SMP apiData={apiData} />
 
-        {/* 총 공급량 */}
-        <RegionValue1 />
+        <REC apiData={apiData} />
+
+        <RegionValue />
       </div>
     </div>
   );

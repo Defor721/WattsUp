@@ -30,7 +30,7 @@ const regionColors: Record<string, string> = {
   충청북도: "#DC143C",
 };
 
-function RegionValue1() {
+function RegionValue() {
   const [regionIndex, setRegionIndex] = useState(0);
   const [regions, setRegions] = useState<Region[]>([]);
   const [total, setTotal] = useState<number>(0); // 총 공급량
@@ -86,7 +86,7 @@ function RegionValue1() {
   const currentRegion = chartData[regionIndex];
 
   return (
-    <Card className="w-[488px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+    <Card className="min-w-[432px] border-none bg-cardBackground-light p-cardPadding shadow-md dark:bg-cardBackground-dark">
       <div className="py-3 text-center text-lg font-semibold">
         오늘의 {currentRegion.name} 전력 공급량
       </div>
@@ -124,4 +124,4 @@ function RegionValue1() {
   );
 }
 
-export default RegionValue1;
+export default RegionValue;

@@ -16,7 +16,7 @@ function IntroducePage() {
   const [activeTab, setActiveTab] = useState("wattsup");
 
   return (
-    <div className="mx-auto max-w-[1920px] p-5 dark:bg-subColor dark:text-white md:w-full">
+    <div className="mx-auto max-w-[1920px] p-5 dark:bg-subColor dark:text-white md:w-full xl:p-10">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid h-[50px] w-full grid-cols-3">
           <TabsTrigger

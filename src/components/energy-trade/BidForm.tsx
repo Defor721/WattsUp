@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -19,33 +19,12 @@ import {
 } from "@/components/shadcn/select";
 import { Regions } from "@/utils/regions";
 import apiClient from "@/lib/axios";
-import Loading from "@/app/loading";
 import { toast } from "@/hooks/useToast";
 
 const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
   label: region,
 }));
-
-const fetchUserCredits = async () => {
-  try {
-    const response = await apiClient.get("/api/users/credit");
-    return response.data.credits || 0; // 크레딧 데이터 반환
-  } catch (error: any) {
-    console.error("크레딧 데이터 로드 실패:", error.message);
-    return 0; // 실패 시 0으로 설정
-  }
-};
-
-const fetchSmpPrice = async () => {
-  try {
-    const response = await apiClient.get("/api/crawl");
-    return response.data.todaySmpData["평균가"] || 0; // SMP 평균가 반환
-  } catch (error: any) {
-    console.error("SMP 데이터 로드 실패:", error.message);
-    return 0; // 실패 시 0으로 설정
-  }
-};
 
 const submitBid = async (price: number, region: string, quantity: number) => {
   try {
@@ -70,6 +49,10 @@ interface BidFormProps {
   onRegionChange: (region: string) => void;
   isSubmitting: boolean;
   setIsSubmitting: any;
+  smpPrice: number;
+  credits: number;
+  setCredits: any;
+  fetchUserCredits: any;
 }
 
 export default function BidForm({
@@ -77,26 +60,12 @@ export default function BidForm({
   onRegionChange,
   isSubmitting,
   setIsSubmitting,
+  smpPrice,
+  credits,
+  setCredits,
+  fetchUserCredits,
 }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
-  const [smpPrice, setSmpPrice] = useState<number>(0); // SMP 값 상태
-  const [credits, setCredits] = useState<number>(0); // 크레딧 상태 추가
-  const [isLoading, setIsLoading] = useState(true); // SMP 로딩 상태
-
-  useEffect(() => {
-    // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
-    const loadData = async () => {
-      setIsLoading(true);
-      const [userCredits, smpValue] = await Promise.all([
-        fetchUserCredits(),
-        fetchSmpPrice(),
-      ]);
-      setCredits(userCredits);
-      setSmpPrice(smpValue);
-      setIsLoading(false);
-    };
-    loadData();
-  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -147,10 +116,6 @@ export default function BidForm({
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div className="w-full">
       <motion.div
@@ -159,7 +124,7 @@ export default function BidForm({
         transition={{ duration: 1 }}
         className="w-full"
       >
-        <Card className="border-0">
+        <Card className="border-0 shadow-none dark:shadow-none">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">입찰하기</CardTitle>
           </CardHeader>
