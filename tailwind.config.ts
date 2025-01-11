@@ -129,8 +129,9 @@ const config: Config = {
         "custom-large": "2rem",
       },
       boxShadow: {
-        "dark-md":
-          "0 4px 6px -1px rgba(255, 255, 255, 0.3), 0 2px 4px -2px rgba(255, 255, 255, 0.3)",
+        "custom-light": "4px 4px 8px rgba(0, 0, 0, 0.1)",
+        "custom-dark": "4px 4px 8px rgba(0, 0, 0, 0.3)",
+        neumorphic: "4px 4px 10px #bebebe, -4px -4px 10px #ffffff",
       },
       keyframes: {
         insideout: {
