@@ -3,15 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("accessToken")?.value;
 
-  console.log("middleware AccessToken:", token); // TODO: 디버깅용 로그
-  console.log("middleware Request URL:", req.url); // TODO: 디버깅용 로그
+  const response = token
+    ? NextResponse.next()
+    : NextResponse.redirect(new URL("/login", req.url));
 
-  if (!token)
-    return NextResponse.redirect(new URL("/login", req.url), {
-      headers: { "Cache-Control": "no-store" },
-    });
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

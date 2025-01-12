@@ -8,6 +8,7 @@ import { Toaster } from "@/components/shadcn/toaster";
 import { MSWProvider, QueryProvider } from "@/config";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import FloatingButton from "@/components/floating-button/FloatingButton";
+import CheckAccessTokenClient from "@/auth/components/common/CheckAccessTokenClient";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,18 +39,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} font-pretendard`}>
         <MSWProvider>
-          {/* <QueryProvider> */}
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <FloatingButton />
-            <Toaster />
-          </ThemeProvider>
-          {/* </QueryProvider> */}
+          <QueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <CheckAccessTokenClient />
+              {children}
+              <FloatingButton />
+              <Toaster />
+            </ThemeProvider>
+          </QueryProvider>
         </MSWProvider>
       </body>
     </html>

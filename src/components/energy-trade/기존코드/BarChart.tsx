@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   BarChart,
@@ -20,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/shadcn/card";
 import { PowerSupplyData } from "@/components/energy-trade/mock/types";
+import apiClient from "@/lib/axios";
 
 export function BarChartComponent() {
   const [data, setData] = useState<PowerSupplyData[]>([]);
@@ -29,7 +29,7 @@ export function BarChartComponent() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/trade/tradedata");
+      const response = await apiClient.get("/api/trade/tradedata");
       setData(response.data);
     } catch (err: any) {
       setError(err.message || "데이터를 가져오는 중 오류가 발생했습니다.");

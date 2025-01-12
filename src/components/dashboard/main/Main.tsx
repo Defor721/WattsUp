@@ -31,7 +31,7 @@ export default function DashboardMain() {
 
   return (
     <Container>
-      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor first:mt-0 dark:text-white">
+      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor dark:text-white">
         대시보드
       </h2>
       <RegionButtons

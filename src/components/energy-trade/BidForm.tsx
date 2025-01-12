@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -19,33 +19,15 @@ import {
 } from "@/components/shadcn/select";
 import { Regions } from "@/utils/regions";
 import apiClient from "@/lib/axios";
-import Loading from "@/app/loading";
 import { toast } from "@/hooks/useToast";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+
+import { SupplyData } from "./SupplyChart";
 
 const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
   label: region,
 }));
-
-const fetchUserCredits = async () => {
-  try {
-    const response = await apiClient.get("/api/users/credit");
-    return response.data.credits || 0; // 크레딧 데이터 반환
-  } catch (error: any) {
-    console.error("크레딧 데이터 로드 실패:", error.message);
-    return 0; // 실패 시 0으로 설정
-  }
-};
-
-const fetchSmpPrice = async () => {
-  try {
-    const response = await apiClient.get("/api/crawl");
-    return response.data.todaySmpData["평균가"] || 0; // SMP 평균가 반환
-  } catch (error: any) {
-    console.error("SMP 데이터 로드 실패:", error.message);
-    return 0; // 실패 시 0으로 설정
-  }
-};
 
 const submitBid = async (price: number, region: string, quantity: number) => {
   try {
@@ -70,6 +52,11 @@ interface BidFormProps {
   onRegionChange: (region: string) => void;
   isSubmitting: boolean;
   setIsSubmitting: any;
+  smpPrice: number;
+  credits: number;
+  setCredits: any;
+  fetchUserCredits: any;
+  supply: SupplyData[];
 }
 
 export default function BidForm({
@@ -77,26 +64,16 @@ export default function BidForm({
   onRegionChange,
   isSubmitting,
   setIsSubmitting,
+  smpPrice,
+  credits,
+  setCredits,
+  fetchUserCredits,
+  supply,
 }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
-  const [smpPrice, setSmpPrice] = useState<number>(0); // SMP 값 상태
-  const [credits, setCredits] = useState<number>(0); // 크레딧 상태 추가
-  const [isLoading, setIsLoading] = useState(true); // SMP 로딩 상태
-
-  useEffect(() => {
-    // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
-    const loadData = async () => {
-      setIsLoading(true);
-      const [userCredits, smpValue] = await Promise.all([
-        fetchUserCredits(),
-        fetchSmpPrice(),
-      ]);
-      setCredits(userCredits);
-      setSmpPrice(smpValue);
-      setIsLoading(false);
-    };
-    loadData();
-  }, []);
+  const selectedSupply =
+    supply.find((item) => item.region === region)?.supply || 0;
+  const roundedSupply = Math.round(selectedSupply);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -147,10 +124,6 @@ export default function BidForm({
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div className="w-full">
       <motion.div
@@ -159,7 +132,7 @@ export default function BidForm({
         transition={{ duration: 1 }}
         className="w-full"
       >
-        <Card className="border-0">
+        <Card className="border-0 shadow-none dark:shadow-none">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">입찰하기</CardTitle>
           </CardHeader>
@@ -197,14 +170,14 @@ export default function BidForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="quantity" className="text-sm font-medium">
-                  수량 (kWh)
+                  전력량 (kWh)
                 </Label>
                 <Input
                   id="quantity"
                   type="text" // 숫자 필터링을 직접 처리
-                  value={quantity}
+                  value={quantity.toLocaleString()}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.replace(/,/g, "");
 
                     // 빈 문자열 허용
                     if (value === "") {
@@ -215,7 +188,17 @@ export default function BidForm({
                     // 숫자만 허용
                     const numericValue = Number(value);
                     if (!isNaN(numericValue) && numericValue >= 0) {
-                      setQuantity(numericValue);
+                      // 입력 값이 roundedSupply를 초과하지 않도록 제한
+                      if (numericValue > roundedSupply) {
+                        toast({
+                          title: "입력 제한",
+                          description: `최대 ${roundedSupply.toLocaleString()} kWh까지만 입력할 수 있습니다.`,
+                          variant: "destructive",
+                        });
+                        setQuantity(roundedSupply); // 최대값으로 제한
+                      } else {
+                        setQuantity(numericValue);
+                      }
                     }
                   }}
                   required

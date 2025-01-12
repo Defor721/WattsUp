@@ -35,6 +35,7 @@ export default function LoginPage() {
       resetAuthState();
       router.refresh();
       router.push(redirectTo);
+      router.refresh();
     }
   }, [accessToken]);
 
