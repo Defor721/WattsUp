@@ -10,6 +10,7 @@ import {
   Legend,
 } from "recharts"; // Recharts 컴포넌트
 import { motion } from "framer-motion"; // Framer Motion
+import { useState } from "react"; // 상태 관리
 
 import {
   Card,
@@ -20,7 +21,7 @@ import {
 import {
   formatNumberWithDecimal,
   formatNumberWithoutDecimal,
-} from "@/hooks/useNumberFormatter";
+} from "@/hooks/useNumberFormatter"; // 숫자 포맷팅
 
 // 데이터 타입 정의
 export interface SupplyData {
@@ -40,6 +41,8 @@ export default function SupplyChart({
   onBarClick,
   supply,
 }: SupplyChartProps) {
+  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null); // Hover 상태 관리
+
   return (
     <div className="w-full">
       <Card className="border-0 shadow-none dark:shadow-none">
@@ -64,9 +67,7 @@ export default function SupplyChart({
                 formatter={(value: number) =>
                   `${formatNumberWithoutDecimal(value)} kWh`
                 }
-                labelStyle={{
-                  color: "#111", // 각 데이터 항목 텍스트는 흰색
-                }}
+                labelStyle={{ color: "#111" }}
               />
               <Legend />
 
@@ -79,36 +80,54 @@ export default function SupplyChart({
                 shape={(props: any) => {
                   const { x, y, width, height, payload } = props;
                   const isSelected = payload.region === selectedRegion;
+                  const isHovered = hoveredRegion === payload.region;
 
-                  return isSelected ? (
-                    // 선택된 경우 깜빡이는 애니메이션 추가
-                    <motion.rect
-                      x={x}
-                      y={y}
-                      width={width}
-                      height={height}
-                      fill="#f59e0b" // 선택된 바의 색상
-                      onClick={() => onBarClick(payload.region)}
-                      style={{ cursor: "pointer" }}
-                      animate={{
-                        opacity: [0.6, 1, 0.6], // 깜빡거리는 효과
-                      }}
-                      transition={{
-                        duration: 1, // 1초 동안 깜빡임
-                        repeat: Infinity, // 무한 반복
-                      }}
-                    />
-                  ) : (
-                    // 기본 막대
-                    <rect
-                      x={x}
-                      y={y}
-                      width={width}
-                      height={height}
-                      fill="#1e3b97" // 기본 바의 색상
-                      onClick={() => onBarClick(payload.region)} // 클릭 이벤트 추가
-                      style={{ cursor: "pointer" }}
-                    />
+                  return (
+                    <g
+                      onMouseEnter={() => setHoveredRegion(payload.region)} // Hover 시작
+                      onMouseLeave={() => setHoveredRegion(null)} // Hover 종료
+                    >
+                      {/* 화살표 UI (선택되지 않은 바에만 표시) */}
+                      {!isSelected && isHovered && (
+                        <motion.polygon
+                          points={`${x + width / 2 - 6},${y - 20} ${x + width / 2 + 6},${y - 20} ${x + width / 2},${y - 10}`}
+                          fill="#1e3b97"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
+                      {/* 선택된 바 */}
+                      {isSelected ? (
+                        <motion.rect
+                          x={x}
+                          y={y}
+                          width={width}
+                          height={height}
+                          fill="#f59e0b"
+                          onClick={() => onBarClick(payload.region)}
+                          style={{ cursor: "pointer" }}
+                          animate={{
+                            opacity: [1, 0.6, 1], // 깜빡이는 효과
+                          }}
+                          transition={{
+                            duration: 0.5, // 0.5초 동안 깜빡임
+                            repeat: 2, // 2번 반복
+                          }}
+                        />
+                      ) : (
+                        // 기본 막대
+                        <rect
+                          x={x}
+                          y={y}
+                          width={width}
+                          height={height}
+                          fill="#1e3b97"
+                          onClick={() => onBarClick(payload.region)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      )}
+                    </g>
                   );
                 }}
               />
