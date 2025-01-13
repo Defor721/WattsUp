@@ -21,6 +21,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import ChangePasswordModal from "./ChangePasswordModal";
 import WithdrawalAccountModal from "./WithdrawalAccountModal";
 import ChargeCreditModal from "./ChargeCreditModal";
+import Loading from "@/app/loading";
 
 function Info() {
   const router = useRouter();
@@ -54,8 +55,10 @@ function Info() {
     router.refresh();
   };
 
+  if (!user) return <Loading />;
+
   return (
-    <Card className="flex w-full max-w-[400px] flex-col items-center border-0 shadow-none">
+    <Card className="flex w-full max-w-[400px] flex-col items-center border-none shadow-none dark:shadow-none">
       <CardHeader className="flex flex-col items-center gap-3 text-center">
         <Avatar
           className="h-24 w-24 cursor-pointer"

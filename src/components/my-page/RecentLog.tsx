@@ -38,7 +38,9 @@ function formatTimeDifference(now: string): string {
 function RecentLog() {
   const { data, loading } = useFetchUserTradeData();
 
-  if (!data || loading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (!data) return <div>거래 기록이 없습니다.</div>;
 
   const bidDatas = data.bidData;
 

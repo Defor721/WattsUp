@@ -1,24 +1,14 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
-  "plugins": ["prettier", "import"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": "error", // Prettier 규칙 강제
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "off",
-    "react/react-in-jsx-scope": "off",
-    "import/order": [
-      "warn",
-      {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          ["sibling", "parent"],
-          "index",
-          "object"
-        ],
-        "newlines-between": "always"
-      }
-    ]
+    "react/react-in-jsx-scope": "off"
   }
 }

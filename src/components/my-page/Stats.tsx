@@ -1,21 +1,12 @@
 "use client";
 
 import React from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-} from "recharts";
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  Progress,
   Tabs,
   TabsContent,
   TabsList,
@@ -26,17 +17,12 @@ import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import useFetchUserTradeData from "./useFetchUserData";
 
-const tradeData = [
-  { name: "입찰 성공", value: 35 },
-  { name: "입찰 실패", value: 25 },
-];
-
-const COLORS = ["#0f1d4b", "#4c6ef5", "#82c91e", "#fcc419"];
-
 function Stats() {
   const { data, loading } = useFetchUserTradeData();
 
-  if (!data || loading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (!data) return <div>거래 기록이 없습니다.</div>;
 
   const stats = data.stats;
   const formattedCount = formatNumberWithoutDecimal(stats.documentCount);
@@ -92,24 +78,6 @@ function Stats() {
                     </small>
                   </div>
                 </div>
-                {/* <div className="flex items-center justify-between">
-                  <div className="">평균 거래 단가</div>
-                  <div className="flex items-center gap-1">
-                    <div className="text-lg font-semibold">{75.2}</div>
-                    <small className="text-sm font-medium leading-none">
-                      원/kWh
-                    </small>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="">최대 거래량</div>
-                  <div className="flex items-center gap-1">
-                    <div className="text-lg font-semibold">{450}</div>
-                    <small className="text-sm font-medium leading-none">
-                      MW
-                    </small>
-                  </div>
-                </div> */}
               </div>
             </Card>
           </TabsContent>

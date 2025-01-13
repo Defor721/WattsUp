@@ -10,7 +10,9 @@ function MainLayout({ children }: { children: ReactNode }) {
     <>
       <SidebarProvider>
         <Sidebar />
-        <div className="flex-1 select-none dark:bg-subColor">{children}</div>
+        <div className="min-h-screen flex-1 select-none dark:bg-subColor">
+          {children}
+        </div>
       </SidebarProvider>
     </>
   );

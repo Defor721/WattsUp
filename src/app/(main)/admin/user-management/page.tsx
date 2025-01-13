@@ -18,7 +18,7 @@ function UserManagement() {
     }
   }, [router, user.role]);
 
-  if (user) return <Loading />;
+  if (!user) return <Loading />;
 
   return (
     <div className="mx-auto max-w-[1920px] p-5 xl:p-10">
