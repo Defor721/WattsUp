@@ -55,13 +55,13 @@ function PredictChart({ data, region, selectedRegion }: Ichart) {
   if (!data) return;
 
   return (
-    <Card className="flex-1 border-none bg-cardBackground-light p-5 dark:bg-cardBackground-dark">
-      <h4 className="my-2 scroll-m-20 pb-8 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+    <Card className="flex h-[418px] flex-1 flex-col gap-2 border-none bg-cardBackground-light p-5 dark:bg-cardBackground-dark">
+      <h4 className="scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
         {selectedRegion} 태양광 발전량 예측 그래프
       </h4>
 
       {/* <ResponsiveContainer width={"100%"} aspect={isTablet ? 4 / 3 : 16 / 7}> */}
-      <ResponsiveContainer width={"100%"} height={300}>
+      <ResponsiveContainer width={"100%"} height={"100%"}>
         <LineChart
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

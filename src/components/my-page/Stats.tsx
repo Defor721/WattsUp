@@ -44,7 +44,7 @@ function Stats() {
   const formattedQuantity = formatNumberWithoutDecimal(stats.totalQuantity);
 
   return (
-    <Card className="flex flex-col border-0 shadow-none">
+    <div className="flex flex-col">
       <CardHeader>
         <CardTitle>개요 및 상세정보</CardTitle>
       </CardHeader>
@@ -88,7 +88,7 @@ function Stats() {
                       {formattedQuantity}
                     </div>
                     <small className="text-sm font-medium leading-none">
-                      mWh
+                      kWh
                     </small>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ function Stats() {
           </TabsContent>
         </Tabs>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
