@@ -32,28 +32,6 @@ interface BidData {
   now: string;
 }
 
-function formatTimeDifference(now: string): string {
-  const currentTime = new Date(); // 현재 시간
-  const eventTime = new Date(now); // 거래 시간
-  const timeDiff = currentTime.getTime() - eventTime.getTime(); // 밀리초 차이
-
-  const diffInMinutes = Math.floor(timeDiff / (1000 * 60)); // 분 단위로 변환
-  const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
-  const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
-
-  if (diffInDays >= 2) {
-    return `${diffInDays}일 전`;
-  } else if (diffInDays === 1) {
-    return `하루 전`;
-  } else if (diffInHours >= 1) {
-    return `${diffInHours}시간 전`;
-  } else if (diffInMinutes >= 1) {
-    return `${diffInMinutes}분 전`;
-  } else {
-    return `방금 전`;
-  }
-}
-
 function TradeTable() {
   const [bidData, setBidData] = useState<BidData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -142,37 +120,41 @@ function TradeTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTrades.map((trade) => {
-              const formattedDate = new Date(trade.now)
-                .toISOString()
-                .split("T")[0];
-              const formattedPrice = formatNumberWithoutDecimal(trade.price);
-              const formattedQuantity = formatNumberWithoutDecimal(
-                trade.quantity,
-              );
-              return (
-                <TableRow
-                  key={trade._id}
-                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-                >
-                  <TableCell className="border border-gray-700 p-3">
-                    {trade.email}
-                  </TableCell>
-                  <TableCell className="border border-gray-700 p-3">
-                    {trade.region}
-                  </TableCell>
-                  <TableCell className="border border-gray-700 p-3">
-                    {formattedPrice} 원
-                  </TableCell>
-                  <TableCell className="border border-gray-700 p-3">
-                    {formattedQuantity}
-                  </TableCell>
-                  <TableCell className="border border-gray-700 p-3">
-                    {formattedDate}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {currentTrades
+              .sort(
+                (a, b) => new Date(b.now).getTime() - new Date(a.now).getTime(),
+              )
+              .map((trade) => {
+                const formattedDate = new Date(trade.now)
+                  .toISOString()
+                  .split("T")[0];
+                const formattedPrice = formatNumberWithoutDecimal(trade.price);
+                const formattedQuantity = formatNumberWithoutDecimal(
+                  trade.quantity,
+                );
+                return (
+                  <TableRow
+                    key={trade._id}
+                    className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+                  >
+                    <TableCell className="border border-gray-700 p-3">
+                      {trade.email}
+                    </TableCell>
+                    <TableCell className="border border-gray-700 p-3">
+                      {trade.region}
+                    </TableCell>
+                    <TableCell className="border border-gray-700 p-3">
+                      {formattedPrice} 원
+                    </TableCell>
+                    <TableCell className="border border-gray-700 p-3">
+                      {formattedQuantity}
+                    </TableCell>
+                    <TableCell className="border border-gray-700 p-3">
+                      {formattedDate}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </div>

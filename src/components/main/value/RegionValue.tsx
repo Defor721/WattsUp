@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
 
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
@@ -91,13 +91,24 @@ function RegionValue() {
         오늘의 {currentRegion.name} 전력 공급량
       </div>
       <div className="relative flex items-center justify-center">
-        {/* <ResponsiveContainer width={200} height={200}> */}
         <PieChart width={200} height={200}>
+          {/* 파이 전체 테두리를 위한 Pie */}
+          <Pie
+            data={[{ value: 1 }]} // 더미 데이터
+            dataKey="value"
+            innerRadius={70} // 테두리 안쪽 반지름
+            outerRadius={99} // 테두리 바깥쪽 반지름
+            fill="none" // 내부 투명
+            stroke="#ccc" // 테두리 색상
+            strokeWidth={1} // 테두리 두께
+          />
+
+          {/* 실제 데이터를 위한 Pie */}
           <Pie
             data={[{ name: currentRegion.name, value: currentRegion.value }]}
             dataKey="value"
             innerRadius={70}
-            outerRadius={100}
+            outerRadius={99}
             startAngle={currentRegion.startAngle}
             endAngle={currentRegion.endAngle}
             stroke="none"
@@ -106,11 +117,10 @@ function RegionValue() {
           >
             <Cell
               key={`cell-${regionIndex}`}
-              fill={regionColors[currentRegion.name] || "#CCCCCC"} // 색상 적용
+              fill={regionColors[currentRegion.name] || "#CCC"} // 색상 적용
             />
           </Pie>
         </PieChart>
-        {/* </ResponsiveContainer> */}
         <div className="absolute text-center">
           <div className="text-2xl font-bold">
             {formatNumberWithoutDecimal(currentRegion.value)} kWh

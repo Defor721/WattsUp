@@ -36,12 +36,12 @@ const defaultItems = [
     label: "대시보드 추가 정보",
     href: "/dashboard/add-information",
   },
-  {
-    id: "profit-analysis",
-    icon: FileText,
-    label: "데이터 분석",
-    href: "/data-report",
-  },
+  // {
+  //   id: "profit-analysis",
+  //   icon: FileText,
+  //   label: "데이터 분석",
+  //   href: "/data-report",
+  // },
   {
     id: "energy-trade",
     icon: TrendingUp,
@@ -60,7 +60,7 @@ const adminItems = [
   {
     id: "user-management",
     icon: Users,
-    label: "사용자 관리",
+    label: "유저 관리",
     href: "/admin/user-management",
   },
   {

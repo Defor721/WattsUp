@@ -4,5 +4,4 @@ import FullPageWrapper from "@/components/main/FullPageWrapper";
 
 export default function Home() {
   return <FullPageWrapper />;
-  // return <div>하이</div>;
 }

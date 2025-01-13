@@ -23,7 +23,7 @@ const FullPageWrapper: React.FC = () => {
       // Fullpage.js 하단 저작권 표시 설정
       credits={{
         enabled: false, // 저작권 메시지 표시 여부 (false: 숨김)
-        label: "Made with FullPage.js", // 메시지 텍스트
+        label: "", // 메시지 텍스트
         position: "right", // 메시지 위치 ("right", "left", "top", "bottom")
       }}
       // 섹션 렌더링 함수

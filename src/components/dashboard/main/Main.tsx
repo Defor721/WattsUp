@@ -30,10 +30,7 @@ export default function DashboardMain() {
   if (error) return <div>{error}</div>;
 
   return (
-    <Container>
-      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight text-mainColor dark:text-white">
-        대시보드
-      </h2>
+    <>
       <RegionButtons
         regions={Object.keys(weatherData)}
         selectedRegion={selectedRegion}
@@ -41,15 +38,15 @@ export default function DashboardMain() {
       />
       <div className="flex flex-col gap-4">
         <div className="grid h-full w-full items-center gap-4 md:grid-cols-1 xl:grid-cols-2">
-          <Card className="flex h-[418px] flex-col items-center justify-center border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark md:w-full xl:w-full">
-            <h4 className="my-2 scroll-m-20 pb-5 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+          <Card className="flex h-[418px] flex-col items-center justify-center gap-2 border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark md:w-full xl:w-full">
+            <h4 className="scroll-m-20 text-center text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
               태양광 발전소 지도
             </h4>
             <div
               id="map"
               style={{
                 width: "100%",
-                height: "300px",
+                height: "100%",
               }}
             >
               <KakaoMap
@@ -69,6 +66,6 @@ export default function DashboardMain() {
           selectedRegion={selectedRegion}
         />
       </div>
-    </Container>
+    </>
   );
 }

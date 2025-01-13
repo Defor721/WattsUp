@@ -9,6 +9,7 @@ import {
   ScrollArea,
 } from "@/components/shadcn";
 import Loading from "@/app/loading";
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import useFetchUserTradeData from "./useFetchUserData";
 
@@ -37,19 +38,20 @@ function formatTimeDifference(now: string): string {
 function RecentLog() {
   const { data, loading } = useFetchUserTradeData();
 
-  if (!data || loading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (!data) return <div>거래 기록이 없습니다.</div>;
 
   const bidDatas = data.bidData;
-  console.log("bidDatas: ", bidDatas);
 
   return (
-    <Card className="flex flex-col border-none shadow-none">
+    <div className="flex flex-col">
       <CardHeader>
-        <CardTitle>최근 활동</CardTitle>
+        <CardTitle>최근 거래 내역</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="max-h-[250px]">
-          <Card className="border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
+      <CardContent className="h-[280px]">
+        <ScrollArea className="h-full">
+          <Card className="border-none bg-cardBackground-light p-cardPadding dark:border-none dark:bg-cardBackground-dark">
             <ul className="flex flex-col gap-3">
               {bidDatas
                 .sort(
@@ -59,10 +61,10 @@ function RecentLog() {
                 .map((bid, index) => (
                   <div
                     key={index}
-                    className="flex w-full items-center justify-between"
+                    className="flex w-full flex-col justify-between md:flex-row md:items-center"
                   >
                     <div className="flex flex-col">
-                      <div>{`${bid.region} 발전소 ${bid.quantity} kMh`}</div>
+                      <div>{`${bid.region} 발전소 ${formatNumberWithoutDecimal(bid.quantity)} kWh`}</div>
                       <div>{formatTimeDifference(bid.now)}</div>
                     </div>
                     <div className="flex gap-2 rounded-md bg-green-400 p-2 text-green-700">
@@ -75,7 +77,7 @@ function RecentLog() {
           </Card>
         </ScrollArea>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
