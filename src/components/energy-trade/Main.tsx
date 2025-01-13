@@ -33,6 +33,8 @@ type TradingStatsData = {
     평균가: number;
   }; // REC 평균가
   totalSupply: number; // 총 공급량
+  smpIncrease: number; // 전일대비 smp 증가량
+  recIncrease: number; // 전일대비 rec 증가량
 };
 
 const fetchUserCredits = async () => {
@@ -49,6 +51,16 @@ const fetchSmpPrice = async () => {
   try {
     const response = await apiClient.get("/api/crawl");
     return response.data.todaySmpData["평균가"] || 0; // SMP 평균가 반환
+  } catch (error: any) {
+    console.error("SMP 데이터 로드 실패:", error.message);
+    return 0; // 실패 시 0으로 설정
+  }
+};
+
+const fetchRecPrice = async () => {
+  try {
+    const response = await apiClient.get("/api/crawl");
+    return response.data.todayRecData["평균가"] || 0; // Rec 평균가 반환
   } catch (error: any) {
     console.error("SMP 데이터 로드 실패:", error.message);
     return 0; // 실패 시 0으로 설정
@@ -90,9 +102,17 @@ const fetchStats = async () => {
 
     const bidCount = bidCountResponse.data.count || 0; // `count`로 접근
     const totalSupply = supplyResponse.data.total || 0; // `total`로 접근
-    const { todaySmpData, todayRecData } = crawlResponse.data;
+    const { todaySmpData, todayRecData, smpIncrease, recIncrease } =
+      crawlResponse.data;
 
-    return { bidCount, totalSupply, todaySmpData, todayRecData };
+    return {
+      bidCount,
+      totalSupply,
+      todaySmpData,
+      todayRecData,
+      smpIncrease,
+      recIncrease,
+    };
   } catch (err) {
     console.error("데이터 로드 실패:", err);
     return null;
@@ -113,21 +133,25 @@ function Main() {
   const [smpPrice, setSmpPrice] = useState<number>(0); // SMP 값 상태
   const [credits, setCredits] = useState<number>(0); // 크레딧 상태 추가
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recPrice, setRecPrice] = useState<number>(0);
 
   useEffect(() => {
     // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
     const loadData = async () => {
       setIsLoading(true);
-      const [stats, supply, userCredits, smpValue] = await Promise.all([
-        fetchStats(),
-        fetchSupply(),
-        fetchUserCredits(),
-        fetchSmpPrice(),
-      ]);
+      const [stats, supply, userCredits, smpValue, recValue] =
+        await Promise.all([
+          fetchStats(),
+          fetchSupply(),
+          fetchUserCredits(),
+          fetchSmpPrice(),
+          fetchRecPrice(),
+        ]);
       setStats(stats);
       setCredits(userCredits);
       setSupply(supply);
       setSmpPrice(smpValue);
+      setRecPrice(recValue);
       setIsLoading(false);
     };
     loadData();
@@ -179,6 +203,7 @@ function Main() {
                   setCredits={setCredits}
                   fetchUserCredits={fetchUserCredits}
                   supply={supply}
+                  recPrice={recPrice}
                 />
               </CardContent>
             </Card>

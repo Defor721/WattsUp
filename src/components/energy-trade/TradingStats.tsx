@@ -19,6 +19,8 @@ type TradingStatsData = {
     평균가: number;
   }; // REC 평균가
   totalSupply: number; // 총 공급량
+  smpIncrease: number; // 전일대비 smp 증가량
+  recIncrease: number; // 전일대비 rec 증가량
 };
 
 interface TradingStatsProps {
@@ -41,7 +43,7 @@ export default function TradingStats({ stats }: TradingStatsProps) {
         />
         <StatItem
           title="REC 평균가"
-          value={`${stats?.todayRecData.평균가.toLocaleString()} 원/REC`}
+          value={`${(stats?.todayRecData?.평균가 ?? 0) / 1000} 원/kwh`}
         />
         <StatItem
           title="총 공급량"

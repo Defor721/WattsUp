@@ -53,6 +53,7 @@ interface BidFormProps {
   isSubmitting: boolean;
   setIsSubmitting: any;
   smpPrice: number;
+  recPrice: number;
   credits: number;
   setCredits: any;
   fetchUserCredits: any;
@@ -69,6 +70,7 @@ export default function BidForm({
   setCredits,
   fetchUserCredits,
   supply,
+  recPrice,
 }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
   const selectedSupply =
@@ -87,7 +89,7 @@ export default function BidForm({
       return;
     }
 
-    const totalPrice = quantity * smpPrice;
+    const totalPrice = quantity * totalUnitPrice;
     if (totalPrice > credits) {
       toast({
         title: "입찰 실패",
@@ -99,7 +101,7 @@ export default function BidForm({
 
     setIsSubmitting(true);
     try {
-      await submitBid(smpPrice, region, quantity);
+      await submitBid(totalPrice, region, quantity);
       toast({
         title: "입찰 성공",
         description: "입찰이 성공적으로 제출되었습니다.",
@@ -123,6 +125,8 @@ export default function BidForm({
       setIsSubmitting(false);
     }
   };
+
+  const totalUnitPrice = smpPrice + recPrice / 1000; // SMP와 REC 가격 합산
 
   return (
     <div className="w-full">
@@ -174,28 +178,23 @@ export default function BidForm({
                 </Label>
                 <Input
                   id="quantity"
-                  type="text" // 숫자 필터링을 직접 처리
+                  type="text"
                   value={quantity.toLocaleString()}
                   onChange={(e) => {
                     const value = e.target.value.replace(/,/g, "");
-
-                    // 빈 문자열 허용
                     if (value === "") {
                       setQuantity(0);
                       return;
                     }
-
-                    // 숫자만 허용
                     const numericValue = Number(value);
                     if (!isNaN(numericValue) && numericValue >= 0) {
-                      // 입력 값이 roundedSupply를 초과하지 않도록 제한
                       if (numericValue > roundedSupply) {
                         toast({
                           title: "입력 제한",
                           description: `최대 ${roundedSupply.toLocaleString()} kWh까지만 입력할 수 있습니다.`,
                           variant: "destructive",
                         });
-                        setQuantity(roundedSupply); // 최대값으로 제한
+                        setQuantity(roundedSupply);
                       } else {
                         setQuantity(numericValue);
                       }
@@ -208,15 +207,20 @@ export default function BidForm({
               <div className="space-y-2">
                 <Label className="text-sm font-medium">단가 (원/kWh)</Label>
                 <div className="text-lg font-bold">
-                  {smpPrice.toLocaleString()} 원
+                  {smpPrice.toLocaleString()} +{" "}
+                  {(recPrice / 1000).toLocaleString()} ={" "}
+                  <span className="text-primary">
+                    {totalUnitPrice.toLocaleString()}
+                  </span>{" "}
+                  원
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">총 가격 (원)</Label>
                 <div className="text-lg font-bold">
-                  {quantity && smpPrice
-                    ? (quantity * smpPrice).toLocaleString()
-                    : "0"}
+                  {quantity && totalUnitPrice
+                    ? (quantity * totalUnitPrice).toLocaleString()
+                    : "0"}{" "}
                   원
                 </div>
               </div>
