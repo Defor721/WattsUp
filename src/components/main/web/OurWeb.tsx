@@ -1,7 +1,7 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트 선언
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo } from "react"; // 상태 관리 및 성능 최적화를 위한 훅
+import { motion, AnimatePresence } from "framer-motion"; // 애니메이션 라이브러리
 import {
   Zap,
   Code,
@@ -9,10 +9,10 @@ import {
   Users,
   Rocket,
   ChevronRight,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+} from "lucide-react"; // 아이콘 라이브러리
+import { useRouter } from "next/navigation"; // 라우팅 기능
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; // 버튼 컴포넌트
 
 // 정보 타입 정의
 interface Info {
@@ -65,17 +65,17 @@ const reasons: Info[] = [
   {
     title: "에너지 산업의 디지털 전환",
     description:
-      "전력거래소는 전력 시장의 중심으로, 디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용함.",
+      "전력거래소는 전력 시장의 중심으로,\n디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용함.",
   },
   {
     title: "사용자 중심의 접근성 개선",
     description:
-      "복잡한 기존 전력거래소 웹을 개선하여 누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공함.",
+      "복잡한 기존 전력거래소 웹을 개선하여\n누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공함.",
   },
   {
     title: "데이터 기반 혁신 가능성",
     description:
-      "실시간 데이터 분석과 예측 모델을 통해 더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
+      "실시간 데이터 분석과 예측 모델을 통해\n더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
   },
 ];
 
@@ -85,17 +85,17 @@ const InfoItem = ({ title, description, icon }: Info) => {
 
   return (
     <motion.div
-      className="group cursor-pointer rounded-lg p-4 transition-all duration-300 hover:shadow-lg"
-      whileHover={{ scale: 1.05 }}
-      style={{ transformOrigin: "center" }}
-      onClick={() => router.push("/introduce")}
+      className="group cursor-pointer overflow-hidden rounded-lg p-4 transition-all duration-300 hover:shadow-lg" // overflow-hidden 추가
+      whileHover={{ scale: 1.03 }} // scale 값 조정
+      style={{ transformOrigin: "center" }} // 변환 원점 설정
+      onClick={() => router.push("/introduce")} // 클릭 시 페이지 이동
     >
       <div className="flex flex-col items-center gap-2">
         {/* 아이콘 */}
         <div className="text-gray-300">{icon}</div>
-        {/* 가운데 정렬된 제목 */}
+        {/* 제목 */}
         <h3 className="text-center text-lg font-semibold">{title}</h3>
-        {/* 설명 중앙 정렬 */}
+        {/* 설명 */}
         <p className="mt-2 text-center text-sm text-slate-200 dark:text-gray-400">
           {description}
         </p>
@@ -169,7 +169,7 @@ const OurWeb = () => {
 
   return (
     <motion.div
-      className="flex min-h-screen flex-col items-center justify-center"
+      className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden" // overflow-x-hidden 추가
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -254,7 +254,10 @@ const OurWeb = () => {
                   <h3 className="text-lg font-semibold">
                     {selectedReason.title}
                   </h3>
-                  <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
+                  <p
+                    className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300"
+                    style={{ whiteSpace: "pre-line" }}
+                  >
                     {selectedReason.description}
                   </p>
                 </motion.div>

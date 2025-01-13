@@ -206,24 +206,30 @@ export default function BidForm({
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">단가 (원/kWh)</Label>
-                <div className="text-lg font-bold">
-                  {smpPrice.toLocaleString()} +{" "}
-                  {(recPrice / 1000).toLocaleString()} ={" "}
-                  <span className="text-primary">
-                    {totalUnitPrice.toLocaleString()}
-                  </span>{" "}
-                  원
+                <div className="text-md space-y-1 font-bold">
+                  <div>
+                    SMP: {smpPrice.toLocaleString()} + REC:{" "}
+                    {(recPrice / 1000).toLocaleString()}
+                  </div>
+                  <div>
+                    ={" "}
+                    <span className="text-primary">
+                      {totalUnitPrice.toLocaleString()}
+                    </span>
+                    원
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">총 가격 (원)</Label>
-                <div className="text-lg font-bold">
+                <div className="text-md font-bold">
                   {quantity && totalUnitPrice
                     ? (quantity * totalUnitPrice).toLocaleString()
                     : "0"}{" "}
                   원
                 </div>
               </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
