@@ -25,6 +25,7 @@ type TradingStatsData = {
     최고가: number;
     최저가: number;
     평균가: number;
+    전일대비변화: number;
   }; // SMP 평균가
   todayRecData: {
     거래일: string;
@@ -90,7 +91,7 @@ const fetchSupply = async () => {
   }
 };
 
-const fetchStats = async () => {
+const fetchStats = async (): Promise<TradingStatsData | null> => {
   try {
     const [bidCountResponse, supplyResponse, crawlResponse] = await Promise.all(
       [
