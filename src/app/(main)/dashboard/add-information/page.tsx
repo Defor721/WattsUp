@@ -99,7 +99,7 @@ function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-[1920px] p-5 dark:bg-subColor xl:p-10">
+    <div className="mx-auto max-w-[1920px] p-5 xl:p-10">
       <Title title={`${selectedDashboard} 대시보드`} />
       {/* 대시보드 선택 */}
       <div className="flex items-center justify-end gap-3">
