@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Card } from "../shadcn";
+import Loading from "@/app/loading";
 
 type TradingStatsData = {
   bidCount: number;
