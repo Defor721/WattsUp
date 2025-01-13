@@ -1,9 +1,8 @@
-import { motion } from "framer-motion"; // 애니메이션 라이브러리
-
+import { motion } from "framer-motion";
 import { Card } from "../shadcn";
 
 type TradingStatsData = {
-  bidCount: number; // 누적 입찰 수
+  bidCount: number;
   todaySmpData: {
     거래량: number;
     거래일: string;
@@ -11,16 +10,17 @@ type TradingStatsData = {
     최고가: number;
     최저가: number;
     평균가: number;
-  }; // SMP 평균가
+    전일대비변화: number;
+  };
   todayRecData: {
     거래일: string;
     최고가: number;
     최소가: number;
     평균가: number;
-  }; // REC 평균가
-  totalSupply: number; // 총 공급량
-  smpIncrease: number; // 전일대비 smp 증가량
-  recIncrease: number; // 전일대비 rec 증가량
+  };
+  totalSupply: number;
+  smpIncrease?: number;
+  recIncrease?: number;
 };
 
 interface TradingStatsProps {
@@ -40,10 +40,12 @@ export default function TradingStats({ stats }: TradingStatsProps) {
         <StatItem
           title="SMP 평균가"
           value={`${stats?.todaySmpData.평균가.toLocaleString()} 원/kWh`}
+          change={stats?.smpIncrease}
         />
         <StatItem
           title="REC 평균가"
-          value={`${(stats?.todayRecData?.평균가 ?? 0) / 1000} 원/kwh`}
+          value={`${((stats?.todayRecData?.평균가 ?? 0) / 1000).toFixed(2)} 원/kWh`}
+          change={stats?.recIncrease}
         />
         <StatItem
           title="총 공급량"
@@ -54,15 +56,33 @@ export default function TradingStats({ stats }: TradingStatsProps) {
   );
 }
 
-function StatItem({ title, value }: { title: string; value: string | number }) {
+function StatItem({
+  title,
+  value,
+  change,
+}: {
+  title: string;
+  value: string | number;
+  change?: number;
+}) {
+  const changeColor = change && change > 0 ? "text-blue-500" : "text-red-500";
+  const changeSymbol = change && change > 0 ? "▲" : "▼";
+
   return (
     <Card className="rounded-lg border-none bg-cardBackground-light p-cardPadding dark:border-none dark:bg-cardBackground-dark">
       <p className="text-sm font-medium text-gray-600 dark:text-gray-200">
         {title}
       </p>
-      <p className="text-2xl font-bold text-gray-800 dark:text-white">
-        {value}
-      </p>
+      <div className="flex items-center">
+        <p className="text-2xl font-bold text-gray-800 dark:text-white">
+          {value}
+        </p>
+        {change !== undefined && (
+          <span className={`ml-2 text-sm ${changeColor}`}>
+            {changeSymbol} {Math.abs(change).toFixed(2)}
+          </span>
+        )}
+      </div>
     </Card>
   );
 }
