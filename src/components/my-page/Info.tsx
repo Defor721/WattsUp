@@ -29,7 +29,7 @@ function Info() {
   const {
     actions: { logout },
   } = useAuthStore();
-  const { user } = useUserStore();
+  const { user, loading } = useUserStore();
   const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +55,7 @@ function Info() {
     router.refresh();
   };
 
-  if (!user) return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <Card className="flex w-full max-w-[400px] flex-col items-center border-none shadow-none dark:shadow-none">
