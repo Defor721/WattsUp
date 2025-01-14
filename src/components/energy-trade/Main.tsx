@@ -11,7 +11,7 @@ import apiClient from "@/lib/axios";
 import { Regions } from "@/utils/regions";
 import Loading from "@/app/loading";
 
-interface SupplyData {
+export interface SupplyData {
   region: string; // 지역 이름
   supply: number; // 전력 공급량
 }
@@ -170,7 +170,11 @@ function Main() {
       <div className="flex flex-col gap-cardGap">
         {/* 상단 거래 현황 */}
 
-        <TradingStats stats={stats} />
+        <TradingStats
+          stats={stats}
+          supply={supply}
+          selectedRegion={selectedRegion}
+        />
 
         {/* 하단 섹션: 차트와 입찰 폼 */}
         <div className="grid w-full grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">

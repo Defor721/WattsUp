@@ -18,10 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card"; // UI 카드 컴포넌트
-import {
-  formatNumberWithDecimal,
-  formatNumberWithoutDecimal,
-} from "@/hooks/useNumberFormatter"; // 숫자 포맷팅
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter"; // 숫자 포맷팅
 
 // 데이터 타입 정의
 export interface SupplyData {

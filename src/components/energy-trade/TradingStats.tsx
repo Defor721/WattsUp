@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Card } from "../shadcn";
 import Loading from "@/app/loading";
+import { SupplyData } from "./Main";
 
 type TradingStatsData = {
   bidCount: number;
@@ -26,9 +27,17 @@ type TradingStatsData = {
 
 interface TradingStatsProps {
   stats: TradingStatsData | null;
+  supply: SupplyData[];
+  selectedRegion: string;
 }
 
-export default function TradingStats({ stats }: TradingStatsProps) {
+export default function TradingStats({
+  stats,
+  supply,
+  selectedRegion,
+}: TradingStatsProps) {
+  const findData = supply.find((item) => item.region === selectedRegion);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -49,8 +58,8 @@ export default function TradingStats({ stats }: TradingStatsProps) {
           change={stats?.recIncrease}
         />
         <StatItem
-          title="총 공급량"
-          value={`${stats?.totalSupply.toLocaleString()} kWh`}
+          title={`${findData?.region} 총 공급량`}
+          value={`${findData?.supply.toLocaleString()} kWh`}
         />
       </div>
     </motion.div>
@@ -66,7 +75,7 @@ function StatItem({
   value: string | number;
   change?: number;
 }) {
-  const changeColor = change && change > 0 ? "text-blue-500" : "text-red-500";
+  const changeColor = change && change > 0 ? "text-red-500" : "text-blue-500";
   const changeSymbol = change && change > 0 ? "▲" : "▼";
 
   return (
