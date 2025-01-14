@@ -1,94 +1,59 @@
-# WattsUp_Project ( Team 9 )
+# VPP 대시보드 및 전력 거래소 구축 프로젝트 - Watts Up
 
-## TurbinCrew Dashboard & Trading Platform
+## 프로젝트 목표
 
-### - 프로젝트 개요 . Features of the Project
+Watts Up은 가상 발전소(VPP)와 전력 거래소 시스템 및 프로토타입을 구축하기 위해 설계된 프로젝트입니다.\
+가상 발전소는 분산된 에너지 자원을 디지털화 하고 통합하며, 마치 하나의 발전소처럼 운영하는 시스템입니다.
 
-**TurbinCrew**와 협력하여, 한국전력발전소 API를 활용한 대시보드와 거래 플랫폼을 개발합니다.  
-Next.js, React, TypeScript, MongoDB, Zustand, 그리고 Swagger를 활용하여 고성능, 확장성, 사용자 친화적인 웹 애플리케이션을 제공합니다.
+이 프로젝트는 [터빈 크루](https://turbinecrew.co.kr/)의 제안서를 바탕으로 기획되었습니다.\
+실시간 전력 모니터링과 거래를 지원하며, 전력 거래 자동화, 사용자 친화적인 대시보드를 제공합니다.
 
----
+## 설치 및 실행 방법
 
-### - 주요기능 . Key Features
+1. **의존성 설치**
 
-1. **실시간 데이터 시각화**
+   ```bash
+   npm install
+   ```
 
-   - 한국전력발전소 API를 통해 실시간 발전소 데이터 수집 및 시각화.
-   - 발전소 상태, 출력량, 효율성 등의 주요 지표를 차트 및 그래프로 표시.
+2. **개발 서버 실행**
 
-2. **거래 플랫폼**
+   ```bash
+   npm run dev
+   ```
 
-   - 에너지 관련 거래 기능 구현.
-   - 사용자 등록 및 로그인, 실시간 거래 데이터 관리.
+   **프로덕션 빌드**
 
-3. **대시보드**
+   ```bash
+   npm run build
+   npm start
+   ```
 
-   - 사용자 맞춤형 대시보드 제공.
-   - 데이터 필터링, 다운로드, 알림 설정.
+## ⚙️ 주요 기술 스택
 
-4. **관리자 기능**
+### 프론트엔드
 
-   - 유저 관리, 거래 내역 모니터링, 발전소 데이터 관리.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-52303d?style=flat-square&logo=zustand&logoColor=white)
+![Shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square&logo=shadcnui&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer%20Motion-0055FF?style=flat-square&logo=framer&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-57b2bd?style=flat-square&logo=recharts&logoColor=white)
 
-5. **Swagger**
-   - API 문서화 및 테스트 도구를 사용해 개발 및 협업 효율성 강화.
+<!-- ![React Query](https://img.shields.io/badge/React%20Query-FF4154?style=flat-square&logo=react-query&logoColor=white) -->
 
----
+### 백엔드 및 데이터 처리
 
-### - 기술 스택 . Tech Stack
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+![Bcrypt](https://img.shields.io/badge/bcrypt-FF6A00?style=flat-square&logo=bcrypt&logoColor=white)
 
-#### **프론트엔드 . FE**
+### 기타 도구
 
-- **Next.js**: React 기반 풀스택 프레임워크로 SEO와 서버 사이드 렌더링(SSR) 지원.
-- **React**: UI 구축.
-- **TypeScript**: 정적 타입 체계를 통해 코드 안정성과 유지보수성 향상.
-- **Zustand**: 상태 관리 라이브러리로 간결하고 효율적인 상태 관리 구현.
-
-#### **백엔드 . BE**
-
-- **Next.js API Routes**: API 엔드포인트 제공.
-- **MongoDB**: NoSQL 데이터베이스로 유연한 데이터 모델링 지원.
-
-#### **기타 . Others**
-
-- **Swagger**: API 문서화를 위한 도구.
-- **한국전력발전소 API**: 실시간 발전소 데이터를 가져와 대시보드와 거래 시스템에 반영.
-- **Tailwind CSS**: 빠르고 효율적인 스타일링.
-
----
-
-### - 설치 및 실행 . Installation and Execution
-
-#### 1. **환경 설정 . Configuration**
-
-- `.env` 파일 생성 후 아래 환경 변수 추가:
-  ```env
-  MONGODB_URI=<MongoDB 연결 URI>
-  API_BASE_URL=<한국전력발전소 API 엔드포인트>
-  JWT_SECRET=<JWT 시크릿 키>
-  ```
-
----
-
-### - 주요 명령어 설치 . Key Installation Commands
-
-#### Next.js, React, TypeScript 기본 설치
-
-`npx create-next-app@latest --typescript`
-
-#### MongoDB 연결 라이브러리
-
-`npm install mongodb`
-
-#### Zustand 상태 관리
-
-`npm install zustand`
-
-#### Tailwind CSS 설치
-
-`npm install -D tailwindcss postcss autoprefixer`
-`npx tailwindcss init`
-
-### Swagger 설치
-
-`npm install swagger-ui-express swagger-jsdoc`
+![cheerio](https://img.shields.io/badge/Cheerio-E88C1F?style=flat-square&logo=cheerio&logoColor=white)
+![MSW](https://img.shields.io/badge/MSW-FF6A00?style=flat-square&logo=mockserviceworker&logoColor=white)
+![Husky](https://img.shields.io/badge/Husky-9c6623?style=flat-square&logo=husky&logoColor=white)
+![Nodemailer](https://img.shields.io/badge/Nodemailer-4d9fcb?style=flat-square&logo=nodemailer&logoColor=white)

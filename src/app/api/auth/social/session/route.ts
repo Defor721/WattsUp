@@ -118,14 +118,17 @@ export async function POST(request: NextRequest) {
     const { businessNumber, principalName, companyName, corporateNumber } =
       businessVerification;
 
-    const existingBusiness = await collection.findOne({ businessNumber });
+    const existingBusiness = await collection.findOne({
+      businessNumber: Long.fromString(businessNumber),
+    });
+
     if (existingBusiness) {
       return NextResponse.json(
         { message: "이미 등록된 사업자번호입니다." },
         { status: 409 },
       );
     }
-
+    console.log(`check`);
     const { password } = await request.json();
 
     if (!password) {
