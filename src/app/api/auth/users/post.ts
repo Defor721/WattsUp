@@ -116,7 +116,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const existingBusinessNumber = await collection.findOne({ businessNumber });
+    const existingBusinessNumber = await collection.findOne({
+      businessNumber: Long.fromString(businessNumber),
+    });
     if (existingBusinessNumber) {
       return NextResponse.json(
         { status: "error", message: "이미 등록된 사업자등록번호입니다." },
