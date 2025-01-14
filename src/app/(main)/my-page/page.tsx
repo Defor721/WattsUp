@@ -6,9 +6,11 @@ import Stats from "@/components/my-page/Stats";
 import RecentLog from "@/components/my-page/RecentLog";
 import useFetchUserTradeData from "@/components/my-page/useFetchUserData";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 export default function Mypage() {
   const { data, loading } = useFetchUserTradeData();
+
   const router = useRouter();
 
   const handleTradeClick = () => {
