@@ -8,10 +8,8 @@ import {
   CardTitle,
   ScrollArea,
 } from "@/components/shadcn";
-import Loading from "@/app/loading";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
-
-import useFetchUserTradeData from "./useFetchUserData";
+import Loading from "@/app/loading";
 
 function formatTimeDifference(now: string): string {
   const currentTime = new Date(); // 현재 시간
@@ -35,14 +33,21 @@ function formatTimeDifference(now: string): string {
   }
 }
 
-function RecentLog() {
-  const { data, loading } = useFetchUserTradeData();
+interface BidData {
+  email: string;
+  now: string;
+  price: number;
+  quantity: number;
+  region: string;
+}
 
+interface RecentLogProps {
+  bidDatas: BidData[];
+  loading: boolean;
+}
+
+function RecentLog({ bidDatas, loading }: RecentLogProps) {
   if (loading) return <Loading />;
-
-  if (!data) return <div>거래 기록이 없습니다.</div>;
-
-  const bidDatas = data.bidData;
 
   return (
     <div className="flex flex-col">

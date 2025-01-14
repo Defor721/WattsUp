@@ -25,7 +25,7 @@ const PowerGenerationTable = ({ data }: TableProps) => {
       <Table className="min-w-full border border-gray-700 text-left text-[#070f26] dark:text-white">
         {/* 테이블 헤더 */}
         <TableHeader>
-          <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-left [&>*]:text-center">
+          <TableRow className="bg-tableHeader-light dark:bg-tableHeader-dark [&>*]:text-center">
             <TableHead className="border border-gray-700 px-3 py-2">
               연도
             </TableHead>
@@ -49,7 +49,7 @@ const PowerGenerationTable = ({ data }: TableProps) => {
           {data.map((row) => (
             <TableRow
               key={row.연도}
-              className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)] [&>*]:text-center"
+              className="bg-transparent [&>*]:text-center"
             >
               <TableCell className="border border-gray-700 px-3 py-2">
                 {row.연도}

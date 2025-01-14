@@ -108,8 +108,8 @@ function UserTable() {
       </div>
       <div className="overflow-x-auto">
         <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
-          <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+          <TableHeader className="bg-tableHeader-light dark:bg-tableHeader-dark">
+            <TableRow className="[&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 사용자 아이디
               </TableHead>
@@ -143,7 +143,7 @@ function UserTable() {
               return (
                 <TableRow
                   key={user.corporateNumber}
-                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+                  className=""
                   // onClick={() => handleUserClick(user.businessNumber)}
                 >
                   <TableCell className="border border-gray-700 p-3">

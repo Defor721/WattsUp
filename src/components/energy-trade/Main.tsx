@@ -137,9 +137,10 @@ function Main() {
   const [recPrice, setRecPrice] = useState<number>(0);
 
   useEffect(() => {
-    // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
-    const loadData = async () => {
+    const loadInitialData = async () => {
       setIsLoading(true);
+
+      // 초기 데이터 로드
       const [stats, supply, userCredits, smpValue, recValue] =
         await Promise.all([
           fetchStats(),
@@ -148,6 +149,7 @@ function Main() {
           fetchSmpPrice(),
           fetchRecPrice(),
         ]);
+
       setStats(stats);
       setCredits(userCredits);
       setSupply(supply);
@@ -155,8 +157,31 @@ function Main() {
       setRecPrice(recValue);
       setIsLoading(false);
     };
-    loadData();
-  }, [isSubmitting]);
+
+    loadInitialData();
+  }, []);
+
+  const handleBidSubmission = async (
+    price: number,
+    region: string,
+    quantity: number,
+  ) => {
+    setIsSubmitting(true);
+    try {
+      await apiClient.post("/api/trade/bid", { price, region, quantity });
+      const updatedCredits = await fetchUserCredits();
+      const updatedStats = await fetchStats();
+      const updatedSupply = await fetchSupply();
+
+      setCredits(updatedCredits);
+      setStats(updatedStats);
+      setSupply(updatedSupply);
+    } catch (error: any) {
+      console.error("입찰 실패:", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (isLoading) return <Loading />;
 
@@ -209,6 +234,7 @@ function Main() {
                   fetchUserCredits={fetchUserCredits}
                   supply={supply}
                   recPrice={recPrice}
+                  handleBidSubmission={handleBidSubmission}
                 />
               </CardContent>
             </Card>

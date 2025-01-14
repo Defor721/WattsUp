@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CircleCheck } from "lucide-react";
 
 import {
   Table,
@@ -11,13 +10,7 @@ import {
   TableHead,
   TableCell,
   Input,
-  Pagination,
   Button,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  ScrollArea,
 } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
@@ -41,7 +34,7 @@ function TradeTable() {
 
   // 페이지네이션
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchTradeData = async () => {
@@ -100,8 +93,8 @@ function TradeTable() {
       </div>
       <div className="overflow-x-auto">
         <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
-          <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+          <TableHeader className="bg-tableHeader-light dark:bg-tableHeader-dark">
+            <TableRow className="[&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 이메일
               </TableHead>
@@ -133,10 +126,7 @@ function TradeTable() {
                   trade.quantity,
                 );
                 return (
-                  <TableRow
-                    key={trade._id}
-                    className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-                  >
+                  <TableRow key={trade._id} className="">
                     <TableCell className="border border-gray-700 p-3">
                       {trade.email}
                     </TableCell>
