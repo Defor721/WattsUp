@@ -3,7 +3,6 @@
 import React from "react";
 
 import { Button, Card } from "@/components/shadcn";
-import apiClient from "@/lib/axios";
 
 interface RegionDataProps {
   firstData: {
@@ -30,12 +29,6 @@ function RegionData({ firstData }: RegionDataProps) {
   // 백엔드로 firstData 보내기
   const sendRegionsDataToDB = async () => {
     try {
-      const { data } = await apiClient.post(
-        "/api/admin/userinfo/updatesupply",
-        firstData,
-      );
-      console.log("First data sent successfully:", data);
-
       const today = new Date().toISOString().split("T")[0];
       localStorage.setItem("lastClickedDate", today);
       setIsButtonDisabled(true);
