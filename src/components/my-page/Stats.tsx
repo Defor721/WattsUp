@@ -12,19 +12,21 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn";
-import Loading from "@/app/loading";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import Loading from "@/app/loading";
 
-import useFetchUserTradeData from "./useFetchUserData";
+interface StatsProps {
+  stats: {
+    totalPrice: number;
+    totalQuantity: number;
+    documentCount: number;
+  };
+  loading: boolean;
+}
 
-function Stats() {
-  const { data, loading } = useFetchUserTradeData();
-
+function Stats({ stats, loading }: StatsProps) {
   if (loading) return <Loading />;
 
-  if (!data) return <div>거래 기록이 없습니다.</div>;
-
-  const stats = data.stats;
   const formattedCount = formatNumberWithoutDecimal(stats.documentCount);
   const formattedPrice = formatNumberWithoutDecimal(stats.totalPrice);
   const formattedQuantity = formatNumberWithoutDecimal(stats.totalQuantity);

@@ -53,7 +53,7 @@ export default function SupplyChart({
             <BarChart
               data={supply}
               barSize={30}
-              margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
+              margin={{ top: 20, right: 0, bottom: 10, left: 0 }}
             >
               <XAxis dataKey="region" tick={{ fontSize: 12 }} />
               <YAxis

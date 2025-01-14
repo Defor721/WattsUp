@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import apiClient from "@/lib/axios";
 
-interface UserTradeData {
+export interface UserTradeData {
   message: string;
   stats: {
     totalPrice: number;
