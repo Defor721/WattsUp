@@ -5,6 +5,8 @@ import React from "react";
 import { Button, Card } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
 
+import { toast } from "@/hooks/useToast";
+
 interface RegionDataProps {
   firstData: {
     date: string;
@@ -29,6 +31,7 @@ function RegionData({ firstData }: RegionDataProps) {
 
   // 백엔드로 firstData 보내기
   const sendRegionsDataToDB = async () => {
+    setIsButtonDisabled(true);
     try {
       const { data } = await apiClient.post(
         "/api/admin/userinfo/updatesupply",
@@ -37,9 +40,20 @@ function RegionData({ firstData }: RegionDataProps) {
 
       const today = new Date().toISOString().split("T")[0];
       localStorage.setItem("lastClickedDate", today);
-      setIsButtonDisabled(true);
+
+      toast({
+        title: "데이터 전송 성공",
+        description: "데이터 전송이 성공적으로 제출되었습니다.",
+        variant: "success",
+      });
     } catch (error) {
+      setIsButtonDisabled(false);
       console.error("Error sending first data:", error);
+      toast({
+        title: "데이터 전송 실패",
+        description: "데이터 전송 중 오류가 발생했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 
