@@ -44,7 +44,9 @@ Watts Up은 가상 발전소와 태양광 전력 거래 시스템 및 프로토�
 
 ![데이터 관리](https://github.com/user-attachments/assets/468b687b-8f6b-4947-bcd6-01832d2b4eb4)
 
-## 📚 시용자 가이드
+<br/>
+
+## 🪪 시용자 가이드
 
 ### 계정 생성 및 로그인 (일반)
 
@@ -76,6 +78,65 @@ Watts Up은 가상 발전소와 태양광 전력 거래 시스템 및 프로토�
    npm run build
    npm start
    ```
+
+<br/>
+
+## 📂 환경 변수 설명
+
+### 🛠️ 기본 환경
+
+- `NEXT_PUBLIC_ENVIRONMENT`: 애플리케이션의 실행 환경을 나타냅니다. (`development`, `production` 등)
+- `NEXT_PUBLIC_API_BASE_URL`: API 요청의 기본 URL을 설정합니다. (`http://localhost:3000` 또는 배포된 URL)
+
+### 🔐 [토큰 시크릿](https://jwt.io/)
+
+- `ACCESS_TOKEN_SECRET`: JWT 엑세스 토큰을 서명하기 위한 비밀 키입니다.
+- `REFRESH_TOKEN_SECRET`: JWT 리프레시 토큰을 서명하기 위한 비밀 키입니다.
+- `BUSINESS_TOKEN_SECRET`: 비즈니스 관련 토큰을 서명하기 위한 비밀 키입니다.
+- `EMAIL_TOKEN_SECRET`: 이메일 인증 토큰을 서명하기 위한 비밀 키입니다.
+
+### 🧂 [bcrypt 암호화](https://github.com/kelektiv/node.bcrypt.js#readme)
+
+- `SALT_ROUND`: bcrypt 암호화 시 해시를 생성할 라운드 수를 설정합니다. (보안 수준을 결정)
+
+### 📦 [MongoDB](https://www.mongodb.com/ko-kr)
+
+- `MONGODB_URI`: MongoDB 연결 문자열입니다. 데이터베이스 서버 URL과 인증 정보를 포함합니다.
+
+### 🔑 [Google OAuth](console.cloud.google.com/)
+
+- `NEXT_PUBLIC_REDIRECT_URI`: Google OAuth 인증 후 리다이렉트될 URL입니다.
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`: Google API에서 발급된 클라이언트 ID입니다.
+- `GOOGLE_CLIENT_SECRET`: Google API에서 발급된 클라이언트 비밀 키입니다.
+
+### 🏢 [공공데이터 사업자 정보 API](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15081808)
+
+- `BUSINESS_STATUS_API_URL`: 공공데이터 사업자 등록 상태를 확인하는 공공데이터 API URL입니다.
+- `BUSINESS_INFO_VERIFICATION_API_URL`: 공공데이터 사업자 정보 검증 API URL입니다.
+- `BUSINESS_SERVICE_KEY`: 공공데이터 사업자 정보 API 접근을 위한 인증 키입니다.
+
+### 🌤️ [공공데이터 발전원별 발전량](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15113384)
+
+- `NEXT_PUBLIC_DATA_PORTAL_SERVICE_KEY`: 공공데이터 포털 서비스 키로, 반전량 데이터를 요청하는 데 사용됩니다.
+
+### ✉️ [Gmail](https://mail.google.com/)
+
+- `GMAIL_USER`: Gmail 계정 이메일 주소입니다.
+- `GMAIL_APP_PW`: Gmail API 또는 SMTP 연동에 필요한 앱 비밀번호입니다.
+
+### 🖴 [Redis](https://redis.io/)
+
+- `REDIS_HOST`: Redis 서버 호스트 URL입니다.
+- `REDIS_PORT`: Redis 서버 포트 번호입니다.
+- `REDIS_PW`: Redis 서버 접속을 위한 비밀번호입니다.
+
+### 🗺️ [Kakao 지도](https://apis.map.kakao.com/web/)
+
+- `REACT_APP_KAKAO_API_KEY`: Kakao 지도 API를 호출하기 위한 인증 키입니다.
+
+### ☁️ [OpenWeather](https://openweathermap.org/)
+
+- `OPEN_WEATHER_API_KEY`: OpenWeatherMap API를 호출하기 위한 인증 키입니다.
 
 <br/>
 
