@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
         { status: 409 },
       );
     }
-    console.log(`check`);
+
     const { password } = await request.json();
 
     if (!password) {
