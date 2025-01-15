@@ -12,7 +12,7 @@ Watts Up은 가상 발전소와 태양광 전력 거래 시스템 및 프로토�
 
 <br/>
 
-## 💻 서비스 소개
+## 💻 주요 기능
 
 ### 전력 거래
 
@@ -38,9 +38,21 @@ Watts Up은 가상 발전소와 태양광 전력 거래 시스템 및 프로토�
 
 ![유저 관리](https://github.com/user-attachments/assets/7c27c404-c682-4835-b23f-b2e37f5025b4)
 
-#### 계정 생성 및 로그인
+### 데이터 확인
 
-### 관리자 가이드
+관리자는 지역 발전량을 갱신하고 거래 목록을 확인할 수 있습니다.
+
+![데이터 관리](https://github.com/user-attachments/assets/468b687b-8f6b-4947-bcd6-01832d2b4eb4)
+
+## 📚 시용자 가이드
+
+### 계정 생성 및 로그인 (일반)
+
+[![일반 로그인](https://img.youtube.com/vi/z6NAji_p-4E/0.jpg)](https://youtu.be/z6NAji_p-4E)
+
+### 계정 생성 및 로그인 (소셜)
+
+[![일반 로그인](https://img.youtube.com/vi/zCHRAivtOEI/0.jpg)](https://youtu.be/zCHRAivtOEI)
 
 <br/>
 
