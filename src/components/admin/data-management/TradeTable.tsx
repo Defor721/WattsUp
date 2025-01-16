@@ -54,17 +54,19 @@ function TradeTable() {
   }, []);
 
   // 검색어에 따른 필터링
-  const filteredTradeData = bidData.filter((trade) => {
-    const searchValue = searchTerm.toLowerCase();
-    return (
-      trade._id.toLowerCase().includes(searchValue) || // ID 필터
-      trade.email.includes(searchValue) || // 사업자 번호 필터
-      trade.region.toLowerCase().includes(searchValue) || // 지역 필터
-      String(trade.price).includes(searchValue) || // 가격 필터
-      String(trade.quantity).includes(searchValue) || // 수량 필터
-      trade.now.toLowerCase().includes(searchValue) // 날짜 필터
-    );
-  });
+  const filteredTradeData = bidData
+    .sort((a, b) => new Date(b.now).getTime() - new Date(a.now).getTime())
+    .filter((trade) => {
+      const searchValue = searchTerm.toLowerCase();
+      return (
+        trade._id.toLowerCase().includes(searchValue) || // ID 필터
+        trade.email.includes(searchValue) || // 사업자 번호 필터
+        trade.region.toLowerCase().includes(searchValue) || // 지역 필터
+        String(trade.price).includes(searchValue) || // 가격 필터
+        String(trade.quantity).includes(searchValue) || // 수량 필터
+        trade.now.toLowerCase().includes(searchValue) // 날짜 필터
+      );
+    });
 
   // 페이지네이션 데이터 계산
   const totalItems = filteredTradeData.length;
@@ -113,38 +115,34 @@ function TradeTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTrades
-              .sort(
-                (a, b) => new Date(b.now).getTime() - new Date(a.now).getTime(),
-              )
-              .map((trade) => {
-                const formattedDate = new Date(trade.now)
-                  .toISOString()
-                  .split("T")[0];
-                const formattedPrice = formatNumberWithoutDecimal(trade.price);
-                const formattedQuantity = formatNumberWithoutDecimal(
-                  trade.quantity,
-                );
-                return (
-                  <TableRow key={trade._id} className="">
-                    <TableCell className="border border-gray-700 p-3">
-                      {trade.email}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {trade.region}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedPrice} 원
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedQuantity}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedDate}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+            {currentTrades.map((trade) => {
+              const formattedDate = new Date(trade.now)
+                .toISOString()
+                .split("T")[0];
+              const formattedPrice = formatNumberWithoutDecimal(trade.price);
+              const formattedQuantity = formatNumberWithoutDecimal(
+                trade.quantity,
+              );
+              return (
+                <TableRow key={trade._id} className="">
+                  <TableCell className="border border-gray-700 p-3">
+                    {trade.email}
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {trade.region}
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedPrice} 원
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedQuantity}
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedDate}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
