@@ -95,7 +95,6 @@ export default function BidForm({
         variant: "success",
       });
 
-      onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
 
       // 크레딧 업데이트
