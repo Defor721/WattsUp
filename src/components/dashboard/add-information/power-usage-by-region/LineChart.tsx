@@ -32,7 +32,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         <YAxis tickFormatter={formatNumberWithoutDecimal} />
         <Tooltip
           formatter={(value: number) =>
-            `${formatNumberWithoutDecimal(value)} 명`
+            `${formatNumberWithoutDecimal(value)} 가구`
           }
           labelStyle={{
             color: "#000000", // 레이블(년도)을 항상 검은색으로 설정

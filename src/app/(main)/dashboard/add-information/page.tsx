@@ -59,7 +59,7 @@ function DashboardPage() {
     },
 
     {
-      name: "전력 사용량 시도별",
+      name: "전력 사용 가구 수",
       path: "/dashboard/power-usage-by-region",
       tags: ["지역", "전력"],
     },
@@ -92,7 +92,7 @@ function DashboardPage() {
     "발전원별 시간별 발전량": PowerGenerationByPowerSource,
     "발전원별 연도별 발전량": PowerGeneration,
     "유형별 전기 고장 추이": Failures,
-    "전력 사용량 시도별": PowerUsageByRegion,
+    "전력 사용 가구 수": PowerUsageByRegion,
     "전력 지표": Electro,
     "판매 단가": PowerPrice,
     "판매 금액": Sales,

@@ -80,7 +80,7 @@ function Info() {
       </CardHeader>
       <CardContent className="flex w-full select-none flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
-          {/* 예치금 충전 */}
+          {/* 크레딧 충전 */}
           <ChargeCreditModal />
           {/* 비밀번호 변경 */}
           <ChangePasswordModal />
