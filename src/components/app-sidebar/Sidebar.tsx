@@ -11,7 +11,7 @@ import {
   Database,
   Laptop,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDeviceType } from "@/hooks/useDeviceType";
 import useAccessToken from "@/auth/hooks/useAccessToken";
@@ -21,6 +21,8 @@ import NavHeader from "./Header";
 import NavMain from "./Main";
 import { NavUser } from "./User";
 import NotLogin from "./NotLogin";
+import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
+import { log } from "console";
 
 // Menu defaultItems
 const defaultItems = [
@@ -73,14 +75,21 @@ const adminItems = [
 
 function Sidebar() {
   const { accessToken } = useAccessToken();
-  const { user } = useUserStore();
+  const {
+    user,
+    actions: { resetUserState },
+  } = useUserStore();
 
   const [isTabletExpanded, setIsTabletExpanded] = useState(false); // 모바일 확장 상태
 
   const { isTablet } = useDeviceType();
+  useEffect(() => {
+    if (!accessToken) {
+      resetUserState(); // user 상태 초기화
+    }
+  }, [accessToken, resetUserState]);
 
   const toggleTabletSidebar = () => setIsTabletExpanded((prev) => !prev);
-
   return (
     <div className="relative flex select-none">
       {/* 테블릿 화면에서 사이드바 확장시켰을 때 */}
