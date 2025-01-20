@@ -1,6 +1,4 @@
-// utils/server/errorHandler.ts
 import { NextResponse } from "next/server";
-
 import { CustomError } from "./customErrors";
 
 export function handleErrorResponse(error: any) {
@@ -8,11 +6,7 @@ export function handleErrorResponse(error: any) {
     return NextResponse.json(
       {
         resultType: "FAIL",
-        error: {
-          errorCode: error.errorCode,
-          reason: error.message,
-          data: error.data || {}, // 추가 데이터를 포함할 수 있음
-        },
+        error: error.serializeErrors(),
       },
       { status: error.statusCode },
     );
@@ -30,3 +24,25 @@ export function handleErrorResponse(error: any) {
     { status: 500 },
   );
 }
+
+/**
+실패시 응답 형태
+
+{
+  "resultType": "FAIL",
+  "error": {
+      "errorCode": "AUTH_EXPIRED",
+      "reason": "인증이 만료되었습니다.",
+      "data": {}
+  }
+}
+ */
+
+/**
+성공시 응답 형태
+
+{
+  "resultType":"SUCCESS",
+  "success":true
+}
+ */
