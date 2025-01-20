@@ -7,6 +7,7 @@ export interface CheckUserResponse {
   email: string;
 }
 
+/** 이메일로 유저 조회 */
 export async function checkUserByEmail(
   email: string,
 ): Promise<CheckUserResponse> {
@@ -17,12 +18,14 @@ export async function checkUserByEmail(
   return data;
 }
 
+/** 토큰으로 유저 조회 */
 export async function fetchCurrentUser() {
   const { data } = await apiClient.get("/api/users");
 
   return data;
 }
 
+/** 현재 비밀번호를 받아 새 비밀번호로 변경 */
 export async function updatePasswordByPassword({
   currentPassword,
   newPassword,
@@ -38,6 +41,7 @@ export async function updatePasswordByPassword({
   return data;
 }
 
+/** 새 비밀번호로 변경 */
 export async function updatePasswordByEmail(newPassword: string) {
   const { data } = await apiClient.patch(
     "/api/users/password/reset",
@@ -50,6 +54,7 @@ export async function updatePasswordByEmail(newPassword: string) {
   return data;
 }
 
+/** 사업자 등록번호로 이메일 조회 */
 export async function getEmailByCorporateNumber({
   businessNumber,
   corporateNumber,

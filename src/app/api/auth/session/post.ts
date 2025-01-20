@@ -3,12 +3,22 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
+import { ValidationError } from "@/server/customErrors";
+import { handleErrorResponse } from "@/server/errorHandler";
 
 export async function POST(request: NextRequest) {
   //일반 로그인
   try {
     const { email, password }: { email: string; password: string } =
       await request.json();
+
+    if (!email || !password) {
+      throw new ValidationError(
+        "email 또는 password",
+        "필수 정보가 누락되었습니다.",
+      );
+    }
+
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
@@ -61,11 +71,6 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json(
-      { message: "Failed to find data", error: errorMessage },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }
