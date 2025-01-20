@@ -1,8 +1,20 @@
 import React from "react";
 
-function Title({ title }: { title: string }) {
+import { cn } from "@/lib/utils";
+
+interface TitleProps {
+  title: string;
+  className?: string;
+}
+
+function Title({ title, className }: TitleProps) {
   return (
-    <h2 className="mb-5 scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+    <h2
+      className={cn(
+        "mb-3 text-3xl font-semibold tracking-tight first:mt-0",
+        className,
+      )}
+    >
       {title}
     </h2>
   );

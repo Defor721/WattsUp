@@ -20,17 +20,32 @@ export async function GET() {
   const collection = db.collection("scrap");
 
   try {
-    // 1. 오늘 날짜 확인
     const today = new Date().toISOString().split("T")[0];
 
-    // 2. 기존 데이터 확인
     const existingData = await collection.findOne({ date: today });
 
+    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1))
+      .toISOString()
+      .split("T")[0];
+    const yesterdayData = await collection.findOne({ date: yesterday });
+
     if (existingData) {
-      // 이미 존재하는 데이터 반환
+      const smpIncrease =
+        ((existingData?.todaySmpData["평균가"] -
+          yesterdayData?.todaySmpData["평균가"]) /
+          yesterdayData?.todaySmpData["평균가"]) *
+        100;
+      const recIncrease =
+        ((existingData?.todayRecData["평균가"] -
+          yesterdayData?.todayRecData["평균가"]) /
+          yesterdayData?.todayRecData["평균가"]) *
+        100;
+
       return NextResponse.json({
         todaySmpData: existingData.todaySmpData,
         todayRecData: existingData.todayRecData,
+        smpIncrease,
+        recIncrease,
       });
     }
 

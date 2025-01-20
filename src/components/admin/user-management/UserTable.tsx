@@ -94,7 +94,7 @@ function UserTable() {
     <div className="mt-3">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="my-3 scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          사용자 관리 테이블
+          유저 테이블
         </h4>
         <Input
           placeholder="검색창"

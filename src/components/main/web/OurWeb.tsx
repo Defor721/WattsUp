@@ -1,23 +1,24 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트 선언
 
-import { useState, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Zap, Code, Lightbulb, Users, Rocket, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
-
-import { Button } from "@/components/ui/button";
+import { useState, useMemo } from "react"; // 상태 관리 및 성능 최적화를 위한 훅
+import { motion, AnimatePresence } from "framer-motion"; // 애니메이션 라이브러리
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/shadcn/tooltip";
+  Zap,
+  Code,
+  Lightbulb,
+  Users,
+  Rocket,
+  ChevronRight,
+} from "lucide-react"; // 아이콘 라이브러리
+import { useRouter } from "next/navigation"; // 라우팅 기능
+
+import { Button } from "@/components/ui/button"; // 버튼 컴포넌트
 
 // 정보 타입 정의
 interface Info {
-  title: string;
-  description: string;
-  icon?: React.ReactNode;
+  title: string; // 제목
+  description: string; // 설명
+  icon?: React.ReactNode; // 아이콘 (선택 사항)
 }
 
 // 팀 정보 데이터
@@ -26,35 +27,35 @@ const teamInfo: Info[] = [
     title: "WattsUp 팀",
     description: "혁신적인 전력 거래 플랫폼 개발",
     icon: (
-      <Zap className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
+      <Zap className="h-6 w-6 transition-colors group-hover:text-yellow-300" />
     ),
   },
   {
     title: "프론트엔드 전문가",
     description: "최신 웹 기술로 효율적인 UI 구현",
     icon: (
-      <Code className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
+      <Code className="h-6 w-6 transition-colors group-hover:text-yellow-300" />
     ),
   },
   {
     title: "혁신적인 아이디어",
     description: "빅데이터와 AI로 미래 솔루션 제시",
     icon: (
-      <Lightbulb className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
+      <Lightbulb className="h-6 w-6 transition-colors group-hover:text-yellow-300" />
     ),
   },
   {
     title: "협업의 힘",
     description: "다양한 기술로 시너지 창출",
     icon: (
-      <Users className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
+      <Users className="h-6 w-6 transition-colors group-hover:text-yellow-300" />
     ),
   },
   {
     title: "미래를 향한 도전",
     description: "지속 가능한 에너지 거래 선도",
     icon: (
-      <Rocket className="h-6 w-6 transition-colors group-hover:text-[rgb(15,30,75)] dark:group-hover:text-yellow-300" />
+      <Rocket className="h-6 w-6 transition-colors group-hover:text-yellow-300" />
     ),
   },
 ];
@@ -64,17 +65,17 @@ const reasons: Info[] = [
   {
     title: "에너지 산업의 디지털 전환",
     description:
-      "전력거래소는 전력 시장의 중심으로, 디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용함.",
+      "전력거래소는 전력 시장의 중심으로,\n디지털 전환이 에너지 효율성을 향상시키는 핵심 요소로 작용함.",
   },
   {
     title: "사용자 중심의 접근성 개선",
     description:
-      "복잡한 기존 전력거래소 웹을 개선하여 누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공함.",
+      "복잡한 기존 전력거래소 웹을 개선하여\n누구나 쉽게 사용할 수 있는 사용자 친화적 인터페이스를 제공함.",
   },
   {
     title: "데이터 기반 혁신 가능성",
     description:
-      "실시간 데이터 분석과 예측 모델을 통해 더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
+      "실시간 데이터 분석과 예측 모델을 통해\n더 나은 의사결정을 지원하는 혁신적인 솔루션을 개발함.",
   },
 ];
 
@@ -84,51 +85,53 @@ const InfoItem = ({ title, description, icon }: Info) => {
 
   return (
     <motion.div
-      className="group cursor-pointer rounded-lg p-4 transition-all duration-300 hover:border hover:border-gray-200 hover:shadow-md"
-      whileHover={{ scale: 1.05 }}
-      onClick={() => router.push("/introduce")}
+      className="group cursor-pointer overflow-hidden rounded-lg p-4 transition-all duration-300 hover:shadow-lg" // overflow-hidden 추가
+      whileHover={{ scale: 1.03 }} // scale 값 조정
+      style={{ transformOrigin: "center" }} // 변환 원점 설정
+      onClick={() => router.push("/introduce")} // 클릭 시 페이지 이동
     >
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col items-center gap-2">
+        {/* 아이콘 */}
         <div className="text-gray-300">{icon}</div>
-        <h3 className="text-lg font-semibold">{title}</h3>
+        {/* 제목 */}
+        <h3 className="text-center text-lg font-semibold">{title}</h3>
+        {/* 설명 */}
+        <p className="mt-2 text-center text-sm text-slate-200 dark:text-gray-400">
+          {description}
+        </p>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        {description}
-      </p>
     </motion.div>
   );
 };
 
 // ReasonItem 컴포넌트
-const ReasonItem = ({ title, description }: Info) => {
+const ReasonItem = ({
+  title,
+  onClick,
+}: {
+  title: string;
+  onClick: () => void;
+}) => {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <motion.div className="cursor-pointer rounded-lg p-2 transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-400 transition-colors duration-300 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300">
-              {title}
-            </h3>
-          </motion.div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p className="max-w-xs text-sm">{description}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <motion.div
+      className="relative cursor-pointer rounded-lg p-2 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+      onClick={onClick}
+    >
+      <h3 className="text-lg font-semibold text-gray-400 transition-colors duration-300 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300">
+        {title}
+      </h3>
+      {/* 화살표 아이콘 */}
+      <motion.div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <ChevronRight className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+      </motion.div>
+    </motion.div>
   );
 };
 
 // OurWeb 컴포넌트
 const OurWeb = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isTextHighlighted, setIsTextHighlighted] = useState(false);
+  const [selectedReason, setSelectedReason] = useState<Info | null>(null); // 선택된 이유 데이터 저장
   const router = useRouter();
-
-  const toggleExpanded = useCallback(() => {
-    setIsExpanded((prev) => !prev);
-    setIsTextHighlighted((prev) => !prev);
-  }, []);
 
   const teamInfoItems = useMemo(
     () =>
@@ -150,12 +153,15 @@ const OurWeb = () => {
       reasons.map((reason, index) => (
         <motion.div
           key={index}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
+          transition={{ delay: 0.1 }}
           className="text-center"
         >
-          <ReasonItem {...reason} />
+          <ReasonItem
+            title={reason.title}
+            onClick={() => setSelectedReason(reason)}
+          />
         </motion.div>
       )),
     [],
@@ -163,14 +169,15 @@ const OurWeb = () => {
 
   return (
     <motion.div
-      className="flex min-h-screen flex-col items-center justify-center"
+      className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden" // overflow-x-hidden 추가
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.section className="container mx-auto px-6">
+      {/* 상단 소개 섹션 */}
+      <motion.section className="w-full bg-slate-800 py-12 text-white">
         <motion.h1
-          className="mb-12 pb-4 text-center text-4xl font-bold"
+          className="mb-8 text-center text-4xl font-bold"
           initial={{ y: -50 }}
           animate={{ y: 0 }}
           transition={{ type: "spring", stiffness: 100 }}
@@ -182,7 +189,7 @@ const OurWeb = () => {
         </motion.h1>
 
         <motion.div
-          className="mb-16 flex justify-center"
+          className="mb-8 flex justify-center"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -190,7 +197,7 @@ const OurWeb = () => {
           <Button
             onClick={() => router.push("/introduce")}
             variant="outline"
-            className="group flex items-center gap-2 rounded-full px-6 py-4 text-base hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="group flex items-center gap-2 rounded-full px-6 py-4 text-base hover:bg-slate-600 dark:hover:bg-gray-800"
           >
             더 알아보기
             <motion.svg
@@ -212,57 +219,61 @@ const OurWeb = () => {
         </motion.div>
 
         <motion.div
-          className="mb-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, staggerChildren: 0.1 }}
         >
           {teamInfoItems}
         </motion.div>
+      </motion.section>
 
+      {/* 중간에 위치한 텍스트 */}
+      <motion.section className="w-full">
         <motion.div
-          className="flex justify-center"
+          className="mb-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <Button
-            onClick={toggleExpanded}
-            variant="ghost"
-            className="group flex items-center gap-2 rounded-full px-8 py-2 text-lg"
-          >
-            <span
-              className={`font-semibold transition-colors ${
-                isTextHighlighted
-                  ? "text-gray-800 hover:text-gray-800 focus:text-gray-800 active:text-gray-800 dark:text-gray-300 dark:hover:text-gray-300 dark:focus:text-gray-800 dark:active:text-gray-800"
-                  : "text-gray-500 hover:text-gray-500 focus:text-gray-500 active:text-gray-500 dark:text-gray-500 dark:hover:text-gray-500 dark:focus:text-gray-500 dark:active:text-gray-500"
-              }`}
-            >
-              우리는 왜 전력거래소 웹을 선택했을까?
-            </span>
-            <motion.div
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ChevronDown className="h-5 w-5" />
-            </motion.div>
-          </Button>
+          {/* 고정된 빈 박스에 description 표시 */}
+          <div className="relative mx-auto mt-4 flex min-h-[140px] w-3/4 max-w-md items-center justify-center overflow-hidden rounded-md bg-gray-100 p-4 pt-4 dark:bg-gray-700">
+            <AnimatePresence mode="wait">
+              {selectedReason ? (
+                <motion.div
+                  key={selectedReason.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="text-center"
+                >
+                  <p className="py-0 text-center text-sm text-gray-400 dark:text-gray-500">
+                    &gt; 우리는 왜 전력거래소 웹을 선택했을까?
+                  </p>
+                  <h3 className="text-lg font-semibold">
+                    {selectedReason.title}
+                  </h3>
+                  <p
+                    className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300"
+                    style={{ whiteSpace: "pre-line" }}
+                  >
+                    {selectedReason.description}
+                  </p>
+                </motion.div>
+              ) : (
+                <p className="text-lg text-gray-400 dark:text-gray-500">
+                  우리는 왜 전력거래소 웹을 선택했을까?
+                </p>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
-      </motion.section>
 
-      <motion.section
-        className="container mx-auto overflow-hidden px-6"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{
-          opacity: isExpanded ? 1 : 0,
-          height: isExpanded ? "auto" : 0,
-        }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      >
         <motion.div
-          className="grid gap-8 py-16 md:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-8 py-8 md:grid-cols-2 lg:grid-cols-3"
           initial={{ opacity: 0 }}
-          animate={{ opacity: isExpanded ? 1 : 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.3 }}
         >
           {reasonItems}

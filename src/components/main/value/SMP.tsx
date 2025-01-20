@@ -10,7 +10,7 @@ interface SmpProps {
 
 function SMP({ apiData }: SmpProps) {
   return (
-    <Card className="min-w-[432px] border-none bg-cardBackground-light p-cardPadding shadow-md dark:bg-cardBackground-dark">
+    <Card className="min-w-[432px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
       <div className="py-3 text-center text-lg font-semibold">오늘의 SMP</div>
       <div className="mb-3 mt-6 flex justify-end text-xs text-gray-500 dark:text-gray-300">
         (단위: 원/kWh)

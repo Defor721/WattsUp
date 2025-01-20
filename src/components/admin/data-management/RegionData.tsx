@@ -65,7 +65,7 @@ function RegionData({ firstData }: RegionDataProps) {
           .map((regionData) => (
             <Card
               key={regionData.region}
-              className="bg-cardBackground-light p-5 dark:bg-cardBackground-dark"
+              className="border-none bg-cardBackground-light p-5 dark:border-none dark:bg-cardBackground-dark"
             >
               <p className="text-xs font-semibold">{regionData.region}</p>
               <p className="text-base font-bold">
