@@ -2,13 +2,16 @@ import React from "react";
 
 import { Card } from "@/components/shadcn";
 
-import { ApiData } from "./page";
-
 interface SmpProps {
-  apiData: ApiData;
+  smpData: {
+    거래일: string;
+    최고가: number;
+    최소가: number;
+    평균가: number;
+  };
 }
 
-function SMP({ apiData }: SmpProps) {
+function SMP({ smpData }: SmpProps) {
   return (
     <Card className="min-w-[432px] border-none bg-cardBackground-light p-cardPadding dark:bg-cardBackground-dark">
       <div className="py-3 text-center text-lg font-semibold">오늘의 SMP</div>
@@ -22,7 +25,7 @@ function SMP({ apiData }: SmpProps) {
               거래일
             </td>
             <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-              {apiData.todaySmpData.거래일 || "-"}
+              {smpData.거래일 || "-"}
             </td>
           </tr>
           <tr className="border-t">
@@ -30,7 +33,7 @@ function SMP({ apiData }: SmpProps) {
               최고가
             </td>
             <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-              {apiData.todaySmpData.최고가 || "-"}
+              {smpData.최고가 || "-"}
             </td>
           </tr>
           <tr className="border-t">
@@ -38,7 +41,7 @@ function SMP({ apiData }: SmpProps) {
               최소가
             </td>
             <td className="border-0 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-              {apiData.todaySmpData.최소가 || "-"}
+              {smpData.최소가 || "-"}
             </td>
           </tr>
           <tr className="border-t">
@@ -46,7 +49,7 @@ function SMP({ apiData }: SmpProps) {
               평균가
             </td>
             <td className="border-0 border-b-1 border-t-1 border-gray-300 pb-[6px] pl-[23px] pr-[15px] pt-[8px]">
-              {apiData.todaySmpData.평균가 || "-"}
+              {smpData.평균가 || "-"}
             </td>
           </tr>
         </tbody>

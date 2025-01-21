@@ -12,9 +12,10 @@ import {
   Input,
   Button,
 } from "@/components/shadcn";
-import apiClient from "@/lib/axios";
-import Loading from "@/app/loading";
+
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import { useQueryClient } from "@tanstack/react-query";
+import { fetchBidLists } from "@/services/adminService";
 
 interface BidData {
   _id: string;
@@ -25,57 +26,41 @@ interface BidData {
   now: string;
 }
 
-function TradeTable() {
-  const [bidData, setBidData] = useState<BidData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+function TradeTable({ bidLists }: { bidLists: BidData[] }) {
+  const queryClient = useQueryClient();
 
-  // 검색어 상태
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // 페이지네이션
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+
+  const totalPages = 5;
 
   useEffect(() => {
-    const fetchTradeData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await apiClient.get("/api/admin/userinfo/bidlist");
-        const bidsData = response.data.bids;
-        setBidData(bidsData);
-      } catch (error) {
-        console.error("Error fetching trade data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (totalPages && currentPage < totalPages) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ["users", nextPage],
+        queryFn: () => fetchBidLists(),
+      });
+    }
+  }, [currentPage, queryClient]);
 
-    fetchTradeData();
-  }, []);
+  // 필터링
+  const [searchTerm, setSearchTerm] = useState("");
 
   // 검색어에 따른 필터링
-  const filteredTradeData = bidData
-    .sort((a, b) => new Date(b.now).getTime() - new Date(a.now).getTime())
-    .filter((trade) => {
-      const searchValue = searchTerm.toLowerCase();
-      return (
-        trade._id.toLowerCase().includes(searchValue) || // ID 필터
-        trade.email.includes(searchValue) || // 사업자 번호 필터
-        trade.region.toLowerCase().includes(searchValue) || // 지역 필터
-        String(trade.price).includes(searchValue) || // 가격 필터
-        String(trade.quantity).includes(searchValue) || // 수량 필터
-        trade.now.toLowerCase().includes(searchValue) // 날짜 필터
-      );
-    });
-
-  // 페이지네이션 데이터 계산
-  const totalItems = filteredTradeData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTrades = filteredTradeData.slice(startIndex, endIndex);
-
-  if (isLoading) return <Loading />;
+  const filteredTradeData = bidLists.sort(
+    (a, b) => new Date(b.now).getTime() - new Date(a.now).getTime(),
+  );
+  // .filter((trade) => {
+  //   const searchValue = searchTerm.toLowerCase();
+  //   return (
+  //     trade._id.toLowerCase().includes(searchValue) || // ID 필터
+  //     trade.email.includes(searchValue) || // 사업자 번호 필터
+  //     trade.region.toLowerCase().includes(searchValue) || // 지역 필터
+  //     String(trade.price).includes(searchValue) || // 가격 필터
+  //     String(trade.quantity).includes(searchValue) || // 수량 필터
+  //     trade.now.toLowerCase().includes(searchValue) // 날짜 필터
+  //   );
+  // });
 
   return (
     <div className="m-w-[700px]">
@@ -115,7 +100,7 @@ function TradeTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTrades.map((trade) => {
+            {filteredTradeData.map((trade) => {
               const formattedDate = new Date(trade.now)
                 .toISOString()
                 .split("T")[0];

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import React, { useEffect, useMemo, useState } from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
 import { Card } from "@/components/shadcn";
@@ -8,6 +10,14 @@ import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 interface Region {
   name: string;
   value: number;
+}
+
+interface RegionValueProps {
+  regionData: {
+    message: string;
+    result: Record<string, number>;
+    total: number;
+  };
 }
 
 // 각 지역의 색상 정의
@@ -30,30 +40,16 @@ const regionColors: Record<string, string> = {
   충청북도: "#DC143C",
 };
 
-function RegionValue() {
+function RegionValue({ regionData }: RegionValueProps) {
   const [regionIndex, setRegionIndex] = useState(0);
-  const [regions, setRegions] = useState<Region[]>([]);
-  const [total, setTotal] = useState<number>(0); // 총 공급량
 
-  useEffect(() => {
-    // 지역 데이터 정리
-    const fetchTotalData = async () => {
-      const response = await fetch("/api/trade/supply");
-      const totalData = await response.json();
-
-      const formattedRegions = Object.entries(totalData.result).map(
-        ([name, value]) => ({
-          name,
-          value: Number(value),
-        }),
-      );
-
-      setRegions(formattedRegions);
-      setTotal(Number(totalData.total)); // 총 공급량 저장
-    };
-
-    fetchTotalData();
-  }, []);
+  const total = regionData.total;
+  const regions: Region[] = Object.entries(regionData.result).map(
+    ([name, value]) => ({
+      name,
+      value: Number(value),
+    }),
+  );
 
   useEffect(() => {
     if (regions.length > 0) {
@@ -66,21 +62,19 @@ function RegionValue() {
     }
   }, [regions]);
 
-  if (regions.length === 0 || total === 0) {
-    return <div>로딩 중...</div>;
-  }
-
-  // 누적 각도를 계산
-  let accumulatedAngle = 0;
-
   // 차트 데이터 생성
-  const chartData = regions.map((region) => {
-    const percentage = (region.value / total) * 100;
-    const startAngle = accumulatedAngle;
-    const endAngle = accumulatedAngle + (percentage * 360) / 100;
-    accumulatedAngle = endAngle; // 누적 각도 업데이트
-    return { ...region, startAngle, endAngle };
-  });
+  const chartData = useMemo(() => {
+    // 누적 각도를 계산
+    let accumulatedAngle = 0;
+
+    return regions.map((region) => {
+      const percentage = (region.value / total) * 100;
+      const startAngle = accumulatedAngle;
+      const endAngle = accumulatedAngle + (percentage * 360) / 100;
+      accumulatedAngle = endAngle; // 누적 각도 업데이트
+      return { ...region, startAngle, endAngle };
+    });
+  }, [regions, total]);
 
   // 현재 지역 데이터
   const currentRegion = chartData[regionIndex];
