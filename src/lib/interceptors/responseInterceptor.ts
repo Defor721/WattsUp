@@ -5,6 +5,15 @@ import { setCookie } from "@/utils";
 
 import apiClient from "../axios";
 
+interface CustomErrorResponse {
+  resultType: "SUCCESS" | "FAIL";
+  result?: {
+    errorCode?: string;
+    message?: string;
+    data?: any;
+  };
+}
+
 let isRefreshing = false;
 let failedQueue: Array<(token: string) => void> = [];
 
@@ -27,30 +36,12 @@ export const handleResponseError = async (error: AxiosError) => {
     return Promise.reject(error);
   }
 
-  const { status, data } = response as AxiosResponse<{ message: string }>;
+  const { status, data } = response as AxiosResponse<CustomErrorResponse>;
 
   // 만료된 토큰 처리
-  if (status === 401 && data.message === "Token Expired") {
+  if (status === 401 && data.result?.errorCode === "AUTH_EXPIRED") {
     return handleTokenRefresh(config as InternalAxiosRequestConfig);
   }
-
-  // 기타 에러 처리
-  // switch (status) {
-  //   case 400:
-  //     console.error(`잘못된 요청입니다. ${response.statusText}`);
-  //     break;
-  //   case 403:
-  //     console.error(`권한이 없습니다. ${response.statusText}`);
-  //     break;
-  //   case 404:
-  //     console.error(`찾을 수 없는 페이지입니다. ${response.statusText}`);
-  //     break;
-  //   case 500:
-  //     console.error(`서버 오류입니다. ${response.statusText}`);
-  //     break;
-  //   default:
-  //     console.error(`에러 발생: ${status}, ${response.statusText}`);
-  // }
 
   return Promise.reject(error);
 };

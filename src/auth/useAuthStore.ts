@@ -154,7 +154,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     /** 일반 로그인 */
     async nativeLogin(email: string, password: string) {
-      console.log(`check nativeLogin`);
       const { actions } = useAuthStore.getState();
       await actions.handleAction(
         () => loginWithEmailAndPassword(email, password),
@@ -212,3 +211,99 @@ export const useAuthStore = create<AuthState>((set) => ({
     resetAuthState: () => set(NULL_AUTH_STATE),
   },
 }));
+
+// /** 소셜 회원가입 */
+// async socialSignup(password) {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => socialSignup(password),
+//     (data) => {
+//       set({
+//         accessToken: data.accessToken,
+//         redirectTo: "/",
+//         error: false,
+//         message: data.message,
+//       });
+//     },
+//   );
+// },
+
+// /** 소셜 로그인 */
+// async socialLogin(code: string) {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => exchangeSocialToken(code),
+//     (data) => {
+//       if (data.message === "추가 정보 입력이 필요합니다.") {
+//         set({
+//           accessToken: null,
+//           message: data.message,
+//           redirectTo: "/login/additional",
+//           error: false,
+//         });
+//       } else {
+//         set({
+//           accessToken: data.accessToken,
+//           redirectTo: "/",
+//           message: data.message,
+//           error: false,
+//         });
+//       }
+//     },
+//   );
+// },
+
+// /** 일반 회원가입 */
+// async nativeSignup(password) {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => nativeSignup({ password }),
+//     (data) => {
+//       set({
+//         redirectTo: "/login",
+//         error: false,
+//         message: data.message,
+//       });
+//     },
+//   );
+// },
+
+// /** 일반 로그인 */
+// async nativeLogin(email: string, password: string) {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => loginWithEmailAndPassword(email, password),
+//     (data) => {
+//       set({
+//         accessToken: data.accessToken,
+//         redirectTo: "/",
+//         error: false,
+//         message: data.message,
+//       });
+//     },
+//   );
+// },
+
+// /** 로그아웃 */
+// async logout() {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => logout(),
+//     (data) => {
+//       set({
+//         redirectTo: "/",
+//         message: data.message,
+//         error: false,
+//       });
+//     },
+//   );
+// },
+
+// /** 회원 탈퇴 */
+// async withdrawalAccount(password: string) {
+//   await useAuthStore.getState().actions.handleAction(
+//     () => deleteUser(password),
+//     (data) => {
+//       set({
+//         redirectTo: "/",
+//         message: data.message,
+//         error: false,
+//       });
+//     },
+//   );
+// },
