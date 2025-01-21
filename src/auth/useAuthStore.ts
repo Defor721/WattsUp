@@ -171,24 +171,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     /** 로그아웃 */
     async logout() {
-      const state = useAuthStore.getState();
-      if (state.loading) return;
-      try {
-        set({ loading: true });
-        const { message } = await logout();
-
-        set({
-          redirectTo: "/",
-          message,
-          error: false,
-        });
-      } catch (error: any) {
-        throw new Error(
-          error.response?.data?.message || "잘못된 로그아웃 시도입니다.",
-        );
-      } finally {
-        set({ loading: false });
-      }
+      await useAuthStore.getState().actions.handleAction(
+        () => logout(),
+        (data) => {
+          set({
+            redirectTo: "/",
+            message: data.message,
+            error: false,
+          });
+        },
+      );
     },
 
     /** 회원 탈퇴 */
@@ -213,6 +205,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     },
 
+    /** message 변경 */
     setMessageState: (message) => set({ message }),
 
     /** 스토어 상태 초기화 */

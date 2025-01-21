@@ -1,4 +1,4 @@
-import { Link } from "lucide-react";
+import Link from "next/link";
 import FindEmailPopup from "./FindEmailPopup";
 import FindPasswordPopup from "./FindPasswordPopup";
 
