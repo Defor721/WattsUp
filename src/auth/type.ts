@@ -40,12 +40,17 @@ export interface AuthState {
   message: string | null;
   loading: boolean;
   actions: {
+    handleAction(
+      asyncFn: () => Promise<any>,
+      onSuccess: (data: any) => void,
+    ): unknown;
     nativeLogin: (email: string, password: string) => Promise<void>;
     socialLogin: (code: string) => Promise<void>;
     socialSignup: (password: string) => Promise<void>;
     nativeSignup: (password: string) => Promise<void>;
     logout: () => Promise<void>;
     withdrawalAccount: (password: string) => Promise<void>;
+    setMessageState: (message: string) => void;
     resetAuthState: () => void;
   };
 }

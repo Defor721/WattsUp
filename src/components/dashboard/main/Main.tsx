@@ -8,7 +8,6 @@ import KakaoMap from "@/components/introduce/KakaoMap";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 import { Card } from "@/components/shadcn";
 
-import Container from "./Container";
 import RegionButtons from "./RegionButtons";
 import PredictChart from "./Chart";
 import PredictTable from "./Table";

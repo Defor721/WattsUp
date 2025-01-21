@@ -8,13 +8,13 @@ import apiClient from "@/lib/axios";
 import { toast } from "@/hooks/useToast";
 
 interface RegionDataProps {
-  firstData: {
+  regionData: {
     date: string;
     regions: { region: string; amgo: number }[];
   };
 }
 
-function RegionData({ firstData }: RegionDataProps) {
+function RegionData({ regionData }: RegionDataProps) {
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
 
   // 버튼 상태 복원
@@ -29,13 +29,13 @@ function RegionData({ firstData }: RegionDataProps) {
     }
   }, []);
 
-  // 백엔드로 firstData 보내기
+  // 백엔드로 regionData 보내기
   const sendRegionsDataToDB = async () => {
     setIsButtonDisabled(true);
     try {
       const { data } = await apiClient.post(
         "/api/admin/userinfo/updatesupply",
-        firstData,
+        regionData,
       );
 
       const today = new Date().toISOString().split("T")[0];
@@ -73,7 +73,7 @@ function RegionData({ firstData }: RegionDataProps) {
 
       {/* 지역별 발전량 텍스트로 표시 */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {firstData.regions
+        {regionData.regions
           .sort((a, b) => a.region.localeCompare(b.region))
           .map((regionData) => (
             <Card

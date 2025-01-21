@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
 
 /** 로그아웃 */
 export async function DELETE(request: NextRequest) {
@@ -36,9 +40,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const response = NextResponse.json(
+    const response = handleSuccessResponse(
       { message: `로그아웃 처리되었습니다.` },
-      { status: 200 },
+      200,
     );
     response.cookies.set("refreshToken", "", {
       httpOnly: true,
@@ -54,13 +58,6 @@ export async function DELETE(request: NextRequest) {
 
     return response;
   } catch (error: any) {
-    if (error.message.startsWith("TokenExpiredError")) {
-      return NextResponse.json({ message: "Token Expired" }, { status: 401 });
-    }
-
-    return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }

@@ -1,4 +1,9 @@
-import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken";
+import jwt, {
+  JwtPayload,
+  TokenExpiredError as JWTTokenExpiredError,
+} from "jsonwebtoken";
+
+import { TokenExpiredError, ValidationError } from "@/server/customErrors";
 
 export async function verifyToken(
   token: string,
@@ -8,10 +13,10 @@ export async function verifyToken(
   try {
     return jwt.verify(token, secret) as JwtPayload;
   } catch (error) {
-    if (error instanceof TokenExpiredError) {
-      throw new Error(`TokenExpiredError: ${tokenType}`);
+    if (error instanceof JWTTokenExpiredError) {
+      throw new TokenExpiredError(tokenType, "토큰이 만료되었습니다.");
     } else {
-      throw new Error(`InvalidTokenError: ${tokenType}`);
+      throw new ValidationError("token", "유효하지 않은 토큰입니다.");
     }
   }
 }
