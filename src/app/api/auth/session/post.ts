@@ -1,13 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
-import { ValidationError } from "@/server/customErrors";
-import { handleErrorResponse } from "@/server/errorHandler";
+import { DatabaseError, ValidationError } from "@/server/customErrors";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
 
+/**
+ * 일반 로그인
+ */
 export async function POST(request: NextRequest) {
-  //일반 로그인
   try {
     const { email, password }: { email: string; password: string } =
       await request.json();
@@ -25,51 +30,50 @@ export async function POST(request: NextRequest) {
 
     const user = await collection.findOne({ email });
     if (!user) {
-      return NextResponse.json(
-        {
-          message:
-            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
-        },
-        { status: 400 },
+      throw new ValidationError(
+        "email or password",
+        "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
       );
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-    if (isPasswordMatch) {
-      const payload = { email: email };
-      const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
-      const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "1h" });
-      const refreshSecret = process.env.REFRESH_TOKEN_SECRET as string;
-      const refreshToken = jwt.sign(payload, refreshSecret, {
-        expiresIn: "7d",
-      });
-      await collection.updateOne(
-        { email },
-        { $set: { refreshToken: refreshToken, updatedAt: new Date() } },
-      );
-      const response = NextResponse.json(
-        { message: "로그인 성공", accessToken },
-        { status: 201 },
-      );
-      response.cookies.set("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 7 * 24 * 60 * 60,
-        path: "/",
-        sameSite: "none",
-      });
-
-      return response;
-    } else {
-      return NextResponse.json(
-        {
-          message:
-            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
-        },
-        { status: 400 },
+    if (!isPasswordMatch) {
+      throw new ValidationError(
+        "email or password",
+        "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.",
       );
     }
+
+    const payload = { email: email };
+    const accessSecret = process.env.ACCESS_TOKEN_SECRET as string;
+    const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "1h" });
+    const refreshSecret = process.env.REFRESH_TOKEN_SECRET as string;
+    const refreshToken = jwt.sign(payload, refreshSecret, {
+      expiresIn: "7d",
+    });
+
+    const updateResult = await collection.updateOne(
+      { email },
+      { $set: { refreshToken: refreshToken, updatedAt: new Date() } },
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      throw new DatabaseError("리프레시 토큰 업데이트에 실패했습니다.");
+    }
+
+    const response = handleSuccessResponse(
+      { message: "로그인 성공", accessToken },
+      201,
+    );
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+      sameSite: "none",
+    });
+
+    return response;
   } catch (error: unknown) {
     return handleErrorResponse(error);
   }

@@ -1,12 +1,27 @@
 import { NextResponse } from "next/server";
 import { CustomError } from "./customErrors";
 
-export function handleErrorResponse(error: any) {
+export function handleSuccessResponse(
+  data: Record<string, unknown>,
+  statusCode = 200,
+) {
+  return NextResponse.json(
+    {
+      resultType: "SUCCESS",
+      result: {
+        ...data,
+      },
+    },
+    { status: statusCode },
+  );
+}
+
+export function handleErrorResponse(error: unknown) {
   if (error instanceof CustomError) {
     return NextResponse.json(
       {
         resultType: "FAIL",
-        error: error.serializeErrors(),
+        result: error.serializeErrors(),
       },
       { status: error.statusCode },
     );
@@ -15,9 +30,9 @@ export function handleErrorResponse(error: any) {
   return NextResponse.json(
     {
       resultType: "FAIL",
-      error: {
+      result: {
         errorCode: "INTERNAL_SERVER_ERROR",
-        reason: "서버 오류가 발생했습니다.",
+        message: "서버 오류가 발생했습니다.",
         data: {},
       },
     },
@@ -30,9 +45,9 @@ export function handleErrorResponse(error: any) {
 
 {
   "resultType": "FAIL",
-  "error": {
+  "result": {
       "errorCode": "AUTH_EXPIRED",
-      "reason": "인증이 만료되었습니다.",
+      "message": "인증이 만료되었습니다.",
       "data": {}
   }
 }
@@ -43,6 +58,9 @@ export function handleErrorResponse(error: any) {
 
 {
   "resultType":"SUCCESS",
-  "success":true
+  "result":{}
 }
  */
+
+// message: 개발자가 볼 것
+// data.reason: 이용자가 볼 것

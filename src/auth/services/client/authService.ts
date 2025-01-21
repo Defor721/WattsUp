@@ -33,17 +33,13 @@ export const loginWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  try {
-    const response = await apiClient.post("/api/auth/session", {
-      email,
-      password,
-    });
-    const { data } = response;
+  const response = await apiClient.post("/api/auth/session", {
+    email,
+    password,
+  });
+  const { data } = response;
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return data;
 };
 
 /**
