@@ -12,11 +12,11 @@ function DataManageMent() {
   const { user } = useUserStore();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user.role !== "admin") {
-      router.push("/");
-    }
-  }, [router, user.role]);
+  // useEffect(() => {
+  //   if (user.role !== "admin") {
+  //     router.push("/");
+  //   }
+  // }, [router, user.role]);
 
   if (!user) return <Loading />;
 
