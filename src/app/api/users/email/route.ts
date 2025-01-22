@@ -44,9 +44,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return handleSuccessResponse("이메일 조회를 성공했습니다.", 200, {
-      maskEmail: maskEmail(user.email),
-      user,
+    return handleSuccessResponse({
+      message: "이메일 조회를 성공했습니다.",
+      statusCode: 200,
+      data: {
+        maskEmail: maskEmail(user.email),
+        user,
+      },
     });
   } catch (error: any) {
     return handleErrorResponse(error);

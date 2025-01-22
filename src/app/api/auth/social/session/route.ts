@@ -110,7 +110,11 @@ export async function POST(request: NextRequest) {
       credit: 0,
     });
 
-    const response = handleSuccessResponse("로그인 성공", 201, { accessToken });
+    const response = handleSuccessResponse({
+      message: "로그인 성공",
+      statusCode: 201,
+      data: { accessToken },
+    });
 
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,

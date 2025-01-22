@@ -61,7 +61,11 @@ export async function POST(request: NextRequest) {
       throw new DatabaseError("리프레시 토큰 업데이트에 실패했습니다.");
     }
 
-    const response = handleSuccessResponse("로그인 성공", 201, { accessToken });
+    const response = handleSuccessResponse({
+      message: "로그인 성공",
+      statusCode: 201,
+      data: { accessToken },
+    });
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,

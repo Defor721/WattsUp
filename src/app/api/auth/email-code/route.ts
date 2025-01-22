@@ -31,7 +31,10 @@ export async function POST(request: NextRequest) {
       EX: 60,
     });
 
-    return handleSuccessResponse("해당 메일로 코드 전송 완료", 200);
+    return handleSuccessResponse({
+      message: "해당 메일로 코드 전송 완료",
+      statusCode: 200,
+    });
   } catch (error) {
     return handleErrorResponse(error);
   }

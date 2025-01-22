@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import { CustomError } from "./customErrors";
 
-export function handleSuccessResponse(
-  message: string,
-  statusCode = 200,
-  data: Record<string, unknown> = {},
-) {
+interface handleSuccessResponseProps {
+  message: string;
+  statusCode: number;
+  data?: Record<string, unknown>;
+}
+
+export function handleSuccessResponse({
+  message,
+  statusCode,
+  data = {},
+}: handleSuccessResponseProps) {
   return NextResponse.json(
     {
       resultType: "SUCCESS",

@@ -62,8 +62,12 @@ export async function POST(request: NextRequest) {
         { $set: { refreshToken, updatedAt: new Date() } },
       );
 
-      const response = handleSuccessResponse("로그인 성공", 201, {
-        accessToken,
+      const response = handleSuccessResponse({
+        message: "로그인 성공",
+        statusCode: 201,
+        data: {
+          accessToken,
+        },
       });
       response.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
@@ -86,10 +90,10 @@ export async function POST(request: NextRequest) {
       { expiresIn: "15m" },
     );
 
-    const response = handleSuccessResponse(
-      "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
-      201,
-    );
+    const response = handleSuccessResponse({
+      message: "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
+      statusCode: 201,
+    });
 
     response.cookies.set("emailVerificationToken", emailVerificationToken, {
       httpOnly: true,

@@ -41,7 +41,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const response = handleSuccessResponse(`로그아웃 처리되었습니다.`, 200);
+    const response = handleSuccessResponse({
+      message: `로그아웃 처리되었습니다.`,
+      statusCode: 200,
+    });
     response.cookies.set("refreshToken", "", {
       httpOnly: true,
       secure: true,
