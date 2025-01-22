@@ -19,6 +19,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection<Bid>("bid");
+    const limit = parseInt(request.nextUrl.searchParams.get("limit") || "10");
+    const pages = parseInt(request.nextUrl.searchParams.get("pages") || "0");
 
     const bids = await collection.find({}).toArray();
 
@@ -31,10 +33,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const totalCount = bids.length; // 문서 총 개수
 
     const stats = { totalPrice, totalQuantity, totalCount };
+
+    const bidSet = await collection
+      .find({})
+      .project({ _id: 0 })
+      .skip(pages)
+      .limit(limit)
+      .toArray();
+
     return NextResponse.json(
       {
         message: "success",
-        bids,
+        bidSet,
         stats, // 총 개수 포함
       },
       { status: 200 },
