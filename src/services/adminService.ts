@@ -13,11 +13,11 @@ interface Users {
 
 // 유저 정보(users)
 export const fetchUserInfo = async (
-  // limit: number = 1,
-  page: number = 1,
-): Promise<{ users: Users[]; totalCount: number }> => {
+  limit: number,
+  page: number = 0,
+): Promise<{ userSet: Users[]; totalCount: number }> => {
   const response = await apiClient.get(
-    `/api/admin/userinfo?limit=1&page=${page}`,
+    `/api/admin/userinfo?limit=${limit}&pages=${page}`,
   );
   return response.data;
 };

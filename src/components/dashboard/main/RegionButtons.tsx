@@ -35,7 +35,7 @@ function RegionButtons({
         <SelectContent className="bg-white dark:bg-cardBackground-dark">
           {regions.map((region) => (
             <SelectItem
-              className="z-10 bg-white dark:bg-cardBackground-dark"
+              className="z-10 bg-white hover:cursor-pointer hover:bg-gray-100 dark:bg-cardBackground-dark dark:hover:bg-gray-900"
               key={region}
               value={region}
             >
