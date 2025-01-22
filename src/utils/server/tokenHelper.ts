@@ -5,11 +5,11 @@ import jwt, {
 
 import { TokenExpiredError, ValidationError } from "@/server/customErrors";
 
-export async function verifyToken(
+export function verifyToken(
   token: string,
   secret: string,
   tokenType: string,
-): Promise<JwtPayload> {
+): JwtPayload {
   try {
     return jwt.verify(token, secret) as JwtPayload;
   } catch (error) {

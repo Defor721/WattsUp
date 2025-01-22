@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
 import clientPromise from "@/lib/mongodb";
@@ -6,38 +6,24 @@ import {
   fetchGoogleTokens,
   fetchGoogleUserInfo,
 } from "@/auth/services/server/authService";
-
-// 환경 변수 검증 함수
-const validateEnv = () => {
-  if (
-    !process.env.ACCESS_TOKEN_SECRET ||
-    !process.env.REFRESH_TOKEN_SECRET ||
-    !process.env.BUSINESS_TOKEN_SECRET ||
-    !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-    !process.env.GOOGLE_CLIENT_SECRET ||
-    !process.env.NEXT_PUBLIC_REDIRECT_URI
-  ) {
-    throw new Error("환경 변수가 설정되지 않았습니다.");
-  }
-};
+import { ConflictError, ValidationError } from "@/server/customErrors";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
 
 /** 구글 토큰 교환 */
 export async function POST(request: NextRequest) {
   try {
-    validateEnv();
-
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
     const { authorizationCode } = await request.json();
 
     if (!authorizationCode) {
-      return NextResponse.json(
-        {
-          message: "Authorization code가 없습니다.",
-          redirectTo: "/login",
-        },
-        { status: 400 },
+      throw new ValidationError(
+        "AuthorizationCode",
+        "구글 인증 코드가 누락되었습니다. 다시 시도해 주세요.",
       );
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -52,13 +38,9 @@ export async function POST(request: NextRequest) {
 
     // 일반 유저 분기 처리
     if (user?.signupType === "native") {
-      return NextResponse.json(
-        {
-          accessToken: "",
-          message:
-            "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요.",
-        },
-        { status: 409 },
+      throw new ConflictError(
+        "User",
+        "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요.",
       );
     }
 
@@ -80,10 +62,13 @@ export async function POST(request: NextRequest) {
         { $set: { refreshToken, updatedAt: new Date() } },
       );
 
-      const response = NextResponse.json(
-        { message: "로그인 성공", accessToken },
-        { status: 201 },
-      );
+      const response = handleSuccessResponse({
+        message: "로그인 성공",
+        statusCode: 201,
+        data: {
+          accessToken,
+        },
+      });
       response.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
@@ -105,10 +90,10 @@ export async function POST(request: NextRequest) {
       { expiresIn: "15m" },
     );
 
-    const response = NextResponse.json(
-      { message: "추가 정보 입력이 필요합니다." },
-      { status: 201 },
-    );
+    const response = handleSuccessResponse({
+      message: "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
+      statusCode: 201,
+    });
 
     response.cookies.set("emailVerificationToken", emailVerificationToken, {
       httpOnly: true,
@@ -119,11 +104,6 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: `${error || "내부 서버 오류가 발생했습니다."}`,
-      },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }

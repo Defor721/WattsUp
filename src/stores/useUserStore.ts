@@ -9,6 +9,15 @@ import {
 } from "@/services/userService";
 import { updateCredit } from "@/services/tradeService";
 
+interface Response {
+  resultType: "SUCCESS" | "FAIL";
+  result?: {
+    message: string;
+    errorCode?: string;
+    data?: any;
+  };
+}
+
 export interface changePasswordProps {
   currentPassword: string;
   newPassword: string;
@@ -25,6 +34,10 @@ export interface UserState {
   loading: boolean;
   message: string;
   actions: {
+    handleAction(
+      asyncFn: () => Promise<any>,
+      onSuccess: (data: any) => void,
+    ): unknown;
     fetchCurrentUser: () => Promise<void>;
     resetPassword: (newPassword: string) => Promise<void>;
     changePassword: ({
@@ -50,6 +63,38 @@ const NULL_USER_STATE: Omit<UserState, "actions"> = {
 export const useUserStore = create<UserState>((set) => ({
   ...NULL_USER_STATE,
   actions: {
+    /** 공통 액션 처리 함수 */
+    async handleAction(
+      asyncFn: () => Promise<Response>,
+      onSuccess: (data: Response["result"]) => void,
+    ) {
+      const { loading } = useUserStore.getState();
+      if (loading) return;
+      try {
+        set({ loading: true });
+        const response = await asyncFn();
+        if (response.resultType === "SUCCESS") {
+          onSuccess(response.result);
+        } else {
+          set({
+            error: true,
+            message: response.result?.message || "처리 중 오류가 발생했습니다.",
+            loading: false,
+          });
+        }
+      } catch (error: any) {
+        set({
+          error: true,
+          message:
+            error.response.data.result.data.reason ||
+            "알 수 없는 오류가 발생했습니다.",
+          loading: false,
+        });
+      } finally {
+        set({ loading: false });
+      }
+    },
+
     /** 현재 유저 데이터 조회 */
     async fetchCurrentUser() {
       const state = useUserStore.getState();
@@ -108,22 +153,21 @@ export const useUserStore = create<UserState>((set) => ({
 
     /** 이메일 찾기 */
     async findEmail({ businessNumber, corporateNumber }: findEmailProps) {
-      try {
-        set({ loading: true });
-        const data = await getEmailByCorporateNumber({
-          businessNumber,
-          corporateNumber,
-        });
-        set({
-          message: `${data.message} ${data.data}`,
-          error: false,
-        });
-      } catch (error: any) {
-        set({ error: true, message: error.response.data.message });
-        throw error;
-      } finally {
-        set({ loading: false });
-      }
+      const { actions } = useUserStore.getState();
+      await actions.handleAction(
+        () =>
+          getEmailByCorporateNumber({
+            businessNumber,
+            corporateNumber,
+          }),
+        (data) => {
+          set({
+            user: data.user,
+            message: `${data.message} ${data.data.maskEmail}`,
+            error: false,
+          });
+        },
+      );
     },
 
     /** 크레딧 충전 */
