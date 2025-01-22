@@ -1,9 +1,9 @@
-export abstract class CustomError extends Error {
+export abstract class CustomError<T = any> extends Error {
   constructor(
     public statusCode: number,
     public errorCode: string,
     public message: string,
-    public data?: any,
+    public data?: T,
   ) {
     super(message);
   }
@@ -11,16 +11,20 @@ export abstract class CustomError extends Error {
   serializeErrors() {
     return {
       errorCode: this.errorCode,
-      reason: this.message,
+      message: this.message,
       data: this.data || {},
     };
   }
 }
 
 export class TokenExpiredError extends CustomError {
-  constructor(public tokenType: string) {
+  constructor(
+    public tokenType: string,
+    public reason: string,
+  ) {
     super(401, "AUTH_EXPIRED", `${tokenType} 인증 세션이 만료되었습니다.`, {
       tokenType,
+      reason,
     });
   }
 }
