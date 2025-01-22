@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { CustomError } from "./customErrors";
 
 export function handleSuccessResponse(
-  data: Record<string, unknown>,
+  message: string,
   statusCode = 200,
+  data: Record<string, unknown> = {},
 ) {
   return NextResponse.json(
     {
       resultType: "SUCCESS",
       result: {
-        ...data,
+        message,
+        data,
       },
     },
     { status: statusCode },
@@ -46,21 +48,25 @@ export function handleErrorResponse(error: unknown) {
 {
   "resultType": "FAIL",
   "result": {
-      "errorCode": "AUTH_EXPIRED",
-      "message": "인증이 만료되었습니다.",
-      "data": {}
+    "errorCode": "AUTH_EXPIRED",
+    "message": "인증이 만료되었습니다.",
+
+    "data": {}
   }
 }
- */
+*/
 
 /**
 성공시 응답 형태
 
 {
   "resultType":"SUCCESS",
-  "result":{}
+  "result":{
+    "message": "인증이 만료되었습니다.",
+    "data": {}
+  }
 }
- */
+*/
 
-// message: 개발자가 볼 것
-// data.reason: 이용자가 볼 것
+// message: 개발자가 볼 것(영어로)
+// data.reason: 이용자가 볼 것(한글로)
