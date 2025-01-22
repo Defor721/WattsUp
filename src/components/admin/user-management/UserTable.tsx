@@ -11,49 +11,49 @@ import {
   TableCell,
   Input,
   Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/shadcn";
 import Loading from "@/app/loading";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUserInfo } from "@/services/adminService";
 
-const LIMIT = 1;
+const LIMIT = 4;
 
 function UserTable() {
   const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [selected, setSelected] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc"); // 기본값 최신순
+
   // 필터링
   const [searchTerm, setSearchTerm] = useState(""); // 검색 입력 상태
 
   const { data, isLoading } = useQuery({
     queryKey: ["users", currentPage],
-    queryFn: () => fetchUserInfo(currentPage),
+    queryFn: () => fetchUserInfo(LIMIT, currentPage - 1),
   });
 
-  const users = data?.users ?? [];
-  const totalPages = 6;
+  const users = data?.userSet ?? [];
+  const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
 
   useEffect(() => {
     if (totalPages && currentPage < totalPages) {
       const nextPage = currentPage + 1;
       queryClient.prefetchQuery({
         queryKey: ["users", nextPage],
-        queryFn: () => fetchUserInfo(nextPage),
+        queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
       });
     }
-  }, [currentPage, queryClient]);
-
-  console.log("data: ", data);
+  }, [currentPage, queryClient, totalPages]);
 
   // 검색어에 따른 필터링
-  const filteredUsers = users.sort((a, b) => {
-    const dateA =
-      typeof a.createdAt === "string" ? Date.parse(a.createdAt) : a.createdAt;
-    const dateB =
-      typeof b.createdAt === "string" ? Date.parse(b.createdAt) : b.createdAt;
-    return dateB - dateA;
-  });
+  const filteredUsers = users;
   // .filter((user) => {
   //   const searchValue = searchTerm.toLowerCase();
   //   return (
@@ -74,7 +74,7 @@ function UserTable() {
     const endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
 
     return Array.from(
-      { length: endPage - startPage + 1 },
+      { length: Math.ceil(endPage - startPage + 1) },
       (_, i) => startPage + i,
     );
   }, [currentPage, totalPages]);
@@ -84,9 +84,76 @@ function UserTable() {
   return (
     <div className="mt-3">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="my-3 scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          유저 테이블
-        </h4>
+        <div className="flex items-center gap-4">
+          <h4 className="my-3 scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+            유저 테이블
+          </h4>
+          <div className="flex items-center gap-4">
+            <Select value={selected} onValueChange={setSelected}>
+              <SelectTrigger className="w-[200px] bg-white dark:bg-cardBackground-dark">
+                <SelectValue placeholder="검색 필터링" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-cardBackground-dark">
+                <SelectItem
+                  value="all"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  전체
+                </SelectItem>
+                <SelectItem
+                  value="id"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  아이디
+                </SelectItem>
+                <SelectItem
+                  value="name"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  사용자명
+                </SelectItem>
+                <SelectItem
+                  value="companyName"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  상호명
+                </SelectItem>
+                <SelectItem
+                  value="business"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  사업자등록번호
+                </SelectItem>
+                <SelectItem
+                  value="corporateNumber"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  법인등록번호
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortOrder} onValueChange={setSortOrder}>
+              <SelectTrigger className="w-[150px] bg-white dark:bg-cardBackground-dark">
+                <SelectValue placeholder="날짜 필터링" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-cardBackground-dark">
+                <SelectItem
+                  value="desc"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  내림차순
+                </SelectItem>
+                <SelectItem
+                  value="asc"
+                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  오름차순
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         <Input
           placeholder="검색창"
           className="max-w-80"
@@ -163,7 +230,7 @@ function UserTable() {
       </div>
       <div className="mt-5 flex justify-center gap-2">
         <Button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
           disabled={currentPage === 1}
           className={`border px-3 py-1 ${currentPage === 1 ? "text-gray-500" : "text-subColor dark:text-white"}`}
         >
@@ -179,9 +246,7 @@ function UserTable() {
           </Button>
         ))}
         <Button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => prev + 1)}
           disabled={currentPage === totalPages}
           className={`border px-3 py-1 ${currentPage === totalPages ? "text-gray-500" : "text-subColor dark:text-white"}`}
         >

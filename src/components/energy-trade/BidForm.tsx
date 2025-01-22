@@ -146,7 +146,7 @@ export default function BidForm({
                   <SelectContent className="bg-white dark:bg-cardBackground-dark">
                     {regionOptions.map((region) => (
                       <SelectItem
-                        className="bg-white dark:bg-cardBackground-dark"
+                        className="bg-white hover:cursor-pointer hover:bg-gray-100 dark:bg-cardBackground-dark dark:hover:bg-gray-900"
                         key={region.value}
                         value={region.value}
                       >

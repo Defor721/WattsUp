@@ -16,10 +16,12 @@ export async function GET(request: NextRequest) {
 
     const userSet = await collection
       .find({ role: { $ne: "admin" } }) // $ne: "admin" 필터 추가
+      // .sort({ createdAt: -1 })
       .project({ _id: 0, password: 0, refreshToken: 0 })
-      .skip(pages)
+      .skip(pages * limit)
       .limit(limit)
       .toArray();
+
     const totalCount = users.length;
 
     return NextResponse.json(
