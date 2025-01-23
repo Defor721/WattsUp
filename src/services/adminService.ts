@@ -24,6 +24,8 @@ export const fetchUserInfo = async (
 
 // 거래 정보(users, bids)
 export const fetchBidLists = async () => {
-  const response = await apiClient.get("/api/admin/userinfo/bidlist");
+  const response = await apiClient.get(
+    "/api/admin/userinfo/bidlist?limit=5&pages=1",
+  );
   return response.data;
 };

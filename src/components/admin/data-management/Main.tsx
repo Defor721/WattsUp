@@ -35,7 +35,7 @@ function Main() {
     queryKey: ["bidLists"],
     queryFn: async () => {
       const response = await fetchBidLists();
-      return response.bids;
+      return response.bidSet;
     },
   });
 

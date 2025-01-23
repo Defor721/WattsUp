@@ -101,7 +101,7 @@ function UserTable() {
                   전체
                 </SelectItem>
                 <SelectItem
-                  value="id"
+                  value="email"
                   className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
                 >
                   아이디
