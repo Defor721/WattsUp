@@ -1,7 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { Long } from "mongodb";
 
 import clientPromise from "@/lib/mongodb";
+import { NotFoundError, ValidationError } from "@/server/customErrors";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
 
 function maskEmail(email: string): string {
   const [id, domain] = email.split("@");
@@ -21,11 +26,9 @@ export async function POST(request: NextRequest) {
     const { businessNumber, corporateNumber } = await request.json();
 
     if (!businessNumber || !corporateNumber) {
-      return NextResponse.json(
-        {
-          message: "입력값이 누락되었습니다. 입력값 확인 후 다시 조회해주세요.",
-        },
-        { status: 400 },
+      throw new ValidationError(
+        "businessNumber or corporateNumber",
+        "사업자등록번호 또는 법인등록번호가 잘못 되었습니다. 사업자등록번호와 법인등록번호를 정확히 입력해 주세요.",
       );
     }
 
@@ -35,26 +38,21 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json(
-        {
-          message: "해당 정보를 가진 사용자를 찾을 수 없습니다.",
-        },
-        { status: 404 },
+      throw new NotFoundError(
+        "User",
+        "해당 정보를 가진 사용자를 찾을 수 없습니다.",
       );
     }
 
-    return NextResponse.json(
-      {
-        message: "이메일 조회를 성공했습니다.",
-        data: maskEmail(user.email),
+    return handleSuccessResponse({
+      message: "이메일 조회를 성공했습니다.",
+      statusCode: 200,
+      data: {
+        maskEmail: maskEmail(user.email),
+        user,
       },
-      { status: 200 },
-    );
+    });
   } catch (error: any) {
-    console.error(error);
-    return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }

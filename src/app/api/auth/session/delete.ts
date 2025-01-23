@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
@@ -6,6 +6,7 @@ import {
   handleErrorResponse,
   handleSuccessResponse,
 } from "@/server/responseHandler";
+import { NotFoundError, ValidationError } from "@/server/customErrors";
 
 /** 로그아웃 */
 export async function DELETE(request: NextRequest) {
@@ -16,9 +17,9 @@ export async function DELETE(request: NextRequest) {
 
     const accessToken = request.cookies.get("accessToken")?.value;
     if (!accessToken) {
-      return NextResponse.json(
-        { message: "엑세스 토큰이 없습니다." },
-        { status: 403 },
+      throw new ValidationError(
+        "accessToken",
+        "엑세스 토큰이 누락되었습니다. 로그인을 다시 시도해 주세요.",
       );
     }
 
@@ -34,16 +35,16 @@ export async function DELETE(request: NextRequest) {
     );
 
     if (result.matchedCount === 0) {
-      return NextResponse.json(
-        { message: `해당 이메일(${email})을 가진 사용자를 찾을 수 없습니다.` },
-        { status: 404 },
+      throw new NotFoundError(
+        "User",
+        `해당 이메일(${email})을 가진 사용자를 찾을 수 없습니다.`,
       );
     }
 
-    const response = handleSuccessResponse(
-      { message: `로그아웃 처리되었습니다.` },
-      200,
-    );
+    const response = handleSuccessResponse({
+      message: `로그아웃 처리되었습니다.`,
+      statusCode: 200,
+    });
     response.cookies.set("refreshToken", "", {
       httpOnly: true,
       secure: true,

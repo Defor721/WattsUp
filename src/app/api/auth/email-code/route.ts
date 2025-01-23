@@ -1,18 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { generateVerificationCode, verificationcodeKey } from "@/utils";
 import { checkRedisConnection, redisClient } from "@/lib/redis";
 import { sendEmail } from "@/lib/nodemailer";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
+import { ValidationError } from "@/server/customErrors";
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
     if (!email) {
-      return NextResponse.json(
-        { message: "요청에 이메일이 없습니다." },
-        { status: 400 },
-      );
+      throw new ValidationError("email", "이메일이 누락되었습니다.");
     }
 
     await checkRedisConnection();
@@ -29,15 +31,12 @@ export async function POST(request: NextRequest) {
       EX: 60,
     });
 
-    return NextResponse.json(
-      { message: "해당 메일로 코드 전송 완료" },
-      { status: 200 },
-    );
+    return handleSuccessResponse({
+      message: "해당 메일로 코드 전송 완료",
+      statusCode: 200,
+    });
   } catch (error) {
-    return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }
 

@@ -15,9 +15,11 @@ interface Users {
 export const fetchUserInfo = async (
   limit: number,
   page: number = 0,
+  select: string,
+  target?: string,
 ): Promise<{ userSet: Users[]; totalCount: number }> => {
   const response = await apiClient.get(
-    `/api/admin/userinfo?limit=${limit}&pages=${page}`,
+    `/api/admin/userinfo?limit=${limit}&pages=${page}&select=${select}&target=${target}`,
   );
   return response.data;
 };

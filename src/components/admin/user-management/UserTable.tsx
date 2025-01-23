@@ -35,22 +35,28 @@ function UserTable() {
   const [searchTerm, setSearchTerm] = useState(""); // 검색 입력 상태
 
   const { data, isLoading } = useQuery({
-    queryKey: ["users", currentPage],
-    queryFn: () => fetchUserInfo(LIMIT, currentPage - 1),
+    queryKey: ["users", currentPage, selected, searchTerm],
+    queryFn: () =>
+      fetchUserInfo(
+        LIMIT,
+        currentPage - 1,
+        selected,
+        encodeURIComponent(searchTerm),
+      ),
   });
 
   const users = data?.userSet ?? [];
   const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
 
-  useEffect(() => {
-    if (totalPages && currentPage < totalPages) {
-      const nextPage = currentPage + 1;
-      queryClient.prefetchQuery({
-        queryKey: ["users", nextPage],
-        queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
-      });
-    }
-  }, [currentPage, queryClient, totalPages]);
+  // useEffect(() => {
+  //   if (totalPages && currentPage < totalPages) {
+  //     const nextPage = currentPage + 1;
+  //     queryClient.prefetchQuery({
+  //       queryKey: ["users", nextPage],
+  //       queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
+  //     });
+  //   }
+  // }, [currentPage, queryClient, totalPages]);
 
   // 검색어에 따른 필터링
   const filteredUsers = users;
@@ -79,7 +85,7 @@ function UserTable() {
     );
   }, [currentPage, totalPages]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading && !data) return <Loading />;
 
   return (
     <div className="mt-3">
@@ -110,7 +116,7 @@ function UserTable() {
                   value="name"
                   className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
                 >
-                  사용자명
+                  사업자명
                 </SelectItem>
                 <SelectItem
                   value="companyName"
@@ -119,7 +125,7 @@ function UserTable() {
                   상호명
                 </SelectItem>
                 <SelectItem
-                  value="business"
+                  value="businessNumber"
                   className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
                 >
                   사업자등록번호

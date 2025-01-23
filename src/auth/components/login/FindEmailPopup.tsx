@@ -31,7 +31,6 @@ export default function FindEmailPopup({ children }: FindPasswordPopupProps) {
     message,
     actions: { findEmail, resetUserState },
   } = useUserStore();
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [businessNumber, setBusinessNumber] = useState("");
   const [isBusinessVerified, setIsBusinessVerified] = useState(false);
@@ -43,6 +42,7 @@ export default function FindEmailPopup({ children }: FindPasswordPopupProps) {
       await findEmail({ businessNumber, corporateNumber });
       setIsEmailFound(true);
     } catch (error) {
+      setIsEmailFound(false);
       console.error(error);
     }
   };
