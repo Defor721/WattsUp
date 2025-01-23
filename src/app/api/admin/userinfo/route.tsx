@@ -8,21 +8,36 @@ export async function GET(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db("wattsup");
     const collection = db.collection("userdata");
+
     const limit = parseInt(request.nextUrl.searchParams.get("limit") || "10");
     const pages = parseInt(request.nextUrl.searchParams.get("pages") || "0");
+    const select = request.nextUrl.searchParams.get("select") || "";
+    const target = request.nextUrl.searchParams.get("target")
+      ? decodeURIComponent(request.nextUrl.searchParams.get("target")!)
+      : "";
 
-    // role이 admin이 아닌 유저만 조회
-    const users = await collection.find({ role: { $ne: "admin" } }).toArray();
+    const query: any = { role: { $ne: "admin" } };
+
+    const allowedFields = [
+      "name",
+      "email",
+      "companyName",
+      "corporateNumber",
+      "businessNumber",
+    ];
+    if (select && target && allowedFields.includes(select)) {
+      query[select] = new RegExp(target, "i");
+    }
+
+    const totalCount = await collection.countDocuments(query);
 
     const userSet = await collection
-      .find({ role: { $ne: "admin" } }) // $ne: "admin" 필터 추가
-      // .sort({ createdAt: -1 })
+      .find(query)
       .project({ _id: 0, password: 0, refreshToken: 0 })
+      .sort({ createdAt: -1 })
       .skip(pages * limit)
       .limit(limit)
       .toArray();
-
-    const totalCount = users.length;
 
     return NextResponse.json(
       { message: "success", userSet, totalCount },
