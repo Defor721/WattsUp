@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   Table,
@@ -13,61 +13,94 @@ import {
   Button,
 } from "@/components/shadcn";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchBidData } from "@/services/adminService";
+import Selector from "@/components/common/Selector";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
-import { useQueryClient } from "@tanstack/react-query";
-import { fetchBidLists } from "@/services/adminService";
 
-interface BidData {
-  _id: string;
-  email: string;
-  region: string;
-  price: number;
-  quantity: number;
-  now: string;
-}
+const filterItems = [
+  { value: "all", label: "전체" },
+  { value: "email", label: "아이디" },
+  { value: "region", label: "지역" },
+  { value: "count", label: "전력량" },
+];
 
-function TradeTable({ bidLists }: { bidLists: BidData[] }) {
+const orderItems = [
+  { value: "desc", label: "내림차순" },
+  { value: "asc", label: "오름차순" },
+];
+
+const LIMIT = 5;
+
+function TradeTable() {
   const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = 5;
-
-  useEffect(() => {
-    if (totalPages && currentPage < totalPages) {
-      const nextPage = currentPage + 1;
-      queryClient.prefetchQuery({
-        queryKey: ["users", nextPage],
-        queryFn: () => fetchBidLists(),
-      });
-    }
-  }, [currentPage, queryClient]);
+  const [selected, setSelected] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc"); // 기본값 최신순
 
   // 필터링
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 검색어에 따른 필터링
-  const filteredTradeData = bidLists.sort(
-    (a, b) => new Date(b.now).getTime() - new Date(a.now).getTime(),
-  );
-  // .filter((trade) => {
-  //   const searchValue = searchTerm.toLowerCase();
-  //   return (
-  //     trade._id.toLowerCase().includes(searchValue) || // ID 필터
-  //     trade.email.includes(searchValue) || // 사업자 번호 필터
-  //     trade.region.toLowerCase().includes(searchValue) || // 지역 필터
-  //     String(trade.price).includes(searchValue) || // 가격 필터
-  //     String(trade.quantity).includes(searchValue) || // 수량 필터
-  //     trade.now.toLowerCase().includes(searchValue) // 날짜 필터
-  //   );
-  // });
+  // 거래 내역 가져오기
+  const { data: bidData } = useQuery({
+    queryKey: ["bidData", currentPage, selected, searchTerm],
+    queryFn: () => fetchBidData(LIMIT, currentPage - 1, selected, searchTerm),
+  });
+
+  const totalCount = bidData?.stats.totalCount ?? 0;
+  const totalPages = Math.ceil(totalCount / LIMIT);
+  // const totalPages = 5;
+
+  const bidLists = bidData?.bidSet ?? [];
+
+  // useEffect(() => {
+  //   if (totalPages && currentPage < totalPages) {
+  //     const nextPage = currentPage + 1;
+  //     queryClient.prefetchQuery({
+  //       queryKey: ["users", nextPage],
+  //       queryFn: () => fetchBidLists(),
+  //     });
+  //   }
+  // }, [currentPage, queryClient]);
+
+  // 페이지네이션 버튼 (최대 5개)
+  const maxPageButtons = 5;
+  const pageButtons = useMemo(() => {
+    const currentGroup = Math.ceil(currentPage / maxPageButtons);
+    const startPage = (currentGroup - 1) * maxPageButtons + 1;
+    const endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
+
+    return Array.from(
+      { length: Math.ceil(endPage - startPage + 1) },
+      (_, i) => startPage + i,
+    );
+  }, [currentPage, totalPages]);
 
   return (
     <div className="m-w-[700px]">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          모든 거래 내역
-        </h4>
+        <div className="flex items-center gap-4">
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+            모든 거래 내역
+          </h4>
+          <div className="flex items-center gap-4">
+            <Selector
+              value={selected}
+              onChange={setSelected}
+              placeholder="검색 필터링"
+              items={filterItems}
+            />
+            <Selector
+              width="w-[150px]"
+              value={sortOrder}
+              onChange={setSortOrder}
+              placeholder="날짜 필터링"
+              items={orderItems}
+            />
+          </div>
+        </div>
         <Input
           placeholder="검색창"
           className="max-w-80"
@@ -92,7 +125,7 @@ function TradeTable({ bidLists }: { bidLists: BidData[] }) {
                 가격
               </TableHead>
               <TableHead className="border border-gray-700 px-3 py-2">
-                수량
+                전력량
               </TableHead>
               <TableHead className="border border-gray-700 px-3 py-2">
                 날짜
@@ -100,7 +133,7 @@ function TradeTable({ bidLists }: { bidLists: BidData[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredTradeData.map((trade) => {
+            {bidLists.map((trade) => {
               const formattedDate = new Date(trade.now)
                 .toISOString()
                 .split("T")[0];
@@ -120,7 +153,7 @@ function TradeTable({ bidLists }: { bidLists: BidData[] }) {
                     {formattedPrice} 원
                   </TableCell>
                   <TableCell className="border border-gray-700 p-3">
-                    {formattedQuantity}
+                    {formattedQuantity} kWh
                   </TableCell>
                   <TableCell className="border border-gray-700 p-3">
                     {formattedDate}
@@ -143,17 +176,13 @@ function TradeTable({ bidLists }: { bidLists: BidData[] }) {
         >
           이전
         </Button>
-        {Array.from({ length: totalPages }, (_, i) => (
+        {pageButtons.map((page) => (
           <Button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`border px-3 py-1 ${
-              currentPage === i + 1
-                ? "bg-subColor text-white dark:bg-white dark:text-subColor"
-                : "text-subColor dark:text-white"
-            }`}
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`border px-3 py-1 ${currentPage === page ? "bg-subColor font-bold text-white dark:bg-white dark:text-subColor" : "text-subColor dark:text-white"}`}
           >
-            {i + 1}
+            {page}
           </Button>
         ))}
         <Button

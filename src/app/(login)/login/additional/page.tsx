@@ -25,6 +25,7 @@ export default function AdditionalPage() {
   const {
     accessToken,
     redirectTo,
+    message,
     actions: { socialSignup, resetAuthState },
   } = useAuthStore();
 
@@ -37,19 +38,18 @@ export default function AdditionalPage() {
   const [companyName, setCompanyName] = useState("");
   const [corporateNumber, setCorporateNumber] = useState("");
   const [isBusinessVerified, setIsBusinessVerified] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<ReactNode>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await socialSignup(password);
     } catch (error: any) {
-      console.log(error);
-      setErrorMessage(error.message || "로그인 중 오류가 발생했습니다.");
+      console.error(error);
     }
   };
 
   useEffect(() => {
+    console.log(`useEffect: `, accessToken);
     if (accessToken) {
       setAccessToken(accessToken);
       resetAuthState();
@@ -96,9 +96,23 @@ export default function AdditionalPage() {
             setCorporateNumber={setCorporateNumber}
           />
           {/* 에러 메시지 */}
-          {errorMessage && (
+          {message && (
             <p className="pt-6 text-center text-sm text-red-500">
-              {errorMessage}
+              {message === "토큰이 만료되었습니다." ? (
+                <>
+                  인증 시간이 초과되었습니다. <br />
+                  다시{" "}
+                  <a
+                    href="/login"
+                    className="text-blue-500 underline hover:text-blue-700"
+                  >
+                    로그인 페이지
+                  </a>
+                  로 이동하여 이메일 및 사업자 인증을 진행해 주세요.
+                </>
+              ) : (
+                message
+              )}
             </p>
           )}
           <CardFooter className="px-0">
