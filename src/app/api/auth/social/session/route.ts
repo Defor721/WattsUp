@@ -9,7 +9,11 @@ import {
   handleErrorResponse,
   handleSuccessResponse,
 } from "@/server/responseHandler";
-import { ConflictError, ValidationError } from "@/server/customErrors";
+import {
+  ConflictError,
+  TokenExpiredError,
+  ValidationError,
+} from "@/server/customErrors";
 
 async function insertUserToDB(collection: any, userData: any) {
   const timestamp = new Date();
@@ -37,7 +41,7 @@ export async function POST(request: NextRequest) {
     if (!emailVerificationToken || !businessVerificationToken) {
       throw new ValidationError(
         "Token",
-        "이메일 및 사업자 인증을 다시 진행해 주세요.",
+        "로그인 페이지로 이동하여 이메일 및 사업자 인증을 다시 진행해 주세요.",
       );
     }
 
@@ -138,6 +142,24 @@ export async function POST(request: NextRequest) {
     });
     return response;
   } catch (error: any) {
+    if (error instanceof TokenExpiredError) {
+      const response = handleErrorResponse(error);
+      response.cookies.set("emailVerificationToken", "", {
+        httpOnly: true,
+        secure: true,
+        path: "/",
+        sameSite: "strict",
+        maxAge: 0,
+      });
+      response.cookies.set("businessVerificationToken", "", {
+        httpOnly: true,
+        secure: true,
+        path: "/",
+        sameSite: "strict",
+        maxAge: 0,
+      });
+      return response;
+    }
     return handleErrorResponse(error);
   }
 }
