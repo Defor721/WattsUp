@@ -34,12 +34,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const stats = { totalPrice, totalQuantity, totalCount };
 
-    const bidSet = await collection
-      .find({})
-      .project({ _id: 0 })
-      .skip(pages)
-      .limit(limit)
-      .toArray();
+    const bidSet = await collection.find({}).skip(pages).limit(limit).toArray();
 
     return NextResponse.json(
       {
