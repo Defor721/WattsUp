@@ -146,17 +146,13 @@ export async function businessInfoVerification(
   companyName: string,
   corporateNumber: string,
 ): Promise<any> {
-  try {
-    const { data } = await apiClient.post("/api/auth/business-info/verify", {
-      businessNumber,
-      startDate,
-      principalName,
-      companyName,
-      corporateNumber,
-    });
+  const { data } = await apiClient.post("/api/auth/business-info/verify", {
+    businessNumber,
+    startDate,
+    principalName,
+    companyName,
+    corporateNumber,
+  });
 
-    return data;
-  } catch (error: any) {
-    throw error;
-  }
+  return data;
 }
