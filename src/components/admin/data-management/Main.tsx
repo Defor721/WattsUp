@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Loading from "@/app/loading";
@@ -9,7 +9,7 @@ import { usePrediction } from "@/hooks/usePrediction";
 import RegionData from "./RegionData";
 import TradeTable from "./TradeTable";
 import TotalStats from "./TotalStats";
-import { fetchBidLists } from "@/services/adminService";
+import { fetchBidStats } from "@/services/adminService";
 
 function Main() {
   // 거래 데이터 가져오기
@@ -19,24 +19,8 @@ function Main() {
     error: tradeError,
   } = useQuery({
     queryKey: ["tradeData"],
-    queryFn: async () => {
-      const response = await fetchBidLists();
-      return response.stats;
-    },
+    queryFn: fetchBidStats,
     staleTime: 1000 * 60 * 5, // 5분 동안 캐싱
-  });
-
-  // 거래 내역 가져오기
-  const {
-    data: bidLists,
-    isLoading: isBidListsLoading,
-    error: bidListsError,
-  } = useQuery({
-    queryKey: ["bidLists"],
-    queryFn: async () => {
-      const response = await fetchBidLists();
-      return response.bidSet;
-    },
   });
 
   // 예측 데이터 가져오기
@@ -98,10 +82,10 @@ function Main() {
   }, [chartData]); // chartData가 변경될 때만 계산
 
   // 로딩 상태 처리
-  if (isStatsLoading || isChartLoading || isBidListsLoading) return <Loading />;
+  if (isStatsLoading || isChartLoading) return <Loading />;
 
   // 에러 상태 처리
-  if (tradeError || predictionError || bidListsError) {
+  if (tradeError || predictionError) {
     return (
       <p className="text-red-500">데이터를 불러오는 중 오류가 발생했습니다.</p>
     );
@@ -116,7 +100,7 @@ function Main() {
       {/* regionData를 RegionData로 전달 */}
       <RegionData regionData={regionData!} />
 
-      <TradeTable bidLists={bidLists} />
+      <TradeTable />
     </div>
   );
 }

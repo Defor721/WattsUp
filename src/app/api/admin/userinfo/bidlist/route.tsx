@@ -36,8 +36,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const bidSet = await collection
       .find({})
-      .project({ _id: 0 })
-      .skip(pages)
+      // .project({ _id: 0 })
+      .sort({ now: -1 })
+      .skip(pages * limit)
       .limit(limit)
       .toArray();
 
