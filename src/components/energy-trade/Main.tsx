@@ -11,7 +11,7 @@ import apiClient from "@/lib/axios";
 import { Regions } from "@/utils/regions";
 import Loading from "@/app/loading";
 
-interface SupplyData {
+export interface SupplyData {
   region: string; // 지역 이름
   supply: number; // 전력 공급량
 }
@@ -137,9 +137,10 @@ function Main() {
   const [recPrice, setRecPrice] = useState<number>(0);
 
   useEffect(() => {
-    // 컴포넌트 마운트 시 크레딧 데이터와 SMP 값 가져오기
-    const loadData = async () => {
+    const loadInitialData = async () => {
       setIsLoading(true);
+
+      // 초기 데이터 로드
       const [stats, supply, userCredits, smpValue, recValue] =
         await Promise.all([
           fetchStats(),
@@ -148,6 +149,7 @@ function Main() {
           fetchSmpPrice(),
           fetchRecPrice(),
         ]);
+
       setStats(stats);
       setCredits(userCredits);
       setSupply(supply);
@@ -155,8 +157,31 @@ function Main() {
       setRecPrice(recValue);
       setIsLoading(false);
     };
-    loadData();
-  }, [isSubmitting]);
+
+    loadInitialData();
+  }, []);
+
+  const handleBidSubmission = async (
+    price: number,
+    region: string,
+    quantity: number,
+  ) => {
+    setIsSubmitting(true);
+    try {
+      await apiClient.post("/api/trade/bid", { price, region, quantity });
+      const updatedCredits = await fetchUserCredits();
+      const updatedStats = await fetchStats();
+      const updatedSupply = await fetchSupply();
+
+      setCredits(updatedCredits);
+      setStats(updatedStats);
+      setSupply(updatedSupply);
+    } catch (error: any) {
+      console.error("입찰 실패:", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (isLoading) return <Loading />;
 
@@ -170,7 +195,11 @@ function Main() {
       <div className="flex flex-col gap-cardGap">
         {/* 상단 거래 현황 */}
 
-        <TradingStats stats={stats} />
+        <TradingStats
+          stats={stats}
+          supply={supply}
+          selectedRegion={selectedRegion}
+        />
 
         {/* 하단 섹션: 차트와 입찰 폼 */}
         <div className="grid w-full grid-cols-1 gap-cardGap md:grid-cols-2 xl:grid-cols-4">
@@ -205,6 +234,7 @@ function Main() {
                   fetchUserCredits={fetchUserCredits}
                   supply={supply}
                   recPrice={recPrice}
+                  handleBidSubmission={handleBidSubmission}
                 />
               </CardContent>
             </Card>

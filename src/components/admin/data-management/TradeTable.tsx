@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { CircleCheck } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   Table,
@@ -11,83 +10,97 @@ import {
   TableHead,
   TableCell,
   Input,
-  Pagination,
   Button,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  ScrollArea,
 } from "@/components/shadcn";
-import apiClient from "@/lib/axios";
-import Loading from "@/app/loading";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchBidData } from "@/services/adminService";
+import Selector from "@/components/common/Selector";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
-interface BidData {
-  _id: string;
-  email: string;
-  region: string;
-  price: number;
-  quantity: number;
-  now: string;
-}
+const filterItems = [
+  { value: "all", label: "전체" },
+  { value: "email", label: "아이디" },
+  { value: "region", label: "지역" },
+  { value: "count", label: "전력량" },
+];
+
+const orderItems = [
+  { value: "desc", label: "내림차순" },
+  { value: "asc", label: "오름차순" },
+];
+
+const LIMIT = 5;
 
 function TradeTable() {
-  const [bidData, setBidData] = useState<BidData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  // 검색어 상태
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [selected, setSelected] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc"); // 기본값 최신순
+
+  // 필터링
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
-
-  useEffect(() => {
-    const fetchTradeData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await apiClient.get("/api/admin/userinfo/bidlist");
-        const bidsData = response.data.bids;
-        setBidData(bidsData);
-      } catch (error) {
-        console.error("Error fetching trade data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTradeData();
-  }, []);
-
-  // 검색어에 따른 필터링
-  const filteredTradeData = bidData.filter((trade) => {
-    const searchValue = searchTerm.toLowerCase();
-    return (
-      trade._id.toLowerCase().includes(searchValue) || // ID 필터
-      trade.email.includes(searchValue) || // 사업자 번호 필터
-      trade.region.toLowerCase().includes(searchValue) || // 지역 필터
-      String(trade.price).includes(searchValue) || // 가격 필터
-      String(trade.quantity).includes(searchValue) || // 수량 필터
-      trade.now.toLowerCase().includes(searchValue) // 날짜 필터
-    );
+  // 거래 내역 가져오기
+  const { data: bidData } = useQuery({
+    queryKey: ["bidData", currentPage, selected, searchTerm],
+    queryFn: () => fetchBidData(LIMIT, currentPage - 1, selected, searchTerm),
   });
 
-  // 페이지네이션 데이터 계산
-  const totalItems = filteredTradeData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTrades = filteredTradeData.slice(startIndex, endIndex);
+  const totalCount = bidData?.stats.totalCount ?? 0;
+  const totalPages = Math.ceil(totalCount / LIMIT);
+  // const totalPages = 5;
 
-  if (isLoading) return <Loading />;
+  const bidLists = bidData?.bidSet ?? [];
+
+  // useEffect(() => {
+  //   if (totalPages && currentPage < totalPages) {
+  //     const nextPage = currentPage + 1;
+  //     queryClient.prefetchQuery({
+  //       queryKey: ["users", nextPage],
+  //       queryFn: () => fetchBidLists(),
+  //     });
+  //   }
+  // }, [currentPage, queryClient]);
+
+  // 페이지네이션 버튼 (최대 5개)
+  const maxPageButtons = 5;
+  const pageButtons = useMemo(() => {
+    const currentGroup = Math.ceil(currentPage / maxPageButtons);
+    const startPage = (currentGroup - 1) * maxPageButtons + 1;
+    const endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
+
+    return Array.from(
+      { length: Math.ceil(endPage - startPage + 1) },
+      (_, i) => startPage + i,
+    );
+  }, [currentPage, totalPages]);
 
   return (
     <div className="m-w-[700px]">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          모든 거래 내역
-        </h4>
+        <div className="flex items-center gap-4">
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+            모든 거래 내역
+          </h4>
+          <div className="flex items-center gap-4">
+            <Selector
+              value={selected}
+              onChange={setSelected}
+              placeholder="검색 필터링"
+              items={filterItems}
+            />
+            <Selector
+              width="w-[150px]"
+              value={sortOrder}
+              onChange={setSortOrder}
+              placeholder="날짜 필터링"
+              items={orderItems}
+            />
+          </div>
+        </div>
         <Input
           placeholder="검색창"
           className="max-w-80"
@@ -100,8 +113,8 @@ function TradeTable() {
       </div>
       <div className="overflow-x-auto">
         <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
-          <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+          <TableHeader className="bg-tableHeader-light dark:bg-tableHeader-dark">
+            <TableRow className="[&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 이메일
               </TableHead>
@@ -112,7 +125,7 @@ function TradeTable() {
                 가격
               </TableHead>
               <TableHead className="border border-gray-700 px-3 py-2">
-                수량
+                전력량
               </TableHead>
               <TableHead className="border border-gray-700 px-3 py-2">
                 날짜
@@ -120,41 +133,34 @@ function TradeTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTrades
-              .sort(
-                (a, b) => new Date(b.now).getTime() - new Date(a.now).getTime(),
-              )
-              .map((trade) => {
-                const formattedDate = new Date(trade.now)
-                  .toISOString()
-                  .split("T")[0];
-                const formattedPrice = formatNumberWithoutDecimal(trade.price);
-                const formattedQuantity = formatNumberWithoutDecimal(
-                  trade.quantity,
-                );
-                return (
-                  <TableRow
-                    key={trade._id}
-                    className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-                  >
-                    <TableCell className="border border-gray-700 p-3">
-                      {trade.email}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {trade.region}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedPrice} 원
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedQuantity}
-                    </TableCell>
-                    <TableCell className="border border-gray-700 p-3">
-                      {formattedDate}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+            {bidLists.map((trade) => {
+              const formattedDate = new Date(trade.now)
+                .toISOString()
+                .split("T")[0];
+              const formattedPrice = formatNumberWithoutDecimal(trade.price);
+              const formattedQuantity = formatNumberWithoutDecimal(
+                trade.quantity,
+              );
+              return (
+                <TableRow key={trade._id} className="">
+                  <TableCell className="border border-gray-700 p-3">
+                    {trade.email}
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {trade.region}
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedPrice} 원
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedQuantity} kWh
+                  </TableCell>
+                  <TableCell className="border border-gray-700 p-3">
+                    {formattedDate}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
@@ -170,17 +176,13 @@ function TradeTable() {
         >
           이전
         </Button>
-        {Array.from({ length: totalPages }, (_, i) => (
+        {pageButtons.map((page) => (
           <Button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`border px-3 py-1 ${
-              currentPage === i + 1
-                ? "bg-subColor text-white dark:bg-white dark:text-subColor"
-                : "text-subColor dark:text-white"
-            }`}
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`border px-3 py-1 ${currentPage === page ? "bg-subColor font-bold text-white dark:bg-white dark:text-subColor" : "text-subColor dark:text-white"}`}
           >
-            {i + 1}
+            {page}
           </Button>
         ))}
         <Button

@@ -170,7 +170,7 @@ export const useUserStore = create<UserState>((set) => ({
       );
     },
 
-    /** 예치금 충전 */
+    /** 크레딧 충전 */
     async chargeCredit(charge: number) {
       try {
         set({ loading: true });

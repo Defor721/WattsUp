@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   Table,
@@ -12,104 +11,121 @@ import {
   TableCell,
   Input,
   Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/shadcn";
-import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchUserInfo } from "@/services/adminService";
+import Selector from "@/components/common/Selector";
 
-interface Users {
-  businessNumber: number;
-  companyName: string;
-  corporateNumber: number;
-  createdAt: string;
-  email: string;
-  name: string;
-  provider: null | "google";
-  signupType: string;
-}
+const LIMIT = 4;
+
+const filterItems = [
+  { value: "all", label: "전체" },
+  { value: "email", label: "아이디" },
+  { value: "name", label: "사업자명" },
+  { value: "companyName", label: "상호명" },
+  { value: "businessNumber", label: "사업자등록번호" },
+  { value: "corporateNumber", label: "법인등록번호" },
+];
+
+const orderItems = [
+  { value: "desc", label: "내림차순" },
+  { value: "asc", label: "오름차순" },
+];
 
 function UserTable() {
-  const router = useRouter();
-  const [users, setUsers] = useState<Users[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [selected, setSelected] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc"); // 기본값 최신순
 
   // 필터링
   const [searchTerm, setSearchTerm] = useState(""); // 검색 입력 상태
 
-  // 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
-  const itemsPerPage = 15; // 한 페이지에 보여줄 항목 수
+  const { data, isLoading } = useQuery({
+    queryKey: ["users", currentPage, selected, searchTerm],
+    queryFn: () =>
+      fetchUserInfo(
+        LIMIT,
+        currentPage - 1,
+        selected,
+        encodeURIComponent(searchTerm),
+      ),
+  });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await apiClient.get(`/api/admin/userinfo`);
-        const data = response.data.users;
-        setUsers(data);
-      } catch (error) {
-        console.error("Error: ", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const users = data?.userSet ?? [];
+  const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
 
-    fetchUserData();
-  }, []);
+  // useEffect(() => {
+  //   if (totalPages && currentPage < totalPages) {
+  //     const nextPage = currentPage + 1;
+  //     queryClient.prefetchQuery({
+  //       queryKey: ["users", nextPage],
+  //       queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
+  //     });
+  //   }
+  // }, [currentPage, queryClient, totalPages]);
 
-  const handleUserClick = (businessNumber: number) => {
-    router.push(`/admin/user-management/${businessNumber}`);
-  };
+  // 페이지네이션 버튼 (최대 5개)
+  const maxPageButtons = 5;
+  const pageButtons = useMemo(() => {
+    const currentGroup = Math.ceil(currentPage / maxPageButtons);
+    const startPage = (currentGroup - 1) * maxPageButtons + 1;
+    const endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
 
-  // 검색어에 따른 필터링
-  const filteredUsers = users
-    .sort((a, b) => {
-      const dateA =
-        typeof a.createdAt === "string" ? Date.parse(a.createdAt) : a.createdAt;
-      const dateB =
-        typeof b.createdAt === "string" ? Date.parse(b.createdAt) : b.createdAt;
-      return dateB - dateA;
-    })
-    .filter((user) => {
-      const searchValue = searchTerm.toLowerCase();
-      return (
-        user.email.toLowerCase().includes(searchValue) || // 이메일 필터
-        user.name.toLowerCase().includes(searchValue) || // 이름 필터
-        user.companyName.toLowerCase().includes(searchValue) || // 상호명 필터
-        user.businessNumber.toString().includes(searchValue) || // 사업자등록번호 필터
-        user.corporateNumber.toString().includes(searchValue) || // 법인등록번호 필터
-        user.createdAt.toString().includes(searchValue) // 가입날짜 필터
-      );
-    });
+    return Array.from(
+      { length: Math.ceil(endPage - startPage + 1) },
+      (_, i) => startPage + i,
+    );
+  }, [currentPage, totalPages]);
 
-  // 페이지네이션에 따라 표시할 데이터 계산
-  const totalItems = filteredUsers.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, endIndex);
-
-  if (isLoading) return <Loading />;
+  if (isLoading && !data) return <Loading />;
 
   return (
     <div className="mt-3">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="my-3 scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
-          유저 테이블
-        </h4>
+        <div className="flex items-center gap-4">
+          <h4 className="my-3 scroll-m-20 text-xl font-semibold tracking-tight text-[#070f26] dark:text-white">
+            유저 테이블
+          </h4>
+          <div className="flex items-center gap-4">
+            <Selector
+              value={selected}
+              onChange={setSelected}
+              placeholder="검색 필터링"
+              items={filterItems}
+            />
+            <Selector
+              width="w-[150px]"
+              value={sortOrder}
+              onChange={setSortOrder}
+              placeholder="날짜 필터링"
+              items={orderItems}
+            />
+          </div>
+        </div>
+
         <Input
           placeholder="검색창"
           className="max-w-80"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // 검색 시 첫 페이지로 이동
+            setCurrentPage(1);
           }}
         />
       </div>
       <div className="overflow-x-auto">
         <Table className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
-          <TableHeader>
-            <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+          <TableHeader className="bg-tableHeader-light dark:bg-tableHeader-dark">
+            <TableRow className="[&>*]:text-center">
               <TableHead className="border border-gray-700 px-3 py-2">
                 사용자 아이디
               </TableHead>
@@ -131,7 +147,7 @@ function UserTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentUsers.map((user) => {
+            {users.map((user) => {
               const business = String(user.businessNumber);
               const formattedBusiness = `${business.slice(0, 3)}-${business.slice(3, 5)}-${business.slice(5)}`;
 
@@ -143,7 +159,7 @@ function UserTable() {
               return (
                 <TableRow
                   key={user.corporateNumber}
-                  className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
+                  className=""
                   // onClick={() => handleUserClick(user.businessNumber)}
                 >
                   <TableCell className="border border-gray-700 p-3">
@@ -172,25 +188,23 @@ function UserTable() {
       </div>
       <div className="mt-5 flex justify-center gap-2">
         <Button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
           disabled={currentPage === 1}
           className={`border px-3 py-1 ${currentPage === 1 ? "text-gray-500" : "text-subColor dark:text-white"}`}
         >
           이전
         </Button>
-        {Array.from({ length: totalPages }, (_, i) => (
+        {pageButtons.map((page) => (
           <Button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`border px-3 py-1 ${currentPage === i + 1 ? "bg-subColor text-white dark:bg-white dark:text-subColor" : "text-subColor dark:text-white"}`}
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`border px-3 py-1 ${currentPage === page ? "bg-subColor font-bold text-white dark:bg-white dark:text-subColor" : "text-subColor dark:text-white"}`}
           >
-            {i + 1}
+            {page}
           </Button>
         ))}
         <Button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => prev + 1)}
           disabled={currentPage === totalPages}
           className={`border px-3 py-1 ${currentPage === totalPages ? "text-gray-500" : "text-subColor dark:text-white"}`}
         >

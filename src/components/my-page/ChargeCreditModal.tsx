@@ -84,12 +84,12 @@ export default function ChargeCreditModal() {
           className="bg-mainColor text-white dark:bg-white dark:text-subColor"
         >
           <WalletCards className="mr-2 h-4 w-4" />
-          예치금 충전
+          크레딧 충전
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[480px] select-none gap-8 bg-white dark:bg-subColor">
         <DialogHeader className="gap-3">
-          <DialogTitle>예치금 충전</DialogTitle>
+          <DialogTitle>크레딧 충전</DialogTitle>
           <DialogDescription>
             충전할 금액을 선택하거나 입력 후 충전 버튼을 눌러주세요.
             <br />
@@ -97,9 +97,9 @@ export default function ChargeCreditModal() {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          {/* 예치금 잔액 */}
+          {/* 크레딧 잔액 */}
           <div className="text-lg font-bold">
-            예치금 잔액: {user?.credit ? user.credit.toLocaleString() : "0"} 원
+            크레딧 잔액: {user?.credit ? user.credit.toLocaleString() : "0"} 원
           </div>
           {/* 충전 금액 선택 */}
           <div className="flex justify-between">

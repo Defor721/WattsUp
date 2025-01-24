@@ -2,8 +2,11 @@ import React from "react";
 
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
-
-import { Stats } from "./Main";
+interface Stats {
+  totalPrice: number;
+  totalQuantity: number;
+  totalCount: number;
+}
 
 interface TotalStatsProps {
   stats: Stats | null;

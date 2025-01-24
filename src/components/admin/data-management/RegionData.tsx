@@ -5,14 +5,16 @@ import React from "react";
 import { Button, Card } from "@/components/shadcn";
 import apiClient from "@/lib/axios";
 
+import { toast } from "@/hooks/useToast";
+
 interface RegionDataProps {
-  firstData: {
+  regionData: {
     date: string;
     regions: { region: string; amgo: number }[];
   };
 }
 
-function RegionData({ firstData }: RegionDataProps) {
+function RegionData({ regionData }: RegionDataProps) {
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
 
   // 버튼 상태 복원
@@ -27,20 +29,31 @@ function RegionData({ firstData }: RegionDataProps) {
     }
   }, []);
 
-  // 백엔드로 firstData 보내기
+  // 백엔드로 regionData 보내기
   const sendRegionsDataToDB = async () => {
+    setIsButtonDisabled(true);
     try {
       const { data } = await apiClient.post(
         "/api/admin/userinfo/updatesupply",
-        firstData,
+        regionData,
       );
-      console.log("First data sent successfully:", data);
 
       const today = new Date().toISOString().split("T")[0];
       localStorage.setItem("lastClickedDate", today);
-      setIsButtonDisabled(true);
+
+      toast({
+        title: "데이터 전송 성공",
+        description: "데이터 전송이 성공적으로 제출되었습니다.",
+        variant: "success",
+      });
     } catch (error) {
+      setIsButtonDisabled(false);
       console.error("Error sending first data:", error);
+      toast({
+        title: "데이터 전송 실패",
+        description: "데이터 전송 중 오류가 발생했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -60,7 +73,7 @@ function RegionData({ firstData }: RegionDataProps) {
 
       {/* 지역별 발전량 텍스트로 표시 */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {firstData.regions
+        {regionData.regions
           .sort((a, b) => a.region.localeCompare(b.region))
           .map((regionData) => (
             <Card

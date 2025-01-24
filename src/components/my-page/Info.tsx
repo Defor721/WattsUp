@@ -21,7 +21,6 @@ import { useUserStore } from "@/stores/useUserStore";
 import ChangePasswordModal from "./ChangePasswordModal";
 import WithdrawalAccountModal from "./WithdrawalAccountModal";
 import ChargeCreditModal from "./ChargeCreditModal";
-import Loading from "@/app/loading";
 
 function Info() {
   const router = useRouter();
@@ -55,8 +54,6 @@ function Info() {
     router.refresh();
   };
 
-  if (!user) return <Loading />;
-
   return (
     <Card className="flex w-full max-w-[400px] flex-col items-center border-none shadow-none dark:shadow-none">
       <CardHeader className="flex flex-col items-center gap-3 text-center">
@@ -83,7 +80,7 @@ function Info() {
       </CardHeader>
       <CardContent className="flex w-full select-none flex-col items-center">
         <div className="flex w-full flex-col justify-center gap-3">
-          {/* 예치금 충전 */}
+          {/* 크레딧 충전 */}
           <ChargeCreditModal />
           {/* 비밀번호 변경 */}
           <ChangePasswordModal />

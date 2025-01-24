@@ -23,7 +23,7 @@ const slides: Slide[] = [
   },
   {
     title: "실시간 분석",
-    subtitle: "AI 기반 인사이트",
+    subtitle: "투명하고 정확한 데이터",
     description: "데이터 중심 의사 결정을 내리세요",
     cta: { text: "대시보드 보기", href: "/dashboard" },
   },

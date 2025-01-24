@@ -18,9 +18,7 @@ import {
   SelectValue,
 } from "@/components/shadcn/select";
 import { Regions } from "@/utils/regions";
-import apiClient from "@/lib/axios";
 import { toast } from "@/hooks/useToast";
-import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
 
 import { SupplyData } from "./SupplyChart";
 
@@ -28,24 +26,6 @@ const regionOptions = Regions.map((region) => ({
   value: region.toLowerCase(),
   label: region,
 }));
-
-const submitBid = async (price: number, region: string, quantity: number) => {
-  try {
-    const response = await apiClient.post("/api/trade/bid", {
-      price,
-      region,
-      quantity,
-    });
-    return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error("API Error:", error.response.data);
-    } else {
-      console.error("Unknown Error:", error.message);
-    }
-    throw new Error("서버와의 통신 중 문제가 발생했습니다.");
-  }
-};
 
 interface BidFormProps {
   region: string;
@@ -58,6 +38,11 @@ interface BidFormProps {
   setCredits: any;
   fetchUserCredits: any;
   supply: SupplyData[];
+  handleBidSubmission: (
+    price: number,
+    region: string,
+    quantity: number,
+  ) => void;
 }
 
 export default function BidForm({
@@ -71,11 +56,13 @@ export default function BidForm({
   fetchUserCredits,
   supply,
   recPrice,
+  handleBidSubmission,
 }: BidFormProps) {
   const [quantity, setQuantity] = useState<number>(0);
   const selectedSupply =
     supply.find((item) => item.region === region)?.supply || 0;
   const roundedSupply = Math.round(selectedSupply);
+  const totalUnitPrice = smpPrice + recPrice / 1000; // SMP와 REC 가격 합산
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,14 +88,13 @@ export default function BidForm({
 
     setIsSubmitting(true);
     try {
-      await submitBid(totalPrice, region, quantity);
+      handleBidSubmission(totalPrice, region, quantity);
       toast({
         title: "입찰 성공",
         description: "입찰이 성공적으로 제출되었습니다.",
         variant: "success",
       });
 
-      onRegionChange(regionOptions[0]?.value || ""); // 기본값 설정
       setQuantity(0);
 
       // 크레딧 업데이트
@@ -125,8 +111,6 @@ export default function BidForm({
       setIsSubmitting(false);
     }
   };
-
-  const totalUnitPrice = smpPrice + recPrice / 1000; // SMP와 REC 가격 합산
 
   return (
     <div className="w-full">
@@ -162,7 +146,7 @@ export default function BidForm({
                   <SelectContent className="bg-white dark:bg-cardBackground-dark">
                     {regionOptions.map((region) => (
                       <SelectItem
-                        className="bg-white dark:bg-cardBackground-dark"
+                        className="bg-white hover:cursor-pointer hover:bg-gray-100 dark:bg-cardBackground-dark dark:hover:bg-gray-900"
                         key={region.value}
                         value={region.value}
                       >

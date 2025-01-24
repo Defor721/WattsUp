@@ -13,7 +13,7 @@ export const fetchCrawlData = async () => {
   return response.data;
 };
 
-export const fetchBid = async () => {
+export const fetchCountBid = async () => {
   const response = await apiClient.get("/api/trade/countbid");
   return response.data;
 };

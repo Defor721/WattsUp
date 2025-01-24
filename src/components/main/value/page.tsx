@@ -7,6 +7,8 @@ import apiClient from "@/lib/axios";
 import RegionValue from "./RegionValue";
 import SMP from "./SMP";
 import REC from "./REC";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCrawlData, fetchSupplyData } from "@/services/tradeService";
 
 export interface ApiData {
   todaySmpData: {
@@ -26,42 +28,24 @@ export interface ApiData {
 }
 
 function TodayValue() {
-  const [apiData, setApiData] = useState<ApiData | null>(null);
+  // SMP
+  const { data: SMPData, isLoading: isSMPLoading } = useQuery({
+    queryKey: ["SMPData"],
+    queryFn: () => fetchCrawlData().then((res) => res.todaySmpData),
+  });
+  // REC
+  const { data: RECData, isLoading: isRECLoading } = useQuery({
+    queryKey: ["RECData"],
+    queryFn: () => fetchCrawlData().then((res) => res.todayRecData),
+  });
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // 지역별 발전량
+  const { data: regionData, isLoading: isRegionValueLoading } = useQuery({
+    queryKey: ["regionValue"],
+    queryFn: fetchSupplyData,
+  });
 
-  useEffect(() => {
-    let isMounted = true; // 컴포넌트가 언마운트 되었는지 확인
-
-    const fetchData = async () => {
-      try {
-        const { data } = await apiClient.get("/api/crawl");
-        if (isMounted) {
-          setApiData(data);
-        }
-      } catch (error) {
-        if (isMounted) {
-          setError(
-            "데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.",
-          );
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-
-    // 컴포넌트 언마운트 시 상태 업데이트 방지
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (isLoading) {
+  if (isSMPLoading || isRECLoading || isRegionValueLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-gray-500">로딩 중...</div>
@@ -69,15 +53,15 @@ function TodayValue() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-lg text-red-500">{error}</div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <div className="text-lg text-red-500">{error}</div>
+  //     </div>
+  //   );
+  // }
 
-  if (!apiData) {
+  if (!SMP || !REC || !regionData) {
     return null; // 데이터가 없을 경우 안전하게 반환
   }
 
@@ -87,11 +71,11 @@ function TodayValue() {
         오늘의 전력정보
       </h1>
       <div className="grid gap-cardGap 2xl:grid-cols-3">
-        <SMP apiData={apiData} />
+        <SMP smpData={SMPData} />
 
-        <REC apiData={apiData} />
+        <REC recData={RECData} />
 
-        <RegionValue />
+        <RegionValue regionData={regionData} />
       </div>
     </div>
   );

@@ -18,10 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/card"; // UI 카드 컴포넌트
-import {
-  formatNumberWithDecimal,
-  formatNumberWithoutDecimal,
-} from "@/hooks/useNumberFormatter"; // 숫자 포맷팅
+import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter"; // 숫자 포맷팅
 
 // 데이터 타입 정의
 export interface SupplyData {
@@ -56,7 +53,7 @@ export default function SupplyChart({
             <BarChart
               data={supply}
               barSize={30}
-              margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
+              margin={{ top: 20, right: 0, bottom: 10, left: 0 }}
             >
               <XAxis dataKey="region" tick={{ fontSize: 12 }} />
               <YAxis

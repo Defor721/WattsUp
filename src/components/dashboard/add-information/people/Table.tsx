@@ -21,8 +21,8 @@ const Table = ({ data }: { data: DataRow[] }) => {
   return (
     <div className="overflow-x-auto">
       <ShadcnTable className="min-w-full border border-gray-700 text-center text-[#070f26] dark:text-white">
-        <TableHeader>
-          <TableRow className="bg-[#F8F9FA] dark:bg-[rgb(15,25,50)] [&>*]:text-center">
+        <TableHeader className="bg-tableHeader-light dark:bg-tableHeader-dark">
+          <TableRow className="[&>*]:text-center">
             <TableHead className="border border-gray-700 px-3 py-2">
               연도
             </TableHead>
@@ -39,10 +39,7 @@ const Table = ({ data }: { data: DataRow[] }) => {
         </TableHeader>
         <TableBody>
           {data.map((row) => (
-            <TableRow
-              key={row.연도}
-              className="odd:bg-[#FFF] even:bg-[#F8F9FA] dark:odd:bg-[rgb(10,20,40)] dark:even:bg-[rgb(15,25,50)]"
-            >
+            <TableRow key={row.연도} className="bg-transparent">
               <TableCell className="border border-gray-700 px-3 py-2">
                 {row.연도}
               </TableCell>

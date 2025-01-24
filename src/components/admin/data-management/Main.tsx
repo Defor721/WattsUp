@@ -1,127 +1,104 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-import apiClient from "@/lib/axios";
 import Loading from "@/app/loading";
 import { usePrediction } from "@/hooks/usePrediction";
 
 import RegionData from "./RegionData";
 import TradeTable from "./TradeTable";
 import TotalStats from "./TotalStats";
-
-export interface Stats {
-  totalPrice: number;
-  totalQuantity: number;
-  totalCount: number;
-}
-
-interface IRegionData {
-  date: string;
-  amgo: number;
-}
-
-type ChartData = Record<string, IRegionData[]>;
-
-const fetchTradeData = async () => {
-  try {
-    const response = await apiClient.get("/api/admin/userinfo/bidlist");
-
-    const statsData = response.data.stats;
-    return statsData;
-  } catch (error) {
-    console.error("Error fetching trade data:", error);
-    return null;
-  }
-};
+import { fetchBidStats } from "@/services/adminService";
 
 function Main() {
-  const [isLoading, setIsLoading] = useState(true);
+  // 거래 데이터 가져오기
+  const {
+    data: stats,
+    isLoading: isStatsLoading,
+    error: tradeError,
+  } = useQuery({
+    queryKey: ["tradeData"],
+    queryFn: fetchBidStats,
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐싱
+  });
 
-  // TotalStats states
-  const [stats, setStats] = useState<Stats | null>(null);
+  // 예측 데이터 가져오기
+  const {
+    chartData,
+    loading: isChartLoading,
+    error: predictionError,
+  } = usePrediction();
 
-  // RegionData states
-  const { chartData }: { chartData: ChartData } = usePrediction();
+  // regionData 계산 (chartData가 변경될 때만 실행)
+  const regionData = useMemo(() => {
+    if (!chartData || Object.keys(chartData).length === 0) return null;
 
-  // firstData 상태
-  const [firstData, setFirstData] = useState<{
-    date: string;
-    regions: { region: string; amgo: number }[];
-  } | null>(null);
+    const today = new Date().toISOString().split("T")[0];
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
+    // 랜덤 값 처리 (지역별 적용)
+    const storedData = localStorage.getItem("regionRandomFactors");
+    let randomFactors: Record<string, number> = {};
 
-      const [statsData] = await Promise.all([fetchTradeData()]);
-      setStats(statsData);
-
-      // chartData에서 firstData 생성
-      if (chartData && Object.keys(chartData).length > 0) {
-        const today = new Date().toISOString().split("T")[0];
-
-        // 랜덤 값 처리
-        const storedData = localStorage.getItem("regionRandomFactors");
-        let randomFactors: Record<string, number> = {};
-
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          if (parsedData.date === today) {
-            randomFactors = parsedData.factors;
-          }
-        }
-
-        if (Object.keys(randomFactors).length === 0) {
-          randomFactors = Object.keys(chartData).reduce(
-            (acc, region) => {
-              acc[region] = Math.random() * (1.2 - 0.8) + 0.8; // 0.8 ~ 1.2
-              return acc;
-            },
-            {} as Record<string, number>,
-          );
-
-          localStorage.setItem(
-            "regionRandomFactors",
-            JSON.stringify({ date: today, factors: randomFactors }),
-          );
-        }
-
-        const firstRegion = Object.values(chartData)[0];
-        const date = firstRegion ? firstRegion[0].date : null;
-
-        if (date) {
-          const processedFirstData = {
-            date,
-            regions: Object.entries(chartData).map(([region, data]) => {
-              const randomFactor = randomFactors[region] || 1;
-              const adjustedAmgo = (data[0]?.amgo || 0) * randomFactor;
-
-              return {
-                region,
-                amgo: Math.round(adjustedAmgo),
-              };
-            }),
-          };
-
-          setFirstData(processedFirstData);
-        }
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      if (parsedData.date === today) {
+        randomFactors = parsedData.factors;
       }
+    }
 
-      setIsLoading(false);
+    if (Object.keys(randomFactors).length === 0) {
+      randomFactors = Object.keys(chartData).reduce(
+        (acc, region) => {
+          acc[region] = Math.random() * (1.2 - 0.8) + 0.8; // 0.8 ~ 1.2
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      localStorage.setItem(
+        "regionRandomFactors",
+        JSON.stringify({ date: today, factors: randomFactors }),
+      );
+    }
+
+    const firstRegion = Object.values(chartData)[0];
+    const date = firstRegion ? firstRegion[0].date : null;
+
+    if (!date) return null;
+
+    return {
+      date,
+      regions: Object.entries(chartData).map(([region, data]) => {
+        const randomFactor = randomFactors[region] || 1;
+        const adjustedAmgo = (data[0]?.amgo || 0) * randomFactor;
+
+        return {
+          region,
+          amgo: Math.round(adjustedAmgo),
+        };
+      }),
     };
+  }, [chartData]); // chartData가 변경될 때만 계산
 
-    loadData();
-  }, [chartData]);
+  // 로딩 상태 처리
+  if (isStatsLoading || isChartLoading) return <Loading />;
 
-  if (isLoading || !chartData || !firstData) return <Loading />;
+  // 에러 상태 처리
+  if (tradeError || predictionError) {
+    return (
+      <p className="text-red-500">데이터를 불러오는 중 오류가 발생했습니다.</p>
+    );
+  }
+
+  // if (!chartData || !regionData) return <Loading />;
 
   return (
     <div className="mt-3 flex flex-col gap-cardGap">
-      <TotalStats stats={stats} />
+      <TotalStats stats={stats!} />
 
-      {/* firstData를 RegionData로 전달 */}
-      <RegionData firstData={firstData} />
+      {/* regionData를 RegionData로 전달 */}
+      <RegionData regionData={regionData!} />
 
       <TradeTable />
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { usePrediction } from "@/hooks/usePrediction";
 import Loading from "@/app/loading";
@@ -8,16 +8,31 @@ import KakaoMap from "@/components/introduce/KakaoMap";
 import { formatNumberWithDecimal } from "@/hooks/useNumberFormatter";
 import { Card } from "@/components/shadcn";
 
-import Container from "./Container";
 import RegionButtons from "./RegionButtons";
 import PredictChart from "./Chart";
 import PredictTable from "./Table";
 
 export default function DashboardMain() {
-  const { weatherData, chartData, loading, error } = usePrediction();
-  const [selectedRegion, setSelectedRegion] = useState("서울시");
+  const { weatherData = {}, chartData = {}, loading, error } = usePrediction();
 
-  const tableData = weatherData[selectedRegion]?.map((item, index) => ({
+  // 지역 버튼을 위한 데이터 처리
+  const availableRegions = Object.keys(weatherData);
+  const [selectedRegion, setSelectedRegion] = useState(
+    availableRegions.length > 0 ? availableRegions[0] : "서울시",
+  );
+
+  // `selectedRegion`이 유효한지 체크하고 자동 수정
+  useEffect(() => {
+    if (
+      !availableRegions.includes(selectedRegion) &&
+      availableRegions.length > 0
+    ) {
+      setSelectedRegion(availableRegions[0]);
+    }
+  }, [availableRegions, selectedRegion]);
+
+  // `tableData`를 안전하게 변환
+  const tableData = (weatherData[selectedRegion] ?? []).map((item, index) => ({
     date: item.date,
     windSpeed: item.windSpeed,
     temperature: item.temperature,
@@ -27,12 +42,19 @@ export default function DashboardMain() {
   }));
 
   if (loading) return <Loading />;
-  if (error) return <div>{error}</div>;
+  if (error)
+    return (
+      <div>
+        {typeof error === "string"
+          ? error
+          : "데이터를 불러오는 중 오류가 발생했습니다."}
+      </div>
+    );
 
   return (
     <>
       <RegionButtons
-        regions={Object.keys(weatherData)}
+        regions={availableRegions}
         selectedRegion={selectedRegion}
         setSelectedRegion={setSelectedRegion}
       />
@@ -56,13 +78,13 @@ export default function DashboardMain() {
           </Card>
 
           <PredictChart
-            data={chartData[selectedRegion]} // 여기서 데이터가 제대로 전달되는지 확인 필요
+            data={chartData[selectedRegion] || []} // 데이터가 없으면 빈 배열 전달
             region={selectedRegion}
             selectedRegion={selectedRegion}
           />
         </div>
         <PredictTable
-          tableData={tableData || []}
+          tableData={tableData ?? []} // undefined가 아닌 빈 배열로 전달
           selectedRegion={selectedRegion}
         />
       </div>
