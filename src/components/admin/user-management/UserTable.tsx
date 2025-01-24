@@ -20,8 +20,23 @@ import {
 import Loading from "@/app/loading";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUserInfo } from "@/services/adminService";
+import Selector from "@/components/common/Selector";
 
 const LIMIT = 4;
+
+const filterItems = [
+  { value: "all", label: "전체" },
+  { value: "email", label: "아이디" },
+  { value: "name", label: "사업자명" },
+  { value: "companyName", label: "상호명" },
+  { value: "businessNumber", label: "사업자등록번호" },
+  { value: "corporateNumber", label: "법인등록번호" },
+];
+
+const orderItems = [
+  { value: "desc", label: "내림차순" },
+  { value: "asc", label: "오름차순" },
+];
 
 function UserTable() {
   const queryClient = useQueryClient();
@@ -35,36 +50,28 @@ function UserTable() {
   const [searchTerm, setSearchTerm] = useState(""); // 검색 입력 상태
 
   const { data, isLoading } = useQuery({
-    queryKey: ["users", currentPage],
-    queryFn: () => fetchUserInfo(LIMIT, currentPage - 1),
+    queryKey: ["users", currentPage, selected, searchTerm],
+    queryFn: () =>
+      fetchUserInfo(
+        LIMIT,
+        currentPage - 1,
+        selected,
+        encodeURIComponent(searchTerm),
+      ),
   });
 
   const users = data?.userSet ?? [];
   const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
 
-  useEffect(() => {
-    if (totalPages && currentPage < totalPages) {
-      const nextPage = currentPage + 1;
-      queryClient.prefetchQuery({
-        queryKey: ["users", nextPage],
-        queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
-      });
-    }
-  }, [currentPage, queryClient, totalPages]);
-
-  // 검색어에 따른 필터링
-  const filteredUsers = users;
-  // .filter((user) => {
-  //   const searchValue = searchTerm.toLowerCase();
-  //   return (
-  //     user.email.toLowerCase().includes(searchValue) || // 이메일 필터
-  //     user.name.toLowerCase().includes(searchValue) || // 이름 필터
-  //     user.companyName.toLowerCase().includes(searchValue) || // 상호명 필터
-  //     user.businessNumber.toString().includes(searchValue) || // 사업자등록번호 필터
-  //     user.corporateNumber.toString().includes(searchValue) || // 법인등록번호 필터
-  //     user.createdAt.toString().includes(searchValue) // 가입날짜 필터
-  //   );
-  // });
+  // useEffect(() => {
+  //   if (totalPages && currentPage < totalPages) {
+  //     const nextPage = currentPage + 1;
+  //     queryClient.prefetchQuery({
+  //       queryKey: ["users", nextPage],
+  //       queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
+  //     });
+  //   }
+  // }, [currentPage, queryClient, totalPages]);
 
   // 페이지네이션 버튼 (최대 5개)
   const maxPageButtons = 5;
@@ -79,7 +86,7 @@ function UserTable() {
     );
   }, [currentPage, totalPages]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading && !data) return <Loading />;
 
   return (
     <div className="mt-3">
@@ -89,68 +96,19 @@ function UserTable() {
             유저 테이블
           </h4>
           <div className="flex items-center gap-4">
-            <Select value={selected} onValueChange={setSelected}>
-              <SelectTrigger className="w-[200px] bg-white dark:bg-cardBackground-dark">
-                <SelectValue placeholder="검색 필터링" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-cardBackground-dark">
-                <SelectItem
-                  value="all"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  전체
-                </SelectItem>
-                <SelectItem
-                  value="id"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  아이디
-                </SelectItem>
-                <SelectItem
-                  value="name"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  사용자명
-                </SelectItem>
-                <SelectItem
-                  value="companyName"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  상호명
-                </SelectItem>
-                <SelectItem
-                  value="business"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  사업자등록번호
-                </SelectItem>
-                <SelectItem
-                  value="corporateNumber"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  법인등록번호
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger className="w-[150px] bg-white dark:bg-cardBackground-dark">
-                <SelectValue placeholder="날짜 필터링" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-cardBackground-dark">
-                <SelectItem
-                  value="desc"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  내림차순
-                </SelectItem>
-                <SelectItem
-                  value="asc"
-                  className="hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
-                >
-                  오름차순
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <Selector
+              value={selected}
+              onChange={setSelected}
+              placeholder="검색 필터링"
+              items={filterItems}
+            />
+            <Selector
+              width="w-[150px]"
+              value={sortOrder}
+              onChange={setSortOrder}
+              placeholder="날짜 필터링"
+              items={orderItems}
+            />
           </div>
         </div>
 
@@ -189,7 +147,7 @@ function UserTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => {
+            {users.map((user) => {
               const business = String(user.businessNumber);
               const formattedBusiness = `${business.slice(0, 3)}-${business.slice(3, 5)}-${business.slice(5)}`;
 
