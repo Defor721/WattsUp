@@ -36,7 +36,7 @@ export interface ResponsePayload {
 export interface AuthState {
   accessToken: string | null;
   redirectTo: string;
-  error: boolean;
+  isError: boolean;
   message: string | null;
   loading: boolean;
   actions: {

@@ -26,7 +26,7 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   const router = useRouter();
   const {
     message,
-    error,
+    isError,
     actions: { withdrawalAccount, resetAuthState },
   } = useAuthStore();
   const {
@@ -54,12 +54,12 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   }, [isDialogOpen, resetAuthState]);
 
   useEffect(() => {
-    if (!error && message === "회원 탈퇴가 완료되었습니다.") {
+    if (!isError && message === "회원 탈퇴가 완료되었습니다.") {
       resetUserState();
       setIsDialogOpen(false);
       router.push("/");
     }
-  }, [message, error, router, resetUserState]);
+  }, [message, isError, router, resetUserState]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

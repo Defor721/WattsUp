@@ -23,7 +23,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const { email } = await verifyToken(
+    const { email } = verifyToken(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET!,
       "accessToken",
@@ -42,8 +42,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     const response = handleSuccessResponse({
-      message: `로그아웃 처리되었습니다.`,
+      message: `Logout successful.`,
       statusCode: 200,
+      data: { userMessage: "로그아웃 처리되었습니다." },
     });
     response.cookies.set("refreshToken", "", {
       httpOnly: true,

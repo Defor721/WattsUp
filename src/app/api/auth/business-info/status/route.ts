@@ -8,6 +8,7 @@ import { NextRequest } from "next/server";
 const API_BASE_URL = process.env.BUSINESS_STATUS_API_URL!;
 const SERVICE_KEY = process.env.BUSINESS_SERVICE_KEY!;
 
+/** 비즈니스 상태 조회 */
 export async function POST(request: NextRequest) {
   try {
     const { businessNumber } = await request.json();
@@ -54,10 +55,11 @@ export async function POST(request: NextRequest) {
     }
 
     return handleSuccessResponse({
-      message: "유효한 사업자 등록번호입니다.",
+      message: "Valid business registration number.",
       statusCode: 200,
       data: {
         businessNumber,
+        userMessage: "유효한 사업자 등록번호입니다.",
       },
     });
   } catch (error) {

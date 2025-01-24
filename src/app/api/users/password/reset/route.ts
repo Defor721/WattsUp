@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
 
+/** 비밀번호 재설정 */
 export async function PATCH(request: NextRequest) {
   try {
     const client = await clientPromise;

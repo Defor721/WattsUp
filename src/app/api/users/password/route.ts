@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
 
+/** 비밀번호 변경 */
 export async function PATCH(request: NextRequest) {
   try {
     const client = await clientPromise;
@@ -18,7 +19,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const { email } = await verifyToken(
+    const { email } = verifyToken(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET!,
       "accessToken",

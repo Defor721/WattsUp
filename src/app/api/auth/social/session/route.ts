@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     if (!emailVerificationToken || !businessVerificationToken) {
       throw new ValidationError(
         "Token",
-        "로그인 페이지로 이동하여 이메일 및 사업자 인증을 다시 진행해 주세요.",
+        "인증 정보가 확인되지 않았습니다. 이메일 및 사업자 인증을 진행해 주세요.",
       );
     }
 
@@ -50,37 +50,20 @@ export async function POST(request: NextRequest) {
       process.env.EMAIL_TOKEN_SECRET!,
       "email",
     );
-
     const { email, signupType, provider } = emailVerification;
-    const user = await collection.findOne({ email });
-
-    if (user?.signupType === "native") {
-      throw new ConflictError(
-        "User",
-        "해당 이메일은 소셜 회원으로 등록되어 있습니다. 소셜 로그인을 이용해 주세요.",
-      );
-    }
-
-    if (user?.signupType === "social") {
-      throw new ConflictError(
-        "User",
-        "해당 이메일은 소셜 회원으로 등록되어 있습니다. 소셜 로그인을 이용해 주세요.",
-      );
-    }
 
     const businessVerification = verifyToken(
       businessVerificationToken,
       process.env.BUSINESS_TOKEN_SECRET!,
       "business",
     );
-
     const { businessNumber, principalName, companyName, corporateNumber } =
       businessVerification;
 
-    const existingBusiness = await collection.findOne({
+    const existingBusinessNumber = await collection.findOne({
       businessNumber: Long.fromString(businessNumber),
     });
-    if (existingBusiness) {
+    if (existingBusinessNumber) {
       throw new ConflictError("Business", "이미 등록된 사업자번호입니다.");
     }
 
@@ -115,9 +98,9 @@ export async function POST(request: NextRequest) {
     });
 
     const response = handleSuccessResponse({
-      message: "로그인 성공",
+      message: "Login successful.",
       statusCode: 201,
-      data: { accessToken },
+      data: { accessToken, userMessage: "로그인 성공" },
     });
 
     response.cookies.set("refreshToken", refreshToken, {

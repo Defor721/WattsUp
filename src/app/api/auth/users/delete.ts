@@ -57,17 +57,16 @@ export async function DELETE(request: NextRequest) {
 
     const result = await collection.deleteOne({ email });
     if (result.deletedCount === 0) {
-      if (result.deletedCount === 0) {
-        throw new NotFoundError(
-          "User",
-          `해당 이메일(${email})의 사용자를 찾을 수 없습니다.`,
-        );
-      }
+      throw new NotFoundError(
+        "User",
+        `해당 이메일(${email})의 사용자를 찾을 수 없습니다.`,
+      );
     }
 
     const response = handleSuccessResponse({
-      message: "회원 탈퇴가 완료되었습니다.",
+      message: "Account deletion successful.",
       statusCode: 200,
+      data: { userMessage: "회원 탈퇴가 완료되었습니다." },
     });
     response.cookies.set("refreshToken", "", {
       httpOnly: true,

@@ -29,7 +29,6 @@ import useAccessToken from "@/auth/hooks/useAccessToken";
 import { User } from "@/auth/type";
 
 import { Button } from "../shadcn";
-import useCheckAccessToken from "@/auth/hooks/useCheckAccessToken";
 
 const avatar = "/assets/images/logo.webp";
 

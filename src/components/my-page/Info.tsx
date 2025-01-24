@@ -28,7 +28,10 @@ function Info() {
   const {
     actions: { logout },
   } = useAuthStore();
-  const { user } = useUserStore();
+  const {
+    user,
+    actions: { resetUserState },
+  } = useUserStore();
   const [avatarSrc, setAvatarSrc] = useState("/assets/images/logo.webp");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,9 +52,9 @@ function Info() {
 
   const handleLogout = async () => {
     await logout();
+    resetUserState();
     resetAccessToken();
     router.push("/");
-    router.refresh();
   };
 
   return (

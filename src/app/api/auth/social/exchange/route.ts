@@ -27,16 +27,12 @@ export async function POST(request: NextRequest) {
       );
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
-    // Google에서 토큰 요청
-    const { access_token } = await fetchGoogleTokens(authorizationCode);
 
-    // Google에서 유저 정보 요청
+    const { access_token } = await fetchGoogleTokens(authorizationCode);
     const googleUser = await fetchGoogleUserInfo(access_token);
 
     // DB에서 유저 확인
     const user = await collection.findOne({ email: googleUser.email });
-
-    // 일반 유저 분기 처리
     if (user?.signupType === "native") {
       throw new ConflictError(
         "User",
@@ -92,9 +88,12 @@ export async function POST(request: NextRequest) {
     );
 
     const response = handleSuccessResponse({
-      message: "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
+      message: "Additional information required.",
       statusCode: 201,
-      data: { resultCode: "INFO_REQUIRED" },
+      data: {
+        resultCode: "INFO_REQUIRED",
+        userMessage: "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
+      },
     });
 
     response.cookies.set("emailVerificationToken", emailVerificationToken, {
