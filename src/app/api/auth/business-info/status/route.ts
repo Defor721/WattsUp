@@ -1,4 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { ConflictError, ValidationError } from "@/server/customErrors";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
+import { NextRequest } from "next/server";
 
 const API_BASE_URL = process.env.BUSINESS_STATUS_API_URL!;
 const SERVICE_KEY = process.env.BUSINESS_SERVICE_KEY!;
@@ -23,97 +28,39 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
 
-    if (response.status === 400) {
-      return NextResponse.json(
-        {
-          message: "잘못된 요청입니다.",
-          details: data?.msg || "JSON 포맷에 적합하지 않는 요청",
-        },
-        { status: 400 },
+    if (!response.ok) {
+      throw new ValidationError(
+        "External API",
+        data?.msg || "외부 API 요청 중 오류가 발생했습니다.",
       );
     }
 
-    if (response.status === 404) {
-      return NextResponse.json(
-        {
-          message: "서비스를 찾을 수 없습니다.",
-          details: data?.msg || "Not Found Service",
-        },
-        { status: 404 },
+    const businessInfo = data.data[0];
+
+    if (businessInfo.b_stt_cd !== "01") {
+      throw new ConflictError(
+        "Business Status",
+        "유효하지 않은 사업자 상태입니다. 영업활동 여부를 확인하세요.",
       );
     }
 
-    if (response.status === 411) {
-      return NextResponse.json(
-        {
-          message: "필수 요청 항목이 누락되었습니다.",
-          details: data?.msg || "필수 요청 파라미터 누락",
-        },
-        { status: 411 },
+    if (
+      businessInfo.tax_type === "국세청에 등록되지 않은 사업자등록번호입니다."
+    ) {
+      throw new ConflictError(
+        "Tax Type",
+        "국세청에 등록된 사업자만 가입할 수 있습니다.",
       );
     }
 
-    if (response.status === 413) {
-      return NextResponse.json(
-        {
-          message: "요청 범위를 초과했습니다.",
-          details: data?.msg || "요청 사업자번호 100개 초과",
-        },
-        { status: 413 },
-      );
-    }
-
-    if (response.status >= 500) {
-      return NextResponse.json(
-        {
-          message: "서버 오류가 발생했습니다. 관리자에게 문의하세요.",
-          details: data?.msg || "Internal Server Error",
-        },
-        { status: 500 },
-      );
-    }
-
-    if (response.status === -5) {
-      return NextResponse.json(
-        {
-          message:
-            "외부 서비스와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-          details: data?.msg || "HTTP_ERROR",
-        },
-        { status: 500 },
-      );
-    }
-
-    if (response.ok) {
-      const businessInfo = data.data[0];
-
-      if (businessInfo.b_stt_cd !== "01") {
-        return NextResponse.json(
-          { message: "유효하지 않은 사업자 상태입니다." },
-          { status: 403 },
-        );
-      }
-
-      if (
-        businessInfo.tax_type === "국세청에 등록되지 않은 사업자등록번호입니다."
-      ) {
-        return NextResponse.json(
-          { message: "국세청에 등록된 사업자만 가입할 수 있습니다." },
-          { status: 403 },
-        );
-      }
-
-      return NextResponse.json(
-        { message: "유효한 사업자 등록번호입니다." },
-        { status: 200 },
-      );
-    }
-
-    return NextResponse.json(data, { status: 200 });
+    return handleSuccessResponse({
+      message: "유효한 사업자 등록번호입니다.",
+      statusCode: 200,
+      data: {
+        businessNumber,
+      },
+    });
   } catch (error) {
-    return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }

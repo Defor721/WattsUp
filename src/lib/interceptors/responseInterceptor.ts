@@ -37,9 +37,13 @@ export const handleResponseError = async (error: AxiosError) => {
   }
 
   const { status, data } = response as AxiosResponse<CustomErrorResponse>;
-
+  console.log(`interceptors: `, data);
   // 만료된 토큰 처리
-  if (status === 401 && data.result?.errorCode === "AUTH_EXPIRED") {
+  if (
+    status === 401 &&
+    data.result?.errorCode === "AUTH_EXPIRED" &&
+    data.result.data.tokenHelper === "accessToken"
+  ) {
     return handleTokenRefresh(config as InternalAxiosRequestConfig);
   }
 

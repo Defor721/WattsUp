@@ -71,7 +71,7 @@ export default function BusinessInfoSection({
       toast({
         variant: "destructive",
         title: "사업자번호 확인에 실패했습니다.",
-        description: `${error.response.data.message}`,
+        description: `${error.response.data.result.data.reason}`,
       });
     } finally {
       setIsBusinessLoading(false);

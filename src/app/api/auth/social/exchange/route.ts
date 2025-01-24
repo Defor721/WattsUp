@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
         statusCode: 201,
         data: {
           accessToken,
+          resultCode: "LOGIN_SUCCESS",
         },
       });
       response.cookies.set("refreshToken", refreshToken, {
@@ -93,6 +94,7 @@ export async function POST(request: NextRequest) {
     const response = handleSuccessResponse({
       message: "추가 정보 입력이 필요합니다. 추가 정보를 입력해 주세요.",
       statusCode: 201,
+      data: { resultCode: "INFO_REQUIRED" },
     });
 
     response.cookies.set("emailVerificationToken", emailVerificationToken, {

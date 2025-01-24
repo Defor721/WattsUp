@@ -15,37 +15,40 @@ export default function AuthCallbackPage() {
 
   const {
     accessToken,
-    error,
     message,
     redirectTo,
     actions: { socialLogin, resetAuthState },
   } = useAuthStore();
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    const error = searchParams.get("error");
-    if (code) socialLogin(code);
-    if (error) router.push("/login");
+    const handleSocialLogin = async () => {
+      const code = searchParams.get("code");
+      const error = searchParams.get("error");
+
+      if (error) router.push("/login/error");
+
+      if (code) {
+        try {
+          await socialLogin(code);
+        } catch (error) {
+          console.error("소셜 로그인 중 오류 발생:", error);
+          router.push("/login/error");
+        }
+      }
+    };
+
+    handleSocialLogin();
   }, [searchParams]);
 
   useEffect(() => {
-    if (accessToken) {
-      setAccessToken(accessToken);
+    if (message) {
+      if (accessToken) {
+        setAccessToken(accessToken);
+      }
+      router.push(redirectTo);
       resetAuthState();
-      router.push(redirectTo);
     }
-  }, [accessToken]);
-
-  // 에러 상태 감지 시 모달 표시
-  useEffect(() => {
-    if (!error && message) {
-      router.push(redirectTo);
-    }
-
-    if (error && message) {
-      router.push(redirectTo);
-    }
-  }, [error, message]);
+  }, [message]);
 
   return (
     <div className="flex h-screen items-center justify-center">

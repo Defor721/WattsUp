@@ -26,7 +26,7 @@ export default function LoginErrorPage() {
   }, [router]);
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-screen items-center justify-center">
       <div className="flex flex-col items-center gap-6 rounded p-6">
         <h1 className="text-4xl font-extrabold">로그인 실패</h1>
         <p className="mt-4 text-base">{message}</p>
