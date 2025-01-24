@@ -16,6 +16,7 @@ import {
 } from "@/components/shadcn";
 import { useAuthStore } from "@/auth/useAuthStore";
 import PasswordInput from "@/auth/components/common/password/PasswordInput";
+import { useUserStore } from "@/stores/useUserStore";
 
 interface WithdrawalAccountModalProps {
   children: React.ReactNode;
@@ -25,8 +26,12 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   const router = useRouter();
   const {
     message,
+    error,
     actions: { withdrawalAccount, resetAuthState },
   } = useAuthStore();
+  const {
+    actions: { resetUserState },
+  } = useUserStore();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -36,10 +41,8 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   const handlewithdrawalAccount = async () => {
     try {
       await withdrawalAccount(password);
-      setIsDialogOpen(false);
-      router.push("/");
     } catch (error) {
-      console.log(error);
+      console.log(`WithdrawalAccountModal error: `, error);
     }
   };
 
@@ -49,6 +52,14 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
       resetAuthState();
     }
   }, [isDialogOpen, resetAuthState]);
+
+  useEffect(() => {
+    if (!error && message === "회원 탈퇴가 완료되었습니다.") {
+      resetUserState();
+      setIsDialogOpen(false);
+      router.push("/");
+    }
+  }, [message, error, router, resetUserState]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

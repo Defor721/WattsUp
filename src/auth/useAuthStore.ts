@@ -43,11 +43,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       try {
         set({ loading: true });
         const response = await asyncFn();
-        console.log(`check socialSignup0: `, response);
+        console.log(`check handleAction: `, response);
         if (response.resultType === "SUCCESS") {
           onSuccess(response.result);
         } else {
-          console.log(`check socialSignup1: `, response);
+          console.log(`check handleAction not success: `, response);
           set({
             error: true,
             message: response.result?.message || "처리 중 오류가 발생했습니다.",
@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           });
         }
       } catch (error: any) {
-        console.log(`check socialSignup2: `, error);
+        console.log(`check handleAction error: `, error);
         set({
           error: true,
           message:
@@ -173,24 +173,17 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     /** 회원 탈퇴 */
     async withdrawalAccount(password: string) {
-      const state = useAuthStore.getState();
-      if (state.loading) return;
-      try {
-        set({ loading: true });
-        const { message } = await deleteUser(password);
-
-        set({
-          redirectTo: "/",
-          message,
-          error: false,
-        });
-      } catch (error: any) {
-        throw new Error(
-          error.response?.data?.message || "잘못된 회원탈퇴 시도입니다.",
-        );
-      } finally {
-        set({ loading: false });
-      }
+      const { actions } = useAuthStore.getState();
+      await actions.handleAction(
+        () => deleteUser(password),
+        (result) => {
+          set({
+            redirectTo: "/",
+            message: result.message,
+            error: false,
+          });
+        },
+      );
     },
 
     /** message 변경 */

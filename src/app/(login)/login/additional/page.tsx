@@ -49,7 +49,6 @@ export default function AdditionalPage() {
   };
 
   useEffect(() => {
-    console.log(`useEffect: `, accessToken);
     if (accessToken) {
       setAccessToken(accessToken);
       resetAuthState();

@@ -94,17 +94,12 @@ export const logout = async () => {
  * 회원탈퇴
  */
 export const deleteUser = async (password: string) => {
-  try {
-    const { data } = await apiClient.delete("/api/auth/users", {
-      data: { password },
-      withCredentials: true,
-    });
+  const { data } = await apiClient.delete("/api/auth/users", {
+    data: { password },
+    withCredentials: true,
+  });
 
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  return data;
 };
 
 /**

@@ -1,8 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 
 import clientPromise from "@/lib/mongodb";
 import { verifyToken } from "@/utils/server/tokenHelper";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
+import {
+  ConflictError,
+  NotFoundError,
+  ValidationError,
+} from "@/server/customErrors";
 
 /** 회원탈퇴 */
 export async function DELETE(request: NextRequest) {
@@ -13,57 +22,53 @@ export async function DELETE(request: NextRequest) {
 
     const accessToken = request.cookies.get("accessToken")?.value;
     if (!accessToken) {
-      return NextResponse.json(
-        { message: "엑세스 토큰이 없습니다." },
-        { status: 403 },
+      throw new ValidationError(
+        "accessToken",
+        "엑세스 토큰이 존재하지 않습니다. 브라우저의 새로고침 버튼을 눌러주세요.",
       );
     }
 
-    const { email } = await verifyToken(
+    const { email } = verifyToken(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET!,
       "accessToken",
     );
 
     const { password } = await request.json();
-
     if (!password) {
-      return NextResponse.json(
-        { message: "비밀번호가 제공되지 않았습니다." },
-        { status: 400 },
-      );
+      throw new ValidationError("password", "비밀번호를 입력해주세요.");
     }
 
     const user = await collection.findOne({ email });
     if (!user) {
-      return NextResponse.json(
-        { message: `해당 이메일(${email})을 가진 사용자를 찾을 수 없습니다.` },
-        { status: 404 },
+      throw new NotFoundError(
+        "User",
+        `해당 이메일(${email})의 사용자를 찾을 수 없습니다.`,
       );
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-
     if (!isPasswordMatch) {
-      return NextResponse.json(
-        { message: "비밀번호가 일치하지 않습니다." },
-        { status: 401 },
+      throw new ConflictError(
+        "Password",
+        "비밀번호가 일치하지 않습니다. 옳바른 비밀번호를 입력해주세요.",
       );
     }
 
     const result = await collection.deleteOne({ email });
-
     if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { message: `해당 이메일(${email})을 가진 사용자를 찾을 수 없습니다.` },
-        { status: 404 },
-      );
+      if (result.deletedCount === 0) {
+        throw new NotFoundError(
+          "User",
+          `해당 이메일(${email})의 사용자를 찾을 수 없습니다.`,
+        );
+      }
     }
 
-    const response = NextResponse.json(
-      { message: `로그아웃 처리되었습니다.` },
-      { status: 200 },
-    );
+    const response = handleSuccessResponse({
+      message: "회원 탈퇴가 완료되었습니다.",
+      statusCode: 200,
+    });
     response.cookies.set("refreshToken", "", {
       httpOnly: true,
       secure: true,
@@ -78,14 +83,6 @@ export async function DELETE(request: NextRequest) {
 
     return response;
   } catch (error: any) {
-    console.log(error);
-    if (error.message.startsWith("TokenExpiredError")) {
-      return NextResponse.json({ message: "Token Expired" }, { status: 401 });
-    }
-
-    return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    return handleErrorResponse(error);
   }
 }
