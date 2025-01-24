@@ -37,6 +37,21 @@ const orderItems = [
   { value: "desc", label: "내림차순" },
   { value: "asc", label: "오름차순" },
 ];
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 function UserTable() {
   const queryClient = useQueryClient();
@@ -48,16 +63,18 @@ function UserTable() {
 
   // 필터링
   const [searchTerm, setSearchTerm] = useState(""); // 검색 입력 상태
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["users", currentPage, selected, searchTerm],
+    queryKey: ["users", currentPage, selected, debouncedSearchTerm],
     queryFn: () =>
       fetchUserInfo(
         LIMIT,
         currentPage - 1,
         selected,
-        encodeURIComponent(searchTerm),
+        encodeURIComponent(debouncedSearchTerm),
       ),
+    staleTime: 5000,
   });
 
   const users = data?.userSet ?? [];
