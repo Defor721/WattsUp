@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Loading from "@/app/loading";
@@ -95,7 +95,7 @@ function Main() {
 
   return (
     <div className="mt-3 flex flex-col gap-cardGap">
-      <TotalStats stats={stats!} />
+      <TotalStats stats={stats} />
 
       {/* regionData를 RegionData로 전달 */}
       <RegionData regionData={regionData!} />
