@@ -31,7 +31,7 @@ export default function AuthCallbackPage() {
         try {
           await socialLogin(code);
         } catch (error) {
-          console.error("소셜 로그인 중 오류 발생:", error);
+          console.error(error);
           router.push("/login/error");
         }
       }
@@ -42,6 +42,13 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     if (message) {
+      if (
+        message ===
+        "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요."
+      ) {
+        router.push("/login/error");
+        return;
+      }
       if (accessToken) {
         setAccessToken(accessToken);
       }

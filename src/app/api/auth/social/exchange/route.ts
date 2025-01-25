@@ -59,11 +59,12 @@ export async function POST(request: NextRequest) {
       );
 
       const response = handleSuccessResponse({
-        message: "로그인 성공",
+        message: "Login successful.",
         statusCode: 201,
         data: {
           accessToken,
           resultCode: "LOGIN_SUCCESS",
+          userMessage: "로그인 성공.",
         },
       });
       response.cookies.set("refreshToken", refreshToken, {

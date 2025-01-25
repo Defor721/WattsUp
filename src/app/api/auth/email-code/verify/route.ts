@@ -45,8 +45,11 @@ export async function POST(request: NextRequest) {
     );
 
     const response = handleSuccessResponse({
-      message: "이메일 인증을 완료했습니다.",
+      message: "Email verification completed.",
       statusCode: 200,
+      data: {
+        userMessage: "이메일 인증을 완료했습니다.",
+      },
     });
     response.cookies.set("emailVerificationToken", emailVerificationToken, {
       httpOnly: true,

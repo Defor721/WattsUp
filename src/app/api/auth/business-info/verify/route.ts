@@ -9,6 +9,7 @@ import { ConflictError, ValidationError } from "@/server/customErrors";
 const API_BASE_URL = process.env.BUSINESS_INFO_VERIFICATION_API_URL!;
 const SERVICE_KEY = process.env.BUSINESS_SERVICE_KEY!;
 
+/** 사업자 번호 검증 */
 export async function POST(request: NextRequest) {
   try {
     const {
@@ -105,8 +106,11 @@ export async function POST(request: NextRequest) {
     );
 
     const response = handleSuccessResponse({
-      message: "유효한 사업자 등록번호입니다.",
+      message: "Valid business registration number.",
       statusCode: 200,
+      data: {
+        userMessage: "유효한 사업자 등록번호입니다.",
+      },
     });
     response.cookies.set(
       "businessVerificationToken",
@@ -127,7 +131,7 @@ export async function POST(request: NextRequest) {
       secure: true,
       path: "/",
       sameSite: "strict",
-      maxAge: 0, // 쿠키 즉시 삭제
+      maxAge: 0,
     });
     return response;
   }

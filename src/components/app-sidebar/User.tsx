@@ -29,6 +29,7 @@ import useAccessToken from "@/auth/hooks/useAccessToken";
 import { User } from "@/auth/type";
 
 import { Button } from "../shadcn";
+import { useUserStore } from "@/stores/useUserStore";
 
 const avatar = "/assets/images/logo.webp";
 
@@ -43,15 +44,16 @@ export function NavUser({ user, isTablet, isTabletExpanded }: UserProps) {
   const {
     actions: { logout },
   } = useAuthStore();
-
+  const {
+    actions: { resetUserState },
+  } = useUserStore();
   const { resetAccessToken } = useAccessToken();
 
   const handleLogout = async () => {
     await logout();
     resetAccessToken();
-
+    resetUserState();
     router.push("/");
-    router.refresh();
   };
 
   return (

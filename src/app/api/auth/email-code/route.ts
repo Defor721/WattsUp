@@ -14,7 +14,10 @@ export async function POST(request: NextRequest) {
     const { email } = await request.json();
 
     if (!email) {
-      throw new ValidationError("email", "이메일이 누락되었습니다.");
+      throw new ValidationError(
+        "email",
+        "이메일이 누락되었습니다. 이메일을 입력해주세요.",
+      );
     }
 
     await checkRedisConnection();
@@ -32,8 +35,11 @@ export async function POST(request: NextRequest) {
     });
 
     return handleSuccessResponse({
-      message: "해당 메일로 코드 전송 완료",
+      message: "Code sent to the email address.",
       statusCode: 200,
+      data: {
+        userMessage: "해당 메일로 코드 전송 완료.",
+      },
     });
   } catch (error) {
     return handleErrorResponse(error);
