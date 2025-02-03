@@ -17,6 +17,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchBidData } from "@/services/adminService";
 import Selector from "@/components/common/Selector";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const filterItems = [
   { value: "all", label: "전체" },
@@ -33,8 +34,6 @@ const orderItems = [
 const LIMIT = 5;
 
 function TradeTable() {
-  const queryClient = useQueryClient();
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const [selected, setSelected] = useState("all");
@@ -42,28 +41,30 @@ function TradeTable() {
 
   // 필터링
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // 거래 내역 가져오기
   const { data: bidData } = useQuery({
-    queryKey: ["bidData", currentPage, selected, searchTerm],
-    queryFn: () => fetchBidData(LIMIT, currentPage - 1, selected, searchTerm),
+    queryKey: ["bidData", currentPage, selected, debouncedSearchTerm],
+    queryFn: () =>
+      fetchBidData(LIMIT, currentPage - 1, selected, debouncedSearchTerm),
+    staleTime: 5000,
+    placeholderData: (previousData) =>
+      previousData ?? {
+        message: "",
+        bidSet: [],
+        stats: {
+          totalCount: 0,
+          totalPrice: 0,
+          totalQuantity: 0,
+        },
+      },
   });
 
   const totalCount = bidData?.stats.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / LIMIT);
-  // const totalPages = 5;
 
   const bidLists = bidData?.bidSet ?? [];
-
-  // useEffect(() => {
-  //   if (totalPages && currentPage < totalPages) {
-  //     const nextPage = currentPage + 1;
-  //     queryClient.prefetchQuery({
-  //       queryKey: ["users", nextPage],
-  //       queryFn: () => fetchBidLists(),
-  //     });
-  //   }
-  // }, [currentPage, queryClient]);
 
   // 페이지네이션 버튼 (최대 5개)
   const maxPageButtons = 5;
