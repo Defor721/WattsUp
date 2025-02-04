@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { slides } from "@/components/main/video/data/slides";
-import BackgroundVideo from "./background-video";
-import AnimatedLogo from "./animated-logo";
-import SlideContent from "./slide-content";
-import SlideNavigation from "./slide-navigation";
+import BackgroundVideo from "../BackgroundVideo";
+import AnimatedLogo from "../AnimatedLogo";
+import SlideContent from "../SlideContent";
+import SlideNavigation from "../SlideNavigation";
 
 export default function VideoPart() {
   const [currentSlide, setCurrentSlide] = useState(0);

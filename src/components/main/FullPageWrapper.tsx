@@ -2,11 +2,11 @@ import React from "react";
 import ReactFullpage from "@fullpage/react-fullpage";
 
 // 각 섹션에 렌더링할 컴포넌트 가져오기
-import VideoPart from "./video/VideoPart";
-import EnergyInfoPage from "./renewable/Renewable";
-import FeaturesPart from "./features/Features";
 import OurWeb from "./web/OurWeb";
 import TodayValue from "./value/page";
+import EnergyInfoPage from "./renewable/pages/EnergyInfoPage";
+import VideoPart from "./video/pages/VideoPart";
+import FeaturesPart from "./features/pages/FeaturesPart";
 // import TodayValue from "../dashboard/main/TodayValue";
 
 const FullPageWrapper: React.FC = () => {
