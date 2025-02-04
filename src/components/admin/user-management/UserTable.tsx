@@ -11,16 +11,12 @@ import {
   TableCell,
   Input,
   Button,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@/components/shadcn";
 import Loading from "@/app/loading";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUserInfo } from "@/services/adminService";
 import Selector from "@/components/common/Selector";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const LIMIT = 4;
 
@@ -37,25 +33,8 @@ const orderItems = [
   { value: "desc", label: "내림차순" },
   { value: "asc", label: "오름차순" },
 ];
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 
 function UserTable() {
-  const queryClient = useQueryClient();
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const [selected, setSelected] = useState("all");
@@ -75,20 +54,12 @@ function UserTable() {
         encodeURIComponent(debouncedSearchTerm),
       ),
     staleTime: 5000,
+    placeholderData: (previousData) =>
+      previousData ?? { userSet: [], totalCount: 0 },
   });
 
   const users = data?.userSet ?? [];
   const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
-
-  // useEffect(() => {
-  //   if (totalPages && currentPage < totalPages) {
-  //     const nextPage = currentPage + 1;
-  //     queryClient.prefetchQuery({
-  //       queryKey: ["users", nextPage],
-  //       queryFn: () => fetchUserInfo(LIMIT, nextPage - 1),
-  //     });
-  //   }
-  // }, [currentPage, queryClient, totalPages]);
 
   // 페이지네이션 버튼 (최대 5개)
   const maxPageButtons = 5;
