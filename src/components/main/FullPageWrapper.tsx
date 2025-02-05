@@ -2,11 +2,11 @@ import React from "react";
 import ReactFullpage from "@fullpage/react-fullpage";
 
 // 각 섹션에 렌더링할 컴포넌트 가져오기
-import VideoPart from "./video/VideoPart";
-import EnergyInfoPage from "./renewable/Renewable";
-import FeaturesPart from "./features/Features";
 import OurWeb from "./web/OurWeb";
 import TodayValue from "./value/page";
+import EnergyInfoPage from "./renewable/pages/EnergyInfoPage";
+import VideoPart from "./video/pages/VideoPart";
+import FeaturesPart from "./features/pages/FeaturesPart";
 // import TodayValue from "../dashboard/main/TodayValue";
 
 const FullPageWrapper: React.FC = () => {
@@ -23,7 +23,7 @@ const FullPageWrapper: React.FC = () => {
       // Fullpage.js 하단 저작권 표시 설정
       credits={{
         enabled: false, // 저작권 메시지 표시 여부 (false: 숨김)
-        label: "", // 메시지 텍스트
+        label: "", // 메시지 텍스트 - 이걸 없애야 밑에 안 뜸.
         position: "right", // 메시지 위치 ("right", "left", "top", "bottom")
       }}
       // 섹션 렌더링 함수

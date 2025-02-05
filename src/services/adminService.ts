@@ -1,4 +1,5 @@
 import apiClient from "@/lib/axios";
+import { BidSet, BidStats } from "@/types/bid";
 
 interface Users {
   businessNumber: number;
@@ -24,26 +25,11 @@ export const fetchUserInfo = async (
   return response.data;
 };
 
-interface BidStats {
-  totalCount: number;
-  totalPrice: number;
-  totalQuantity: number;
-}
 // 거래 데이터
 export const fetchBidStats = async () => {
   const response = await apiClient.get(`/api/admin/userinfo/bidlist`);
   return response.data.stats;
 };
-
-interface BidSet {
-  _id: string;
-  businessNumber: number;
-  email: string;
-  now: string;
-  price: number;
-  quantity: number;
-  region: string;
-}
 
 // 거래 내역
 export const fetchBidData = async (

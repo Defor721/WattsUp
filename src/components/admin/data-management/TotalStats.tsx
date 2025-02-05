@@ -2,14 +2,10 @@ import React from "react";
 
 import { Card } from "@/components/shadcn";
 import { formatNumberWithoutDecimal } from "@/hooks/useNumberFormatter";
-interface Stats {
-  totalPrice: number;
-  totalQuantity: number;
-  totalCount: number;
-}
+import { BidStats } from "@/types/bid";
 
 interface TotalStatsProps {
-  stats: Stats | null;
+  stats: BidStats;
 }
 
 function TotalStats({ stats }: TotalStatsProps) {
