@@ -1,19 +1,17 @@
 import { NextRequest } from "next/server";
 
-import clientPromise from "@/lib/mongodb";
-import { verifyToken } from "@/utils/server/tokenHelper";
 import {
   handleErrorResponse,
   handleSuccessResponse,
 } from "@/server/responseHandler";
 import { NotFoundError, ValidationError } from "@/server/customErrors";
+import { verifyToken } from "@/server/utils/tokenHelper";
+import { getCollection } from "@/server/db/mongodb";
 
 /** 로그아웃 */
 export async function DELETE(request: NextRequest) {
   try {
-    const client = await clientPromise;
-    const db = client.db("wattsup");
-    const collection = db.collection("userdata");
+    const collection = await getCollection("userdata");
 
     const accessToken = request.cookies.get("accessToken")?.value;
     if (!accessToken) {

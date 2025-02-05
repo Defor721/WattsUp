@@ -37,6 +37,7 @@ export default function ConfirmPasswordInput({
           maxLength={16}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="new-password"
           required
         />
         {confirmPassword && (
