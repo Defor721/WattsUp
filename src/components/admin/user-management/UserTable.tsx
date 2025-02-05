@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   Table,
@@ -39,8 +39,12 @@ const orderItems = [
 ];
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
+  const lastValue = useRef(value);
 
   useEffect(() => {
+    if (lastValue.current === value) return;
+    lastValue.current = value;
+
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
