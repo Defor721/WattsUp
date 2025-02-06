@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/auth/useAuthStore";
-import { toast } from "@/hooks/useToast";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
 
 import PasswordSection from "../common/password/PasswordSection";
@@ -15,6 +14,8 @@ import BusinessNumberSection from "../common/business/BusinessInfoSection";
 export default function SignupForm() {
   const router = useRouter();
   const {
+    isError,
+    message,
     actions: { nativeSignup, resetAuthState },
   } = useAuthStore();
 
@@ -39,13 +40,8 @@ export default function SignupForm() {
     try {
       e.preventDefault();
       await nativeSignup(password);
-      router.push("/login");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "회원가입에 실패했습니다.",
-        description: `${error.response.data.message}`,
-      });
+      console.error(error);
     }
   };
 
@@ -57,6 +53,12 @@ export default function SignupForm() {
     setIsBusinessVerified(false);
     resetAuthState();
   };
+
+  useEffect(() => {
+    if (!isError && message === "회원가입이 완료되었습니다.") {
+      router.push("/login");
+    }
+  }, [message, isError, router]);
 
   useEffect(() => {
     resetAllStates();
@@ -95,7 +97,11 @@ export default function SignupForm() {
           setCorporateNumber={setCorporateNumber}
         />
       </CardContent>
-      <CardFooter className="px-0">
+      <CardFooter className="flex-col gap-2 px-0">
+        {/* 에러 메시지 */}
+        {message && (
+          <p className="text-center text-sm text-red-500">{message}</p>
+        )}
         {/* 버튼 섹션 */}
         <Button
           type="submit"
