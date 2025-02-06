@@ -17,22 +17,29 @@ interface CustomErrorResponse {
 let isRefreshing = false;
 let failedQueue: Array<(token: string) => void> = [];
 
+const logOnDev = (message: string) => {
+  if (process.env.NEXT_PUBLIC_ENVIRONMENT === "development")
+    console.log(message);
+};
+
 // 응답 인터셉터
 export const handleResponse = (response: AxiosResponse): AxiosResponse => {
-  console.log(
-    `[Response]: ${response.config.method?.toUpperCase()} ${
-      response.config.url
-    }`,
-  );
+  const { method, url } = response.config;
+  const { status } = response;
+  logOnDev(`[API] ${method?.toUpperCase()} ${url} | Request ${status}`);
+
   return response;
 };
 
 // 응답 에러 핸들러
 export const handleResponseError = async (error: AxiosError) => {
-  const { response, config } = error;
+  const { message, response, config } = error;
+  const { method, url } = config || {};
 
   if (!response) {
-    console.error("[Network Error]:", error.message);
+    logOnDev(
+      `[API] ${method?.toUpperCase()} ${url} | Network Error: ${message}`,
+    );
     return Promise.reject(error);
   }
 
