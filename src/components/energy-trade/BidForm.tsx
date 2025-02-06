@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/shadcn/select";
-import { Regions } from "@/utils/regions";
+import { Regions } from "@/constants/regions";
 import { toast } from "@/hooks/useToast";
 
 import { SupplyData } from "./SupplyChart";
