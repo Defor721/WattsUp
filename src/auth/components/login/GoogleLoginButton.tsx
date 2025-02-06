@@ -23,7 +23,7 @@ export default function GoogleLoginButton() {
         src={`/assets/logos/google/svg/neutral/web_neutral_sq_na.svg`}
         alt="Google Logo"
         width={30}
-        height={18}
+        height={30}
         className="mr-6"
       />
       <span className="text-google-text">Google 계정으로 로그인</span>

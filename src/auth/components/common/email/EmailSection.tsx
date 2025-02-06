@@ -54,7 +54,7 @@ export default function EmailSection({
       await sendVerificationEmail({ email });
     } catch (error: any) {
       setIsError(true);
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response.data.result.data.reason);
     } finally {
       setIsEmailCodeLoading(false);
     }
@@ -76,7 +76,7 @@ export default function EmailSection({
     } catch (error: any) {
       setIsError(true);
       setIsEmailVerified(false);
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response.data.result.data.reason);
     } finally {
       setIsEmailValificationLoading(false);
     }

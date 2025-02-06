@@ -47,32 +47,3 @@ export function handleErrorResponse(error: unknown) {
     { status: 500 },
   );
 }
-
-/**
-실패시 응답 형태
-
-{
-  "resultType": "FAIL",
-  "result": {
-    "errorCode": "AUTH_EXPIRED",
-    "message": "인증이 만료되었습니다.",
-
-    "data": {}
-  }
-}
-*/
-
-/**
-성공시 응답 형태
-
-{
-  "resultType":"SUCCESS",
-  "result":{
-    "message": "인증이 만료되었습니다.",
-    "data": {}
-  }
-}
-*/
-
-// message: 개발자가 볼 것(영어로)
-// data.reason: 이용자가 볼 것(한글로)

@@ -12,6 +12,33 @@ import {
 } from "@/components/shadcn/tabs";
 import { ESGItems } from "@/components/introduce/EsgItem";
 
+// TODO: Metadata는 "use client" 해결 후 사용할 것
+// import { Metadata } from "next";
+
+// const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
+// export const metadata: Metadata = {
+//   title: "내정보 - WATTSUP",
+//   description: "WattsUp에서 에너지 거래 및 분석을 시작하세요.",
+//   metadataBase: new URL(baseUrl),
+//   openGraph: {
+//     type: "website",
+//     locale: "ko_KR",
+//     url: `${baseUrl}/dashboard`,
+//     siteName: "WattsUp Energy Dashboard",
+//     title: "내정보 - WATTSUP",
+//     description: "WattsUp에서 에너지 거래 및 분석을 시작하세요.",
+//     images: [
+//       {
+//         url: "/assets/images/logo.webp",
+//         width: 1200,
+//         height: 630,
+//         alt: "WattsUp 로고",
+//       },
+//     ],
+//   },
+// };
+
 function IntroducePage() {
   const [activeTab, setActiveTab] = useState("wattsup");
 
