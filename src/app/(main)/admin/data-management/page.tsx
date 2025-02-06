@@ -12,6 +12,7 @@ function DataManageMent() {
   const { user } = useUserStore();
   const router = useRouter();
 
+  // TODO: 개발하면서 불편해서 주석 달아놓음, 배포할때 주석풀기
   // useEffect(() => {
   //   if (user.role !== "admin") {
   //     router.push("/");
