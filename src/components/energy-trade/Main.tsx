@@ -8,7 +8,7 @@ import TradingStats from "@/components/energy-trade/TradingStats";
 import BidForm from "@/components/energy-trade/BidForm";
 import SupplyChart from "@/components/energy-trade/SupplyChart";
 import apiClient from "@/lib/axios";
-import { Regions } from "@/utils/regions";
+import { Regions } from "@/constants/regions";
 import Loading from "@/app/loading";
 
 export interface SupplyData {
