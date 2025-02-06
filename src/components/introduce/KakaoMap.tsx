@@ -39,8 +39,9 @@ const KakaoMap = ({ onRegionClick }: KakaoMapProps) => {
   // 카카오 맵 초기화 및 마커 설정
   useEffect(() => {
     const script = document.createElement("script");
-    script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=d4b51b70e6c2633c7dd0c60675acfe6f&autoload=false";
+    const MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
+
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${MAP_KEY}&autoload=false`;
     script.async = true;
 
     script.onload = () => {
