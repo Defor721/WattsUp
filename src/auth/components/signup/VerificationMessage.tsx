@@ -16,7 +16,7 @@ export default function VerificationMessage({
   isEmailCodeEntered,
 }: VerificationMessageProps) {
   if (isError) {
-    return <div className="text-red-600">실패하였습니다. {errorMessage}</div>;
+    return <div className="text-red-600">{errorMessage}</div>;
   }
 
   if (!isEmailVerified && emailCode && !isError) {

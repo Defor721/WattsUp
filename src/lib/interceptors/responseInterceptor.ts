@@ -37,7 +37,7 @@ export const handleResponseError = async (error: AxiosError) => {
   }
 
   const { status, data } = response as AxiosResponse<CustomErrorResponse>;
-  console.log(`interceptors: `, data);
+
   // 만료된 토큰 처리
   if (
     status === 401 &&

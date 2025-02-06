@@ -1,6 +1,4 @@
 export { setCookie, getCookie, deleteCookie } from "./client/cookieHelper";
-export { generateVerificationCode } from "./server/generateVerificationCode";
-export { verificationcodeKey } from "./server/redisKey";
 export {
   isValidEmail,
   isValidPassword,

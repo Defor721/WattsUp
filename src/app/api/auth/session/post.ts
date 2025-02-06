@@ -2,12 +2,12 @@ import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-import clientPromise from "@/lib/mongodb";
 import { DatabaseError, ValidationError } from "@/server/customErrors";
 import {
   handleErrorResponse,
   handleSuccessResponse,
 } from "@/server/responseHandler";
+import { getCollection } from "@/server/db/mongodb";
 
 /**
  * 일반 로그인
@@ -24,9 +24,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = await clientPromise;
-    const db = client.db("wattsup");
-    const collection = db.collection("userdata");
+    const collection = await getCollection("userdata");
 
     const user = await collection.findOne({ email });
     if (!user) {
@@ -62,9 +60,9 @@ export async function POST(request: NextRequest) {
     }
 
     const response = handleSuccessResponse({
-      message: "로그인 성공",
+      message: "Login successful.",
       statusCode: 201,
-      data: { accessToken },
+      data: { accessToken, userMessage: "로그인 성공" },
     });
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,

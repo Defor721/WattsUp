@@ -85,7 +85,7 @@ export default function FindPasswordPopup({
           <p className="text-center text-sm text-red-500">{message}</p>
         )}
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button type="button" variant="ghost" className="border-1">
               취소
             </Button>

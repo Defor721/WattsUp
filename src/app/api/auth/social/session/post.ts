@@ -1,20 +1,21 @@
 import { NextRequest } from "next/server";
+import jwt from "jsonwebtoken";
 import { Long } from "mongodb";
 import bcrypt from "bcrypt";
 
 import { verifyToken } from "@/server/utils/tokenHelper";
 import {
+  handleErrorResponse,
+  handleSuccessResponse,
+} from "@/server/responseHandler";
+import {
   ConflictError,
   TokenExpiredError,
   ValidationError,
 } from "@/server/customErrors";
-import {
-  handleErrorResponse,
-  handleSuccessResponse,
-} from "@/server/responseHandler";
 import { getCollection, insertDataToDB } from "@/server/db/mongodb";
 
-/** 일반 회원가입 */
+/** 소셜 회원가입하며 로그인 */
 export async function POST(request: NextRequest) {
   try {
     const emailVerificationToken = request.cookies.get(
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
     const businessVerificationToken = request.cookies.get(
       "businessVerificationToken",
     )?.value;
+
     if (!emailVerificationToken || !businessVerificationToken) {
       throw new ValidationError(
         "Token",
@@ -35,29 +37,17 @@ export async function POST(request: NextRequest) {
       process.env.EMAIL_TOKEN_SECRET!,
       "email",
     );
-
     const { email, signupType, provider } = emailVerification;
-
-    const collection = await getCollection("userdata");
-    const existingUser = await collection.findOne({ email });
-    if (existingUser) {
-      throw new ValidationError(
-        "User",
-        existingUser.signupType === "native"
-          ? "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요."
-          : "해당 이메일은 소셜 회원으로 등록되어 있습니다. 소셜 로그인을 이용해 주세요.",
-      );
-    }
 
     const businessVerification = verifyToken(
       businessVerificationToken,
       process.env.BUSINESS_TOKEN_SECRET!,
       "business",
     );
-
-    const { principalName, businessNumber, companyName, corporateNumber } =
+    const { businessNumber, principalName, companyName, corporateNumber } =
       businessVerification;
 
+    const collection = await getCollection("userdata");
     const existingBusinessNumber = await collection.findOne({
       businessNumber: Long.fromString(businessNumber),
     });
@@ -73,6 +63,14 @@ export async function POST(request: NextRequest) {
     const SALT_ROUND = parseInt(process.env.SALT_ROUND!);
     const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
 
+    const payload = { email };
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+      expiresIn: "1h",
+    });
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
+      expiresIn: "7d",
+    });
+
     await insertDataToDB(collection, {
       email,
       password: hashedPassword,
@@ -82,16 +80,23 @@ export async function POST(request: NextRequest) {
       companyName,
       corporateNumber: Long.fromString(corporateNumber),
       businessNumber: Long.fromString(businessNumber),
+      refreshToken,
       role: "member",
       credit: 0,
     });
 
     const response = handleSuccessResponse({
-      message: "Registration successful.",
+      message: "Login successful.",
       statusCode: 201,
-      data: { userMessage: "회원가입이 완료되었습니다." },
+      data: { accessToken, userMessage: "로그인 성공" },
     });
 
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      sameSite: "none",
+    });
     response.cookies.set("emailVerificationToken", "", {
       httpOnly: true,
       secure: true,
@@ -99,7 +104,6 @@ export async function POST(request: NextRequest) {
       sameSite: "strict",
       maxAge: 0,
     });
-
     response.cookies.set("businessVerificationToken", "", {
       httpOnly: true,
       secure: true,
@@ -107,7 +111,6 @@ export async function POST(request: NextRequest) {
       sameSite: "strict",
       maxAge: 0,
     });
-
     return response;
   } catch (error: any) {
     if (error instanceof TokenExpiredError) {

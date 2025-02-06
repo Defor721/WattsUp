@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
@@ -49,7 +49,6 @@ export default function AdditionalPage() {
   };
 
   useEffect(() => {
-    console.log(`useEffect: `, accessToken);
     if (accessToken) {
       setAccessToken(accessToken);
       resetAuthState();

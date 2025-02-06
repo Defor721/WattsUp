@@ -5,6 +5,7 @@ import jwt, {
 
 import { TokenExpiredError, ValidationError } from "@/server/customErrors";
 
+/** 토큰 유효성 검사 */
 export function verifyToken(
   token: string,
   secret: string,
