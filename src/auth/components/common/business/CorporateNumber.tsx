@@ -10,6 +10,7 @@ import {
 } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES, VALIDATION_NUMERIC } from "@/constants";
 
 interface CorporateNumber {
   corporateNumber: string;
@@ -33,17 +34,17 @@ export default function CorporateNumber({
             <IoMdInformationCircleOutline />
           </TooltipTrigger>
           <TooltipContent side="right">
-            {"'-' 기호를 제외한 법인등록번호 13자리를 입력해주세요."}
+            {VALIDATION_MESSAGES.CORPORATE_NUMBER_TOOLTIP}
           </TooltipContent>
         </div>
       </Tooltip>
       <div className="relative">
         <Input
-          className={`h-[44px] pr-10 dark:ring-offset-0 ${corporateNumber.length !== 13 && corporateNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
+          className={`h-[44px] pr-10 dark:ring-offset-0 ${corporateNumber.length !== VALIDATION_NUMERIC.CORPORATE_NUMBER_LENGTH && corporateNumber.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
           id="corporateNumber"
           name="corporateNumber"
           placeholder="0000000000000"
-          maxLength={13}
+          maxLength={VALIDATION_NUMERIC.CORPORATE_NUMBER_LENGTH}
           value={corporateNumber}
           onChange={(e) =>
             setCorporateNumber(e.target.value.replace(/[^0-9]/g, ""))
@@ -56,11 +57,13 @@ export default function CorporateNumber({
         )}
       </div>
       <div className="text-sm text-gray-500">
-        {corporateNumber.length !== 13 && corporateNumber.trim() !== "" && (
-          <div className="text-red-600">
-            법인등록번호 13자리 모두 입력해주셔야 합니다.
-          </div>
-        )}
+        {corporateNumber.length !==
+          VALIDATION_NUMERIC.CORPORATE_NUMBER_LENGTH &&
+          corporateNumber.trim() !== "" && (
+            <div className="text-red-600">
+              {VALIDATION_MESSAGES.CORPORATE_NUMBER_REQUIRED}
+            </div>
+          )}
       </div>
     </div>
   );

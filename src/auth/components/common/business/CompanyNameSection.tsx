@@ -10,6 +10,7 @@ import {
 } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES } from "@/constants";
 
 interface CompanyNameSectionProps {
   companyName: string;
@@ -33,9 +34,7 @@ export default function CompanyNameSection({
             <IoMdInformationCircleOutline />
           </TooltipTrigger>
           <TooltipContent side="right">
-            {
-              "주식회사인 경우 예: (주)회사명, 주식회사 회사명 으로 입력해주세요."
-            }
+            {VALIDATION_MESSAGES.COMPANY_NAME_TOOLTIP}
           </TooltipContent>
         </div>
       </Tooltip>

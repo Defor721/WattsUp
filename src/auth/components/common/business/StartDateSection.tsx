@@ -10,7 +10,7 @@ import {
 } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
-import { VALIDATION_NUMERIC } from "@/constants";
+import { VALIDATION_MESSAGES, VALIDATION_NUMERIC } from "@/constants";
 
 interface StartDateSectionProps {
   startDate: string;
@@ -34,7 +34,7 @@ export default function StartDateSection({
             <IoMdInformationCircleOutline />
           </TooltipTrigger>
           <TooltipContent side="right">
-            {`YYYYMMDD 포맷으로 개업일자 8자리를 입력해주세요. 예) 20000101`}
+            {VALIDATION_MESSAGES.START_DATE_TOOLTIP}
           </TooltipContent>
         </div>
       </Tooltip>
@@ -58,7 +58,7 @@ export default function StartDateSection({
       <div className="text-sm text-gray-500">
         {startDate.length !== 8 && startDate.trim() !== "" && (
           <div className="text-red-600">
-            개업일자 8자리 모두 입력해주셔야 합니다.
+            {VALIDATION_MESSAGES.START_DATE_REQUIRED}
           </div>
         )}
       </div>

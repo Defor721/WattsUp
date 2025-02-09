@@ -18,6 +18,7 @@ import { useAuthStore } from "@/auth/useAuthStore";
 import PasswordInput from "@/auth/components/common/password/PasswordInput";
 import { useUserStore } from "@/stores/useUserStore";
 import useAccessToken from "@/auth/hooks/useAccessToken";
+import { AUTH_MESSAGES } from "@/constants";
 
 interface WithdrawalAccountModalProps {
   children: React.ReactNode;
@@ -56,7 +57,7 @@ function WithdrawalAccountModal({ children }: WithdrawalAccountModalProps) {
   }, [isDialogOpen, resetAuthState]);
 
   useEffect(() => {
-    if (!isError && message === "회원 탈퇴가 완료되었습니다.") {
+    if (!isError && message === AUTH_MESSAGES.ACCOUNT_DELETION_SUCCESS) {
       resetUserState();
       resetAccessToken();
       setIsDialogOpen(false);
