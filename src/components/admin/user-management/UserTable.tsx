@@ -35,6 +35,8 @@ const orderItems = [
 ];
 
 function UserTable() {
+  const useClient = useQueryClient();
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const [selected, setSelected] = useState("all");
@@ -60,6 +62,22 @@ function UserTable() {
 
   const users = data?.userSet ?? [];
   const totalPages = Math.ceil((data?.totalCount ?? 0) / LIMIT);
+
+  // TODO: prefetchQuery를 이용하여, 페이지네이션에서 데이터 프리패칭 받는 방법(설명하고, 삭제할예정)
+  // useEffect(() => {
+  //   if (currentPage < totalPages) {
+  //     useClient.prefetchQuery({
+  //       queryKey: ["users", currentPage + 1, selected, debouncedSearchTerm],
+  //       queryFn: () =>
+  //         fetchUserInfo(
+  //           LIMIT,
+  //           currentPage + 1,
+  //           selected,
+  //           encodeURIComponent(debouncedSearchTerm),
+  //         ),
+  //     });
+  //   }
+  // }, [currentPage, selected, debouncedSearchTerm, useClient, totalPages]);
 
   // 페이지네이션 버튼 (최대 5개)
   const maxPageButtons = 5;

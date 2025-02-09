@@ -65,10 +65,8 @@ const denormalize = (data: number[], min: number, max: number) =>
 
 // 모델 로드 함수
 const loadModel = async (): Promise<tf.LayersModel> => {
-  console.time("Model Loading");
   const model = await tf.loadLayersModel("/assets/models/model.json");
-  console.log("Model loaded successfully!");
-  console.timeEnd("Model Loading");
+
   return model;
 };
 

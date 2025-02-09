@@ -15,6 +15,7 @@ interface EmailRequestBody {
  * personalId: 주민등록번호 앞 6자리(개인사업자일 경우)
  * corporateNumber: 법인번호 13자리(법인사업자일 경우)
  */
+
 const users = [
   {
     id: "1",
