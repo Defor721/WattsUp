@@ -17,12 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/shadcn/select";
-import { Regions } from "@/constants/regions";
+
 import { toast } from "@/hooks/useToast";
 
 import { SupplyData } from "./SupplyChart";
+import { REGIONS } from "@/constants";
 
-const regionOptions = Regions.map((region) => ({
+const regionOptions = REGIONS.map((region) => ({
   value: region.toLowerCase(),
   label: region,
 }));

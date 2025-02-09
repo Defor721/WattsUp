@@ -4,6 +4,7 @@ import { Input, Label } from "@/components/shadcn";
 
 import EyeButton from "../ui/EyeButton";
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES } from "@/constants";
 
 interface ConfirmPasswordInputProps {
   confirmPasswordLabel?: string;
@@ -33,7 +34,7 @@ export default function ConfirmPasswordInput({
           type={showConfirmPassword ? "text" : "password"}
           id="confirmPassword"
           name="confirmPassword"
-          placeholder="비밀번호 확인을 위해 다시 입력해주세요."
+          placeholder={VALIDATION_MESSAGES.PASSWORD_CONFIRM_REQUIRED}
           maxLength={16}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}

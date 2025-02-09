@@ -9,6 +9,7 @@ import StartDateSection from "./StartDateSection";
 import CompanyNameSection from "./CompanyNameSection";
 import CorporateNumber from "./CorporateNumber";
 import PrincipalName from "./PrincipalName";
+import { SYSTEM_MESSAGES, VALIDATION_MESSAGES } from "@/constants";
 
 interface BusinessInfoSectionProps {
   isBusinessVerified: boolean;
@@ -62,15 +63,13 @@ export default function BusinessInfoSection({
         corporateNumber,
       );
       setIsBusinessVerified(true);
-      setBusinessStatusMessage("유효한 사업자 등록번호입니다.");
+      setBusinessStatusMessage(VALIDATION_MESSAGES.VALID_BUSINESS_NUMBER);
     } catch (error: any) {
-      setBusinessStatusMessage(
-        "실패하였습니다. 아래의 실패 사유를 참고해주세요.",
-      );
+      setBusinessStatusMessage(SYSTEM_MESSAGES.ACTION_FAILED);
       setIsBusinessVerified(false);
       toast({
         variant: "destructive",
-        title: "사업자번호 확인에 실패했습니다.",
+        title: VALIDATION_MESSAGES.INVALID_BUSINESS_NUMBER,
         description: `${error.response.data.result.data.reason}`,
       });
     } finally {

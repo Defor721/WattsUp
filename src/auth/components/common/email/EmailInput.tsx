@@ -3,6 +3,7 @@ import React, { Dispatch } from "react";
 import { Input, Label } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES } from "@/constants";
 
 interface EmailInputProps {
   children?: React.ReactNode;
@@ -37,7 +38,7 @@ export default function EmailInput({
           <Input
             id="email"
             type="email"
-            placeholder="이메일을 입력해주세요."
+            placeholder={VALIDATION_MESSAGES.EMAIL_REQUIRED}
             maxLength={320}
             value={email}
             onChange={(e) => setEmail(e.target.value)}

@@ -6,6 +6,7 @@ import { Triangle } from "react-loader-spinner";
 
 import { useAuthStore } from "@/auth/useAuthStore";
 import useAccessToken from "@/auth/hooks/useAccessToken";
+import { AUTH_MESSAGES } from "@/constants";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -42,10 +43,7 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     if (message) {
-      if (
-        message ===
-        "해당 이메일은 일반 회원으로 등록되어 있습니다. 일반 로그인을 이용해 주세요."
-      ) {
+      if (message === AUTH_MESSAGES.EMAIL_REGISTERED_AS_NATIVE) {
         router.push("/login/error");
         return;
       }

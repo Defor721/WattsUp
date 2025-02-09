@@ -9,6 +9,7 @@ import EmailInput from "../common/email/EmailInput";
 import PasswordInput from "../common/password/PasswordInput";
 import Divider from "../common/ui/Divider";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
+import { ERROR_MESSAGES, VALIDATION_MESSAGES } from "@/constants";
 
 export default function LoginForm() {
   const {
@@ -24,18 +25,18 @@ export default function LoginForm() {
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!email) {
-      setMessageState("이메일을 입력해주세요.");
+      setMessageState(VALIDATION_MESSAGES.EMAIL_REQUIRED);
       return;
     }
     if (!password) {
-      setMessageState("비밀번호를 입력해주세요.");
+      setMessageState(VALIDATION_MESSAGES.PASSWORD_REQUIRED);
       return;
     }
     setMessageState("");
     try {
       await nativeLogin(email, password);
     } catch (error: any) {
-      setMessageState(error.message || "로그인 중 오류가 발생했습니다.");
+      setMessageState(error.message || ERROR_MESSAGES.LOGIN_ERROR);
     }
   };
 

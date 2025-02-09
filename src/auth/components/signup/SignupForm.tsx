@@ -10,6 +10,7 @@ import { Button, CardContent, CardFooter } from "@/components/shadcn";
 import PasswordSection from "../common/password/PasswordSection";
 import EmailSection from "../common/email/EmailSection";
 import BusinessNumberSection from "../common/business/BusinessInfoSection";
+import { AUTH_MESSAGES } from "@/constants";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function SignupForm() {
   };
 
   useEffect(() => {
-    if (!isError && message === "회원가입이 완료되었습니다.") {
+    if (!isError && message === AUTH_MESSAGES.SIGNUP_SUCCESS) {
       router.push("/login");
     }
   }, [message, isError, router]);
