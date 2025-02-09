@@ -10,6 +10,7 @@ import {
 } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES, VALIDATION_NUMERIC } from "@/constants";
 
 interface PrincipalNameProps {
   principalName: string;
@@ -33,7 +34,7 @@ export default function PrincipalName({
             <IoMdInformationCircleOutline />
           </TooltipTrigger>
           <TooltipContent side="right">
-            외국인 사업자의 경우에는 영문명 입력해주세요.
+            {VALIDATION_MESSAGES.PRINCIPAL_NAME_TOOLTIP}
           </TooltipContent>
         </div>
       </Tooltip>
@@ -43,7 +44,7 @@ export default function PrincipalName({
           id="principalName"
           name="principalName"
           placeholder="홍길동"
-          maxLength={50}
+          maxLength={VALIDATION_NUMERIC.PRINCIPAL_NAME_MAX_LENGTH}
           value={principalName}
           onChange={(e) => setPrincipalName(e.target.value)}
           required

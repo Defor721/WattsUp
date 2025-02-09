@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { WalletCards } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -16,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/shadcn";
 import { useUserStore } from "@/stores/useUserStore";
+import { VALIDATION_NUMERIC } from "@/constants";
 
 export default function ChargeCreditModal() {
   const {
@@ -29,15 +29,18 @@ export default function ChargeCreditModal() {
   const [error, setError] = useState("");
 
   const fixedAmounts = [1000, 10000, 100000, 1000000];
-  const MAX_AMOUNT = 10000000;
-  const MIN_AMOUNT = 1000;
 
   const handleFixedCharge = (amount: number) => {
-    const newCharge = Math.min(Number(charge) + amount, MAX_AMOUNT);
+    const newCharge = Math.min(
+      Number(charge) + amount,
+      VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT,
+    );
     setCharge(String(newCharge));
 
-    if (newCharge >= MAX_AMOUNT) {
-      setError(`최대 충전 금액은 ${MAX_AMOUNT.toLocaleString()}원입니다.`);
+    if (newCharge >= VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT) {
+      setError(
+        `최대 충전 금액은 ${VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT.toLocaleString()}원입니다.`,
+      );
     } else {
       setError("");
     }
@@ -45,8 +48,10 @@ export default function ChargeCreditModal() {
 
   const handleInputChange = (value: string) => {
     const numericValue = Number(value.replace(/[^0-9]/g, ""));
-    if (numericValue > MAX_AMOUNT) {
-      setError(`최대 충전 금액은 ${MAX_AMOUNT.toLocaleString()}원입니다.`);
+    if (numericValue > VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT) {
+      setError(
+        `최대 충전 금액은 ${VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT.toLocaleString()}원입니다.`,
+      );
       return;
     } else {
       setError("");
@@ -55,9 +60,12 @@ export default function ChargeCreditModal() {
   };
 
   const handleChargeSubmit = async () => {
-    if (Number(charge) < MIN_AMOUNT || Number(charge) > MAX_AMOUNT) {
+    if (
+      Number(charge) < VALIDATION_NUMERIC.MIN_CHARGE_AMOUNT ||
+      Number(charge) > VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT
+    ) {
       setError(
-        `충전 금액은 ${MIN_AMOUNT.toLocaleString()}원 이상, ${MAX_AMOUNT.toLocaleString()}원 이하여야 합니다.`,
+        `충전 금액은 ${VALIDATION_NUMERIC.MIN_CHARGE_AMOUNT.toLocaleString()}원 이상, ${VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT.toLocaleString()}원 이하여야 합니다.`,
       );
       return;
     }
@@ -93,7 +101,10 @@ export default function ChargeCreditModal() {
           <DialogDescription>
             충전할 금액을 선택하거나 입력 후 충전 버튼을 눌러주세요.
             <br />
-            1회 최소충전금액은 1,000원이며 최대충전금액은 10,000,000 원입니다.
+            1회 최소충전금액은{" "}
+            {VALIDATION_NUMERIC.MIN_CHARGE_AMOUNT.toLocaleString()}원이며
+            최대충전금액은{" "}
+            {VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT.toLocaleString()}원입니다.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
@@ -141,8 +152,8 @@ export default function ChargeCreditModal() {
             className="bg-mainColor text-white dark:bg-white dark:text-subColor"
             disabled={
               loading ||
-              Number(charge) < MIN_AMOUNT ||
-              Number(charge) > MAX_AMOUNT
+              Number(charge) < VALIDATION_NUMERIC.MIN_CHARGE_AMOUNT ||
+              Number(charge) > VALIDATION_NUMERIC.MAX_CHARGE_AMOUNT
             }
           >
             충전
