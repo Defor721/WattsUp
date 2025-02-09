@@ -16,7 +16,7 @@ jobs:
 
       - name: Add forked repository as remote
         run: |
-          git remote add fork https://github.com/zerozeroha/WattsUp
+          git remote add fork https://github.com/zerozeroha/WattsUp.git
   
       - name: Push changes to forked repository
         run: |
