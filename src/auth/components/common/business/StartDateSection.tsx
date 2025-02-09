@@ -10,6 +10,7 @@ import {
 } from "@/components/shadcn";
 
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_NUMERIC } from "@/constants";
 
 interface StartDateSectionProps {
   startDate: string;
@@ -39,12 +40,12 @@ export default function StartDateSection({
       </Tooltip>
       <div className="relative">
         <Input
-          className={`h-[44px] pr-10 dark:ring-offset-0 ${startDate.length !== 8 && startDate.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
+          className={`h-[44px] pr-10 dark:ring-offset-0 ${startDate.length !== VALIDATION_NUMERIC.START_DATE_NUMBER_LENGTH && startDate.trim() !== "" ? "border-red-600 focus:ring-transparent" : "focus:border-blue-500 focus:ring-transparent"}`}
           type={"text"}
           id="startDate"
           name="startDate"
           placeholder="YYYYMMDD"
-          maxLength={8}
+          maxLength={VALIDATION_NUMERIC.START_DATE_NUMBER_LENGTH}
           value={startDate}
           onChange={(e) => setStartDate(e.target.value.replace(/[^0-9]/g, ""))}
           required

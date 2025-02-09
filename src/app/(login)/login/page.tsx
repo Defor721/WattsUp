@@ -33,7 +33,6 @@ export default function LoginPage() {
     if (accessToken) {
       setAccessToken(accessToken);
       resetAuthState();
-      router.refresh();
       router.push(redirectTo);
       router.refresh();
     }

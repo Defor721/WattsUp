@@ -8,7 +8,7 @@ import TradingStats from "@/components/energy-trade/TradingStats";
 import BidForm from "@/components/energy-trade/BidForm";
 import SupplyChart from "@/components/energy-trade/SupplyChart";
 import apiClient from "@/lib/axios";
-import { Regions } from "@/constants/regions";
+import { REGIONS } from "@/constants";
 import Loading from "@/app/loading";
 
 export interface SupplyData {
@@ -78,7 +78,7 @@ const fetchSupply = async () => {
     }
 
     // 데이터 매핑
-    const mappedData = Regions.map((region) => ({
+    const mappedData = REGIONS.map((region) => ({
       region,
       supply: result[region] ?? 0, // 값이 없으면 0으로 설정
     }));

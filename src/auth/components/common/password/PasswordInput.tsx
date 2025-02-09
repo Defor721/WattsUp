@@ -5,6 +5,7 @@ import { isValidPassword } from "@/utils";
 
 import EyeButton from "../ui/EyeButton";
 import XCircleButton from "../ui/XCircleButton";
+import { VALIDATION_MESSAGES } from "@/constants";
 
 interface PasswordInputProps {
   passwordLabel?: string;
@@ -40,7 +41,7 @@ export default function PasswordInput({
           type={showPassword ? "text" : "password"}
           id="password"
           name="password"
-          placeholder="비밀번호를 입력해주세요."
+          placeholder={VALIDATION_MESSAGES.PASSWORD_REQUIRED}
           maxLength={16}
           value={password}
           onChange={(e) => setPassword(e.target.value.replace(/\s/g, ""))}

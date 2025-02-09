@@ -1,4 +1,4 @@
-export const Regions = [
+export const REGIONS = [
   "강원도",
   "경기도",
   "경상남도",
