@@ -9,7 +9,7 @@ import EmailInput from "../common/email/EmailInput";
 import PasswordInput from "../common/password/PasswordInput";
 import Divider from "../common/ui/Divider";
 import { Button, CardContent, CardFooter } from "@/components/shadcn";
-import { ERROR_MESSAGES, VALIDATION_MESSAGES } from "@/constants";
+import { AUTH_MESSAGES, VALIDATION_MESSAGES } from "@/constants";
 
 export default function LoginForm() {
   const {
@@ -36,7 +36,7 @@ export default function LoginForm() {
     try {
       await nativeLogin(email, password);
     } catch (error: any) {
-      setMessageState(error.message || ERROR_MESSAGES.LOGIN_ERROR);
+      setMessageState(error.message || AUTH_MESSAGES.LOGIN_ERROR);
     }
   };
 
