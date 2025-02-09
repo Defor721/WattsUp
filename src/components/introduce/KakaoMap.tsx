@@ -40,9 +40,7 @@ const KakaoMap = ({ onRegionClick }: KakaoMapProps) => {
   useEffect(() => {
     const script = document.createElement("script");
 
-    const mapkey = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
-
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=61804505012d865a7dd72ed683fc80bc&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_API_KEY}&autoload=false`;
 
     script.async = true;
 
