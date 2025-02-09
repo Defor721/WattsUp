@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
     await checkRedisConnection();
     await redisClient.del(verificationcodeKey(email));
     const verificationCode = generateVerificationCode();
-
     await sendEmail({
       email,
       subject: "Watts Up VPP 회원가입 이메일 인증 코드",
