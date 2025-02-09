@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-
-import apiClient from "@/lib/axios";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCrawlData, fetchSupplyData } from "@/services/tradeService";
 
 import RegionValue from "./RegionValue";
 import SMP from "./SMP";
 import REC from "./REC";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCrawlData, fetchSupplyData } from "@/services/tradeService";
 
 export interface ApiData {
   todaySmpData: {
@@ -28,15 +26,32 @@ export interface ApiData {
 }
 
 function TodayValue() {
-  // SMP
+  // SMP 데이터
   const { data: SMPData, isLoading: isSMPLoading } = useQuery({
     queryKey: ["SMPData"],
-    queryFn: () => fetchCrawlData().then((res) => res.todaySmpData),
+    queryFn: async () => {
+      try {
+        const res = await fetchCrawlData();
+        return res.todaySmpData;
+      } catch (error) {
+        console.error("SMP 데이터 가져오기 실패:", error);
+        return null;
+      }
+    },
   });
-  // REC
+
+  // REC 데이터
   const { data: RECData, isLoading: isRECLoading } = useQuery({
     queryKey: ["RECData"],
-    queryFn: () => fetchCrawlData().then((res) => res.todayRecData),
+    queryFn: async () => {
+      try {
+        const res = await fetchCrawlData();
+        return res.todayRecData;
+      } catch (error) {
+        console.error("REC 데이터 가져오기 실패:", error);
+        return null;
+      }
+    },
   });
 
   // 지역별 발전량
@@ -45,6 +60,7 @@ function TodayValue() {
     queryFn: fetchSupplyData,
   });
 
+  // 로딩 상태 처리
   if (isSMPLoading || isRECLoading || isRegionValueLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -53,16 +69,13 @@ function TodayValue() {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="flex h-screen items-center justify-center">
-  //       <div className="text-lg text-red-500">{error}</div>
-  //     </div>
-  //   );
-  // }
-
-  if (!SMP || !REC || !regionData) {
-    return null; // 데이터가 없을 경우 안전하게 반환
+  // 데이터가 없는 경우 기본값 처리
+  if (!SMPData || !RECData || !regionData) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-red-500">데이터를 불러올 수 없습니다.</div>
+      </div>
+    );
   }
 
   return (
@@ -71,10 +84,21 @@ function TodayValue() {
         오늘의 전력정보
       </h1>
       <div className="grid gap-cardGap 2xl:grid-cols-3">
-        <SMP smpData={SMPData} />
-
-        <REC recData={RECData} />
-
+        <SMP
+          smpData={SMPData ?? { 거래일: "", 최고가: 0, 최소가: 0, 평균가: 0 }}
+        />
+        <REC
+          recData={
+            RECData ?? {
+              거래량: 0,
+              거래일: "",
+              종가: 0,
+              최고가: 0,
+              최저가: 0,
+              평균가: 0,
+            }
+          }
+        />
         <RegionValue regionData={regionData} />
       </div>
     </div>
