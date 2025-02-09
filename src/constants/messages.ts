@@ -1,11 +1,26 @@
+/** 요청하는 메시지 */
 export const VALIDATION_MESSAGES = {
+  // 이메일
   EMAIL_REQUIRED: "이메일을 입력해주세요.",
+
+  // 비밀번호
   PASSWORD_REQUIRED: "비밀번호를 입력해주세요.",
   PASSWORD_CONFIRM_REQUIRED: "비밀번호 확인을 위해 다시 입력해주세요.",
+
+  // 사업자 등록
+  BUSINESS_NUMBER_REQUIRED: "사업자 번호 10자리 모두 입력해주셔야 합니다.",
   VALID_BUSINESS_NUMBER: "유효한 사업자 등록번호입니다.",
   INVALID_BUSINESS_NUMBER: "올바른 사업자 등록번호를 입력해주세요.",
+  BUSINESS_NUMBER_TOOLTIP:
+    "'-' 기호를 제외한 사업자 번호 10자리를 입력해주세요.",
 };
 
+export const VALIDATION_NUMERIC = {
+  BUSINESS_NUMBER_LENGTH: 10,
+  START_DATE_NUMBER_LENGTH: 8,
+};
+
+/** 회원가입, 로그인 관련 메시지 */
 export const AUTH_MESSAGES = {
   LOGIN_ERROR: "로그인 중 오류가 발생했습니다.",
   EMAIL_REGISTERED_AS_NATIVE:
